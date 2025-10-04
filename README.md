@@ -12,3 +12,12 @@ Currently using the following programs and versions:
 
 - Tauri CLI: 4.6.2
 - pnpm: 10.18.0
+
+# Debugging
+
+Managed to run the debugger using nvim-dap with overseer:
+
+1. Use overseer to run the task defined in `.vscode/tasks.json`: `:OverseerRun`, then select `dev server (vite)`
+2. Launch the debugger by opening `main.rs` and pressing F5
+
+Theoretically, it should be possible to automatically launch the Vite dev server when debugging starts, but I haven't managed it yet.
