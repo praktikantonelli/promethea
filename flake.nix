@@ -54,21 +54,12 @@
         devShell = with pkgs;
           mkShell {
             buildInputs = [
+              pkg-config
               cargo
               rust-analyzer
               rustPackages.clippy
               rustc
               rustfmt
-              tokei
-              openssl
-              pkg-config
-              xorg.libxcb
-              gcc
-              protobuf
-              dioxus-cli
-              xdotool
-              wasm-bindgen-cli_0_2_100
-              lld_21
               at-spi2-atk
               atkmm
               cairo
@@ -80,10 +71,12 @@
               libsoup_3
               pango
               webkitgtk_4_1
+              openssl
+              cargo-tauri
+              gobject-introspection
+              nodejs
+              pnpm
             ];
-            RUST_SRC_PATH = rustPlatform.rustLibSrc;
-            LD_LIBRARY_PATH = libPath;
-            GIT_EXTERNAL_DIFF = "${difftastic}/bin/difft";
           };
 
       });
