@@ -3176,6 +3176,7 @@ dependencies = [
  "tauri-plugin-devtools",
  "tauri-plugin-opener",
  "tauri-plugin-store",
+ "thiserror 2.0.17",
 ]
 
 [[package]]
