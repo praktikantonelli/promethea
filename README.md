@@ -21,3 +21,5 @@ Managed to run the debugger using nvim-dap with overseer:
 2. Launch the debugger by opening `main.rs` and pressing F5
 
 Theoretically, it should be possible to automatically launch the Vite dev server when debugging starts, but I haven't managed it yet.
+
+Also works in VS Code by starting vite server with `pnpm vite` and then clicking the "Debug" button in main function
