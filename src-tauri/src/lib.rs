@@ -43,11 +43,6 @@ pub fn run() {
 
     builder
         .plugin(tauri_plugin_opener::init())
-        .setup(|app| {
-            let store = app.store("promethea-config.json")?;
-
-            Ok(())
-        })
         .invoke_handler(tauri::generate_handler![greet, notify_library_path_set])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
