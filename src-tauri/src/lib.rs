@@ -1,5 +1,3 @@
-use serde_json::json;
-use std::path::PathBuf;
 use tauri::{AppHandle, Wry};
 use tauri_plugin_store::StoreExt;
 
