@@ -28,7 +28,7 @@ fn greet(name: &str) -> String {
 fn notify_library_path_set(app: AppHandle<Wry>) -> Result<(), Error> {
     println!("In tauri::command notify_library_path_set()");
     let store = app.store("promethea-config.json")?;
-    let path = store.get("library-path");
+    let path = store.get("library_path");
     dbg!(path);
 
     Ok(())

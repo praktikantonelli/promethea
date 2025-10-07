@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { load } from '@tauri-apps/plugin-store';
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
@@ -15,6 +16,13 @@ async function greet() {
 
 async function setPath() {
   if (pathInputEl) {
+    let path = pathInputEl.value;
+    // set path in store here
+    const store = await load("promethea-config.json");
+    await store.set("library_path", { value: path });
+    await store.save();
+
+    // call backend to to notify about setting path
     await invoke("notify_library_path_set");
   }
 }
