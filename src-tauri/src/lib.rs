@@ -9,16 +9,27 @@ enum Error {
     StoreAccess(#[from] tauri_plugin_store::Error),
 }
 
+impl serde::Serialize for Error {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        serializer.serialize_str(self.to_string().as_ref())
+    }
+}
+
 #[tauri::command]
 fn greet(name: &str) -> String {
+    println!("In tauri::command greet()");
     format!("Hello, {name}! You've been greeted from Rust!")
 }
 
 #[tauri::command]
-fn set_library_path(app: AppHandle<Wry>, path: String) -> Result<(), Error> {
-    let path = PathBuf::from(path);
+fn notify_library_path_set(app: AppHandle<Wry>) -> Result<(), Error> {
+    println!("In tauri::command notify_library_path_set()");
     let store = app.store("promethea-config.json")?;
-    store.set("library-path", json!({"value": path}));
+    let path = store.get("library-path");
+    dbg!(path);
 
     Ok(())
 }
@@ -39,7 +50,7 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![greet, notify_library_path_set])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
