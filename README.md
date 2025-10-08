@@ -19,6 +19,12 @@ Currently, I'm using the following app components and versions to build everythi
 - Tauri CLI: 4.6.2
 - pnpm: 10.18.0
 
+### Commit Linting
+
+To enforce cleaner commit messages, I've decided to try commit linting with husky and commitlint. Whenever a commit message is created via `git commit -m "some-message"`, these two tools enforce the structure `"type(scope): message"` where `type` can be things such as `"feat"`, `"fix"`, `"revert"` etc. The `"scope"` is intended to show _where_ the type of change has been made roughly. Finally, the message is just any type of message.
+
+Since both husky and commitlint were added to the project via `pnpm`, the packages should be automatically installed on any system that uses this code base. As such, no additional setup effort should be required.
+
 # Debugging
 
 Managed to run the debugger using nvim-dap with overseer:
@@ -29,4 +35,3 @@ Managed to run the debugger using nvim-dap with overseer:
 Theoretically, it should be possible to automatically launch the Vite dev server when debugging starts, but I haven't managed it yet.
 
 Also works in VS Code by starting vite server with `pnpm vite` and then clicking the "Debug" button in main function
-
