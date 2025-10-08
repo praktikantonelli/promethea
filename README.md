@@ -1,14 +1,20 @@
-# Tauri + Vanilla TS
+# Promethea
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
+This project aims to be a replacement for a collection of tools I use regularly for managing my ebook library, among which are calibre and calibre-web. While both of those tools are amazing, the fact that I need at least those two to get everything I want is enough reason for me to try and improve my situation with something new.
 
-## Recommended IDE Setup
+## Features
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+As this project is still in its early phases, I'm focusing on creating a minimum viable product that can replace calibre and calibre-web, as well as improve on some key missing features. This includes
 
-# Windows
+- [ ] Adding/Editing/Deleting ebooks in my library
+- [ ] Managing metadata associated with each book
+- [ ] Having books that may belong to multiple series/universes
+- [ ] Having proper views of authors and series
+- [ ] Using automatic fetching of metadata with sensible standards and ways of replacing data
 
-Currently using the following programs and versions:
+## Technical Planning
+
+Currently, I'm using the following app components and versions to build everything:
 
 - Tauri CLI: 4.6.2
 - pnpm: 10.18.0
@@ -23,3 +29,4 @@ Managed to run the debugger using nvim-dap with overseer:
 Theoretically, it should be possible to automatically launch the Vite dev server when debugging starts, but I haven't managed it yet.
 
 Also works in VS Code by starting vite server with `pnpm vite` and then clicking the "Debug" button in main function
+
