@@ -18,13 +18,13 @@ impl serde::Serialize for Error {
 
 #[tauri::command]
 fn greet(name: &str) -> String {
-    println!("In tauri::command greet()");
+    log::warn!("Received request: greet()");
     format!("Hello, {name}! You've been greeted from Rust!")
 }
 
 #[tauri::command]
 fn notify_library_path_set(app: AppHandle<Wry>) -> Result<(), Error> {
-    println!("In tauri::command notify_library_path_set()");
+    log::info!("Received request: notify_library_path_set()");
     let store = app.store("promethea-config.json")?;
     let path = store.get("library_path");
     dbg!(path);
@@ -34,7 +34,10 @@ fn notify_library_path_set(app: AppHandle<Wry>) -> Result<(), Error> {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let mut builder = tauri::Builder::default().plugin(tauri_plugin_store::Builder::new().build());
+    let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
+        // .plugin(tauri_plugin_log::Builder::new().build())
+        .plugin(tauri_plugin_store::Builder::new().build());
     #[cfg(debug_assertions)]
     {
         let devtools = tauri_plugin_devtools::init();
@@ -42,7 +45,6 @@ pub fn run() {
     }
 
     builder
-        .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![greet, notify_library_path_set])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
