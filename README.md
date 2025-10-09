@@ -11,6 +11,8 @@ As this project is still in its early phases, I'm focusing on creating a minimum
 - [ ] Having books that may belong to multiple series/universes
 - [ ] Having proper views of authors and series
 - [ ] Using automatic fetching of metadata with sensible standards and ways of replacing data
+- [ ] Basic data collection regarding books I've read over time (when started/finished, etc.)
+- [ ] Ideally provide an app for as many platforms as possible (native, mobile, web)
 
 ## Technical Planning
 
@@ -18,6 +20,12 @@ Currently, I'm using the following app components and versions to build everythi
 
 - Tauri CLI: 4.6.2
 - pnpm: 10.18.0
+
+## Platforms
+
+Tauri only allows creating native desktop apps and mobile apps. There is currently no way to use tauri for web apps directly, so the future of that part is unclear. Ideally, I would like to create something that runs on the web as well because this would be a great way of getting access to my library even from devices that don't have promethea installed, but at the same time this would likely require almost an entirely separate code base with its own HTTP server implementation.
+
+For now, tauri is being developed mainly for the desktop, but once it's in a more stable and polished form, I'll look into bringing it to mobile as well.
 
 ### Commit Linting
 
