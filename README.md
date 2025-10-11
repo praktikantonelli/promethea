@@ -19,6 +19,8 @@ Currently, I'm using the following app components and versions to build everythi
 - Tauri CLI: 4.6.2
 - pnpm: 10.18.0
 
+As soon as I reach the point where I can use Promethea as a complete replacement for calibre, I'll start using it as such and will look into and work on other improvements. For example, in order to replace calibre-web as well (which is also a goal but not as important as replacing calibre), I'll need to create a backend service (e.g. with the axum crate) that uses the same frontend and offers alternative implementations for all the backend stuff handled by Tauri.
+
 ### Commit Linting
 
 To enforce cleaner commit messages, I've decided to try commit linting with husky and commitlint. Whenever a commit message is created via `git commit -m "some-message"`, these two tools enforce the structure `"type(scope): message"` where `type` can be things such as `"feat"`, `"fix"`, `"revert"` etc. The `"scope"` is intended to show _where_ the type of change has been made roughly. Finally, the message is just any type of message.
