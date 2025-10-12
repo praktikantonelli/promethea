@@ -1,1 +1,8 @@
-pnpm dlx commitlint --edit .git/COMMIT_EDITMSG
+#!/usr/bin/env sh
+# Optional: if Husky created this helper, keep it; otherwise harmless to skip
+[ -f "$(dirname "$0")/_/husky.sh" ] && . "$(dirname "$0")/_/husky.sh"
+
+# Use the local install (fast) and the message file Git passes as $1
+pnpm exec commitlint --edit "$1"
+# Or:
+# ./node_modules/.bin/commitlint --edit "$1"
