@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "process",
+      "label": "dev server (vite)",
+      "command": "pnpm",
+      "args": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "1420"
+      ],
+      "isBackground": true,
+      "presentation": {
+        "revealProblems": "onProblem"
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^error:.*",
+          "file": 1,
+          "line": 2
+        },
+        "background": {
+          "activeOnStart": false,
+          "beginsPattern": "VITE v\\d+\\.\\d+\\.\\d+",
+          "endsPattern": "Local:\\s*http://localhost:1420/"
+        }
+      }
+    }
+  ]
+}
