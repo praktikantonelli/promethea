@@ -60,6 +60,7 @@ async function getBackendStatus(): Promise<DbStatus> {
 
 // "Create new database…" → pick directory, create DEFAULT_DB_FILENAME inside
 async function onCreateNewClicked() {
+  console.log("Create new clicked!");
   const dir = await open({
     directory: true,
     multiple: false,
