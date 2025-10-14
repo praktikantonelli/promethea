@@ -172,8 +172,8 @@ fn notify_library_path_set(app: AppHandle<Wry>) -> Result<(), Error> {
 pub fn run() {
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        // .plugin(tauri_plugin_log::Builder::new().build())
-        .plugin(tauri_plugin_store::Builder::new().build());
+        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_dialog::init());
     #[cfg(debug_assertions)]
     {
         let devtools = tauri_plugin_devtools::init();

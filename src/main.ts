@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { load } from '@tauri-apps/plugin-store';
+import { open, save } from '@tauri-apps/plugin-dialog';
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
