@@ -182,6 +182,7 @@ pub fn run() {
 
     builder
         .setup(|app| {
+            // Let app manage SQLite database state
             app.manage(Db(Arc::new(RwLock::new(DbState::default()))));
             let app_handle = app.handle().clone();
             let db_state = app.state::<Db>().inner().0.clone();
