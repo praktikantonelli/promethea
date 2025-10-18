@@ -1,38 +1,22 @@
-import { invoke } from "@tauri-apps/api/core";
-import { load } from "@tauri-apps/plugin-store";
-import { open } from "@tauri-apps/plugin-dialog";
+import { open } from '@tauri-apps/plugin-dialog';
 
-let createNewButton: HTMLElement | null;
-let openExistingButton: HTMLElement | null;
-
-async function create_new() {
+async function createNew() {
   const folder = await open({
     multiple: false,
     directory: true,
-  });
+  })
   console.log(folder);
 }
 
-async function open_existing() {
-  const file = await open({
-    multiple: false,
-    directory: false,
-  });
-  console.log(file);
-}
+const button = document.getElementById('btn');
+const new_button = document.getElementById('create-new-btn');
+button?.addEventListener('click', function handleClick(event) {
+  console.log('button clicked');
+  console.log(event);
+  console.log(event.target);
+});
 
-window.addEventListener("DOMContentLoaded", () => {
-  createNewButton = document.getElementById("#btn-create-new");
-  openExistingButton = document.getElementById("#btn-open-existing");
-
-
-
-  createNewButton?.addEventListener("click", () => {
-    create_new();
-  });
-
-  openExistingButton?.addEventListener("click", () => {
-    open_existing();
-  });
-
-})
+new_button?.addEventListener('click', () => {
+  console.log('new button clicked');
+  createNew();
+});
