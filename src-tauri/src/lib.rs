@@ -6,6 +6,7 @@ use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
 const APP_CONFIG_PATH: &str = "promethea-config.json";
+const LIBRARY_DATABASE_NAME: &str = "library.db";
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct BookRecord {
@@ -54,7 +55,7 @@ impl From<anyhow::Error> for Error {
 
 #[tauri::command]
 fn create_new_db(app: AppHandle, folder: String) -> Result<(), Error> {
-    let db_file_path = PathBuf::from(folder).join(PathBuf::from("library.db"));
+    let db_file_path = PathBuf::from(folder).join(PathBuf::from(LIBRARY_DATABASE_NAME));
     std::fs::File::create(db_file_path.clone()).unwrap();
 
     // update config store
