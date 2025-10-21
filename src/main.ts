@@ -1,11 +1,13 @@
 import { open } from '@tauri-apps/plugin-dialog';
+import { invoke } from '@tauri-apps/api/core';
 
 async function createNew() {
-  const folder = await open({
+  const folderPath = await open({
     multiple: false,
     directory: true,
   })
-  console.log(folder);
+  console.log(folderPath);
+  invoke('create_new_db', { folder: folderPath });
 }
 
 async function openExisting() {
