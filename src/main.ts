@@ -10,6 +10,7 @@ async function createNew() {
 
 async function openExisting() {
   const file = await open({
+    filters: [{ name: 'library', extensions: ['db', 'sqlite', 'db3'] }],
     multiple: false,
     directory: false,
   })
