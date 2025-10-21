@@ -1,5 +1,11 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use serde_json::json;
+use std::path::PathBuf;
+use tauri::AppHandle;
+use tauri_plugin_store::StoreExt;
+
+const APP_CONFIG_PATH: &str = "promethea-config.json";
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct BookRecord {
@@ -46,6 +52,18 @@ impl From<anyhow::Error> for Error {
     }
 }
 
+#[tauri::command]
+fn create_new_db(app: AppHandle, folder: String) -> Result<(), Error> {
+    let db_file_path = PathBuf::from(folder).join(PathBuf::from("library.db"));
+    std::fs::File::create(db_file_path.clone()).unwrap();
+
+    // update config store
+    let store = app.store(APP_CONFIG_PATH)?;
+    store.set("library-path", json!({ "value": db_file_path.to_str() }));
+
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let mut builder = tauri::Builder::default()
@@ -64,7 +82,7 @@ pub fn run() {
             let app_handle = app.handle().clone();
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![])
+        .invoke_handler(tauri::generate_handler![create_new_db])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
