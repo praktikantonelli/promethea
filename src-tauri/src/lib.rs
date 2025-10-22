@@ -1,16 +1,18 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use sqlx::{Pool, Row, Sqlite};
 use std::path::PathBuf;
-use tauri::AppHandle;
+use tauri::{AppHandle, State};
 use tauri_plugin_store::StoreExt;
+use tokio::sync::Mutex;
 
 const APP_CONFIG_PATH: &str = "promethea-config.json";
 const LIBRARY_DATABASE_NAME: &str = "library.db";
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct BookRecord {
-    book_id: usize,
+    book_id: i64,
     title: String,
     sort: String,
     authors: Vec<String>,
@@ -54,6 +56,60 @@ impl From<anyhow::Error> for Error {
 }
 
 #[tauri::command]
+async fn test_database(db_state: State<'_, Mutex<Pool<Sqlite>>>) -> Result<BookRecord, String> {
+    let pool = db_state.lock().await;
+    let query = "WITH series_info AS (
+                SELECT
+                    bsl.book,
+                    json_group_array(
+                        json_object(
+                            'series', s.name, 'sort', s.sort, 'volume', bsl.entry
+                        )
+                    ) series_and_volume
+                FROM
+                    series AS s
+                    JOIN books_series_link bsl ON bsl.series = s.id
+                GROUP BY
+                    bsl.book
+            ),
+            authors_info AS (
+                SELECT
+                    json_group_array(a.name) authors,
+                    json_group_array(a.sort) authors_sort,
+                    bal.book
+                FROM
+                    authors AS a
+                    JOIN books_authors_link bal ON a.id = bal.author
+                GROUP BY
+                    bal.book
+            )
+            SELECT
+                id, title, sort, date_added, date_published, last_modified, number_of_pages, goodreads_id, authors, authors_sort, series_and_volume
+            FROM
+                books
+                LEFT JOIN series_info ON series_info.book = books.id
+                JOIN authors_info ON authors_info.book = books.id
+            ORDER BY
+                books.date_added ASC";
+    match sqlx::query(query).fetch_one(&*pool).await {
+        Ok(row) => Ok(BookRecord {
+            book_id: row.get("id"),
+            title: row.get("title"),
+            sort: row.get("sort"),
+            authors: serde_json::from_str(row.get("authors")).unwrap(),
+            authors_sort: serde_json::from_str(row.get("authors_sort")).unwrap(),
+            series_and_volume: serde_json::from_str(row.get("series_and_volume")).unwrap(),
+            number_of_pages: row.get("number_of_pages"),
+            goodreads_id: row.get("goodreads_id"),
+            date_added: row.get("date_added"),
+            date_published: row.get("date_published"),
+            date_modified: row.get("date_modified"),
+        }),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
 fn create_new_db(app: AppHandle, folder: String) -> Result<(), Error> {
     let db_file_path = PathBuf::from(folder).join(PathBuf::from(LIBRARY_DATABASE_NAME));
     std::fs::File::create(db_file_path.clone()).unwrap();
@@ -81,6 +137,10 @@ pub fn run() {
         .setup(|app| {
             // Let app manage SQLite database state
             let app_handle = app.handle().clone();
+            let store = app.store(APP_CONFIG_PATH).unwrap();
+            if let Some(db_path) = store.get("library-path") {
+                println!("{db_path:?}");
+            }
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![create_new_db])
