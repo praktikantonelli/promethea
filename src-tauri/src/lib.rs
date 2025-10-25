@@ -1,9 +1,9 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use sqlx::{Pool, Row, Sqlite};
+use sqlx::{sqlite::SqliteConnectOptions, Pool, Row, Sqlite, SqlitePool};
 use std::path::PathBuf;
-use tauri::{AppHandle, State};
+use tauri::{AppHandle, Manager, State};
 use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_store::StoreExt;
 use tokio::sync::Mutex;
@@ -133,6 +133,14 @@ fn open_existing_db(app: AppHandle, path: String) -> Result<(), Error> {
     Ok(())
 }
 
+async fn connect(path: PathBuf) -> Result<Pool<Sqlite>, Error> {
+    let options = SqliteConnectOptions::new().foreign_keys(true);
+    let pool = SqlitePool::connect_with(options).await.unwrap();
+    sqlx::migrate!("./migrations").run(&pool).await.unwrap();
+
+    Ok(pool)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let mut builder = tauri::Builder::default()
@@ -154,6 +162,11 @@ pub fn run() {
             let store = app.store(APP_CONFIG_PATH).unwrap();
             if let Some(db_path) = store.get("library-path") {
                 log::info!("Using database at {db_path:?}");
+                tauri::async_runtime::block_on(async move {
+                    let path = PathBuf::from(db_path.get("value").unwrap().to_string());
+                    let pool = connect(path).await.unwrap();
+                    app.manage(Mutex::new(pool.clone()));
+                })
             } else {
                 log::info!("No database path in config, wait for user to provide one");
             }
