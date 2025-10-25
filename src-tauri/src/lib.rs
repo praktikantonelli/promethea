@@ -4,6 +4,7 @@ use serde_json::json;
 use sqlx::{Pool, Row, Sqlite};
 use std::path::PathBuf;
 use tauri::{AppHandle, State};
+use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_store::StoreExt;
 use tokio::sync::Mutex;
 
@@ -127,10 +128,12 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_dialog::init());
-    #[cfg(debug_assertions)]
-    {
+    if cfg!(debug_assertions) {
         let devtools = tauri_plugin_devtools::init();
         builder = builder.plugin(devtools);
+    } else {
+        let log = tauri_plugin_log::Builder::new().build();
+        builder = builder.plugin(log);
     }
 
     builder
@@ -139,7 +142,9 @@ pub fn run() {
             let app_handle = app.handle().clone();
             let store = app.store(APP_CONFIG_PATH).unwrap();
             if let Some(db_path) = store.get("library-path") {
-                println!("{db_path:?}");
+                log::info!("Using database at {db_path:?}");
+            } else {
+                log::info!("No database path in config, wait for user to provide one");
             }
             Ok(())
         })
