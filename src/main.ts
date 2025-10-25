@@ -11,12 +11,13 @@ async function createNew() {
 }
 
 async function openExisting() {
-  const file = await open({
+  const filePath = await open({
     filters: [{ name: 'library', extensions: ['db', 'sqlite', 'db3'] }],
     multiple: false,
     directory: false,
   })
-  console.log(file);
+  console.log(filePath);
+  invoke('open_existing_db', { path: filePath });
 }
 
 const existing_button = document.getElementById('open-existing-btn');

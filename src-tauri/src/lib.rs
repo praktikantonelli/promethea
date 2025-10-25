@@ -122,6 +122,17 @@ fn create_new_db(app: AppHandle, folder: String) -> Result<(), Error> {
     Ok(())
 }
 
+#[tauri::command]
+fn open_existing_db(app: AppHandle, path: String) -> Result<(), Error> {
+    let db_file_path = PathBuf::from(path);
+
+    let store = app.store(APP_CONFIG_PATH)?;
+    store.set("library-path", json!({ "value": db_file_path.to_str() }));
+    log::info!("Updated database path in store to {db_file_path:?}");
+
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let mut builder = tauri::Builder::default()
@@ -148,7 +159,7 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![create_new_db])
+        .invoke_handler(tauri::generate_handler![create_new_db, open_existing_db])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
