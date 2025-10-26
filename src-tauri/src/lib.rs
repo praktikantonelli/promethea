@@ -134,7 +134,10 @@ fn open_existing_db(app: AppHandle, path: String) -> Result<(), Error> {
 }
 
 async fn connect(path: PathBuf) -> Result<Pool<Sqlite>, Error> {
-    let options = SqliteConnectOptions::new().foreign_keys(true);
+    log::info!("Trying to connect to database at {path:?}");
+    let options = SqliteConnectOptions::new()
+        .foreign_keys(true)
+        .filename(path);
     let pool = SqlitePool::connect_with(options).await.unwrap();
     sqlx::migrate!("./migrations").run(&pool).await.unwrap();
 
@@ -163,7 +166,7 @@ pub fn run() {
             if let Some(db_path) = store.get("library-path") {
                 log::info!("Using database at {db_path:?}");
                 tauri::async_runtime::block_on(async move {
-                    let path = PathBuf::from(db_path.get("value").unwrap().to_string());
+                    let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
                     let pool = connect(path).await.unwrap();
                     app.manage(Mutex::new(pool.clone()));
                 })
