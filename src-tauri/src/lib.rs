@@ -146,22 +146,27 @@ async fn connect(path: PathBuf) -> Result<Pool<Sqlite>, Error> {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let mut builder = tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_dialog::init());
-    if cfg!(debug_assertions) {
-        let devtools = tauri_plugin_devtools::init();
-        builder = builder.plugin(devtools);
-    } else {
-        let log = tauri_plugin_log::Builder::new().build();
-        builder = builder.plugin(log);
-    }
-
     builder
         .setup(|app| {
             // Let app manage SQLite database state
-            let app_handle = app.handle().clone();
+            let (tauri_plugin_log, max_level, logger) =
+                tauri_plugin_log::Builder::new().split(app.handle())?;
+
+            if cfg!(debug_assertions) {
+                // With debug assertions, use CrabNebula dev tools plugin
+                let mut devtools_builder = tauri_plugin_devtools::Builder::default();
+                devtools_builder.attach_logger(logger);
+                app.handle().plugin(devtools_builder.init())?;
+            } else {
+                // Without debug assertions, use regular logger plugin
+                tauri_plugin_log::attach_logger(max_level, logger)?;
+            }
+            app.handle().plugin(tauri_plugin_log)?;
+
             let store = app.store(APP_CONFIG_PATH).unwrap();
             if let Some(db_path) = store.get("library-path") {
                 log::info!("Using database at {db_path:?}");

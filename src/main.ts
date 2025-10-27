@@ -1,4 +1,5 @@
 import { open } from '@tauri-apps/plugin-dialog';
+import { warn, debug, trace, info, error } from '@tauri-apps/plugin-log';
 import { invoke } from '@tauri-apps/api/core';
 
 async function createNew() {
@@ -6,7 +7,7 @@ async function createNew() {
     multiple: false,
     directory: true,
   })
-  console.log(folderPath);
+  await info("${folderPath}");
   invoke('create_new_db', { folder: folderPath });
 }
 
@@ -16,7 +17,7 @@ async function openExisting() {
     multiple: false,
     directory: false,
   })
-  console.log(filePath);
+  await info("${filePath}");
   invoke('open_existing_db', { path: filePath });
 }
 
@@ -24,11 +25,11 @@ const existing_button = document.getElementById('open-existing-btn');
 const new_button = document.getElementById('create-new-btn');
 
 new_button?.addEventListener('click', () => {
-  console.log('new button clicked');
+  info('new button clicked');
   createNew();
 });
 
 existing_button?.addEventListener('click', () => {
-  console.log('existing button clicked');
+  info('existing button clicked');
   openExisting();
 })
