@@ -118,6 +118,7 @@ fn create_new_db(app: AppHandle, folder: String) -> Result<(), Error> {
     // update config store
     let store = app.store(APP_CONFIG_PATH)?;
     store.set("library-path", json!({ "value": db_file_path.to_str() }));
+    log::info!("Updated database path in store to {db_file_path:?}");
 
     Ok(())
 }
@@ -134,12 +135,13 @@ fn open_existing_db(app: AppHandle, path: String) -> Result<(), Error> {
 }
 
 async fn connect(path: PathBuf) -> Result<Pool<Sqlite>, Error> {
-    log::info!("Trying to connect to database at {path:?}");
+    log::info!("Trying to connect to database at {path:?}...");
     let options = SqliteConnectOptions::new()
         .foreign_keys(true)
-        .filename(path);
+        .filename(path.clone());
     let pool = SqlitePool::connect_with(options).await.unwrap();
     sqlx::migrate!("./migrations").run(&pool).await.unwrap();
+    log::info!("Successfully opened database at {path:?}");
 
     Ok(pool)
 }
