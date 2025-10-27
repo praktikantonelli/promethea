@@ -4,7 +4,6 @@ use serde_json::json;
 use sqlx::{sqlite::SqliteConnectOptions, Pool, Row, Sqlite, SqlitePool};
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager, State};
-use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_store::StoreExt;
 use tokio::sync::Mutex;
 
