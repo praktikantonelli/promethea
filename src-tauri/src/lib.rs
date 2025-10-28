@@ -10,6 +10,26 @@ use tokio::sync::Mutex;
 const APP_CONFIG_PATH: &str = "promethea-config.json";
 const LIBRARY_DATABASE_NAME: &str = "library.db";
 
+struct DataBase {
+    pool: Option<Pool<Sqlite>>,
+}
+
+impl DataBase {
+    async fn new(path_opt: Option<PathBuf>) -> Self {
+        if let Some(path) = path_opt {
+            let options = SqliteConnectOptions::new()
+                .foreign_keys(true)
+                .filename(path.clone());
+            let pool = SqlitePool::connect_with(options).await.unwrap();
+            sqlx::migrate!("./migrations").run(&pool).await.unwrap();
+            log::info!("Successfully opened database at {path:?}");
+            Self { pool: Some(pool) }
+        } else {
+            Self { pool: None }
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct BookRecord {
     book_id: i64,
@@ -173,8 +193,9 @@ pub fn run() {
                 log::info!("Using database at {db_path:?}");
                 tauri::async_runtime::block_on(async move {
                     let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
-                    let pool = connect(path).await.unwrap();
-                    app.manage(Mutex::new(pool.clone()));
+                    // let pool = connect(path).await.unwrap();
+                    let db = DataBase::new(Some(path)).await;
+                    app.manage(Mutex::new(db));
                 })
             } else {
                 log::info!("No database path in config, wait for user to provide one");
