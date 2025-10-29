@@ -21,6 +21,7 @@ impl AppDb {
         }
     }
     async fn init_with_path(&self, path: PathBuf) -> anyhow::Result<()> {
+        log::info!("Creating SQLite pool for DB at {path:?}");
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
             .filename(path.clone());
@@ -33,6 +34,7 @@ impl AppDb {
         // there was one
         if let Some(old) = guard.replace(pool) {
             // if Option<SqlitePool> had value, close pool
+            log::info!("Found old SQLite pool in AppDb state, closing...");
             old.close().await;
         }
 
@@ -201,13 +203,15 @@ pub fn run() {
 
             let store = app.store(APP_CONFIG_PATH).unwrap();
             if let Some(db_path) = store.get("library-path") {
-                let db_state = app.state::<AppDb>().clone();
                 log::info!("Using database at {db_path:?}");
+                let db_state = app.state::<AppDb>().clone();
                 tauri::async_runtime::block_on(async move {
                     let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
                     // let pool = connect(path).await.unwrap();
                     if let Err(err) = db_state.init_with_path(path).await {
                         log::error!("DB init on startup failed: {err}");
+                    } else {
+                        log::info!("DB connected successfully");
                     }
                 })
             } else {
