@@ -5,28 +5,38 @@ use sqlx::{sqlite::SqliteConnectOptions, Pool, Row, Sqlite, SqlitePool};
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager, State};
 use tauri_plugin_store::StoreExt;
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, RwLock};
 
 const APP_CONFIG_PATH: &str = "promethea-config.json";
 const LIBRARY_DATABASE_NAME: &str = "library.db";
 
-struct DataBase {
-    pool: Option<Pool<Sqlite>>,
+struct AppDb {
+    inner: RwLock<Option<SqlitePool>>,
 }
 
-impl DataBase {
-    async fn new(path_opt: Option<PathBuf>) -> Self {
-        if let Some(path) = path_opt {
-            let options = SqliteConnectOptions::new()
-                .foreign_keys(true)
-                .filename(path.clone());
-            let pool = SqlitePool::connect_with(options).await.unwrap();
-            sqlx::migrate!("./migrations").run(&pool).await.unwrap();
-            log::info!("Successfully opened database at {path:?}");
-            Self { pool: Some(pool) }
-        } else {
-            Self { pool: None }
+impl AppDb {
+    fn new() -> Self {
+        Self {
+            inner: RwLock::new(None),
         }
+    }
+    async fn init_with_path(&self, path: PathBuf) -> anyhow::Result<()> {
+        let options = SqliteConnectOptions::new()
+            .foreign_keys(true)
+            .filename(path.clone());
+        let pool = SqlitePool::connect_with(options).await?;
+        sqlx::migrate!("./migrations").run(&pool).await?;
+        log::info!("Successfully opened database at {path:?}");
+
+        let mut guard = self.inner.write().await;
+        // guard.replace(pool) puts pool into Option<SqlitePool> and returns the contained value if
+        // there was one
+        if let Some(old) = guard.replace(pool) {
+            // if Option<SqlitePool> had value, close pool
+            old.close().await;
+        }
+
+        Ok(())
     }
 }
 
@@ -172,6 +182,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_dialog::init());
     builder
+        .manage(AppDb::new())
         .setup(|app| {
             // Let app manage SQLite database state
             let (tauri_plugin_log, max_level, logger) =
@@ -190,12 +201,14 @@ pub fn run() {
 
             let store = app.store(APP_CONFIG_PATH).unwrap();
             if let Some(db_path) = store.get("library-path") {
+                let db_state = app.state::<AppDb>().clone();
                 log::info!("Using database at {db_path:?}");
                 tauri::async_runtime::block_on(async move {
                     let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
                     // let pool = connect(path).await.unwrap();
-                    let db = DataBase::new(Some(path)).await;
-                    app.manage(Mutex::new(db));
+                    if let Err(err) = db_state.init_with_path(path).await {
+                        log::error!("DB init on startup failed: {err}");
+                    }
                 })
             } else {
                 log::info!("No database path in config, wait for user to provide one");
