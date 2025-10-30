@@ -4,6 +4,7 @@ use serde_json::json;
 use sqlx::{sqlite::SqliteConnectOptions, Pool, Row, Sqlite, SqlitePool};
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager, State};
+use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_plugin_store::StoreExt;
 use tokio::sync::{Mutex, RwLock};
 
@@ -187,8 +188,9 @@ pub fn run() {
         .manage(AppDb::new())
         .setup(|app| {
             // Let app manage SQLite database state
-            let (tauri_plugin_log, max_level, logger) =
-                tauri_plugin_log::Builder::new().split(app.handle())?;
+            let (tauri_plugin_log, max_level, logger) = tauri_plugin_log::Builder::default()
+                .with_colors(ColoredLevelConfig::default())
+                .split(app.handle())?;
 
             if cfg!(debug_assertions) {
                 // With debug assertions, use CrabNebula dev tools plugin
