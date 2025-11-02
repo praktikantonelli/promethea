@@ -1,5 +1,4 @@
 import BuiltWith from '@/features/built-with'
-import GithubStarButton from '@/features/github-star-button'
 import CreateNewButton from '@/features/create-new-button'
 import OpenExistingButton from '@/features/open-existing-button/indet'
 
