@@ -1,5 +1,7 @@
 import BuiltWith from '@/features/built-with'
 import GithubStarButton from '@/features/github-star-button'
+import CreateNewButton from '@/features/create-new-button'
+import OpenExistingButton from '@/features/open-existing-button/indet'
 
 export function HomePage() {
   return (
@@ -15,7 +17,8 @@ export function HomePage() {
             apps with Vite, React, and Tailwind CSS.
           </p>
         </div>
-        <GithubStarButton />
+        <CreateNewButton />
+        <OpenExistingButton />
       </div>
     </div>
   )
