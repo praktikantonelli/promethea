@@ -1,8 +1,11 @@
-import BuiltWith from '@/features/built-with'
-import CreateNewButton from '@/features/create-new-button'
-import OpenExistingButton from '@/features/open-existing-button'
+import BuiltWith from '@/features/built-with';
+import CreateNewButton from '@/features/create-new-button';
+import OpenExistingButton from '@/features/open-existing-button';
+import NoDatabaseDialog from '@/features/no-database-dialog';
 
 export function HomePage() {
+
+
   return (
     <div className="flex h-screen">
       <div className="m-auto text-center space-y-3">
@@ -16,8 +19,7 @@ export function HomePage() {
             apps with Vite, React, and Tailwind CSS.
           </p>
         </div>
-        <CreateNewButton />
-        <OpenExistingButton />
+        <NoDatabaseDialog shouldOpen={true} />
       </div>
     </div>
   )
