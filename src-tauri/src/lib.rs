@@ -220,7 +220,11 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![create_new_db, open_existing_db])
+        .invoke_handler(tauri::generate_handler![
+            create_new_db,
+            open_existing_db,
+            database_loading_failed
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

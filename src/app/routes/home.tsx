@@ -1,8 +1,9 @@
 import BuiltWith from '@/features/built-with';
 import NoDatabaseDialog from '@/features/no-database-dialog';
+import { useDbFailure } from '@/lib/dbFailedToLoad';
 
 export function HomePage() {
-
+  const { failed, loading, refresh, setFailed } = useDbFailure();
 
   return (
     <div className="flex h-screen">
