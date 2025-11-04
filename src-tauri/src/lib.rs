@@ -168,6 +168,13 @@ fn open_existing_db(app: AppHandle, path: String) -> Result<(), Error> {
     Ok(())
 }
 
+#[tauri::command]
+async fn database_loading_failed(state: State<'_, Mutex<AppState>>) -> Result<bool, Error> {
+    let state = state.lock().await;
+    let flag = *state.failed_to_load_db.read().await;
+    Ok(flag)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = tauri::Builder::default()
