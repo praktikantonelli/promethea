@@ -166,18 +166,6 @@ fn open_existing_db(app: AppHandle, path: String) -> Result<(), Error> {
     Ok(())
 }
 
-async fn connect(path: PathBuf) -> Result<Pool<Sqlite>, Error> {
-    log::info!("Trying to connect to database at {path:?}...");
-    let options = SqliteConnectOptions::new()
-        .foreign_keys(true)
-        .filename(path.clone());
-    let pool = SqlitePool::connect_with(options).await.unwrap();
-    sqlx::migrate!("./migrations").run(&pool).await.unwrap();
-    log::info!("Successfully opened database at {path:?}");
-
-    Ok(pool)
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = tauri::Builder::default()
@@ -210,7 +198,6 @@ pub fn run() {
                 let db_state = app.state::<AppDb>().clone();
                 tauri::async_runtime::block_on(async move {
                     let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
-                    // let pool = connect(path).await.unwrap();
                     if let Err(err) = db_state.init_with_path(path).await {
                         log::error!("DB init on startup failed: {err}");
                     } else {
