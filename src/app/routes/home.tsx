@@ -1,6 +1,4 @@
 import BuiltWith from '@/features/built-with';
-import CreateNewButton from '@/features/create-new-button';
-import OpenExistingButton from '@/features/open-existing-button';
 import NoDatabaseDialog from '@/features/no-database-dialog';
 
 export function HomePage() {
