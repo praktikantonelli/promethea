@@ -11,17 +11,19 @@ use tokio::sync::{Mutex, RwLock};
 const APP_CONFIG_PATH: &str = "promethea-config.json";
 const LIBRARY_DATABASE_NAME: &str = "library.db";
 
-struct AppDb {
-    inner: RwLock<Option<SqlitePool>>,
+struct AppState {
+    db_pool: RwLock<Option<SqlitePool>>,
+    failed_to_load_db: RwLock<bool>,
 }
 
-impl AppDb {
+impl AppState {
     fn new() -> Self {
         Self {
-            inner: RwLock::new(None),
+            db_pool: RwLock::new(None),
+            failed_to_load_db: RwLock::new(false),
         }
     }
-    async fn init_with_path(&self, path: PathBuf) -> anyhow::Result<()> {
+    async fn init_db_with_path(&self, path: PathBuf) -> anyhow::Result<()> {
         log::info!("Creating SQLite pool for DB at {path:?}");
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
@@ -30,7 +32,7 @@ impl AppDb {
         sqlx::migrate!("./migrations").run(&pool).await?;
         log::info!("Successfully opened database at {path:?}");
 
-        let mut guard = self.inner.write().await;
+        let mut guard = self.db_pool.write().await;
         // guard.replace(pool) puts pool into Option<SqlitePool> and returns the contained value if
         // there was one
         if let Some(old) = guard.replace(pool) {
@@ -174,7 +176,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_dialog::init());
     builder
-        .manage(AppDb::new())
+        .manage(AppState::new())
         .setup(|app| {
             // Let app manage SQLite database state
             let (tauri_plugin_log, max_level, logger) = tauri_plugin_log::Builder::default()
@@ -195,11 +197,13 @@ pub fn run() {
             let store = app.store(APP_CONFIG_PATH).unwrap();
             if let Some(db_path) = store.get("library-path") {
                 log::info!("Using database at {db_path:?}");
-                let db_state = app.state::<AppDb>().clone();
+                let app_state = app.state::<AppState>().clone();
                 tauri::async_runtime::block_on(async move {
                     let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
-                    if let Err(err) = db_state.init_with_path(path).await {
+                    if let Err(err) = app_state.init_db_with_path(path).await {
                         log::error!("DB init on startup failed: {err}");
+                        let mut db_loading_failed_guard = app_state.failed_to_load_db.write().await;
+                        *db_loading_failed_guard = true;
                     } else {
                         log::info!("DB connected successfully");
                     }
