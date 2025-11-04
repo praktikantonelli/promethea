@@ -1,9 +1,7 @@
 import BuiltWith from '@/features/built-with';
 import NoDatabaseDialog from '@/features/no-database-dialog';
-import { useDbFailure } from '@/lib/dbFailedToLoad';
 
 export function HomePage() {
-  const { failed, loading, refresh, setFailed } = useDbFailure();
 
   return (
     <div className="flex h-screen">
@@ -18,7 +16,7 @@ export function HomePage() {
             apps with Vite, React, and Tailwind CSS.
           </p>
         </div>
-        <NoDatabaseDialog shouldOpen={true} />
+        <NoDatabaseDialog />
       </div>
     </div>
   )

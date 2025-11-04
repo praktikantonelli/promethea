@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { info } from "@tauri-apps/plugin-log";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 async function createNew() {
   const folderPath = await open({
@@ -28,11 +28,8 @@ async function openExisting() {
   invoke("open_existing_db", { path: filePath });
 }
 
-export default function NoDatabaseDialog({ shouldOpen }: { shouldOpen: boolean }) {
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    setOpen(shouldOpen)
-  }, [shouldOpen])
+export default function NoDatabaseDialog() {
+  const [open, setOpen] = useState<boolean>(true);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
