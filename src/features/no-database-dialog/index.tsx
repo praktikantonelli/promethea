@@ -6,7 +6,7 @@ import {
   DialogTitle
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { info } from "@tauri-apps/plugin-log";
+import { debug, info } from "@tauri-apps/plugin-log";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";
@@ -56,7 +56,6 @@ export default function NoDatabaseDialog() {
   const { status, setStatus, refresh } = useDbInitStatus();
 
   const [open, setOpen] = useState<boolean>(false);
-
   useEffect(() => {
     if (!status) return;
     setOpen(status.status === "needs_setup");

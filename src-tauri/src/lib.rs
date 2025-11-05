@@ -12,6 +12,7 @@ const APP_CONFIG_PATH: &str = "promethea-config.json";
 const LIBRARY_DATABASE_NAME: &str = "library.db";
 
 #[derive(Serialize, Deserialize)]
+#[serde(tag = "status", rename_all = "snake_case")]
 enum DbInitStatus {
     Loaded,
     NeedsSetup { reason: Option<String> },
