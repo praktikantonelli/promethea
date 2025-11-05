@@ -30,7 +30,7 @@ impl AppState {
             last_error: RwLock::new(None),
         }
     }
-    async fn init_db_with_path(&self, path: PathBuf) -> anyhow::Result<()> {
+    async fn connect_db_with_path(&self, path: PathBuf) -> anyhow::Result<()> {
         log::info!("Creating SQLite pool for DB at {path:?}");
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
@@ -218,7 +218,7 @@ pub fn run() {
                 let app_state = app.state::<AppState>().clone();
                 tauri::async_runtime::block_on(async move {
                     let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
-                    if let Err(err) = app_state.init_db_with_path(path).await {
+                    if let Err(err) = app_state.connect_db_with_path(path).await {
                         log::error!("DB init on startup failed: {err}");
                     } else {
                         log::info!("DB connected successfully");
