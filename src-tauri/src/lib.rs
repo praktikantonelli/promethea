@@ -13,14 +13,12 @@ const LIBRARY_DATABASE_NAME: &str = "library.db";
 
 struct AppState {
     db_pool: RwLock<Option<SqlitePool>>,
-    failed_to_load_db: RwLock<bool>,
 }
 
 impl AppState {
     fn new() -> Self {
         Self {
             db_pool: RwLock::new(None),
-            failed_to_load_db: RwLock::new(false),
         }
     }
     async fn init_db_with_path(&self, path: PathBuf) -> anyhow::Result<()> {
@@ -168,13 +166,6 @@ fn open_existing_db(app: AppHandle, path: String) -> Result<(), Error> {
     Ok(())
 }
 
-#[tauri::command]
-async fn database_loading_failed(state: State<'_, Mutex<AppState>>) -> Result<bool, Error> {
-    let state = state.lock().await;
-    let flag = *state.failed_to_load_db.read().await;
-    Ok(flag)
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = tauri::Builder::default()
@@ -209,8 +200,6 @@ pub fn run() {
                     let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
                     if let Err(err) = app_state.init_db_with_path(path).await {
                         log::error!("DB init on startup failed: {err}");
-                        let mut db_loading_failed_guard = app_state.failed_to_load_db.write().await;
-                        *db_loading_failed_guard = true;
                     } else {
                         log::info!("DB connected successfully");
                     }
@@ -220,11 +209,7 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![
-            create_new_db,
-            open_existing_db,
-            database_loading_failed
-        ])
+        .invoke_handler(tauri::generate_handler![create_new_db, open_existing_db,])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
