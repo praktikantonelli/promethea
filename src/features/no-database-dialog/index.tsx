@@ -9,7 +9,31 @@ import { Button } from "@/components/ui/button";
 import { info } from "@tauri-apps/plugin-log";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+
+type DbInitStatus =
+  | { status: "loaded" }
+  | { status: "needs_setup"; reason?: string };
+
+function useDbInitStatus() {
+  const [status, setStatus] = useState<DbInitStatus | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    invoke<DbInitStatus>("get_init_status").then((s) => alive && setStatus(s)).catch(() => alive && setStatus({ status: "needs_setup", reason: "query failed" })
+    );
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const refresh = useCallback(async () => {
+    const s = await invoke<DbInitStatus>("get_init_status");
+    setStatus(s);
+  }, []);
+
+  return { status, setStatus, refresh };
+}
 
 async function createNew() {
   const folderPath = await open({
@@ -29,7 +53,15 @@ async function openExisting() {
 }
 
 export default function NoDatabaseDialog() {
-  const [open, setOpen] = useState<boolean>(true);
+  const { status, setStatus, refresh } = useDbInitStatus();
+
+  const [open, setOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!status) return;
+    setOpen(status.status === "needs_setup");
+  }, [status]);
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

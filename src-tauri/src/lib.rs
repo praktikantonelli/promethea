@@ -11,14 +11,22 @@ use tokio::sync::{Mutex, RwLock};
 const APP_CONFIG_PATH: &str = "promethea-config.json";
 const LIBRARY_DATABASE_NAME: &str = "library.db";
 
+#[derive(Serialize, Deserialize)]
+enum DbInitStatus {
+    Loaded,
+    NeedsSetup { reason: Option<String> },
+}
+
 struct AppState {
     db_pool: RwLock<Option<SqlitePool>>,
+    last_error: RwLock<Option<String>>,
 }
 
 impl AppState {
     fn new() -> Self {
         Self {
             db_pool: RwLock::new(None),
+            last_error: RwLock::new(None),
         }
     }
     async fn init_db_with_path(&self, path: PathBuf) -> anyhow::Result<()> {
@@ -166,6 +174,17 @@ fn open_existing_db(app: AppHandle, path: String) -> Result<(), Error> {
     Ok(())
 }
 
+#[tauri::command]
+async fn get_init_status(state: State<'_, AppState>) -> Result<DbInitStatus, ()> {
+    if state.db_pool.read().await.is_some() {
+        Ok(DbInitStatus::Loaded)
+    } else {
+        Ok(DbInitStatus::NeedsSetup {
+            reason: state.last_error.read().await.clone(),
+        })
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = tauri::Builder::default()
@@ -209,7 +228,11 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![create_new_db, open_existing_db,])
+        .invoke_handler(tauri::generate_handler![
+            create_new_db,
+            open_existing_db,
+            get_init_status
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
