@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { debug, info } from "@tauri-apps/plugin-log";
-import { open } from "@tauri-apps/plugin-dialog";
+import { open as dialogOpen } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";
 
@@ -36,7 +36,7 @@ function useDbInitStatus() {
 }
 
 async function createNew() {
-  const folderPath = await open({
+  const folderPath = await dialogOpen({
     multiple: false,
     directory: true,
   })
@@ -44,7 +44,7 @@ async function createNew() {
 }
 
 async function openExisting() {
-  const filePath = await open({
+  const filePath = await dialogOpen({
     filters: [{ name: "library", extensions: ["db", "sqlite", "db3"] }],
     multiple: false,
     directory: false
