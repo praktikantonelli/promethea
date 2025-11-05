@@ -152,7 +152,11 @@ async fn test_database(db_state: State<'_, Mutex<Pool<Sqlite>>>) -> Result<BookR
 }
 
 #[tauri::command]
-fn create_new_db(app: AppHandle, folder: String) -> Result<(), Error> {
+async fn create_new_db(
+    state: State<'_, AppState>,
+    app: AppHandle,
+    folder: String,
+) -> Result<(), Error> {
     let db_file_path = PathBuf::from(folder).join(PathBuf::from(LIBRARY_DATABASE_NAME));
     std::fs::File::create(db_file_path.clone()).unwrap();
 
@@ -161,16 +165,24 @@ fn create_new_db(app: AppHandle, folder: String) -> Result<(), Error> {
     store.set("library-path", json!({ "value": db_file_path.to_str() }));
     log::info!("Updated database path in store to {db_file_path:?}");
 
+    state.connect_db_with_path(db_file_path).await?;
+
     Ok(())
 }
 
 #[tauri::command]
-fn open_existing_db(app: AppHandle, path: String) -> Result<(), Error> {
+async fn open_existing_db(
+    state: State<'_, AppState>,
+    app: AppHandle,
+    path: String,
+) -> Result<(), Error> {
     let db_file_path = PathBuf::from(path);
 
     let store = app.store(APP_CONFIG_PATH)?;
     store.set("library-path", json!({ "value": db_file_path.to_str() }));
     log::info!("Updated database path in store to {db_file_path:?}");
+
+    state.connect_db_with_path(db_file_path).await?;
 
     Ok(())
 }
