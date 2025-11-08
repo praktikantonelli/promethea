@@ -200,7 +200,7 @@ export function LibraryTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
-  const [columnVisibility, setColumnVisibility] = React.useState({
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
     authors_sort: false,
     sort: false
   });
