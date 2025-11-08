@@ -20,10 +20,20 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+tauri-plugin-log = { version = "2", features = ["colored"] }
 tauri-plugin-devtools = "2.0.0"
 tauri-plugin-store = "2"
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 thiserror = "2.0.17"
 log = "0.4"
-tauri-plugin-log = "2"
+sqlx = { version = "0.8.6", features = [
+  "sqlite",
+  "runtime-tokio-rustls",
+  "chrono",
+] }
+tokio = { version = "1.47.1", features = ["macros", "rt-multi-thread"] }
+chrono = { version = "0.4.42", features = ["serde"] }
+anyhow = { version = "1.0.100" }
+tauri-plugin-process = "2"
