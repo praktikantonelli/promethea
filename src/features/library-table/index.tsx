@@ -132,10 +132,30 @@ export const columns: ColumnDef<BookRecord>[] = [
   {
     accessorKey: "authors",
     header: "Authors",
+    cell: ({ row }) => {
+      const authors = row.getValue("authors");
+      let formatted: string | null;
+      if (authors instanceof Array) {
+        formatted = authors.join(", ")
+      } else {
+        formatted = null;
+      }
+      return <div>{formatted}</div>
+    }
   },
   {
     accessorKey: "authors_sort",
     header: "Authors Sort",
+    cell: ({ row }) => {
+      const authors = row.getValue("authors_sort");
+      let formatted: string | null;
+      if (authors instanceof Array) {
+        formatted = authors.join(", ")
+      } else {
+        formatted = null;
+      }
+      return <div>{formatted}</div>
+    }
   },
   {
     accessorKey: "series_and_volume",
