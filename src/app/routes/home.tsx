@@ -1,5 +1,6 @@
 import BuiltWith from '@/features/built-with';
 import NoDatabaseDialog from '@/features/no-database-dialog';
+import { LibraryTable } from '@/features/library-table';
 
 export function HomePage() {
 
@@ -7,14 +8,7 @@ export function HomePage() {
     <div className="flex h-screen">
       <div className="m-auto text-center space-y-3">
         <div className="space-y-3">
-          <BuiltWith />
-          <h1 className="text-3xl items-center">
-            Welcome to Tauri React template!
-          </h1>
-          <p>
-            This template is a starting point for building Tauri
-            apps with Vite, React, and Tailwind CSS.
-          </p>
+          <LibraryTable />
         </div>
         <NoDatabaseDialog />
       </div>
