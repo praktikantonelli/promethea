@@ -230,12 +230,12 @@ export function LibraryTable() {
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder}
-                      ? null
-                      : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                      )
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
