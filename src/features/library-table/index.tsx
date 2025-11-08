@@ -160,6 +160,11 @@ export const columns: ColumnDef<BookRecord>[] = [
   {
     accessorKey: "series_and_volume",
     header: "Series and Volume",
+    cell: ({ row }) => {
+      const series_and_volume: SeriesAndVolume[] = row.getValue("series_and_volume");
+      let formatted = series_and_volume.map((element) => `${element.series} #${element.volume}`).join(", ");
+      return <div>{formatted}</div>
+    }
   },
   {
     accessorKey: "number_of_pages",
