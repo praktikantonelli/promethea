@@ -84,8 +84,8 @@ export const book_records: BookRecord[] = [
     ],
     number_of_pages: 432,
     goodreads_id: 61215351,
-    date_added: new Date(2025, 11, 8),
-    date_modified: new Date(2025, 11, 8),
+    date_added: new Date(2025, 10, 8),
+    date_modified: new Date(2025, 10, 8),
     date_published: new Date(1954, 7, 29)
   },
   {
@@ -103,8 +103,8 @@ export const book_records: BookRecord[] = [
     ],
     number_of_pages: 912,
     goodreads_id: 7743175,
-    date_added: new Date(2025, 11, 8),
-    date_modified: new Date(2025, 11, 8),
+    date_added: new Date(2025, 10, 8),
+    date_modified: new Date(2025, 10, 8),
     date_published: new Date(2013, 1, 8)
   }
 ]
@@ -152,14 +152,47 @@ export const columns: ColumnDef<BookRecord>[] = [
   {
     accessorKey: "date_added",
     header: "Date Added",
+    cell: ({ row }) => {
+      const value = row.getValue("date_added");
+      let formatted: string | null;
+      if (value instanceof Date) {
+        formatted = value.toLocaleDateString()
+      } else {
+        formatted = null
+      }
+
+      return <div>{formatted}</div>
+    }
   },
   {
     accessorKey: "date_modified",
     header: "Date Modified",
+    cell: ({ row }) => {
+      const value = row.getValue("date_modified");
+      let formatted: string | null;
+      if (value instanceof Date) {
+        formatted = value.toLocaleDateString()
+      } else {
+        formatted = null
+      }
+
+      return <div>{formatted}</div>
+    }
   },
   {
     accessorKey: "date_published",
-    header: "Date Pulished"
+    header: "Date Pulished",
+    cell: ({ row }) => {
+      const value = row.getValue("date_published");
+      let formatted: string | null;
+      if (value instanceof Date) {
+        formatted = value.toLocaleDateString()
+      } else {
+        formatted = null
+      }
+
+      return <div>{formatted}</div>
+    }
   }
 ]
 
