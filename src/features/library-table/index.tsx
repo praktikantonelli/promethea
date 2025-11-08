@@ -159,7 +159,7 @@ export const columns: ColumnDef<BookRecord>[] = [
   },
   {
     accessorKey: "date_published",
-    header: "Date Pulishedb"
+    header: "Date Pulished"
   }
 ]
 
