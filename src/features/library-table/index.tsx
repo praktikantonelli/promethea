@@ -119,6 +119,54 @@ export const book_records: BookRecord[] = [
     date_added: new Date(2025, 10, 9),
     date_modified: new Date(2025, 10, 9),
     date_published: new Date(2019, 1, 19)
+  },
+  {
+    book_id: 4,
+    title: "The Two Towers",
+    sort: "Two Towers, The",
+    authors: ["J. R. R. Tolkien"],
+    authors_sort: ["Tolkien, J. R. R."],
+    series_and_volume: [
+      {
+        series: "Middle-Earth",
+        sort: "Middle-Earth",
+        volume: 2
+      },
+      {
+        series: "The Lord of the Rings",
+        sort: "Lord of the Rings, The",
+        volume: 2
+      }
+    ],
+    number_of_pages: 448,
+    goodreads_id: 61215372,
+    date_added: new Date(2025, 10, 9),
+    date_modified: new Date(2025, 10, 9),
+    date_published: new Date(1954, 10, 11)
+  },
+  {
+    book_id: 5,
+    title: "The Return of the King",
+    sort: "Return of the King, The",
+    authors: ["J. R. R. Tolkien"],
+    authors_sort: ["Tolkien, J. R. R."],
+    series_and_volume: [
+      {
+        series: "Middle-Earth",
+        sort: "Middle-Earth",
+        volume: 3
+      },
+      {
+        series: "The Lord of the Rings",
+        sort: "Lord of the Rings, The",
+        volume: 3
+      }
+    ],
+    number_of_pages: 432,
+    goodreads_id: 61215384,
+    date_added: new Date(2025, 10, 9),
+    date_modified: new Date(2025, 10, 9),
+    date_published: new Date(1955, 9, 20)
   }
 ]
 
