@@ -123,6 +123,11 @@ export const columns: ColumnDef<BookRecord>[] = [
           <ArrowUpDown />
         </Button>
       )
+    },
+    sortingFn: (rowA, rowB) => {
+      const a = rowA.original.sort ?? "";
+      const b = rowB.original.sort ?? "";
+      return a.localeCompare(b, undefined, { sensitivity: "base" });
     }
   },
   {
@@ -141,6 +146,11 @@ export const columns: ColumnDef<BookRecord>[] = [
         formatted = null;
       }
       return <div>{formatted}</div>
+    },
+    sortingFn: (rowA, rowB) => {
+      const a = rowA.original.authors_sort[0] ?? "";
+      const b = rowB.original.authors_sort[0] ?? "";
+      return a.localeCompare(b, undefined, { sensitivity: "base" });
     }
   },
   {
