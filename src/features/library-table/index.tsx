@@ -136,7 +136,14 @@ export const columns: ColumnDef<BookRecord>[] = [
   },
   {
     accessorKey: "authors",
-    header: "Authors",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Authors
+          <ArrowUpDown />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const authors = row.getValue("authors");
       let formatted: string | null;
