@@ -106,6 +106,19 @@ export const book_records: BookRecord[] = [
     date_added: new Date(2025, 10, 8),
     date_modified: new Date(2025, 10, 8),
     date_published: new Date(2013, 1, 8)
+  },
+  {
+    book_id: 3,
+    title: "The Sword of Kaigen",
+    sort: "Sword of Kaigen, The",
+    authors: ["M. L. Wang"],
+    authors_sort: ["Wang, M. L."],
+    series_and_volume: [],
+    number_of_pages: 651,
+    goodreads_id: 41886271,
+    date_added: new Date(2025, 10, 9),
+    date_modified: new Date(2025, 10, 9),
+    date_published: new Date(2019, 1, 19)
   }
 ]
 
