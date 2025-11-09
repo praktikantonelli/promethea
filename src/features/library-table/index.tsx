@@ -237,7 +237,14 @@ export const columns: ColumnDef<BookRecord>[] = [
   },
   {
     accessorKey: "series_and_volume",
-    header: "Series and Volume",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Series and Volume
+          <ArrowUpDown />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const series_and_volume: SeriesAndVolume[] = row.getValue("series_and_volume");
       let formatted = series_and_volume.map((element) => `${element.series} #${element.volume}`).join(", ");
