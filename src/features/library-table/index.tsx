@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import {
+  Column,
   ColumnDef,
   ColumnFiltersState,
   flexRender,
@@ -56,6 +57,16 @@ export type BookRecord = {
   date_added: Date
   date_published: Date
   date_modified: Date
+}
+
+function getColumnLabel<TData>(column: Column<BookRecord, unknown>) {
+  const metaLabel = column.columnDef.meta as string | undefined;
+  if (metaLabel) return metaLabel;
+
+  const header = column.columnDef.header;
+  if (typeof header === "string") return header;
+
+  return column.id;
 }
 
 export const book_records: BookRecord[] = [
@@ -244,7 +255,8 @@ export const columns: ColumnDef<BookRecord>[] = [
       const series_and_volume: SeriesAndVolume[] = row.getValue("series_and_volume");
       let formatted = series_and_volume.map((element) => `${element.series} #${element.volume}`).join(", ");
       return <div>{formatted}</div>
-    }
+    },
+    meta: "Series and Volume" // needed to correctly format column name in dropdown-menu
   },
   {
     accessorKey: "number_of_pages",
@@ -356,7 +368,7 @@ export function LibraryTable() {
                     column.toggleVisibility(!!value)
                   }
                 >
-                  {typeof column.columnDef.header === "string" ? column.columnDef.header : column.id}
+                  {getColumnLabel(column)}
                 </DropdownMenuCheckboxItem>
               )
             })}
