@@ -268,7 +268,7 @@ export const columns: ColumnDef<BookRecord>[] = [
     header: "Goodreads ID",
     cell: ({ row }) => {
       const link = `https://goodreads.com/book/show/${row.getValue("goodreads_id")}`;
-      return <a href={link} target="_blank" className="inline-flex">Link to Goodreads<ArrowUpRight size={13} /></a>
+      return <a href={link} target="_blank">Link to Goodreads<ArrowUpRight /></a>
 
     }
   },
