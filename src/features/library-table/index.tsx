@@ -1,6 +1,8 @@
 // see https://ui.shadcn.com/docs/components/data-table
 "use client";
 
+import { invoke } from "@tauri-apps/api/core";
+
 import * as React from "react";
 import {
   Column,
@@ -69,6 +71,8 @@ function getColumnLabel<TData>(column: Column<BookRecord, unknown>) {
 
   return column.id;
 }
+
+export const test_books: BookRecord[] = await invoke("fetch_books");
 
 export const book_records: BookRecord[] = [
   {
@@ -330,7 +334,7 @@ export function LibraryTable() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: book_records,
+    data: test_books,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
