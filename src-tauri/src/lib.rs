@@ -52,13 +52,16 @@ impl AppState {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
 pub struct BookRecord {
     book_id: i64,
     title: String,
     sort: String,
+    #[sqlx(json)]
     authors: Vec<String>,
+    #[sqlx(json)]
     authors_sort: Vec<String>,
+    #[sqlx(json)]
     series_and_volume: Vec<SeriesAndVolume>,
     number_of_pages: u32,
     goodreads_id: u64,
@@ -67,7 +70,7 @@ pub struct BookRecord {
     date_modified: DateTime<Utc>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
 pub struct SeriesAndVolume {
     series: String,
     sort: String,
@@ -98,57 +101,47 @@ impl From<anyhow::Error> for Error {
 }
 
 #[tauri::command]
-async fn test_database(db_state: State<'_, Mutex<Pool<Sqlite>>>) -> Result<BookRecord, String> {
-    let pool = db_state.lock().await;
-    let query = "WITH series_info AS (
+async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, String> {
+    let read_guard = state.db_pool.read().await;
+    if let Some(pool) = &*read_guard {
+        let query = "WITH series_info AS (
+                    SELECT
+                        bsl.book,
+                        json_group_array(
+                            json_object(
+                                'series', s.name, 'sort', s.sort, 'volume', bsl.entry
+                            )
+                        ) series_and_volume
+                    FROM
+                        series AS s
+                        JOIN books_series_link bsl ON bsl.series = s.id
+                    GROUP BY
+                        bsl.book
+                ),
+                authors_info AS (
+                    SELECT
+                        json_group_array(a.name) authors,
+                        json_group_array(a.sort) authors_sort,
+                        bal.book
+                    FROM
+                        authors AS a
+                        JOIN books_authors_link bal ON a.id = bal.author
+                    GROUP BY
+                        bal.book
+                )
                 SELECT
-                    bsl.book,
-                    json_group_array(
-                        json_object(
-                            'series', s.name, 'sort', s.sort, 'volume', bsl.entry
-                        )
-                    ) series_and_volume
+                    id, title, sort, date_added, date_published, last_modified, number_of_pages, goodreads_id, authors, authors_sort, series_and_volume
                 FROM
-                    series AS s
-                    JOIN books_series_link bsl ON bsl.series = s.id
-                GROUP BY
-                    bsl.book
-            ),
-            authors_info AS (
-                SELECT
-                    json_group_array(a.name) authors,
-                    json_group_array(a.sort) authors_sort,
-                    bal.book
-                FROM
-                    authors AS a
-                    JOIN books_authors_link bal ON a.id = bal.author
-                GROUP BY
-                    bal.book
-            )
-            SELECT
-                id, title, sort, date_added, date_published, last_modified, number_of_pages, goodreads_id, authors, authors_sort, series_and_volume
-            FROM
-                books
-                LEFT JOIN series_info ON series_info.book = books.id
-                JOIN authors_info ON authors_info.book = books.id
-            ORDER BY
-                books.date_added ASC";
-    match sqlx::query(query).fetch_one(&*pool).await {
-        Ok(row) => Ok(BookRecord {
-            book_id: row.get("id"),
-            title: row.get("title"),
-            sort: row.get("sort"),
-            authors: serde_json::from_str(row.get("authors")).unwrap(),
-            authors_sort: serde_json::from_str(row.get("authors_sort")).unwrap(),
-            series_and_volume: serde_json::from_str(row.get("series_and_volume")).unwrap(),
-            number_of_pages: row.get("number_of_pages"),
-            goodreads_id: row.get("goodreads_id"),
-            date_added: row.get("date_added"),
-            date_published: row.get("date_published"),
-            date_modified: row.get("date_modified"),
-        }),
-        Err(e) => Err(e.to_string()),
+                    books
+                    LEFT JOIN series_info ON series_info.book = books.id
+                    JOIN authors_info ON authors_info.book = books.id
+                ORDER BY
+                    books.date_added ASC";
+        let books: Vec<BookRecord> = sqlx::query_as(query).fetch_all(pool).await.unwrap();
+        return Ok(books);
     }
+
+    Err(String::from("Database pool unavailable"))
 }
 
 #[tauri::command]
@@ -244,7 +237,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             create_new_db,
             open_existing_db,
-            get_init_status
+            get_init_status,
+            fetch_books
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
