@@ -1,4 +1,3 @@
-import BuiltWith from '@/features/built-with';
 import NoDatabaseDialog from '@/features/no-database-dialog';
 import { LibraryTable } from '@/features/library-table';
 
