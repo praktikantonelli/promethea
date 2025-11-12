@@ -284,8 +284,11 @@ export const columns: ColumnDef<BookRecord>[] = [
       let formatted: string | null;
       if (value instanceof Date) {
         formatted = value.toLocaleDateString()
+      } else if (typeof value === "string") {
+        let date = new Date(value);
+        formatted = date.toLocaleDateString();
       } else {
-        formatted = null
+        formatted = null;
       }
 
       return <div>{formatted}</div>
@@ -299,8 +302,11 @@ export const columns: ColumnDef<BookRecord>[] = [
       let formatted: string | null;
       if (value instanceof Date) {
         formatted = value.toLocaleDateString()
+      } else if (typeof value === "string") {
+        let date = new Date(value);
+        formatted = date.toLocaleDateString();
       } else {
-        formatted = null
+        formatted = null;
       }
 
       return <div>{formatted}</div>
@@ -314,6 +320,9 @@ export const columns: ColumnDef<BookRecord>[] = [
       let formatted: string | null;
       if (value instanceof Date) {
         formatted = value.toLocaleDateString()
+      } else if (typeof value === "string") {
+        let date = new Date(value);
+        formatted = date.toLocaleDateString();
       } else {
         formatted = null
       }
