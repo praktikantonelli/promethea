@@ -62,7 +62,7 @@ export type BookRecord = {
   date_modified: Date
 }
 
-function getColumnLabel<TData>(column: Column<BookRecord, unknown>) {
+function getColumnLabel(column: Column<BookRecord, unknown>) {
   const metaLabel = column.columnDef.meta as string | undefined;
   if (metaLabel) return metaLabel;
 
