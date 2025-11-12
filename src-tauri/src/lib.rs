@@ -130,7 +130,7 @@ async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, Stri
                         bal.book
                 )
                 SELECT
-                    id, title, sort, date_added, date_published, last_modified, number_of_pages, goodreads_id, authors, authors_sort, series_and_volume
+                    id AS book_id, title, sort, date_added, date_published, last_modified AS date_modified, number_of_pages, goodreads_id, authors, authors_sort, CASE WHEN series_and_volume IS NULL OR trim(series_and_volume) = '' THEN '[]' WHEN json_valid(series_and_volume) = 1 THEN series_and_volume ELSE '[]' END AS series_and_volume
                 FROM
                     books
                     LEFT JOIN series_info ON series_info.book = books.id
