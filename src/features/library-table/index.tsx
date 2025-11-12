@@ -308,7 +308,7 @@ export const columns: ColumnDef<BookRecord>[] = [
   },
   {
     accessorKey: "date_published",
-    header: "Date Pulished",
+    header: "Date Published",
     cell: ({ row }) => {
       const value = row.getValue("date_published");
       let formatted: string | null;
