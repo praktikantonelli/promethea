@@ -1,12 +1,12 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use sqlx::{sqlite::SqliteConnectOptions, Pool, Row, Sqlite, SqlitePool};
+use sqlx::{sqlite::SqliteConnectOptions, SqlitePool};
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager, State};
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_plugin_store::StoreExt;
-use tokio::sync::{Mutex, RwLock};
+use tokio::sync::RwLock;
 
 const APP_CONFIG_PATH: &str = "promethea-config.json";
 const LIBRARY_DATABASE_NAME: &str = "library.db";
