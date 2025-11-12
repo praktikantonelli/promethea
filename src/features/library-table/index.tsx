@@ -72,114 +72,7 @@ function getColumnLabel(column: Column<BookRecord, unknown>) {
   return column.id;
 }
 
-export const test_books: BookRecord[] = await invoke("fetch_books");
-
-export const book_records: BookRecord[] = [
-  {
-    book_id: 1,
-    title: "The Fellowship of the Ring",
-    sort: "Fellowship of the Ring, The",
-    authors: ["J. R. R. Tolkien"],
-    authors_sort: ["Tolkien, J. R. R."],
-    series_and_volume: [
-      {
-        series: "Middle-Earth",
-        sort: "Middle-Earth",
-        volume: 1
-      },
-      {
-        series: "The Lord of the Rings",
-        sort: "Lord of the Rings, The",
-        volume: 1
-      }
-    ],
-    number_of_pages: 432,
-    goodreads_id: 61215351,
-    date_added: new Date(2025, 10, 8),
-    date_modified: new Date(2025, 10, 8),
-    date_published: new Date(1954, 7, 29)
-  },
-  {
-    book_id: 2,
-    title: "A Memory of Light",
-    sort: "Memory of Light, A",
-    authors: ["Robert Jordan", "Brandon Sanderson"],
-    authors_sort: ["Jordan, Robert", "Sanderson, Brandon"],
-    series_and_volume: [
-      {
-        series: "Wheel of Time",
-        sort: "Wheel of Time",
-        volume: 14
-      },
-    ],
-    number_of_pages: 912,
-    goodreads_id: 7743175,
-    date_added: new Date(2025, 10, 8),
-    date_modified: new Date(2025, 10, 8),
-    date_published: new Date(2013, 1, 8)
-  },
-  {
-    book_id: 3,
-    title: "The Sword of Kaigen",
-    sort: "Sword of Kaigen, The",
-    authors: ["M. L. Wang"],
-    authors_sort: ["Wang, M. L."],
-    series_and_volume: [],
-    number_of_pages: 651,
-    goodreads_id: 41886271,
-    date_added: new Date(2025, 10, 9),
-    date_modified: new Date(2025, 10, 9),
-    date_published: new Date(2019, 1, 19)
-  },
-  {
-    book_id: 4,
-    title: "The Two Towers",
-    sort: "Two Towers, The",
-    authors: ["J. R. R. Tolkien"],
-    authors_sort: ["Tolkien, J. R. R."],
-    series_and_volume: [
-      {
-        series: "Middle-Earth",
-        sort: "Middle-Earth",
-        volume: 2
-      },
-      {
-        series: "The Lord of the Rings",
-        sort: "Lord of the Rings, The",
-        volume: 2
-      }
-    ],
-    number_of_pages: 448,
-    goodreads_id: 61215372,
-    date_added: new Date(2025, 10, 9),
-    date_modified: new Date(2025, 10, 9),
-    date_published: new Date(1954, 10, 11)
-  },
-  {
-    book_id: 5,
-    title: "The Return of the King",
-    sort: "Return of the King, The",
-    authors: ["J. R. R. Tolkien"],
-    authors_sort: ["Tolkien, J. R. R."],
-    series_and_volume: [
-      {
-        series: "Middle-Earth",
-        sort: "Middle-Earth",
-        volume: 3
-      },
-      {
-        series: "The Lord of the Rings",
-        sort: "Lord of the Rings, The",
-        volume: 3
-      }
-    ],
-    number_of_pages: 432,
-    goodreads_id: 61215384,
-    date_added: new Date(2025, 10, 9),
-    date_modified: new Date(2025, 10, 9),
-    date_published: new Date(1955, 9, 20)
-  }
-]
+export const book_records: BookRecord[] = await invoke("fetch_books");
 
 export const columns: ColumnDef<BookRecord>[] = [
   {
@@ -343,7 +236,7 @@ export function LibraryTable() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: test_books,
+    data: book_records,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
