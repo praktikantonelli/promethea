@@ -136,3 +136,10 @@ pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, 
 
     Err(String::from("Database pool unavailable"))
 }
+
+#[tauri::command]
+pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), Error> {
+    log::info!("Received request to add book from {path:?}");
+
+    Ok(())
+}
