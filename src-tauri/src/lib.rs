@@ -1,4 +1,4 @@
-use crate::database::{create_new_db, fetch_books, get_init_status, open_existing_db};
+use crate::database::{add_book, create_new_db, fetch_books, get_init_status, open_existing_db};
 use crate::state::{AppState, APP_CONFIG_PATH};
 use std::path::PathBuf;
 use tauri::Manager;
@@ -56,7 +56,8 @@ pub fn run() {
             create_new_db,
             open_existing_db,
             get_init_status,
-            fetch_books
+            fetch_books,
+            add_book
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
