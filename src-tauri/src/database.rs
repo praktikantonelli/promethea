@@ -1,6 +1,7 @@
 use crate::errors::Error;
 use crate::state::{AppState, APP_CONFIG_PATH, LIBRARY_DATABASE_NAME};
 use chrono::{DateTime, Utc};
+use epub::doc::EpubDoc;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::path::PathBuf;
@@ -140,6 +141,20 @@ pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, 
 #[tauri::command]
 pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), Error> {
     log::info!("Received request to add book from {path:?}");
+
+    let doc = EpubDoc::new(path).unwrap();
+    dbg!(&doc.metadata);
+
+    let title = doc.get_title().unwrap();
+    let authors = doc
+        .metadata
+        .iter()
+        .filter(|e| e.property == "creator")
+        .map(|e| e.value.clone())
+        .collect::<Vec<String>>();
+
+    dbg!(title);
+    dbg!(authors);
 
     Ok(())
 }

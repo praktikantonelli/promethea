@@ -37,3 +37,4 @@ tokio = { version = "1.47.1", features = ["macros", "rt-multi-thread"] }
 chrono = { version = "0.4.42", features = ["serde"] }
 anyhow = { version = "1.0.100" }
 tauri-plugin-process = "2"
+epub = { version = "2.1.5" }
