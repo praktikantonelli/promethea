@@ -2,6 +2,7 @@ use crate::errors::Error;
 use crate::state::{AppState, APP_CONFIG_PATH, LIBRARY_DATABASE_NAME};
 use chrono::{DateTime, Utc};
 use epub::doc::EpubDoc;
+use grscraper::MetadataRequestBuilder;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::path::PathBuf;
@@ -153,8 +154,15 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
         .map(|e| e.value.clone())
         .collect::<Vec<String>>();
 
-    dbg!(title);
-    dbg!(authors);
+    let metadata = MetadataRequestBuilder::default()
+        .with_title(&title)
+        .with_author(authors.first().unwrap())
+        .execute()
+        .await
+        .unwrap()
+        .unwrap();
+
+    dbg!(metadata);
 
     Ok(())
 }

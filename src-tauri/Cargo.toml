@@ -38,3 +38,4 @@ chrono = { version = "0.4.42", features = ["serde"] }
 anyhow = { version = "1.0.100" }
 tauri-plugin-process = "2"
 epub = { version = "2.1.5" }
+goodreads-metadata-scraper = "0.2.4"
