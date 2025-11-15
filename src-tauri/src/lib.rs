@@ -22,6 +22,8 @@ pub fn run() {
             // Let app manage SQLite database state
             let (tauri_plugin_log, max_level, logger) = tauri_plugin_log::Builder::default()
                 .with_colors(ColoredLevelConfig::default())
+                .level(log::LevelFilter::Info)
+                .level_for("promethea", log::LevelFilter::Trace)
                 .split(app.handle())?;
 
             if cfg!(debug_assertions) {
