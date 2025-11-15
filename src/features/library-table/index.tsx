@@ -72,8 +72,6 @@ function getColumnLabel(column: Column<BookRecord, unknown>) {
   return column.id;
 }
 
-export const book_records: BookRecord[] = await invoke("fetch_books");
-
 export const columns: ColumnDef<BookRecord>[] = [
   {
     accessorKey: "book_id",
@@ -226,6 +224,35 @@ export const columns: ColumnDef<BookRecord>[] = [
 ]
 
 export function LibraryTable() {
+  const [data, setData] = React.useState<BookRecord[]>([]);
+
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<unknown>(null);
+
+  React.useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        setLoading(true);
+        const result = await invoke<BookRecord[]>("fetch_books");
+        if (!cancelled) {
+          setData(result);
+        }
+      } catch (e) {
+        if (!cancelled) setError(e);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
@@ -236,7 +263,7 @@ export function LibraryTable() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: book_records,
+    data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
