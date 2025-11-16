@@ -1,4 +1,4 @@
 [workspace]
 
-members = ["crates/desktop", "crates/core", "crates/server"]
+members = ["crates/desktop", "crates/promethea_core", "crates/server"]
 resolver = "2"
