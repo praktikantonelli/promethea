@@ -24,3 +24,6 @@ dist-ssr
 
 # direnv flake profiles
 .direnv
+
+# target folder in backend workspace
+*/target/*
