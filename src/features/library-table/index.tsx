@@ -162,8 +162,9 @@ export const columns: ColumnDef<BookRecord>[] = [
     accessorKey: "goodreads_id",
     header: "Goodreads ID",
     cell: ({ row }) => {
-      const link = `https://goodreads.com/book/show/${row.getValue("goodreads_id")}`;
-      return <a href={link} target="_blank" className="inline-flex">Link to Goodreads<ArrowUpRight size={13} /></a>
+      const id: string = row.getValue("goodreads_id");
+      const link = `https://goodreads.com/book/show/${id}`;
+      return <a href={link} target="_blank" className="inline-flex">{id}<ArrowUpRight size={13} /></a>
 
     }
   },
