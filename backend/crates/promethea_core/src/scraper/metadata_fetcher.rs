@@ -331,10 +331,10 @@ mod tests {
 
     #[tokio::test]
     async fn fetch_metadata_test() {
-        let expected_series = Some(vec![BookSeries::new(
+        let expected_series = vec![BookSeries::new(
             "Percy Jackson and the Olympians".to_string(),
             5.0,
-        )]);
+        )];
         let expected_contributors = vec![BookContributor::new(
             "Rick Riordan".to_string(),
             "Author".to_string(),
@@ -366,7 +366,7 @@ mod tests {
             Some("1423101472".to_string()),
             expected_contributors,
             expected_genres,
-            expected_series.unwrap(),
+            expected_series,
             Some(381),
             Some("English".to_string()),
             Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_string()),
