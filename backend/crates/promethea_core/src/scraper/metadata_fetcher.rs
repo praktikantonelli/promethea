@@ -34,6 +34,8 @@ pub struct BookMetadata {
     pub language: Option<String>,
     /// A URL to an image of the book's cover, if available.
     pub image_url: Option<String>,
+    /// The ID with which the book's metadata has been fetched
+    pub goodreads_id: Option<String>,
 }
 
 /// Represents an individual who contributed to the book, such as an author or editor.
@@ -69,6 +71,7 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
     let page_count = extract_page_count(&metadata, &amazon_id);
     let language = extract_language(&metadata, &amazon_id);
     let series = extract_series(&metadata, &amazon_id);
+    let goodreads_id = Some(goodreads_id.to_string());
 
     let metadata = BookMetadata::new(
         title,
@@ -83,6 +86,7 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
         page_count,
         language,
         image_url,
+        goodreads_id,
     );
 
     Ok(metadata)
@@ -361,6 +365,7 @@ mod tests {
             Some(381),
             Some("English".to_string()),
             Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_string()),
+            Some(String::from("4556058")),
         );
 
         let metadata = fetch_metadata("4556058").await.unwrap();
