@@ -3773,6 +3773,7 @@ dependencies = [
  "epub",
  "goodreads-metadata-scraper",
  "log",
+ "promethea_core",
  "serde",
  "serde_json",
  "sqlx",

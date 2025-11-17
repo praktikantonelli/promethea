@@ -2,7 +2,7 @@ use crate::errors::Error;
 use crate::state::{AppState, APP_CONFIG_PATH, LIBRARY_DATABASE_NAME};
 use chrono::{DateTime, Utc};
 use epub::doc::EpubDoc;
-use grscraper::MetadataRequestBuilder;
+use promethea_core::scraper::request_builder::MetadataRequestBuilder;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::path::PathBuf;
