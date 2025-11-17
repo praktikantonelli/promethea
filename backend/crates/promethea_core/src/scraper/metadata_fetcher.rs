@@ -26,8 +26,8 @@ pub struct BookMetadata {
     pub contributors: Vec<BookContributor>,
     /// A list of genres associated with the book.
     pub genres: Vec<String>,
-    /// The series information, if the book is part of a series, represented as a `BookSeries`.
-    pub series: Option<BookSeries>,
+    /// A list of series information, if the book is part of a series, represented as a `BookSeries`.
+    pub series: Vec<BookSeries>,
     /// The number of pages in the book, if available.
     pub page_count: Option<i64>,
     /// The language of the book, if available.
@@ -70,7 +70,7 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
     let isbn = extract_isbn(&metadata, &amazon_id);
     let page_count = extract_page_count(&metadata, &amazon_id);
     let language = extract_language(&metadata, &amazon_id);
-    let series = extract_series(&metadata, &amazon_id);
+    let series = extract_series(&metadata, &amazon_id)?;
     let goodreads_id = Some(goodreads_id.to_string());
 
     let metadata = BookMetadata::new(
@@ -282,33 +282,38 @@ fn extract_language(metadata: &Value, amazon_id: &str) -> Option<String> {
     to_string(language)
 }
 
-fn extract_series(metadata: &Value, amazon_id: &str) -> Option<BookSeries> {
-    let series_array =
-        metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookSeries"].as_array()?;
+fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, ScraperError> {
+    let series_array = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookSeries"]
+        .as_array()
+        .unwrap();
 
-    let series = series_array.first()?;
+    let series_info = series_array
+        .iter()
+        .filter_map(|series| {
+            let Some(position) = series["userPosition"]
+                .as_str()
+                .map(|s| s.split('-').next().unwrap_or(""))
+                .and_then(|s| s.parse::<f32>().ok())
+            else {
+                warn!("Failed to parse series number");
+                return None;
+            };
 
-    let Some(position) = series["userPosition"]
-        .as_str()
-        .map(|s| s.split('-').next().unwrap_or(""))
-        .and_then(|s| s.parse::<f32>().ok())
-    else {
-        warn!("Failed to parse series number");
-        return None;
-    };
+            let Some(key) = to_string(&series["series"]["__ref"]) else {
+                warn!("Failed to parse series key");
+                return None;
+            };
 
-    let Some(key) = to_string(&series["series"]["__ref"]) else {
-        warn!("Failed to parse series key");
-        return None;
-    };
+            let title = &metadata["props"]["pageProps"]["apolloState"][key]["title"];
+            let Some(title) = to_string(title) else {
+                warn!("Failed to parse series title");
+                return None;
+            };
 
-    let title = &metadata["props"]["pageProps"]["apolloState"][key]["title"];
-    let Some(title) = to_string(title) else {
-        warn!("Failed to parse series title");
-        return None;
-    };
-
-    Some(BookSeries::new(title, position))
+            Some(BookSeries::new(title, position))
+        })
+        .collect::<Vec<BookSeries>>();
+    Ok(series_info)
 }
 
 fn to_string(value: &Value) -> Option<String> {
@@ -326,10 +331,10 @@ mod tests {
 
     #[tokio::test]
     async fn fetch_metadata_test() {
-        let expected_series = Some(BookSeries::new(
+        let expected_series = Some(vec![BookSeries::new(
             "Percy Jackson and the Olympians".to_string(),
             5.0,
-        ));
+        )]);
         let expected_contributors = vec![BookContributor::new(
             "Rick Riordan".to_string(),
             "Author".to_string(),
@@ -361,7 +366,7 @@ mod tests {
             Some("1423101472".to_string()),
             expected_contributors,
             expected_genres,
-            expected_series,
+            expected_series.unwrap(),
             Some(381),
             Some("English".to_string()),
             Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_string()),
