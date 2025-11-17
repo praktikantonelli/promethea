@@ -3810,7 +3810,6 @@ name = "promethea_core"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "derive-new",
  "log",
  "pretty_assertions",
  "regex",

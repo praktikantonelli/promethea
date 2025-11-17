@@ -1,6 +1,5 @@
 use crate::scraper::errors::ScraperError;
 use chrono::{DateTime, Utc};
-use derive_new::new;
 use log::{error, warn};
 use regex::Regex;
 use reqwest::get;
@@ -39,7 +38,7 @@ pub struct BookMetadata {
 }
 
 /// Represents an individual who contributed to the book, such as an author or editor.
-#[derive(Debug, new, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct BookContributor {
     /// The name of the contributor.
     pub name: String,
@@ -48,7 +47,7 @@ pub struct BookContributor {
 }
 
 /// Represents series information for a book, including the series title and book's position within the series.
-#[derive(Debug, new, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct BookSeries {
     /// The title of the series.
     pub title: String,
@@ -207,7 +206,7 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
         warn!("Failed to parse contributor");
     }
 
-    name.map(|n| BookContributor::new(n, role))
+    name.map(|n| BookContributor { name: n, role })
 }
 
 fn extract_genres(metadata: &Value, amazon_id: &str) -> Vec<String> {
@@ -288,7 +287,7 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, 
     let series_info = series_array
         .iter()
         .filter_map(|series| {
-            let Some(position) = series["userPosition"]
+            let Some(number) = series["userPosition"]
                 .as_str()
                 .map(|s| s.split('-').next().unwrap_or(""))
                 .and_then(|s| s.parse::<f32>().ok())
@@ -308,7 +307,7 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, 
                 return None;
             };
 
-            Some(BookSeries::new(title, position))
+            Some(BookSeries { title, number })
         })
         .collect::<Vec<BookSeries>>();
     Ok(series_info)
@@ -331,14 +330,23 @@ mod tests {
     #[tokio::test]
     async fn fetch_metadata_test() {
         let expected_series = vec![
-            BookSeries::new("Percy Jackson and the Olympians".to_string(), 5.0),
-            BookSeries::new("Camp Half-Blood Chronicles".to_string(), 5.0),
-            BookSeries::new("Coleccionable Percy Jackson".to_string(), 5.0),
+            BookSeries {
+                title: "Percy Jackson and the Olympians".to_string(),
+                number: 5.0,
+            },
+            BookSeries {
+                title: "Camp Half-Blood Chronicles".to_string(),
+                number: 5.0,
+            },
+            BookSeries {
+                title: "Coleccionable Percy Jackson".to_string(),
+                number: 5.0,
+            },
         ];
-        let expected_contributors = vec![BookContributor::new(
-            "Rick Riordan".to_string(),
-            "Author".to_string(),
-        )];
+        let expected_contributors = vec![BookContributor {
+            name: "Rick Riordan".to_string(),
+            role: "Author".to_string(),
+        }];
         let expected_genres = vec![
             "Fantasy".to_string(),
             "Young Adult".to_string(),
