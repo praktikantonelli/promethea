@@ -326,13 +326,15 @@ fn to_string(value: &Value) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[tokio::test]
     async fn fetch_metadata_test() {
-        let expected_series = vec![BookSeries::new(
-            "Percy Jackson and the Olympians".to_string(),
-            5.0,
-        )];
+        let expected_series = vec![
+            BookSeries::new("Percy Jackson and the Olympians".to_string(), 5.0),
+            BookSeries::new("Camp Half-Blood Chronicles".to_string(), 5.0),
+            BookSeries::new("Coleccionable Percy Jackson".to_string(), 5.0),
+        ];
         let expected_contributors = vec![BookContributor::new(
             "Rick Riordan".to_string(),
             "Author".to_string(),
