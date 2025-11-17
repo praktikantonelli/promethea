@@ -8,7 +8,7 @@ use scraper::{Html, Selector};
 use serde_json::Value;
 
 /// The primary data structure containing the metadata of a book.
-#[derive(Debug, new, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct BookMetadata {
     /// The main title of the book.
     pub title: String,
@@ -73,7 +73,7 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
     let series = extract_series(&metadata, &amazon_id)?;
     let goodreads_id = Some(goodreads_id.to_string());
 
-    let metadata = BookMetadata::new(
+    Ok(BookMetadata {
         title,
         subtitle,
         description,
@@ -87,9 +87,7 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
         language,
         image_url,
         goodreads_id,
-    );
-
-    Ok(metadata)
+    })
 }
 
 async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError> {
@@ -351,27 +349,28 @@ mod tests {
             "Urban Fantasy".to_string(),
             "Childrens".to_string(),
         ];
-        let expected_metadata = BookMetadata::new(
-            "The Last Olympian".to_string(),
-            None,
-            Some("All year the half-bloods have been preparing for battle against the Titans, knowing the odds of victory are grim. \
+        let expected_metadata = BookMetadata {
+            title: "The Last Olympian".to_string(),
+            subtitle: None,
+            description: Some("All year the half-bloods have been preparing for battle against the Titans, knowing the odds of victory are grim. \
             Kronos's army is stronger than ever, and with every god and half-blood he recruits, the evil Titan's power only grows.\
             <br /><br />While the Olympians struggle to contain the rampaging monster Typhon, Kronos begins his advance on New York City, \
             where Mount Olympus stands virtually unguarded. Now it's up to Percy Jackson and an army of young demigods to stop the Lord of Time. \
             <br /><br />In this momentous final book in the <i>New York Times</i> best-selling series, the long-awaited prophecy surrounding \
             Percy's sixteenth birthday unfolds. And as the battle for Western civilization rages on the streets of Manhattan, Percy faces a \
             terrifying suspicion that he may be fighting against his own fate.".to_string()),
-            Some("Disney-Hyperion Books".to_string()),
-            Some(DateTime::parse_from_rfc3339("2009-05-05T07:00:00Z").unwrap().to_utc()),
-            Some("1423101472".to_string()),
-            expected_contributors,
-            expected_genres,
-            expected_series,
-            Some(381),
-            Some("English".to_string()),
-            Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_string()),
-            Some(String::from("4556058")),
-        );
+            publisher: Some("Disney-Hyperion Books".to_string()),
+            publication_date: Some(DateTime::parse_from_rfc3339("2009-05-05T07:00:00Z").unwrap().to_utc()),
+            isbn: Some("1423101472".to_string()),
+            contributors: expected_contributors,
+            genres: expected_genres,
+            series: expected_series,
+            page_count: Some(381),
+            language: Some("English".to_string()),
+            image_url: Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_string()),
+            goodreads_id: Some(String::from("4556058")),
+
+        };
 
         let metadata = fetch_metadata("4556058").await.unwrap();
         assert_eq!(metadata, expected_metadata);
