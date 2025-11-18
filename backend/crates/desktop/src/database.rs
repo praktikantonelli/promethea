@@ -154,15 +154,16 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
         .map(|e| e.value.clone())
         .collect::<Vec<String>>();
 
-    let metadata = MetadataRequestBuilder::default()
+    let request = MetadataRequestBuilder::default()
         .with_title(&title)
-        .with_author(authors.first().unwrap())
-        .execute()
-        .await
-        .unwrap()
-        .unwrap();
+        .with_author(authors.first().unwrap());
 
-    dbg!(metadata);
+    match request.execute().await.unwrap() {
+        Some(metadata) => {
+            dbg!(metadata);
+        }
+        None => log::info!("No metadata found for this book"),
+    }
 
     Ok(())
 }
