@@ -143,6 +143,7 @@ pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, 
 pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), Error> {
     log::info!("Received request to add book from {path:?}");
 
+    // Extract bare minimum metadata (title + author(s)) from EPUB file
     let doc = EpubDoc::new(path).unwrap();
     dbg!(&doc.metadata);
 
@@ -154,6 +155,8 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
         .map(|e| e.value.clone())
         .collect::<Vec<String>>();
 
+    // Use those title and author(s) to find the appropriate book on Goodreads and scrape it for
+    // more data
     let request = MetadataRequestBuilder::default()
         .with_title(&title)
         .with_author(authors.first().unwrap());
@@ -164,6 +167,8 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
         }
         None => log::info!("No metadata found for this book"),
     }
+
+    // Assemble data into SQL query
 
     Ok(())
 }
