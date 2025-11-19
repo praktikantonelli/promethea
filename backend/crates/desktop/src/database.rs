@@ -173,6 +173,21 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
     // Basic logic: Upsert new book title, author(s) name(s) and series title(s), meaning try to
     // insert and then fetch resulting ID, do not insert if already present and fetch previously
     // existing ID.
+    //
+    // In SQLite, upsert either with
+    //
+    // INSERT INTO series (name)
+    // VALUES (?)
+    // ON CONFLICT(name) DO
+    // UPDATE SET name = excluded.name RETURNING id;
+    //
+    // or
+    //
+    // INSERT OR IGNORE INTO series (name) VALUES (?);
+    // SELECT id FROM series WHERE name = ?;
+    //
+    // After doing that for books, authors and series, take all IDs and update linking tables. Wrap
+    // all queries between one BEGIN; and one COMMIT;
 
     // For sorting, define helper functions for common stuff like titles starting with "The", "A",
     // "An", and for authors try "Lastname, Firstname"
