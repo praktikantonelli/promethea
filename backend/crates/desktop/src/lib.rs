@@ -11,6 +11,9 @@ mod state;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    let enable_devtools = std::env::var("ENABLE_DEVTOOLS")
+        .map(|v| v == "true" || v == "1")
+        .unwrap_or(false);
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_opener::init())
@@ -18,20 +21,29 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init());
     builder
         .manage(AppState::new())
-        .setup(|app| {
+        .setup(move |app| {
             // Let app manage SQLite database state
             let (tauri_plugin_log, max_level, logger) = tauri_plugin_log::Builder::default()
                 .with_colors(ColoredLevelConfig::default())
                 .level(log::LevelFilter::Info)
-                .level_for("promethea", log::LevelFilter::Trace)
+                .level_for("promethea", log::LevelFilter::Info)
                 .split(app.handle())?;
 
-            if cfg!(debug_assertions) {
-                // With debug assertions, use CrabNebula dev tools plugin
-                let mut devtools_builder = tauri_plugin_devtools::Builder::default();
-                devtools_builder.attach_logger(logger);
-                app.handle().plugin(devtools_builder.init())?;
-            } else {
+            #[cfg(debug_assertions)]
+            {
+                if enable_devtools {
+                    println!("DevTools enabled via .env");
+                    // With debug assertions, use CrabNebula dev tools plugin
+                    let mut devtools_builder = tauri_plugin_devtools::Builder::default();
+                    devtools_builder.attach_logger(logger);
+                    app.handle().plugin(devtools_builder.init())?;
+                } else {
+                    println!("DevTools disabled via .env");
+                    tauri_plugin_log::attach_logger(max_level, logger)?;
+                }
+            }
+            #[cfg(not(debug_assertions))]
+            {
                 // Without debug assertions, use regular logger plugin
                 tauri_plugin_log::attach_logger(max_level, logger)?;
             }

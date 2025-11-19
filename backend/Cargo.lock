@@ -3786,6 +3786,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "chrono",
+ "dotenvy",
  "epub",
  "goodreads-metadata-scraper",
  "log",
