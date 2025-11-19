@@ -170,5 +170,12 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
 
     // Assemble data into SQL query
 
+    // Basic logic: Upsert new book title, author(s) name(s) and series title(s), meaning try to
+    // insert and then fetch resulting ID, do not insert if already present and fetch previously
+    // existing ID.
+
+    // For sorting, define helper functions for common stuff like titles starting with "The", "A",
+    // "An", and for authors try "Lastname, Firstname"
+
     Ok(())
 }
