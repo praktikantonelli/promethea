@@ -1,5 +1,4 @@
 use promethea_core::database::queries::Db;
-use sqlx::{sqlite::SqliteConnectOptions, SqlitePool};
 use std::path::PathBuf;
 use tokio::sync::RwLock;
 

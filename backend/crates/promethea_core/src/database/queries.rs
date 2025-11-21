@@ -10,7 +10,7 @@ impl Db {
     pub async fn init(path: &Path) -> Result<Self, sqlx::Error> {
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
-            .filename(path.clone());
+            .filename(path);
         let pool = SqlitePool::connect_with(options).await?;
         sqlx::migrate!("src\\database\\migrations")
             .run(&pool)
