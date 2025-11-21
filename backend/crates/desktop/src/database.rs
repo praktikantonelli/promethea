@@ -1,7 +1,6 @@
 use crate::errors::Error;
 use crate::state::{AppState, APP_CONFIG_PATH, LIBRARY_DATABASE_NAME};
 use epub::doc::EpubDoc;
-use promethea_core::database::queries::fetch_books_query;
 use promethea_core::database::types::BookRecord;
 use promethea_core::scraper::request_builder::MetadataRequestBuilder;
 use serde::{Deserialize, Serialize};
@@ -55,7 +54,7 @@ pub async fn open_existing_db(
 
 #[tauri::command]
 pub async fn get_init_status(state: State<'_, AppState>) -> Result<DbInitStatus, ()> {
-    if state.db_pool.read().await.is_some() {
+    if state.db.read().await.is_some() {
         Ok(DbInitStatus::Loaded)
     } else {
         Ok(DbInitStatus::NeedsSetup {
@@ -66,9 +65,9 @@ pub async fn get_init_status(state: State<'_, AppState>) -> Result<DbInitStatus,
 
 #[tauri::command]
 pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, String> {
-    let read_guard = state.db_pool.read().await;
-    if let Some(pool) = &*read_guard {
-        let books = fetch_books_query(pool);
+    let read_guard = state.db.read().await;
+    if let Some(db) = &*read_guard {
+        let books = db.fetch_books_query();
         return books.await.map_err(|e| format!("Failed to run query: {e}"));
     }
 
