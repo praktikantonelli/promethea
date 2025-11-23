@@ -14,6 +14,21 @@ fn get_name_sort(author_name: String) -> String {
     String::new()
 }
 
+fn get_title_sort(title: String) -> String {
+    // Required patterns:
+    // the everythingelse -> everythingelse, the e.g. The Hobbit
+    // a everythingelse -> everythingelse, a e.g. A Game of Thrones
+    // an everythingelse -> everythingelse, an e.g. An Echo of Thigns to Come
+    if let Some(prefix) = title.split_whitespace().next() {
+        if ["A", "An", "The"].contains(&prefix) {
+            let remainder = title.replace(prefix, "");
+            let trimmed_remainder = remainder.trim();
+            return format!("{trimmed_remainder}, {prefix}");
+        }
+    }
+    title
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -38,5 +53,37 @@ mod tests {
         ];
 
         assert_eq!(results, expected);
+    }
+
+    #[test]
+    fn test_titles() {
+        let titles = [
+            String::from("A Game of Thrones"),
+            String::from("An Echo of Things to Come"),
+            String::from("The Hobbit"),
+            String::from("Neverwhere"),
+            String::from("I Am Not A Serial Killer"),
+            String::from("Mr Monster"),
+            String::from("The Hero of Ages"),
+            String::from("The Great Hunt"),
+        ];
+
+        let expected = vec![
+            String::from("Game of Thrones, A"),
+            String::from("Echo of Things to Come, An"),
+            String::from("Hobbit, The"),
+            String::from("Neverwhere"),
+            String::from("I Am Not A Serial Killer"),
+            String::from("Mr Monster"),
+            String::from("Hero of Ages, The"),
+            String::from("Great Hunt, The"),
+        ];
+
+        let results: Vec<String> = titles
+            .iter()
+            .map(|title| get_title_sort(title.to_owned()))
+            .collect();
+
+        assert_eq!(expected, results);
     }
 }
