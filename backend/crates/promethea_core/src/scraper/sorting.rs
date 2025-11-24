@@ -10,6 +10,15 @@ fn get_name_sort(author_name: String) -> String {
     // f. lastname otherlastname        ->      lastname otherlastname, f. e.g. R. Scott Bakker
     // singlename                       ->      singlename e.g. Baosu
     // firstname f. prefix lastname     ->      lastname, firstname f. prefix e.g. Ursula K. Le Guin
+    //
+    // INFO: firstname middlename lastname and firstname lastname otherlastname cannot be reliably
+    // distinguished, e.g., Orson Scott Card -> Scott is middle name, but H. Jon Benjamin -> Jon is
+    // middle name. And Scott can be both a first or last name, so you also can't just keep a list
+    // of common first or last names either.
+    // Solution: Assume the pattern "firstname name lastname" has a middle name because that's much
+    // more common. This will lead to wrong results with names like Lois McMaster Bujold, but
+    // that's okay. Before calling this function, check the database for records of a given author,
+    // and only call this function as a fallback!
 
     String::new()
 }
@@ -32,6 +41,7 @@ fn get_title_sort(title: String) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn test_firstname_lastname() {
