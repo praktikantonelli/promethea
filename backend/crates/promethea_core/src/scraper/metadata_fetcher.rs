@@ -40,6 +40,7 @@ pub struct BookMetadata {
 /// Represents an individual who contributed to the book, such as an author or editor.
 #[derive(Debug, PartialEq)]
 pub struct BookContributor {
+    // TODO: Add goodreads ID as field
     /// The name of the contributor.
     pub name: String,
     /// The role of the contributor, such as "Author" or "Illustrator".
@@ -49,6 +50,7 @@ pub struct BookContributor {
 /// Represents series information for a book, including the series title and book's position within the series.
 #[derive(Debug, PartialEq)]
 pub struct BookSeries {
+    // TODO: Add goodreads ID as field
     /// The title of the series.
     pub title: String,
     /// The position of the book within the series, represented as a float to accommodate cases like "1.5".
@@ -151,6 +153,7 @@ fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
 }
 
 fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
+    // TODO: Extract goodreads ID of all contributors too
     let mut contributors = Vec::new();
 
     let primary =
@@ -280,6 +283,7 @@ fn extract_language(metadata: &Value, amazon_id: &str) -> Option<String> {
 }
 
 fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, ScraperError> {
+    // TODO: Extend so we also extract goodreads ID of each series
     let series_array = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookSeries"]
         .as_array()
         .unwrap();
