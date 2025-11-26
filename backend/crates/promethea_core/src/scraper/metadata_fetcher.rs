@@ -40,11 +40,12 @@ pub struct BookMetadata {
 /// Represents an individual who contributed to the book, such as an author or editor.
 #[derive(Debug, PartialEq)]
 pub struct BookContributor {
-    // TODO: Add goodreads ID as field
     /// The name of the contributor.
     pub name: String,
     /// The role of the contributor, such as "Author" or "Illustrator".
     pub role: String,
+    /// The Goodreads ID of the contributor
+    pub goodreads_id: String,
 }
 
 /// Represents series information for a book, including the series title and book's position within the series.
@@ -203,13 +204,19 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 }
 
 fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
-    let contributor = &metadata["props"]["pageProps"]["apolloState"][key]["name"];
+    let contributor = &metadata["props"]["pageProps"]["apolloState"][&key]["name"];
     let name = to_string(contributor);
+    let goodreads_id =
+        to_string(&metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]).unwrap();
     if name.is_none() {
         warn!("Failed to parse contributor");
     }
 
-    name.map(|n| BookContributor { name: n, role })
+    name.map(|n| BookContributor {
+        name: n,
+        role,
+        goodreads_id,
+    })
 }
 
 fn extract_genres(metadata: &Value, amazon_id: &str) -> Vec<String> {
