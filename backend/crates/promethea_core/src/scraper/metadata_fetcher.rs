@@ -360,6 +360,7 @@ mod tests {
         let expected_contributors = vec![BookContributor {
             name: "Rick Riordan".to_string(),
             role: "Author".to_string(),
+            goodreads_id: "15872".to_string(),
         }];
         let expected_genres = vec![
             "Fantasy".to_string(),
