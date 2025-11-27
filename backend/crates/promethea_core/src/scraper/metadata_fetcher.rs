@@ -206,8 +206,11 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
     let contributor = &metadata["props"]["pageProps"]["apolloState"][&key]["name"];
     let name = to_string(contributor);
-    let goodreads_id =
-        to_string(&metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]).unwrap();
+    let goodreads_id = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
+        .as_number()
+        .unwrap()
+        .to_string();
+
     if name.is_none() {
         warn!("Failed to parse contributor");
     }
