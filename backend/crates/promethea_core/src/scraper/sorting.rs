@@ -1,4 +1,4 @@
-fn get_name_sort(author_name: String) -> String {
+pub fn get_name_sort(author_name: String) -> String {
     // Takes the full name of an author and produces a string according to which the name should
     // be sorted. General logic: Sort by last "word" in name and comma-separate it from everything
     // else in the name, e.g. `Guy Le Best => Best, Guy Le`
@@ -14,7 +14,7 @@ fn get_name_sort(author_name: String) -> String {
     }
 }
 
-fn get_title_sort(title: String) -> String {
+pub fn get_title_sort(title: String) -> String {
     // Required patterns:
     // the everythingelse -> everythingelse, the e.g. The Hobbit
     // a everythingelse -> everythingelse, a e.g. A Game of Thrones

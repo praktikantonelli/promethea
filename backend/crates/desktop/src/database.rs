@@ -1,8 +1,10 @@
 use crate::errors::Error;
 use crate::state::{AppState, APP_CONFIG_PATH, LIBRARY_DATABASE_NAME};
 use epub::doc::EpubDoc;
+use futures::future::join_all;
 use promethea_core::database::types::BookRecord;
 use promethea_core::scraper::request_builder::MetadataRequestBuilder;
+use promethea_core::scraper::sorting::{get_name_sort, get_title_sort};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::path::PathBuf;
@@ -96,12 +98,20 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
         .with_title(&title)
         .with_author(authors.first().unwrap());
 
-    match request.execute().await.unwrap() {
-        Some(metadata) => {
-            dbg!(metadata);
-        }
-        None => log::info!("No metadata found for this book"),
-    }
+    let Some(metadata) = request.execute().await.unwrap() else {
+        log::info!("No metadata found for this book");
+        return Err(Error::Other(
+            "Failed to find metadata for given book".to_string(),
+        ));
+    };
+
+    let read_guard = state.db.read().await;
+    let Some(db) = &*read_guard else {
+        log::warn!("Database currently not available");
+        return Err(Error::Other(
+            "Failed to get database connection from app state".to_string(),
+        ));
+    };
 
     // At this point, we have:
     // Book title and Goodreads ID
@@ -112,8 +122,17 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
     //
     // MISSING:
     // Title sort string => Titles are generally unique, use sort function
+    let title_sort = get_title_sort(title);
+    dbg!(title_sort);
     // Author(s) sort string(s) => In order to handle special cases once, first look if available
     // in database already
+    let authors = metadata.contributors;
+    let authors_sort = join_all(
+        authors
+            .iter()
+            .map(|author| db.try_fetch_author_sort(author.name.clone())),
+    )
+    .await;
     // Series sort string(s) => Same as authors
     // Date added => get today's date
     // Date updated => get today's date
