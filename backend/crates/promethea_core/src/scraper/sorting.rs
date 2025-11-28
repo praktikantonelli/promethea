@@ -1,26 +1,17 @@
 fn get_name_sort(author_name: String) -> String {
-    // Required patterns:
-    // firstname lastname               ->      lastname, firstname   e.g. Brandon Sanderson
-    // firstname m. lastname            ->      lastname, firstname m.  e.g. Peter V. Brett
-    // firstname middlename lastname    ->      lastname, firtsname middlename  e.g. Robert Louis Stevenson
-    // firstname lastname otherlastname ->      lastname otherlastname, firstname e.g. Lois McMaster Bujold
-    // f. f. lastname                   ->      lastname, f. f. e.g. R. F. Kuang
-    // f. f. f. lastname                ->      lastname, f. f. f. e.g. J. R. R. Tolkien
-    // firstname f. f. lastname         ->      lastname, firstname f. f. e.g. George R. R. Martin
-    // f. lastname otherlastname        ->      lastname otherlastname, f. e.g. R. Scott Bakker
-    // singlename                       ->      singlename e.g. Baosu
-    // firstname f. prefix lastname     ->      lastname, firstname f. prefix e.g. Ursula K. Le Guin
-    //
-    // INFO: firstname middlename lastname and firstname lastname otherlastname cannot be reliably
-    // distinguished, e.g., Orson Scott Card -> Scott is middle name, but H. Jon Benjamin -> Jon is
-    // middle name. And Scott can be both a first or last name, so you also can't just keep a list
-    // of common first or last names either.
-    // Solution: Assume the pattern "firstname name lastname" has a middle name because that's much
-    // more common. This will lead to wrong results with names like Lois McMaster Bujold, but
-    // that's okay. Before calling this function, check the database for records of a given author,
-    // and only call this function as a fallback!
+    // Takes the full name of an author and produces a string according to which the name should
+    // be sorted. General logic: Sort by last "word" in name and comma-separate it from everything
+    // else in the name, e.g. `Guy Le Best => Best, Guy Le`
+    let mut tokens = author_name.split_whitespace().collect::<Vec<&str>>();
 
-    String::new()
+    match tokens.len() {
+        0 => String::new(),
+        1 => String::from(tokens[0]),
+        _ => {
+            let determining_name = tokens.pop().unwrap();
+            format!("{}, {}", determining_name, tokens.join(" "))
+        }
+    }
 }
 
 fn get_title_sort(title: String) -> String {
