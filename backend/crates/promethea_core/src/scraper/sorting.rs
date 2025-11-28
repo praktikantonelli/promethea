@@ -174,6 +174,30 @@ mod tests {
     }
 
     #[test]
+    fn test_f_m_m_lastname() {
+        let name = String::from("J. R. R. Tolkien");
+
+        let expected = String::from("Tolkien, J. R. R.");
+        let result = get_name_sort(name);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_singlename() {
+        let names = [String::from("Baoshu"), String::from("Madonna")];
+
+        let expected = vec![String::from("Baoshu"), String::from("Madonna")];
+
+        let results: Vec<String> = names
+            .iter()
+            .map(|name| get_name_sort(name.to_owned()))
+            .collect();
+
+        assert_eq!(expected, results);
+    }
+
+    #[test]
     fn test_titles() {
         let titles = [
             String::from("A Game of Thrones"),
