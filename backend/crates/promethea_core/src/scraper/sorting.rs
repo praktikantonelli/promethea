@@ -66,6 +66,114 @@ mod tests {
     }
 
     #[test]
+    fn test_firstname_middlename_lastname() {
+        let names = [
+            String::from("Guy Gavriel Kay"),
+            String::from("Orson Scott Card"),
+            String::from("Justin Lee Anderson"),
+        ];
+
+        let expected = vec![
+            String::from("Kay, Guy Gavriel"),
+            String::from("Card, Orson Scott"),
+            String::from("Anderson, Justin Lee"),
+        ];
+
+        let results: Vec<String> = names
+            .iter()
+            .map(|name| get_name_sort(name.to_owned()))
+            .collect();
+
+        assert_eq!(expected, results);
+    }
+
+    #[test]
+    fn test_firstname_m_lastname() {
+        let names = [
+            String::from("Michael J. Sullivan"),
+            String::from("Arthur C. Clarke"),
+            String::from("Philip K. Dick"),
+            String::from("Ursula K. Le Guin"),
+        ];
+
+        let expected = vec![
+            String::from("Sullivan, Michael J."),
+            String::from("Clarke, Arthur C."),
+            String::from("Dick, Philip K."),
+            String::from("Guin, Ursula K. Le"),
+        ];
+
+        let results: Vec<String> = names
+            .iter()
+            .map(|name| get_name_sort(name.to_owned()))
+            .collect();
+
+        assert_eq!(expected, results);
+    }
+
+    #[test]
+    fn test_f_m_lastname() {
+        let names = [
+            String::from("R. R. Virdi"),
+            String::from("S. A. Chakraborty"),
+            String::from("M. L. Wang"),
+        ];
+
+        let expected = vec![
+            String::from("Virdi, R. R."),
+            String::from("Chakraborty, S. A."),
+            String::from("Wang, M. L."),
+        ];
+
+        let results: Vec<String> = names
+            .iter()
+            .map(|name| get_name_sort(name.to_owned()))
+            .collect();
+
+        assert_eq!(expected, results);
+    }
+
+    #[test]
+    fn test_firstname_m_m_lastname() {
+        let names = [
+            String::from("James S. A. Corey"),
+            String::from("George R. R. Martin"),
+        ];
+
+        let expected = vec![
+            String::from("Corey, James S. A."),
+            String::from("Martin, George R. R."),
+        ];
+
+        let results: Vec<String> = names
+            .iter()
+            .map(|name| get_name_sort(name.to_owned()))
+            .collect();
+
+        assert_eq!(expected, results);
+    }
+
+    #[test]
+    fn test_f_middlename_lastname() {
+        let names = [
+            String::from("R. Scott Bakker"),
+            String::from("F. Scott Fitzgerald"),
+        ];
+
+        let expected = vec![
+            String::from("Bakker, R. Scott"),
+            String::from("Fitzgerald, F. Scott"),
+        ];
+
+        let results: Vec<String> = names
+            .iter()
+            .map(|name| get_name_sort(name.to_owned()))
+            .collect();
+
+        assert_eq!(expected, results);
+    }
+
+    #[test]
     fn test_titles() {
         let titles = [
             String::from("A Game of Thrones"),
