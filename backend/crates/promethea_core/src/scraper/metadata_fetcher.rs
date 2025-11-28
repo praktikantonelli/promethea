@@ -51,11 +51,12 @@ pub struct BookContributor {
 /// Represents series information for a book, including the series title and book's position within the series.
 #[derive(Debug, PartialEq)]
 pub struct BookSeries {
-    // TODO: Add goodreads ID as field
     /// The title of the series.
     pub title: String,
     /// The position of the book within the series, represented as a float to accommodate cases like "1.5".
     pub number: f32,
+    /// The Goodreads ID of the series
+    pub goodreads_id: String,
 }
 
 pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperError> {
@@ -154,7 +155,6 @@ fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
 }
 
 fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
-    // TODO: Extract goodreads ID of all contributors too
     let mut contributors = Vec::new();
 
     let primary =
@@ -293,7 +293,6 @@ fn extract_language(metadata: &Value, amazon_id: &str) -> Option<String> {
 }
 
 fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, ScraperError> {
-    // TODO: Extend so we also extract goodreads ID of each series
     let series_array = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookSeries"]
         .as_array()
         .unwrap();
@@ -315,13 +314,23 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, 
                 return None;
             };
 
-            let title = &metadata["props"]["pageProps"]["apolloState"][key]["title"];
+            let title = &metadata["props"]["pageProps"]["apolloState"][&key]["title"];
             let Some(title) = to_string(title) else {
                 warn!("Failed to parse series title");
                 return None;
             };
 
-            Some(BookSeries { title, number })
+            let web_url = &metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"];
+            let Some(goodreads_id) = extract_id_from_url(web_url) else {
+                warn!("Failed to parse series ID");
+                return None;
+            };
+
+            Some(BookSeries {
+                title,
+                number,
+                goodreads_id,
+            })
         })
         .collect::<Vec<BookSeries>>();
     Ok(series_info)
@@ -336,6 +345,14 @@ fn to_string(value: &Value) -> Option<String> {
         .filter(|s| !s.is_empty())
 }
 
+fn extract_id_from_url(url: &Value) -> Option<String> {
+    let url = url.as_str()?;
+    let replaced = url.replace("https://www.goodreads.com/series/", "");
+    let id_raw = replaced.split("-").next()?;
+    let id = String::from(id_raw);
+    Some(id)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -347,14 +364,17 @@ mod tests {
             BookSeries {
                 title: "Percy Jackson and the Olympians".to_string(),
                 number: 5.0,
+                goodreads_id: "40736".to_string(),
             },
             BookSeries {
                 title: "Camp Half-Blood Chronicles".to_string(),
                 number: 5.0,
+                goodreads_id: "183923".to_string(),
             },
             BookSeries {
                 title: "Coleccionable Percy Jackson".to_string(),
                 number: 5.0,
+                goodreads_id: "399169".to_string(),
             },
         ];
         let expected_contributors = vec![BookContributor {
