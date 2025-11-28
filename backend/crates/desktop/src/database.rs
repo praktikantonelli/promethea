@@ -103,6 +103,21 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
         None => log::info!("No metadata found for this book"),
     }
 
+    // At this point, we have:
+    // Book title and Goodreads ID
+    // Author(s) and Goodreads ID(s)
+    // Series name, volume and Goodreads ID
+    // Page count
+    // Publication date
+    //
+    // MISSING:
+    // Title sort string => Titles are generally unique, use sort function
+    // Author(s) sort string(s) => In order to handle special cases once, first look if available
+    // in database already
+    // Series sort string(s) => Same as authors
+    // Date added => get today's date
+    // Date updated => get today's date
+
     // Assemble data into SQL query
 
     // Basic logic: Upsert new book title, author(s) name(s) and series title(s), meaning try to

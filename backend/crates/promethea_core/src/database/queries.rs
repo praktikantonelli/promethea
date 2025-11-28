@@ -1,5 +1,5 @@
 use crate::database::types::BookRecord;
-use sqlx::{SqlitePool, sqlite::SqliteConnectOptions};
+use sqlx::{Row, SqlitePool, sqlite::SqliteConnectOptions};
 use std::path::Path;
 
 pub struct Db {
@@ -74,5 +74,31 @@ impl Db {
                 books.date_added ASC;";
         let books: Vec<BookRecord> = sqlx::query_as(query).fetch_all(&self.pool).await?;
         Ok(books)
+    }
+
+    pub async fn try_fetch_author_sort(&self, name: String) -> Result<Option<String>, sqlx::Error> {
+        let query = "
+            SELECT sort FROM authors WHERE name LIKE $1;
+        ";
+        let sort = sqlx::query(query)
+            .bind(name)
+            .fetch_one(&self.pool)
+            .await?
+            .get(0);
+
+        Ok(Some(sort))
+    }
+
+    pub async fn try_fetch_series_sort(&self, name: String) -> Result<Option<String>, sqlx::Error> {
+        let query = "
+            SELECT sort FROM series WHERE name LIKE $1;
+        ";
+        let sort = sqlx::query(query)
+            .bind(name)
+            .fetch_one(&self.pool)
+            .await?
+            .get(0);
+
+        Ok(Some(sort))
     }
 }
