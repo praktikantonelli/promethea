@@ -1,4 +1,4 @@
-pub fn get_name_sort(author_name: String) -> String {
+pub fn get_name_sort(author_name: &str) -> String {
     // Takes the full name of an author and produces a string according to which the name should
     // be sorted. General logic: Sort by last "word" in name and comma-separate it from everything
     // else in the name, e.g. `Guy Le Best => Best, Guy Le`
@@ -14,7 +14,7 @@ pub fn get_name_sort(author_name: String) -> String {
     }
 }
 
-pub fn get_title_sort(title: String) -> String {
+pub fn get_title_sort(title: &str) -> String {
     // Required patterns:
     // the everythingelse -> everythingelse, the e.g. The Hobbit
     // a everythingelse -> everythingelse, a e.g. A Game of Thrones
@@ -26,7 +26,7 @@ pub fn get_title_sort(title: String) -> String {
             return format!("{trimmed_remainder}, {prefix}");
         }
     }
-    title
+    title.to_string()
 }
 
 #[cfg(test)]
@@ -42,10 +42,7 @@ mod tests {
             String::from("Tad Williams"),
         ];
 
-        let results: Vec<String> = names
-            .iter()
-            .map(|name| get_name_sort(name.to_owned()))
-            .collect();
+        let results: Vec<String> = names.iter().map(|name| get_name_sort(name)).collect();
 
         let expected = vec![
             String::from("Sanderson, Brandon"),
@@ -70,10 +67,7 @@ mod tests {
             String::from("Anderson, Justin Lee"),
         ];
 
-        let results: Vec<String> = names
-            .iter()
-            .map(|name| get_name_sort(name.to_owned()))
-            .collect();
+        let results: Vec<String> = names.iter().map(|name| get_name_sort(name)).collect();
 
         assert_eq!(expected, results);
     }
@@ -94,10 +88,7 @@ mod tests {
             String::from("Guin, Ursula K. Le"),
         ];
 
-        let results: Vec<String> = names
-            .iter()
-            .map(|name| get_name_sort(name.to_owned()))
-            .collect();
+        let results: Vec<String> = names.iter().map(|name| get_name_sort(name)).collect();
 
         assert_eq!(expected, results);
     }
@@ -116,10 +107,7 @@ mod tests {
             String::from("Wang, M. L."),
         ];
 
-        let results: Vec<String> = names
-            .iter()
-            .map(|name| get_name_sort(name.to_owned()))
-            .collect();
+        let results: Vec<String> = names.iter().map(|name| get_name_sort(name)).collect();
 
         assert_eq!(expected, results);
     }
@@ -136,10 +124,7 @@ mod tests {
             String::from("Martin, George R. R."),
         ];
 
-        let results: Vec<String> = names
-            .iter()
-            .map(|name| get_name_sort(name.to_owned()))
-            .collect();
+        let results: Vec<String> = names.iter().map(|name| get_name_sort(name)).collect();
 
         assert_eq!(expected, results);
     }
@@ -156,17 +141,14 @@ mod tests {
             String::from("Fitzgerald, F. Scott"),
         ];
 
-        let results: Vec<String> = names
-            .iter()
-            .map(|name| get_name_sort(name.to_owned()))
-            .collect();
+        let results: Vec<String> = names.iter().map(|name| get_name_sort(name)).collect();
 
         assert_eq!(expected, results);
     }
 
     #[test]
     fn test_f_m_m_lastname() {
-        let name = String::from("J. R. R. Tolkien");
+        let name = "J. R. R. Tolkien";
 
         let expected = String::from("Tolkien, J. R. R.");
         let result = get_name_sort(name);
@@ -180,10 +162,7 @@ mod tests {
 
         let expected = vec![String::from("Baoshu"), String::from("Madonna")];
 
-        let results: Vec<String> = names
-            .iter()
-            .map(|name| get_name_sort(name.to_owned()))
-            .collect();
+        let results: Vec<String> = names.iter().map(|name| get_name_sort(name)).collect();
 
         assert_eq!(expected, results);
     }
@@ -212,10 +191,7 @@ mod tests {
             String::from("Great Hunt, The"),
         ];
 
-        let results: Vec<String> = titles
-            .iter()
-            .map(|title| get_title_sort(title.to_owned()))
-            .collect();
+        let results: Vec<String> = titles.iter().map(|title| get_title_sort(title)).collect();
 
         assert_eq!(expected, results);
     }
