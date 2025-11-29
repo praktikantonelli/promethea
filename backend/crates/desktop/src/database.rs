@@ -7,9 +7,25 @@ use promethea_core::scraper::request_builder::MetadataRequestBuilder;
 use promethea_core::scraper::sorting::{get_name_sort, get_title_sort};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::future::Future;
 use std::path::PathBuf;
 use tauri::{AppHandle, State};
 use tauri_plugin_store::StoreExt;
+
+async fn resolve_sort_with_fallback<F, Fut, E>(
+    key: String,
+    primary: F,
+    fallback: fn(&str) -> String,
+) -> String
+where
+    F: Fn(&str) -> Fut,
+    Fut: Future<Output = Result<Option<String>, E>>,
+{
+    match primary(&key).await {
+        Ok(Some(v)) => v,
+        _ => fallback(&key),
+    }
+}
 
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "status", rename_all = "snake_case")]
@@ -121,19 +137,33 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
     // Publication date
     //
     // MISSING:
-    // Title sort string => Titles are generally unique, use sort function
-    let title_sort = get_title_sort(title);
+    // Title sort string => Titles are generally unique, use sort function directly, no fallback
+    let title_sort = get_title_sort(&title);
     dbg!(title_sort);
     // Author(s) sort string(s) => In order to handle special cases once, first look if available
     // in database already
     let authors = metadata.contributors;
-    let authors_sort = join_all(
-        authors
-            .iter()
-            .map(|author| db.try_fetch_author_sort(author.name.clone())),
-    )
+    let authors_sort = join_all(authors.iter().map(|key| async move {
+        match db.try_fetch_author_sort(&key.name).await {
+            Ok(Some(v)) => v,
+            _ => get_name_sort(&key.name),
+        }
+    }))
     .await;
+    dbg!(&authors);
+    dbg!(&authors_sort);
+
     // Series sort string(s) => Same as authors
+    let series = metadata.series;
+    let series_sort = join_all(series.iter().map(|key| async move {
+        match db.try_fetch_series_sort(&key.title).await {
+            Ok(Some(v)) => v,
+            _ => get_title_sort(&key.title),
+        }
+    }))
+    .await;
+    dbg!(&series);
+    dbg!(&series_sort);
     // Date added => get today's date
     // Date updated => get today's date
 

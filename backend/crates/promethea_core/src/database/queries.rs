@@ -76,7 +76,7 @@ impl Db {
         Ok(books)
     }
 
-    pub async fn try_fetch_author_sort(&self, name: String) -> Result<Option<String>, sqlx::Error> {
+    pub async fn try_fetch_author_sort(&self, name: &str) -> Result<Option<String>, sqlx::Error> {
         let query = "
             SELECT sort FROM authors WHERE name LIKE $1;
         ";
@@ -89,7 +89,7 @@ impl Db {
         Ok(Some(sort))
     }
 
-    pub async fn try_fetch_series_sort(&self, name: String) -> Result<Option<String>, sqlx::Error> {
+    pub async fn try_fetch_series_sort(&self, name: &str) -> Result<Option<String>, sqlx::Error> {
         let query = "
             SELECT sort FROM series WHERE name LIKE $1;
         ";
