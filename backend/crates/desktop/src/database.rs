@@ -1,5 +1,6 @@
 use crate::errors::Error;
 use crate::state::{AppState, APP_CONFIG_PATH, LIBRARY_DATABASE_NAME};
+use chrono::{DateTime, Local, Utc};
 use epub::doc::EpubDoc;
 use futures::future::join_all;
 use promethea_core::database::types::BookRecord;
@@ -165,7 +166,11 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
     dbg!(&series);
     dbg!(&series_sort);
     // Date added => get today's date
+    let date_added = Local::now().to_utc();
     // Date updated => get today's date
+    let date_updated = Local::now().to_utc();
+    dbg!(&date_added);
+    dbg!(&date_updated);
 
     // Assemble data into SQL query
 
