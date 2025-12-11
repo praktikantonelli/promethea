@@ -101,4 +101,15 @@ impl Db {
 
         Ok(Some(sort))
     }
+
+    pub async fn insert_book(&self, book: BookRecord) -> Result<(), sqlx::Error> {
+        let query = "
+            BEGIN;
+            
+
+            END;
+        ";
+
+        Ok(())
+    }
 }
