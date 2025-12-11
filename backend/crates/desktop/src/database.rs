@@ -168,7 +168,7 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
     // Date added => get today's date
     let date_added = Local::now().to_utc();
     // Date updated => get today's date
-    let date_updated = date_added.clone();
+    let date_updated = date_added;
     dbg!(&date_added);
     dbg!(&date_updated);
 
