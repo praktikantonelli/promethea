@@ -103,6 +103,15 @@ impl Db {
     }
 
     pub async fn insert_book(&self, book: BookRecord) -> Result<(), sqlx::Error> {
+        // Query outline:
+        // 1. Insert book (title, sort, date_added, date_published, last_modified, number_of_pages, goodreads_id)
+        // 2. Fetch book ID (either newly created through operation 1 or already there and retrieved)
+        // 3. Insert author(s) (name, sort, goodreads_id)
+        // 4. Fetch author IDs (same principle as book ID)
+        // 5. Insert series (name, sort, volume, goodreads_id)
+        // 6. Fetch series IDs (same principle as books and authors)
+        // 7. Insert book series link (book ID, series ID(s))
+        // 8. Insert book authors link (book ID, author(s) ID(s))
         let query = "
             BEGIN;
             
