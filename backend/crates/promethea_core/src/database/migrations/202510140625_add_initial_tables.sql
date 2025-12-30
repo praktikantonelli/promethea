@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS authors (
     name TEXT NOT NULL COLLATE NOCASE,
     sort TEXT NOT NULL COLLATE NOCASE,
     goodreads_id INTEGER,
-    UNIQUE(name)
+    UNIQUE(goodreads_id)
 );
 CREATE TABLE IF NOT EXISTS books (
     id INTEGER PRIMARY KEY,
@@ -14,12 +14,14 @@ CREATE TABLE IF NOT EXISTS books (
     last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     number_of_pages INTEGER NOT NULL DEFAULT 0,
     goodreads_id INTEGER
+    UNIQUE(goodreads_id)
 );
 CREATE TABLE IF NOT EXISTS series (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL COLLATE NOCASE,
     sort TEXT NOT NULL COLLATE NOCASE,
     goodreads_id INTEGER
+    UNIQUE(goodreads_id)
 );
 CREATE TABLE IF NOT EXISTS read_books (
     book INTEGER NOT NULL,
