@@ -16,6 +16,12 @@ CREATE TABLE IF NOT EXISTS books (
     goodreads_id INTEGER
     UNIQUE(goodreads_id)
 );
+CREATE TRIGGER IF NOT EXISTS trg_book_last_modified 
+AFTER UPDATE ON books
+FOR EACH ROW
+BEGIN
+  UPDATE books SET last_modified = CURRENT_TIMESTAMP WHERE id = OLD.id;
+END;
 CREATE TABLE IF NOT EXISTS series (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL COLLATE NOCASE,
