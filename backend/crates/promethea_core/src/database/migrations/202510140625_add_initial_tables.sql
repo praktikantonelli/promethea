@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS books (
     date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     date_published TIMESTAMP,
     last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    number_of_pages INTEGER NOT NULL DEFAULT 0,
+    number_of_pages INTEGER NOT NULL DEFAULT 0 CHECK(number_of_pages >= 0),
     goodreads_id INTEGER
     UNIQUE(goodreads_id)
 );
