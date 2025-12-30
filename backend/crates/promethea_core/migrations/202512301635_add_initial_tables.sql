@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS books (
     date_published TIMESTAMP,
     last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     number_of_pages INTEGER NOT NULL DEFAULT 0 CHECK(number_of_pages >= 0),
-    goodreads_id INTEGER
+    goodreads_id INTEGER,
     UNIQUE(goodreads_id)
 );
 CREATE TRIGGER IF NOT EXISTS trg_book_last_modified 
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS series (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL COLLATE NOCASE,
     sort TEXT NOT NULL COLLATE NOCASE,
-    goodreads_id INTEGER
+    goodreads_id INTEGER,
     UNIQUE(goodreads_id)
 );
 CREATE TABLE IF NOT EXISTS read_books (
