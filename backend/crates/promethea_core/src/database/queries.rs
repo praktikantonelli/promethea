@@ -12,9 +12,7 @@ impl Db {
             .foreign_keys(true)
             .filename(path);
         let pool = SqlitePool::connect_with(options).await?;
-        sqlx::migrate!("src\\database\\migrations")
-            .run(&pool)
-            .await?;
+        sqlx::migrate!().run(&pool).await?;
 
         Ok(Self { pool })
     }
