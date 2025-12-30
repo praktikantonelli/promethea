@@ -51,3 +51,7 @@ CREATE TABLE IF NOT EXISTS books_series_link (
     FOREIGN KEY(series) REFERENCES series(id) ON DELETE CASCADE,
     PRIMARY KEY(series, entry)
 );
+
+CREATE INDEX IF NOT EXISTS idx_books_authors_author ON books_authors_link(author);
+CREATE INDEX IF NOT EXISTS idx_books_series_series  ON books_series_link(series);
+CREATE INDEX IF NOT EXISTS idx_read_books_book      ON read_books(book);
