@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS books_authors_link (
     author INTEGER NOT NULL,
     FOREIGN KEY(book) REFERENCES books(id) ON DELETE CASCADE,
     FOREIGN KEY(author) REFERENCES authors(id) ON DELETE CASCADE,
-    UNIQUE(book, author)
+    PRIMARY KEY(book, author)
 );
 CREATE TABLE IF NOT EXISTS books_series_link (
     book INTEGER NOT NULL,
@@ -42,5 +42,5 @@ CREATE TABLE IF NOT EXISTS books_series_link (
     entry REAL NOT NULL,
     FOREIGN KEY(book) REFERENCES books(id) ON DELETE CASCADE,
     FOREIGN KEY(series) REFERENCES series(id) ON DELETE CASCADE,
-    UNIQUE(series, entry)
+    PRIMARY KEY(series, entry)
 );
