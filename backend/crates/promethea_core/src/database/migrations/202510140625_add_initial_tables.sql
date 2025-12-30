@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS books_authors_link (
 CREATE TABLE IF NOT EXISTS books_series_link (
     book INTEGER NOT NULL,
     series INTEGER NOT NULL,
-    entry REAL NOT NULL,
+    entry REAL NOT NULL CHECK(entry >= 0),
     FOREIGN KEY(book) REFERENCES books(id) ON DELETE CASCADE,
     FOREIGN KEY(series) REFERENCES series(id) ON DELETE CASCADE,
     PRIMARY KEY(series, entry)
