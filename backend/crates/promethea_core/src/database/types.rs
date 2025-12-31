@@ -4,16 +4,16 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
 pub struct BookRecord {
     book_id: i64,
-    title: String,
-    sort: String,
+    pub title: String,
+    pub sort: String,
     #[sqlx(json)]
-    authors: Vec<AuthorRecord>,
+    pub authors: Vec<AuthorRecord>,
     #[sqlx(json)]
-    series_and_volume: Vec<SeriesAndVolumeRecord>,
-    number_of_pages: u32,
-    goodreads_id: u64,
-    date_added: DateTime<Utc>,
-    date_published: DateTime<Utc>,
+    pub series_and_volume: Vec<SeriesAndVolumeRecord>,
+    pub number_of_pages: u32,
+    pub goodreads_id: u64,
+    pub date_added: DateTime<Utc>,
+    pub date_published: DateTime<Utc>,
     date_modified: DateTime<Utc>,
 }
 

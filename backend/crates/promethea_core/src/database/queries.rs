@@ -1,5 +1,5 @@
 use crate::database::types::{BookRecord, InsertBookError};
-use sqlx::{Row, SqlitePool, sqlite::SqliteConnectOptions};
+use sqlx::{Row, Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 use std::path::Path;
 
 pub struct Db {
@@ -100,7 +100,7 @@ impl Db {
         Ok(Some(sort))
     }
 
-    pub async fn insert_book(&self, book: BookRecord) -> Result<(), InsertBookError> {
+    pub async fn insert_book(&self, book: &BookRecord) -> Result<(), InsertBookError> {
         // Query outline:
         // 1. Insert book (title, sort, date_added, date_published, last_modified, number_of_pages, goodreads_id)
         // 2. Fetch book ID (either newly created through operation 1 or already there and retrieved)
@@ -110,13 +110,52 @@ impl Db {
         // 6. Fetch series IDs (same principle as books and authors)
         // 7. Insert book series link (book ID, series ID(s))
         // 8. Insert book authors link (book ID, author(s) ID(s))
-        let query = "
-            BEGIN;
-            
+        let mut tx: Transaction<'_, Sqlite> = self.pool.begin().await?;
 
-            END;
-        ";
+        let book_id_res: Result<i64, sqlx::Error> = sqlx::query_scalar(
+            r#"
+            INSERT INTO books (
+                title,
+                sort,
+                date_added,
+                date_published,
+                number_of_pages,
+                goodreads_id
+            )
+            VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+                RETURNING id; 
+        "#,
+        )
+        .bind(&book.title)
+        .bind(&book.sort)
+        .bind(book.date_added)
+        .bind(book.date_published)
+        .bind(book.number_of_pages as i64)
+        .bind(book.goodreads_id as i64)
+        .fetch_one(&mut *tx)
+        .await;
+
+        // If book was inserted successfully, fetch its internal ID, otherwise return early and
+        // rollback previous SQL query
+        let book_id = match book_id_res {
+            Ok(id) => id,
+            Err(e) => {
+                if is_sqlite_unique_violation(&e) {
+                    tx.rollback().await.ok();
+                    return Err(InsertBookError::BookAlreadyExists(book.goodreads_id));
+                }
+                return Err(InsertBookError::Db(e));
+            }
+        };
 
         Ok(())
+    }
+}
+
+fn is_sqlite_unique_violation(e: &sqlx::Error) -> bool {
+    // Check for unique violation by searching for matching text in error message
+    match e {
+        sqlx::Error::Database(db_err) => db_err.message().contains("UNIQUE constraint failed"),
+        _ => false,
     }
 }
