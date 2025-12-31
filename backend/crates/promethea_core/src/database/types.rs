@@ -7,11 +7,9 @@ pub struct BookRecord {
     title: String,
     sort: String,
     #[sqlx(json)]
-    authors: Vec<String>,
+    authors: Vec<AuthorRecord>,
     #[sqlx(json)]
-    authors_sort: Vec<String>,
-    #[sqlx(json)]
-    series_and_volume: Vec<SeriesAndVolume>,
+    series_and_volume: Vec<SeriesAndVolumeRecord>,
     number_of_pages: u32,
     goodreads_id: u64,
     date_added: DateTime<Utc>,
@@ -20,7 +18,14 @@ pub struct BookRecord {
 }
 
 #[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
-pub struct SeriesAndVolume {
+pub struct AuthorRecord {
+    name: String,
+    sort: String,
+    goodreads_id: u64,
+}
+
+#[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
+pub struct SeriesAndVolumeRecord {
     series: String,
     sort: String,
     volume: f64,
