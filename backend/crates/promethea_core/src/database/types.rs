@@ -30,3 +30,12 @@ pub struct SeriesAndVolumeRecord {
     sort: String,
     volume: f64,
 }
+
+#[derive(Debug, thiserror::Error)]
+pub enum InsertBookError {
+    #[error("book already exists (goodreads_id={0})")]
+    BookAlreadyExists(u64),
+
+    #[error("database error: {0}")]
+    Db(#[from] sqlx::Error),
+}

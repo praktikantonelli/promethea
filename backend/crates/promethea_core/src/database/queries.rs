@@ -1,4 +1,4 @@
-use crate::database::types::BookRecord;
+use crate::database::types::{BookRecord, InsertBookError};
 use sqlx::{Row, SqlitePool, sqlite::SqliteConnectOptions};
 use std::path::Path;
 
@@ -100,7 +100,7 @@ impl Db {
         Ok(Some(sort))
     }
 
-    pub async fn insert_book(&self, book: BookRecord) -> Result<(), sqlx::Error> {
+    pub async fn insert_book(&self, book: BookRecord) -> Result<(), InsertBookError> {
         // Query outline:
         // 1. Insert book (title, sort, date_added, date_published, last_modified, number_of_pages, goodreads_id)
         // 2. Fetch book ID (either newly created through operation 1 or already there and retrieved)
