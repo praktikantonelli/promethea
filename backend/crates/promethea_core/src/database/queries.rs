@@ -148,6 +148,67 @@ impl Db {
             }
         };
 
+        // handle authors
+        for a in &book.authors {
+            let author_id: i64 = sqlx::query_scalar(
+                r#"
+                    INSERT INTO authors(name, sort, goodreads_id)
+                    VALUES (?1, ?2, ?3)
+                    ON CONFLICT(goodreads_id) DO UPDATE SET
+                        name = excluded.name,
+                        sort = excluded.sort
+                    RETURNING id;
+                "#,
+            )
+            .bind(&a.name)
+            .bind(&a.sort)
+            .bind(a.goodreads_id as i64)
+            .fetch_one(&mut *tx)
+            .await?;
+
+            sqlx::query(
+                r#"
+                INSERT OR IGNORE INTO books_authors_link(book, author)
+                VALUES (?1, ?2);
+            "#,
+            )
+            .bind(book_id)
+            .bind(author_id)
+            .execute(&mut *tx)
+            .await?;
+        }
+
+        // handle series
+        for sav in &book.series_and_volume {
+            let series_id: i64 = sqlx::query_scalar(
+                r#"
+                INSERT INTO series(name, sort, goodreads_id)
+                VALUES (?1, ?2, ?3)
+                ON CONFLICT(goodreads_id) DO UPDATE SET
+                    name = EXCLUDED.name,
+                    sort = EXCLUDED.sort
+                RETURNING id;
+            "#,
+            )
+            .bind(&sav.series)
+            .bind(&sav.sort)
+            .bind(sav.goodreads_id as i64)
+            .fetch_one(&mut *tx)
+            .await?;
+
+            sqlx::query(
+                r#"
+                INSERT INTO books_series_link(book, series, entry)
+                VALUES (?1, ?2, ?3)
+            "#,
+            )
+            .bind(book_id)
+            .bind(series_id)
+            .bind(sav.volume)
+            .execute(&mut *tx)
+            .await?;
+        }
+
         Ok(())
     }
 }
