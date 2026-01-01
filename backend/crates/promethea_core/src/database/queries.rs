@@ -208,6 +208,7 @@ impl Db {
             .execute(&mut *tx)
             .await?;
         }
+        tx.commit().await?;
 
         Ok(())
     }
