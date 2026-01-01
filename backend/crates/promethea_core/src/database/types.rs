@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
 pub struct BookRecord {
-    book_id: i64,
+    pub book_id: i64,
     pub title: String,
     pub sort: String,
     #[sqlx(json)]
@@ -14,7 +14,7 @@ pub struct BookRecord {
     pub goodreads_id: u64,
     pub date_added: DateTime<Utc>,
     pub date_published: DateTime<Utc>,
-    date_modified: DateTime<Utc>,
+    pub date_modified: DateTime<Utc>,
 }
 
 #[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
