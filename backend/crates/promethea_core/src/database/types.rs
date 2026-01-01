@@ -19,16 +19,16 @@ pub struct BookRecord {
 
 #[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
 pub struct AuthorRecord {
-    name: String,
-    sort: String,
-    goodreads_id: u64,
+    pub name: String,
+    pub sort: String,
+    pub goodreads_id: u64,
 }
 
 #[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
 pub struct SeriesAndVolumeRecord {
-    series: String,
-    sort: String,
-    volume: f64,
+    pub series: String,
+    pub sort: String,
+    pub volume: f64,
 }
 
 #[derive(Debug, thiserror::Error)]
