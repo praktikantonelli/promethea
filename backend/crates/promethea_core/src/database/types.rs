@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
+#[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct BookRecord {
     pub book_id: i64,
     pub title: String,
@@ -17,14 +17,14 @@ pub struct BookRecord {
     pub date_modified: DateTime<Utc>,
 }
 
-#[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
+#[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct AuthorRecord {
     pub name: String,
     pub sort: String,
     pub goodreads_id: u64,
 }
 
-#[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
+#[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct SeriesAndVolumeRecord {
     pub series: String,
     pub sort: String,
