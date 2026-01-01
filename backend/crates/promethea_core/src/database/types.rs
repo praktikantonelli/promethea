@@ -29,6 +29,7 @@ pub struct SeriesAndVolumeRecord {
     pub series: String,
     pub sort: String,
     pub volume: f64,
+    pub goodreads_id: u64,
 }
 
 #[derive(Debug, thiserror::Error)]
