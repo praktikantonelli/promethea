@@ -3,12 +3,13 @@ use crate::state::{AppState, APP_CONFIG_PATH, LIBRARY_DATABASE_NAME};
 use chrono::{DateTime, Local, Utc};
 use epub::doc::EpubDoc;
 use futures::future::join_all;
-use promethea_core::database::types::BookRecord;
+use promethea_core::database::types::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 use promethea_core::scraper::request_builder::MetadataRequestBuilder;
 use promethea_core::scraper::sorting::{get_name_sort, get_title_sort};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::future::Future;
+use std::iter::zip;
 use std::path::PathBuf;
 use tauri::{AppHandle, State};
 use tauri_plugin_store::StoreExt;
@@ -99,7 +100,6 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
 
     // Extract bare minimum metadata (title + author(s)) from EPUB file
     let doc = EpubDoc::new(path).unwrap();
-    dbg!(&doc.metadata);
 
     let title = doc.get_title().unwrap();
     let authors = doc
@@ -130,19 +130,7 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
         ));
     };
 
-    // At this point, we have:
-    // Book title and Goodreads ID
-    // Author(s) and Goodreads ID(s)
-    // Series name, volume and Goodreads ID
-    // Page count
-    // Publication date
-    //
-    // MISSING:
-    // Title sort string => Titles are generally unique, use sort function directly, no fallback
     let title_sort = get_title_sort(&title);
-    dbg!(title_sort);
-    // Author(s) sort string(s) => In order to handle special cases once, first look if available
-    // in database already
     let authors = metadata.contributors;
     let authors_sort = join_all(authors.iter().map(|key| async move {
         match db.try_fetch_author_sort(&key.name).await {
@@ -151,8 +139,13 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
         }
     }))
     .await;
-    dbg!(&authors);
-    dbg!(&authors_sort);
+    let authors = zip(authors, authors_sort)
+        .map(|(author, author_sort)| AuthorRecord {
+            name: author.name,
+            sort: author_sort,
+            goodreads_id: author.goodreads_id.parse().unwrap(),
+        })
+        .collect::<Vec<AuthorRecord>>();
 
     // Series sort string(s) => Same as authors
     let series = metadata.series;
@@ -163,38 +156,41 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
         }
     }))
     .await;
-    dbg!(&series);
-    dbg!(&series_sort);
+    let series_and_volume = zip(series, series_sort)
+        .map(|(series, series_sort)| SeriesAndVolumeRecord {
+            series: series.title,
+            sort: series_sort,
+            volume: series.number as f64,
+            goodreads_id: series.goodreads_id.parse().unwrap(),
+        })
+        .collect::<Vec<SeriesAndVolumeRecord>>();
     // Date added => get today's date
     let date_added = Local::now().to_utc();
     // Date updated => get today's date
     let date_updated = date_added;
-    dbg!(&date_added);
-    dbg!(&date_updated);
 
     // Assemble data into SQL query
+    let book_record = BookRecord {
+        book_id: -1,
+        title,
+        sort: title_sort,
+        authors,
+        series_and_volume,
+        number_of_pages: metadata.page_count.unwrap() as u32,
+        goodreads_id: metadata.goodreads_id.unwrap().parse().unwrap(),
+        date_added,
+        date_published: metadata.publication_date.unwrap(),
+        date_modified: date_updated,
+    };
+    dbg!(&book_record);
 
-    // Basic logic: Upsert new book title, author(s) name(s) and series title(s), meaning try to
-    // insert and then fetch resulting ID, do not insert if already present and fetch previously
-    // existing ID.
-    //
-    // In SQLite, upsert either with
-    //
-    // INSERT INTO series (name)
-    // VALUES (?)
-    // ON CONFLICT(name) DO
-    // UPDATE SET name = excluded.name RETURNING id;
-    //
-    // or
-    //
-    // INSERT OR IGNORE INTO series (name) VALUES (?);
-    // SELECT id FROM series WHERE name = ?;
-    //
-    // After doing that for books, authors and series, take all IDs and update linking tables. Wrap
-    // all queries between one BEGIN; and one COMMIT;
-
-    // For sorting, define helper functions for common stuff like titles starting with "The", "A",
-    // "An", and for authors try "Lastname, Firstname"
+    let read_guard = state.db.read().await;
+    if let Some(db) = &*read_guard {
+        match db.insert_book(&book_record).await {
+            Ok(()) => log::info!("Successfully added book!"),
+            Err(e) => log::error!("Failed to add book!"),
+        }
+    }
 
     Ok(())
 }
