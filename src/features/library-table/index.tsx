@@ -239,7 +239,6 @@ export function LibraryTable() {
       try {
         setLoading(true);
         const result = await invoke<BookRecord[]>("fetch_books");
-        info(JSON.stringify(result, null, 2));
         if (!cancelled) {
           setData(result);
         }
