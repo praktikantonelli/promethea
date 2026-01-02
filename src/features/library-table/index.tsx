@@ -41,20 +41,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { info, error as logError } from "@tauri-apps/plugin-log";
 
-export type SeriesAndVolume = {
+export type SeriesAndVolumeRecord = {
   series: string
   sort: string
   volume: number
+  goodreads_id: number
+}
+
+export type AuthorRecord = {
+  name: string
+  sort: string
+  goodreads_id: number
 }
 
 export type BookRecord = {
   book_id: number
   title: string
   sort: string
-  authors: string[]
-  authors_sort: string[]
-  series_and_volume: SeriesAndVolume[]
+  authors: AuthorRecord[]
+  series_and_volume: SeriesAndVolumeRecord[]
   number_of_pages: number
   goodreads_id: number
   date_added: Date
@@ -108,18 +115,13 @@ export const columns: ColumnDef<BookRecord>[] = [
       )
     },
     cell: ({ row }) => {
-      const authors = row.getValue("authors");
-      let formatted: string | null;
-      if (authors instanceof Array) {
-        formatted = authors.join(", ")
-      } else {
-        formatted = null;
-      }
+      const authors: AuthorRecord[] = row.getValue("authors");
+      let formatted = authors.map((element) => `${element.name}`).join(", ");
       return <div>{formatted}</div>
     },
     sortingFn: (rowA, rowB) => {
-      const a = rowA.original.authors_sort[0] ?? "";
-      const b = rowB.original.authors_sort[0] ?? "";
+      const a = rowA.original.authors[0].sort ?? "";
+      const b = rowB.original.authors[0].sort ?? "";
       return a.localeCompare(b, undefined, { sensitivity: "base" });
     }
   },
@@ -148,7 +150,7 @@ export const columns: ColumnDef<BookRecord>[] = [
       )
     },
     cell: ({ row }) => {
-      const series_and_volume: SeriesAndVolume[] = row.getValue("series_and_volume");
+      const series_and_volume: SeriesAndVolumeRecord[] = row.getValue("series_and_volume");
       let formatted = series_and_volume.map((element) => `${element.series} #${element.volume}`).join(", ");
       return <div>{formatted}</div>
     },
@@ -237,10 +239,12 @@ export function LibraryTable() {
       try {
         setLoading(true);
         const result = await invoke<BookRecord[]>("fetch_books");
+        info(JSON.stringify(result, null, 2));
         if (!cancelled) {
           setData(result);
         }
       } catch (e) {
+        logError(`"Failed to get data for book table: ${e}`);
         if (!cancelled) setError(e);
       } finally {
         if (!cancelled) setLoading(false);
