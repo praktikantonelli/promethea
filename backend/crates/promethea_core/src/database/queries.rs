@@ -28,8 +28,10 @@ impl Db {
                     bsl.book, 
                     Json_group_array(
                         Json_object(
-                            'series', s.NAME, 'sort', s.sort, 'volume', 
-                            bsl.entry
+                            'series', s.NAME, 
+                            'sort', s.sort, 
+                            'volume', bsl.entry,
+                            'goodreads_id', s.GOODREADS_ID
                         )
                     ) series_and_volume 
                 FROM 
@@ -40,8 +42,11 @@ impl Db {
             ), 
             authors_info AS (
                 SELECT 
-                    Json_group_array(a.NAME) authors, 
-                    Json_group_array(a.sort) authors_sort, 
+                    Json_group_array(Json_object(
+                        'name', a.NAME,
+                        'sort', a.SORT,
+                        'goodreads_id', a.GOODREADS_ID
+                    )) authors,
                     bal.book 
                 FROM 
                     authors AS a 
@@ -59,7 +64,6 @@ impl Db {
                 number_of_pages, 
                 goodreads_id, 
                 authors, 
-                authors_sort, 
                 CASE WHEN series_and_volume IS NULL 
                 OR Trim(series_and_volume) = '' THEN '[]' WHEN Json_valid
                     (series_and_volume) = 1 THEN series_and_volume ELSE '[]' END AS 
@@ -69,7 +73,8 @@ impl Db {
                 LEFT JOIN series_info ON series_info.book = books.id 
                 JOIN authors_info ON authors_info.book = books.id 
             ORDER BY 
-                books.date_added ASC;";
+                books.date_added ASC;
+        ";
         let books: Vec<BookRecord> = sqlx::query_as(query).fetch_all(&self.pool).await?;
         Ok(books)
     }
