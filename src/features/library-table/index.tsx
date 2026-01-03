@@ -2,6 +2,7 @@
 "use client";
 
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 
 import * as React from "react";
 import {
@@ -234,20 +235,32 @@ export function LibraryTable() {
 
   React.useEffect(() => {
     let cancelled = false;
+    let unlisten: null | (() => void) = null;
 
-    (async () => {
+    const fetchBooks = async () => {
       try {
         setLoading(true);
         const result = await invoke<BookRecord[]>("fetch_books");
         if (!cancelled) {
           setData(result);
+          setError(null);
         }
       } catch (e) {
-        logError(`"Failed to get data for book table: ${e}`);
+        logError(`failed to get data for book table: ${e}`);
         if (!cancelled) setError(e);
       } finally {
         if (!cancelled) setLoading(false);
       }
+    };
+
+    (async () => {
+      // initial table load
+      await fetchBooks();
+
+      // listen to DB change event
+      unlisten = await listen("db:changed", () => {
+        fetchBooks();
+      })
     })();
 
     return () => {
