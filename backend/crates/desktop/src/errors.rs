@@ -2,6 +2,8 @@
 pub enum Error {
     #[error("Failed to open key-value config")]
     StoreAccess(#[from] tauri_plugin_store::Error),
+    #[error("Tauri error: {0}")]
+    Tauri(#[from] tauri::Error),
     #[error("{0}")]
     Other(String),
 }

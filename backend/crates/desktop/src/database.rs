@@ -11,7 +11,7 @@ use serde_json::json;
 use std::future::Future;
 use std::iter::zip;
 use std::path::PathBuf;
-use tauri::{AppHandle, State};
+use tauri::{AppHandle, Emitter, State};
 use tauri_plugin_store::StoreExt;
 
 async fn resolve_sort_with_fallback<F, Fut, E>(
@@ -95,7 +95,11 @@ pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, 
 }
 
 #[tauri::command]
-pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), Error> {
+pub async fn add_book(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    path: PathBuf,
+) -> Result<(), Error> {
     log::info!("Received request to add book from {path:?}");
 
     // Extract bare minimum metadata (title + author(s)) from EPUB file
@@ -185,12 +189,19 @@ pub async fn add_book(state: State<'_, AppState>, path: PathBuf) -> Result<(), E
     dbg!(&book_record);
 
     let read_guard = state.db.read().await;
-    if let Some(db) = &*read_guard {
-        match db.insert_book(&book_record).await {
-            Ok(()) => log::info!("Successfully added book!"),
-            Err(e) => log::error!("Failed to add book!"),
+    let db = match &*read_guard {
+        Some(db) => db,
+        None => {
+            log::error!("Could not get DB read guard!");
+            return Err(Error::Other("Could not get DB read guard".into()));
         }
+    };
+    if let Err(e) = db.insert_book(&book_record).await {
+        log::error!("Failed to add book: {e}");
+        return Err(Error::Other(e.to_string()));
     }
 
+    log::info!("Successfully added book");
+    app.emit("db:changed", ())?;
     Ok(())
 }
