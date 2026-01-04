@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use tauri::Manager;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_plugin_store::StoreExt;
+use tracing_subscriber::{fmt, EnvFilter};
 
 mod database;
 mod errors;
@@ -11,6 +12,15 @@ mod state;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    #[cfg(not(debug_assertions))]
+    {
+        let subscriber = fmt()
+            .with_env_filter(EnvFilter::from_default_env())
+            .finish();
+
+        tracing::subscriber::set_global_default(subscriber)
+            .expect("Unable to set global tracing subscriber");
+    }
     let enable_devtools = std::env::var("ENABLE_DEVTOOLS")
         .map(|v| v == "true" || v == "1")
         .unwrap_or(false);
@@ -27,6 +37,9 @@ pub fn run() {
                 .with_colors(ColoredLevelConfig::default())
                 .level(log::LevelFilter::Info)
                 .level_for("promethea", log::LevelFilter::Info)
+                .target(tauri_plugin_log::Target::new(
+                    tauri_plugin_log::TargetKind::Webview,
+                ))
                 .split(app.handle())?;
 
             #[cfg(debug_assertions)]

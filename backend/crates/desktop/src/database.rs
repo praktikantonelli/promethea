@@ -11,8 +11,11 @@ use serde_json::json;
 use std::future::Future;
 use std::iter::zip;
 use std::path::PathBuf;
+use std::time::Instant;
 use tauri::{AppHandle, Emitter, State};
 use tauri_plugin_store::StoreExt;
+use tokio::task;
+use tracing::{info_span, instrument, Instrument};
 
 async fn resolve_sort_with_fallback<F, Fut, E>(
     key: String,
@@ -94,33 +97,77 @@ pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, 
     Err(String::from("Database pool unavailable"))
 }
 
+#[instrument(
+    name = "cmd.add_book",
+    skip(app, state),
+    fields(path = ?path)
+)]
 #[tauri::command]
 pub async fn add_book(
     app: AppHandle,
     state: State<'_, AppState>,
     path: PathBuf,
 ) -> Result<(), Error> {
-    log::info!("Received request to add book from {path:?}");
+    tracing::info!("Received request to add book from {path:?}");
 
-    // Extract bare minimum metadata (title + author(s)) from EPUB file
-    let doc = EpubDoc::new(path).unwrap();
+    // Phase 1: Extract title + author(s) from EPUB file
+    let parse_span = info_span!("epub.parse");
+    let (title, authors) = task::spawn_blocking({
+        let path = path.clone();
+        move || {
+            let _e = parse_span.enter();
 
-    let title = doc.get_title().unwrap();
-    let authors = doc
-        .metadata
-        .iter()
-        .filter(|e| e.property == "creator")
-        .map(|e| e.value.clone())
-        .collect::<Vec<String>>();
+            let t0 = Instant::now();
 
-    // Use those title and author(s) to find the appropriate book on Goodreads and scrape it for
-    // more data
-    let request = MetadataRequestBuilder::default()
-        .with_title(&title)
-        .with_author(authors.first().unwrap());
+            // Extract bare minimum metadata (title + author(s)) from EPUB file
+            let doc = EpubDoc::new(path).unwrap();
 
-    let Some(metadata) = request.execute().await.unwrap() else {
-        log::info!("No metadata found for this book");
+            let title = doc.get_title().unwrap();
+            let authors = doc
+                .metadata
+                .iter()
+                .filter(|e| e.property == "creator")
+                .map(|e| e.value.clone())
+                .collect::<Vec<String>>();
+
+            tracing::info!(
+                elapsed_ms = t0.elapsed().as_millis(),
+                author_count = authors.len(),
+                "epub metadata extracted"
+            );
+            Ok::<_, Error>((title, authors))
+        }
+    })
+    .await
+    .map_err(|e| Error::Other(e.to_string()))??;
+
+    // Phase 2: Use found title and author(s) to scrape Goodreads for metadata
+    let first_author = authors.first().cloned().unwrap_or_default();
+    let scrape_span = info_span!("metadata.scrape", title = %title, author = %first_author);
+    let metadata = async {
+        let t0 = Instant::now();
+
+        let request = MetadataRequestBuilder::default()
+            .with_title(&title)
+            .with_author(&first_author);
+
+        let result = request
+            .execute()
+            .await
+            .map_err(|e| Error::Other(format!("{e:?}")))?;
+
+        tracing::info!(
+            elapsed_ms = t0.elapsed().as_millis(),
+            found = result.is_some(),
+            "metadata scraping done"
+        );
+        Ok::<_, Error>(result)
+    }
+    .instrument(scrape_span)
+    .await?;
+
+    let Some(metadata) = metadata else {
+        tracing::info!("no metadat found");
         return Err(Error::Other(
             "Failed to find metadata for given book".to_string(),
         ));
@@ -128,7 +175,7 @@ pub async fn add_book(
 
     let read_guard = state.db.read().await;
     let Some(db) = &*read_guard else {
-        log::warn!("Database currently not available");
+        tracing::warn!("Database currently not available");
         return Err(Error::Other(
             "Failed to get database connection from app state".to_string(),
         ));
@@ -186,22 +233,21 @@ pub async fn add_book(
         date_published: metadata.publication_date.unwrap(),
         date_modified: date_updated,
     };
-    dbg!(&book_record);
 
     let read_guard = state.db.read().await;
     let db = match &*read_guard {
         Some(db) => db,
         None => {
-            log::error!("Could not get DB read guard!");
+            tracing::error!("Could not get DB read guard!");
             return Err(Error::Other("Could not get DB read guard".into()));
         }
     };
     if let Err(e) = db.insert_book(&book_record).await {
-        log::error!("Failed to add book: {e}");
+        tracing::error!("Failed to add book: {e}");
         return Err(Error::Other(e.to_string()));
     }
 
-    log::info!("Successfully added book");
+    tracing::info!("Successfully added book");
     app.emit("db:changed", ())?;
     Ok(())
 }
