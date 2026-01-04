@@ -264,7 +264,9 @@ export function LibraryTable() {
     })();
 
     return () => {
+      // cleanup => stop listening for event
       cancelled = true;
+      unlisten?.();
     };
   }, []);
 
