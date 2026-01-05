@@ -186,6 +186,7 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 
     for contributor in secondary {
         let role = to_string(&contributor["role"]);
+        dbg!(&contributor);
         let key = to_string(&contributor["node"]["__ref"]);
         if role.is_none() || key.is_none() {
             warn!("Failed to parse contributor");
@@ -206,9 +207,10 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
     let contributor = &metadata["props"]["pageProps"]["apolloState"][&key]["name"];
     let name = to_string(contributor);
+    dbg!(&contributor);
     let goodreads_id = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
         .as_number()
-        .unwrap()
+        .unwrap() // problematic unwrap here when selecting Angie Sage - Darke (Septimus Heap #1)
         .to_string();
 
     if name.is_none() {
