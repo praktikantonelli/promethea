@@ -162,7 +162,6 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
             .as_object()
             .map(|obj| (to_string(&obj["role"]), to_string(&obj["node"]["__ref"])));
 
-    dbg!(&primary);
     match primary {
         Some((Some(role), Some(reference))) => {
             if let Some(contributor) = fetch_contributor(metadata, (role, reference)) {
@@ -222,10 +221,6 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
                 })
         })
         .unwrap();
-    // let goodreads_id = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
-    //     .as_number()
-    //     .unwrap() // problematic unwrap here when selecting Angie Sage - Darke (Septimus Heap #1)
-    //     .to_string();
 
     if name.is_none() {
         warn!("Failed to parse contributor");
@@ -435,5 +430,23 @@ mod tests {
 
         let metadata = fetch_metadata("4556058").await.unwrap();
         assert_eq!(metadata, expected_metadata);
+    }
+
+    #[tokio::test]
+    async fn fetch_metadata_author_with_no_legacy_id() {
+        let expected_authors = vec![
+            BookContributor {
+                name: "Angie Sage".to_string(),
+                role: "Author".to_string(),
+                goodreads_id: "157663".to_string(),
+            },
+            BookContributor {
+                name: "Mark Zug".to_string(),
+                role: "Illustrations".to_string(),
+                goodreads_id: "619712".to_string(),
+            },
+        ];
+        let metadata = fetch_metadata("7355137").await.unwrap();
+        assert_eq!(expected_authors, metadata.contributors);
     }
 }
