@@ -162,6 +162,7 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
             .as_object()
             .map(|obj| (to_string(&obj["role"]), to_string(&obj["node"]["__ref"])));
 
+    dbg!(&primary);
     match primary {
         Some((Some(role), Some(reference))) => {
             if let Some(contributor) = fetch_contributor(metadata, (role, reference)) {
@@ -186,7 +187,6 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 
     for contributor in secondary {
         let role = to_string(&contributor["role"]);
-        dbg!(&contributor);
         let key = to_string(&contributor["node"]["__ref"]);
         if role.is_none() || key.is_none() {
             warn!("Failed to parse contributor");
@@ -207,11 +207,25 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
     let contributor = &metadata["props"]["pageProps"]["apolloState"][&key]["name"];
     let name = to_string(contributor);
-    dbg!(&contributor);
+    // First, try to extract Goodreads ID from "legacyId" field
     let goodreads_id = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
-        .as_number()
-        .unwrap() // problematic unwrap here when selecting Angie Sage - Darke (Septimus Heap #1)
-        .to_string();
+        .as_i64()
+        .map(|x| x.to_string())
+        .or_else(|| {
+            metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"]
+                .as_str()
+                .and_then(|x| {
+                    x.replace("https://www.goodreads.com/author/show/", "")
+                        .split(".")
+                        .next()
+                        .map(|s| s.to_string())
+                })
+        })
+        .unwrap();
+    // let goodreads_id = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
+    //     .as_number()
+    //     .unwrap() // problematic unwrap here when selecting Angie Sage - Darke (Septimus Heap #1)
+    //     .to_string();
 
     if name.is_none() {
         warn!("Failed to parse contributor");
