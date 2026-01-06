@@ -206,10 +206,20 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
     let contributor = &metadata["props"]["pageProps"]["apolloState"][&key]["name"];
     let name = to_string(contributor);
+    // First, try to extract Goodreads ID from "legacyId" field
     let goodreads_id = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
-        .as_number()
-        .unwrap()
-        .to_string();
+        .as_i64()
+        .map(|x| x.to_string())
+        .or_else(|| {
+            metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"]
+                .as_str()
+                .and_then(|x| {
+                    x.strip_prefix("https://www.goodreads.com/author/show/")
+                        .and_then(|rest| rest.split('.').next())
+                        .map(|s| s.to_string())
+                })
+        })
+        .unwrap();
 
     if name.is_none() {
         warn!("Failed to parse contributor");
@@ -419,5 +429,23 @@ mod tests {
 
         let metadata = fetch_metadata("4556058").await.unwrap();
         assert_eq!(metadata, expected_metadata);
+    }
+
+    #[tokio::test]
+    async fn fetch_metadata_author_with_no_legacy_id() {
+        let expected_authors = vec![
+            BookContributor {
+                name: "Angie Sage".to_string(),
+                role: "Author".to_string(),
+                goodreads_id: "157663".to_string(),
+            },
+            BookContributor {
+                name: "Mark Zug".to_string(),
+                role: "Illustrations".to_string(),
+                goodreads_id: "619712".to_string(),
+            },
+        ];
+        let metadata = fetch_metadata("7355137").await.unwrap();
+        assert_eq!(expected_authors, metadata.contributors);
     }
 }
