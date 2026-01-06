@@ -214,9 +214,8 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
             metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"]
                 .as_str()
                 .and_then(|x| {
-                    x.replace("https://www.goodreads.com/author/show/", "")
-                        .split(".")
-                        .next()
+                    x.strip_prefix("https://www.goodreads.com/author/show/")
+                        .and_then(|rest| rest.split('.').next())
                         .map(|s| s.to_string())
                 })
         })
