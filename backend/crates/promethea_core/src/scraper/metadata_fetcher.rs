@@ -1,6 +1,6 @@
 use crate::scraper::errors::ScraperError;
 use chrono::{DateTime, Utc};
-use log::{error, warn};
+use log::{error, info, warn};
 use regex::Regex;
 use reqwest::get;
 use scraper::{Html, Selector};
@@ -189,6 +189,11 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
         let key = to_string(&contributor["node"]["__ref"]);
         if role.is_none() || key.is_none() {
             warn!("Failed to parse contributor");
+            continue;
+        }
+        // Only keep contributors that are authors
+        if role.as_ref().unwrap() != "Author" {
+            info!("Contributor not an author, skipping...");
             continue;
         }
 
