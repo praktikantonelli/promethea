@@ -437,20 +437,55 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn fetch_metadata_author_with_no_legacy_id() {
-        let expected_authors = vec![
-            BookContributor {
-                name: "Angie Sage".to_string(),
-                role: "Author".to_string(),
-                goodreads_id: "157663".to_string(),
-            },
-            BookContributor {
-                name: "Mark Zug".to_string(),
-                role: "Illustrations".to_string(),
-                goodreads_id: "619712".to_string(),
-            },
-        ];
+    async fn fetch_metadata_contributor_with_no_legacy_id() {
+        let expected_contributor = BookContributor {
+            name: "Mark Zug".to_string(),
+            role: "Illustrations".to_string(),
+            goodreads_id: "619712".to_string(),
+        };
+        let metadata = extract_book_metadata("7355137").await.unwrap();
+        let contributor = fetch_contributor(
+            &metadata,
+            (
+                "Illustrations".to_string(),
+                "Contributor:kca://author/amzn1.gr.author.v1.pVNrjuvKvXYyslKm1pwHxQ".to_string(),
+            ),
+        )
+        .unwrap();
+        assert_eq!(expected_contributor, contributor);
+    }
+
+    #[tokio::test]
+    async fn test_multiple_contributors_single_author() {
+        // Darke - Angie Sage, Mark Zug(Illustrator)
+        let expected_authors = vec![BookContributor {
+            name: "Angie Sage".to_string(),
+            role: "Author".to_string(),
+            goodreads_id: "157663".to_string(),
+        }];
         let metadata = fetch_metadata("7355137").await.unwrap();
         assert_eq!(expected_authors, metadata.contributors);
+    }
+
+    #[tokio::test]
+    async fn test_multiple_contributors_multiple_authors() {
+        // A Memory of Light - Robert Jordan, Brandon Sanderson
+        let expected_authors = [
+            BookContributor {
+                name: "Brandon Sanderson".to_string(),
+                role: "Author".to_string(),
+                goodreads_id: "38550".to_string(),
+            },
+            BookContributor {
+                name: "Robert Jordan".to_string(),
+                role: "Author".to_string(),
+                goodreads_id: "6252".to_string(),
+            },
+        ];
+        let contributors = fetch_metadata("7743175").await.unwrap().contributors;
+        assert_eq!(contributors.len(), expected_authors.len());
+        for contributor in contributors {
+            assert!(expected_authors.contains(&contributor));
+        }
     }
 }
