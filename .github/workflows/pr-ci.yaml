@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend/desktop
+        working-directory: backend/crates/desktop
     steps:
       - name: Checkout
         uses: actions/checkout@v4
