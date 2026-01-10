@@ -37,7 +37,7 @@ jobs:
           workspaces: "backend -> target"
 
       - name: Cargo Test (workspace)
-        run: cargo test --workspace --all-targets --locked --exclude desktop
+        run: cargo test --workspace --all-targets --locked --exclude crates/desktop
 
 
   tauri-desktop-build:
