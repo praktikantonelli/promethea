@@ -42,7 +42,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { info, error as logError } from "@tauri-apps/plugin-log";
+import { error as logError } from "@tauri-apps/plugin-log";
 
 export type SeriesAndVolumeRecord = {
   series: string
@@ -230,8 +230,8 @@ export const columns: ColumnDef<BookRecord>[] = [
 export function LibraryTable() {
   const [data, setData] = React.useState<BookRecord[]>([]);
 
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<unknown>(null);
+  const [_loading, setLoading] = React.useState(true);
+  const [_error, setError] = React.useState<unknown>(null);
 
   React.useEffect(() => {
     let cancelled = false;

@@ -77,11 +77,76 @@ jobs:
       # - name: Smoke run
       #   run: cargo run --locked -- --smoke-test
 
-  e2e:
-    name: E2E tests (future)
-    runs-on: ubuntu-latest
-    needs: [rust-tests, tauri-desktop-build]
-    continue-on-error: true
+  e2e-windows:
+    name: E2E (Windows)
+    runs-on: windows-latest
+    needs: [rust-tests]   
+    timeout-minutes: 30
+    # Optional: don’t run on draft PRs
+    if: ${{ github.event.pull_request.draft == false }}
     steps:
-      - name: Placeholder
-        run: echo "E2E tests not implemented yet"
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust builds
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "backend -> target"
+
+      - name: Install tauri-driver
+        shell: pwsh
+        run: cargo install tauri-driver --locked
+
+      - name: Install msedgedriver-tool
+        shell: pwsh
+        run: cargo install --git https://github.com/chippers/msedgedriver-tool
+
+      - name: Download Edge WebDriver and put on PATH
+        shell: pwsh
+        run: |
+          msedgedriver-tool
+
+          # Find downloaded driver
+          $driver = Get-ChildItem -Path $PWD -Filter msedgedriver.exe -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $driver) {
+            $driver = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter msedgedriver.exe -ErrorAction SilentlyContinue | Select-Object -First 1
+          }
+          if (-not $driver) { throw "msedgedriver.exe not found after msedgedriver-tool" }
+
+          $cargoBin = Join-Path $env:USERPROFILE ".cargo\bin"
+          New-Item -ItemType Directory -Force -Path $cargoBin | Out-Null
+          Copy-Item $driver.FullName (Join-Path $cargoBin "msedgedriver.exe") -Force
+
+          # Ensure cargo bin is on PATH for later steps (tauri-driver will find msedgedriver)
+          $cargoBin | Out-File -FilePath $env:GITHUB_PATH -Append
+
+          msedgedriver --version
+
+      - name: Install repo dependencies
+        shell: pwsh
+        run: pnpm install --frozen-lockfile
+
+      - name: Install e2e-tests dependencies
+        shell: pwsh
+        run: pnpm -C e2e-tests install --frozen-lockfile
+
+      - name: Run E2E
+        shell: pwsh
+        run: pnpm -C e2e-tests test
+
+    
