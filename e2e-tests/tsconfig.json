@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "types": [
+      "node",
+      "mocha",
+      "webdriverio"
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "wdio.conf.ts",
+    "tests/**/*.ts"
+  ],
+}
