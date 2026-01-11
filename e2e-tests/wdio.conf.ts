@@ -5,6 +5,7 @@ import { spawn, spawnSync } from "child_process";
 import { fileURLToPath } from "url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const appName = process.platform === "win32" ? "promethea.exe" : "promethea";
 
 async function getFreePort(): Promise<number> {
   return await new Promise((resolve, reject) => {
@@ -47,24 +48,21 @@ function waitForPort(host: string, port: number, timeoutMs = 20000) {
 let tauriDriver: ReturnType<typeof spawn> | undefined;
 
 function closeTauriDriver() {
-  if (tauriDriver && !tauriDriver.killed) {
+  if (!tauriDriver) return;
+  if (tauriDriver.killed) return;
+
+  try {
     tauriDriver.kill();
+  } catch {
+
+  } finally {
+    tauriDriver = undefined;
   }
 }
 
-// Ensure cleanup even if tests crash
-process.on("exit", closeTauriDriver);
-process.on("SIGINT", () => {
-  closeTauriDriver();
-  process.exit(130);
-});
-process.on("SIGTERM", () => {
-  closeTauriDriver();
-  process.exit(143);
-});
 
 export const config: WebdriverIO.Config = {
-  host: "127.0.0.1",
+  hostname: "127.0.0.1",
   port: 0 as any,
 
   specs: ["./tests/specs/**/*.e2e.ts"],
@@ -73,14 +71,13 @@ export const config: WebdriverIO.Config = {
   // This is the key part: tell tauri-driver which binary to launch
   capabilities: [
     {
-      maxInstances: 1,
       "tauri:options": {
         application: path.resolve(
           __dirname,
           `../backend/target/debug/${appName}`
         ),
       },
-    },
+    } as unknown as WebdriverIO.Capabilities,
   ],
 
   reporters: ["spec"],
@@ -136,24 +133,14 @@ export const config: WebdriverIO.Config = {
 
     await waitForPort("127.0.0.1", port);
 
-    tauriDriver.on("exit", (code) => {
-      console.error(`tauri-driver exited with code ${code}`);
+    tauriDriver.on("exit", (code, signal) => {
+      console.error(`tauri-driver exited (code=${code}, signal=${signal})`);
       process.exit(code ?? 1);
     });
   },
 
-  afterSession: () => {
+  onComplete: () => {
     closeTauriDriver();
   },
 
-  //
-  // TypeScript support for WDIO runner
-  //
-  autoCompileOpts: {
-    autoCompile: true,
-    tsNodeOpts: {
-      transpileOnly: true,
-      project: path.resolve(__dirname, "tsconfig.json"),
-    },
-  },
 };
