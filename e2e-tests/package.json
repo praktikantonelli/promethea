@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "wdio run wdio.conf.ts"
+    "test": "node --loader ts-node/esm ./node_modules/@wdio/cli/bin/wdio.js run wdio.conf.ts"
   },
   "dependencies": {
     "@wdio/cli": "^9.23.0"
@@ -17,6 +17,7 @@
     "@wdio/spec-reporter": "^9.20.0",
     "chai": "^6.2.2",
     "ts-node": "^10.9.2",
-    "typescript": "~5.6.3"
+    "typescript": "~5.6.3",
+    "webdriverio": "^9.23.0"
   }
 }
