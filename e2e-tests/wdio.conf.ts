@@ -39,7 +39,7 @@ export const config: WebdriverIO.Config = {
       "tauri:options": {
         application: path.resolve(
           __dirname,
-          "../backend/desktop/target/debug/promethea.exe"
+          "../backend/desktop/target/debug/promethea"
         ),
       },
     },
