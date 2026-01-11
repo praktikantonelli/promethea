@@ -107,7 +107,7 @@ export const config: WebdriverIO.Config = {
   //
   // Start tauri-driver before WebdriverIO tries to create a session. :contentReference[oaicite:8]{index=8}
   //
-  beforeSession: () => {
+  beforeSession: async () => {
     const tauriDriverPath = path.resolve(os.homedir(), ".cargo", "bin", process.platform === "win32" ? "tauri-driver.exe" : "tauri-driver");
 
     tauriDriver = spawn(tauriDriverPath, ["--port", String(DRIVER_PORT)], {
