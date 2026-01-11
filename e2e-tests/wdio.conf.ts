@@ -5,9 +5,20 @@ import { spawn, spawnSync } from "child_process";
 import { fileURLToPath } from "url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const DRIVER_HOST = "127.0.0.1";
-const DRIVER_PORT = 4445;
-const appName = process.platform === "win32" ? "promethea.exe" : "promethea";
+
+async function getFreePort(): Promise<number> {
+  return await new Promise((resolve, reject) => {
+    const server = net.createServer();
+    server.unref();
+    server.on("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      const addr = server.address();
+      if (!addr || typeof addr === "string") return reject(new Error("No address"));
+      const port = addr.port;
+      server.close(() => resolve(port));
+    });
+  });
+}
 
 function waitForPort(host: string, port: number, timeoutMs = 20000) {
   const start = Date.now();
@@ -53,8 +64,8 @@ process.on("SIGTERM", () => {
 });
 
 export const config: WebdriverIO.Config = {
-  host: DRIVER_HOST,
-  port: DRIVER_PORT,
+  host: "127.0.0.1",
+  port: 0 as any,
 
   specs: ["./tests/specs/**/*.e2e.ts"],
   maxInstances: 1,
@@ -107,10 +118,12 @@ export const config: WebdriverIO.Config = {
   //
   // Start tauri-driver before WebdriverIO tries to create a session. :contentReference[oaicite:8]{index=8}
   //
-  beforeSession: async () => {
+  beforeSession: async (config) => {
+    const port = await getFreePort();
+    (config as any).port = port;
     const tauriDriverPath = path.resolve(os.homedir(), ".cargo", "bin", process.platform === "win32" ? "tauri-driver.exe" : "tauri-driver");
 
-    tauriDriver = spawn(tauriDriverPath, ["--port", String(DRIVER_PORT)], {
+    tauriDriver = spawn(tauriDriverPath, ["--port", String(port)], {
       stdio: "inherit",
       windowsHide: true,
       shell: false,
@@ -121,7 +134,12 @@ export const config: WebdriverIO.Config = {
       process.exit(1);
     });
 
-    await waitForPort(DRIVER_HOST, DRIVER_PORT);
+    await waitForPort("127.0.0.1", port);
+
+    tauriDriver.on("exit", (code) => {
+      console.error(`tauri-driver exited with code ${code}`);
+      process.exit(code ?? 1);
+    });
   },
 
   afterSession: () => {
