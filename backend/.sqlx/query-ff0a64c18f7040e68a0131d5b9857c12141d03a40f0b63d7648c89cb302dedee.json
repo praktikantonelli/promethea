@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "WITH series_info AS (\n                SELECT \n                    bsl.book, \n                    Json_group_array(\n                        Json_object(\n                            'series', s.NAME, \n                            'sort', s.sort, \n                            'volume', bsl.entry,\n                            'goodreads_id', s.GOODREADS_ID\n                        )\n                    ) series_and_volume \n                FROM \n                    series AS s \n                    JOIN books_series_link bsl ON bsl.series = s.id \n                GROUP BY \n                    bsl.book\n            ), \n            authors_info AS (\n                SELECT \n                    Json_group_array(Json_object(\n                        'name', a.NAME,\n                        'sort', a.SORT,\n                        'goodreads_id', a.GOODREADS_ID\n                    )) authors,\n                    bal.book \n                FROM \n                    authors AS a \n                    JOIN books_authors_link bal ON a.id = bal.author \n                GROUP BY \n                    bal.book\n            ) \n            SELECT \n                id AS book_id, \n                title, \n                sort, \n                date_added, \n                date_published, \n                last_modified AS date_modified, \n                number_of_pages, \n                goodreads_id, \n                authors, \n                CASE WHEN series_and_volume IS NULL \n                OR Trim(series_and_volume) = '' THEN '[]' WHEN Json_valid\n                    (series_and_volume) = 1 THEN series_and_volume ELSE '[]' END AS \n                    series_and_volume \n            FROM \n                books \n                LEFT JOIN series_info ON series_info.book = books.id \n                JOIN authors_info ON authors_info.book = books.id \n            ORDER BY \n                books.date_added ASC;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "book_id",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "title",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "sort",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "date_added",
+        "ordinal": 3,
+        "type_info": "Datetime"
+      },
+      {
+        "name": "date_published",
+        "ordinal": 4,
+        "type_info": "Datetime"
+      },
+      {
+        "name": "date_modified",
+        "ordinal": 5,
+        "type_info": "Datetime"
+      },
+      {
+        "name": "number_of_pages",
+        "ordinal": 6,
+        "type_info": "Integer"
+      },
+      {
+        "name": "goodreads_id",
+        "ordinal": 7,
+        "type_info": "Integer"
+      },
+      {
+        "name": "authors",
+        "ordinal": 8,
+        "type_info": "Text"
+      },
+      {
+        "name": "series_and_volume",
+        "ordinal": 9,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "ff0a64c18f7040e68a0131d5b9857c12141d03a40f0b63d7648c89cb302dedee"
+}
