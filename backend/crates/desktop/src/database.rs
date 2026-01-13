@@ -1,6 +1,6 @@
 use crate::errors::Error;
 use crate::state::{AppState, APP_CONFIG_PATH, LIBRARY_DATABASE_NAME};
-use chrono::{DateTime, Local, Utc};
+use chrono::Local;
 use epub::doc::EpubDoc;
 use futures::future::join_all;
 use promethea_core::database::types::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
@@ -227,11 +227,11 @@ pub async fn add_book(
         sort: title_sort,
         authors,
         series_and_volume,
-        number_of_pages: metadata.page_count.unwrap() as u32,
+        number_of_pages: metadata.page_count.unwrap(),
         goodreads_id: metadata.goodreads_id.unwrap().parse().unwrap(),
-        date_added,
-        date_published: metadata.publication_date.unwrap(),
-        date_modified: date_updated,
+        date_added: date_added.naive_utc(),
+        date_published: metadata.publication_date.unwrap().naive_utc(),
+        date_modified: date_updated.naive_utc(),
     };
 
     let read_guard = state.db.read().await;

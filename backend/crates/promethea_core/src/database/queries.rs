@@ -1,5 +1,5 @@
 use crate::database::types::{BookRecord, InsertBookError};
-use sqlx::{Row, Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
+use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 use std::path::Path;
 
 pub struct Db {
@@ -22,8 +22,8 @@ impl Db {
     }
 
     pub async fn fetch_books_query(&self) -> Result<Vec<BookRecord>, sqlx::Error> {
-        let query = "
-            WITH series_info AS (
+        let books: Vec<BookRecord> = sqlx::query_as(
+            "WITH series_info AS (
                 SELECT 
                     bsl.book, 
                     Json_group_array(
@@ -74,33 +74,27 @@ impl Db {
                 JOIN authors_info ON authors_info.book = books.id 
             ORDER BY 
                 books.date_added ASC;
-        ";
-        let books: Vec<BookRecord> = sqlx::query_as(query).fetch_all(&self.pool).await?;
+        ",
+        )
+        .fetch_all(&self.pool)
+        .await?;
         Ok(books)
     }
 
     pub async fn try_fetch_author_sort(&self, name: &str) -> Result<Option<String>, sqlx::Error> {
-        let query = "
-            SELECT sort FROM authors WHERE name LIKE $1;
-        ";
-        let sort = sqlx::query(query)
-            .bind(name)
+        let sort = sqlx::query!("SELECT sort FROM authors WHERE name LIKE ?", name)
             .fetch_one(&self.pool)
             .await?
-            .get(0);
+            .sort;
 
         Ok(Some(sort))
     }
 
     pub async fn try_fetch_series_sort(&self, name: &str) -> Result<Option<String>, sqlx::Error> {
-        let query = "
-            SELECT sort FROM series WHERE name LIKE $1;
-        ";
-        let sort = sqlx::query(query)
-            .bind(name)
+        let sort = sqlx::query!("SELECT sort FROM series WHERE name LIKE ?", name)
             .fetch_one(&self.pool)
             .await?
-            .get(0);
+            .sort;
 
         Ok(Some(sort))
     }
@@ -117,7 +111,10 @@ impl Db {
         // 8. Insert book authors link (book ID, author(s) ID(s))
         let mut tx: Transaction<'_, Sqlite> = self.pool.begin().await?;
 
-        let book_id_res: Result<i64, sqlx::Error> = sqlx::query_scalar(
+        let book_goodreads_id = book.goodreads_id;
+        let number_of_pages = book.number_of_pages;
+
+        let book_id_res: Result<i64, sqlx::Error> = sqlx::query_scalar!(
             r#"
             INSERT INTO books (
                 title,
@@ -127,16 +124,16 @@ impl Db {
                 number_of_pages,
                 goodreads_id
             )
-            VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+            VALUES (?, ?, ?, ?, ?, ?)
                 RETURNING id; 
         "#,
+            book.title,
+            book.sort,
+            book.date_added,
+            book.date_published,
+            number_of_pages,
+            book_goodreads_id
         )
-        .bind(&book.title)
-        .bind(&book.sort)
-        .bind(book.date_added)
-        .bind(book.date_published)
-        .bind(book.number_of_pages as i64)
-        .bind(book.goodreads_id as i64)
         .fetch_one(&mut *tx)
         .await;
 
@@ -155,61 +152,65 @@ impl Db {
 
         // handle authors
         for a in &book.authors {
-            let author_id: i64 = sqlx::query_scalar(
+            let author_goodreads_id = a.goodreads_id;
+            let author_id: i64 = sqlx::query!(
                 r#"
                     INSERT INTO authors(name, sort, goodreads_id)
-                    VALUES (?1, ?2, ?3)
+                    VALUES (?, ?, ?)
                     ON CONFLICT(goodreads_id) DO UPDATE SET
                         name = excluded.name,
                         sort = excluded.sort
                     RETURNING id;
                 "#,
+                a.name,
+                a.sort,
+                author_goodreads_id
             )
-            .bind(&a.name)
-            .bind(&a.sort)
-            .bind(a.goodreads_id as i64)
             .fetch_one(&mut *tx)
-            .await?;
+            .await?
+            .id;
 
-            sqlx::query(
+            sqlx::query!(
                 r#"
                 INSERT OR IGNORE INTO books_authors_link(book, author)
                 VALUES (?1, ?2);
             "#,
+                book_id,
+                author_id
             )
-            .bind(book_id)
-            .bind(author_id)
             .execute(&mut *tx)
             .await?;
         }
 
         // handle series
         for sav in &book.series_and_volume {
-            let series_id: i64 = sqlx::query_scalar(
+            let sav_goodreads_id = sav.goodreads_id;
+            let series_id: i64 = sqlx::query!(
                 r#"
                 INSERT INTO series(name, sort, goodreads_id)
-                VALUES (?1, ?2, ?3)
+                VALUES (?, ?, ?)
                 ON CONFLICT(goodreads_id) DO UPDATE SET
                     name = EXCLUDED.name,
                     sort = EXCLUDED.sort
                 RETURNING id;
             "#,
+                sav.series,
+                sav.sort,
+                sav_goodreads_id
             )
-            .bind(&sav.series)
-            .bind(&sav.sort)
-            .bind(sav.goodreads_id as i64)
             .fetch_one(&mut *tx)
-            .await?;
+            .await?
+            .id;
 
-            sqlx::query(
+            sqlx::query!(
                 r#"
                 INSERT INTO books_series_link(book, series, entry)
-                VALUES (?1, ?2, ?3)
+                VALUES (?, ?, ?)
             "#,
+                book_id,
+                series_id,
+                sav.volume
             )
-            .bind(book_id)
-            .bind(series_id)
-            .bind(sav.volume)
             .execute(&mut *tx)
             .await?;
         }

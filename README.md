@@ -43,3 +43,14 @@ Managed to run the debugger using nvim-dap with overseer:
 Theoretically, it should be possible to automatically launch the Vite dev server when debugging starts, but I haven't managed it yet.
 
 Also works in VS Code by starting vite server with `pnpm vite` and then clicking the "Debug" button in main function
+
+# Database
+
+In order to use `sqlx`'s `query!()` macro, you temporarily need a database at compile time and set its path as the `DATABASE_URL` environment variable. Then, update the offline cache via CLI:
+
+```
+# ./backend
+DATABASE_URL=sqlite:///C:/path/to/sqlite.db cargo sqlx prepare --workspace
+```
+
+This command creates an offline store for compile-time checks of `sqlx::query!()` without needing a constantly available database. The command has to be rerun occasionally, for example when the schema changes or when a new query is added.
