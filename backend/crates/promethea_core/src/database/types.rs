@@ -21,7 +21,7 @@ pub struct BookRecord {
 pub struct AuthorRecord {
     pub name: String,
     pub sort: String,
-    pub goodreads_id: u64,
+    pub goodreads_id: i64,
 }
 
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
@@ -29,13 +29,13 @@ pub struct SeriesAndVolumeRecord {
     pub series: String,
     pub sort: String,
     pub volume: f64,
-    pub goodreads_id: u64,
+    pub goodreads_id: i64,
 }
 
 #[derive(Debug, thiserror::Error)]
 pub enum InsertBookError {
     #[error("book already exists (goodreads_id={0})")]
-    BookAlreadyExists(u64),
+    BookAlreadyExists(i64),
 
     #[error("database error: {0}")]
     Db(#[from] sqlx::Error),
