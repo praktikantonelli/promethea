@@ -1,5 +1,5 @@
 use crate::database::types::{BookRecord, InsertBookError};
-use sqlx::{Row, Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
+use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 use std::path::Path;
 
 pub struct Db {

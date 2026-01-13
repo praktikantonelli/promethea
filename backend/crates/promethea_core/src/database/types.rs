@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc};
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
@@ -10,11 +10,11 @@ pub struct BookRecord {
     pub authors: Vec<AuthorRecord>,
     #[sqlx(json)]
     pub series_and_volume: Vec<SeriesAndVolumeRecord>,
-    pub number_of_pages: u32,
-    pub goodreads_id: u64,
-    pub date_added: DateTime<Utc>,
-    pub date_published: DateTime<Utc>,
-    pub date_modified: DateTime<Utc>,
+    pub number_of_pages: i64,
+    pub goodreads_id: i64,
+    pub date_added: NaiveDateTime,
+    pub date_published: NaiveDateTime,
+    pub date_modified: NaiveDateTime,
 }
 
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
