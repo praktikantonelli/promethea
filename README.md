@@ -49,7 +49,7 @@ Also works in VS Code by starting vite server with `pnpm vite` and then clicking
 In order to use `sqlx`'s `query!()` macro, you temporarily need a database at compile time and set its path as the `DATABASE_URL` environment variable. Then, update the offline cache via CLI:
 
 ```
-// ./backend
+# ./backend
 DATABASE_URL=sqlite:///C:/path/to/sqlite.db cargo sqlx prepare --workspace
 ```
 
