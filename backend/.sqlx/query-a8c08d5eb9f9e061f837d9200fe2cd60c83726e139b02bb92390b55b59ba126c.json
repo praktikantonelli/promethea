@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT sort FROM authors WHERE name LIKE ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "sort",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "a8c08d5eb9f9e061f837d9200fe2cd60c83726e139b02bb92390b55b59ba126c"
+}
