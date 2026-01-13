@@ -111,8 +111,8 @@ impl Db {
         // 8. Insert book authors link (book ID, author(s) ID(s))
         let mut tx: Transaction<'_, Sqlite> = self.pool.begin().await?;
 
-        let book_goodreads_id = book.goodreads_id as i64;
-        let number_of_pages = book.number_of_pages as i64;
+        let book_goodreads_id = book.goodreads_id;
+        let number_of_pages = book.number_of_pages;
 
         let book_id_res: Result<i64, sqlx::Error> = sqlx::query_scalar!(
             r#"
@@ -152,7 +152,7 @@ impl Db {
 
         // handle authors
         for a in &book.authors {
-            let author_goodreads_id = a.goodreads_id as i64;
+            let author_goodreads_id = a.goodreads_id;
             let author_id: i64 = sqlx::query!(
                 r#"
                     INSERT INTO authors(name, sort, goodreads_id)
@@ -184,7 +184,7 @@ impl Db {
 
         // handle series
         for sav in &book.series_and_volume {
-            let sav_goodreads_id = sav.goodreads_id as i64;
+            let sav_goodreads_id = sav.goodreads_id;
             let series_id: i64 = sqlx::query!(
                 r#"
                 INSERT INTO series(name, sort, goodreads_id)
