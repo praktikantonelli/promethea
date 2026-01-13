@@ -22,8 +22,7 @@ impl Db {
     }
 
     pub async fn fetch_books_query(&self) -> Result<Vec<BookRecord>, sqlx::Error> {
-        let books: Vec<BookRecord> = sqlx::query_as!(
-            BookRecord,
+        let books: Vec<BookRecord> = sqlx::query_as(
             "WITH series_info AS (
                 SELECT 
                     bsl.book, 
@@ -75,7 +74,7 @@ impl Db {
                 JOIN authors_info ON authors_info.book = books.id 
             ORDER BY 
                 books.date_added ASC;
-        "
+        ",
         )
         .fetch_all(&self.pool)
         .await?;
