@@ -3,3 +3,17 @@
 members = ["crates/desktop", "crates/promethea_core", "crates/server"]
 default-members = ["crates/promethea_core", "crates/server"]
 resolver = "2"
+
+[workspace.lints.rust]
+warnings = "deny"
+
+[workspace.lints.clippy]
+all = "warn"
+pedantic = "warn"
+nursery = "warn"
+cargo = "warn"
+unwrap_used = "warn"
+expect_used = "warn"
+dbg_macro = "warn"
+todo = "warn"
+unimplemented = "warn"
