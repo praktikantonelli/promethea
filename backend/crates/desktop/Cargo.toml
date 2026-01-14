@@ -7,8 +7,8 @@ license = "MIT OR Apache-2.0"
 description = "The Tauri application behind Promethea"
 keywords = ["ebook", "library", "metadata", "EPUB"]
 categories = ["gui", "visualization"]
-authors = ["you"]
-edition = "2021"
+authors = ["praktikantonelli"]
+edition = "2024"
 
 [lints]
 workspace = true
