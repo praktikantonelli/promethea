@@ -1,7 +1,12 @@
 [package]
 name = "promethea"
 version = "0.1.0"
-description = "A Tauri App"
+repository = "https://github.com/praktikantonelli/promethea"
+readme = "../../../README.md"
+license = "MIT OR Apache-2.0"
+description = "The Tauri application behind Promethea"
+keywords = ["ebook", "library", "metadata", "EPUB"]
+categories = ["gui", "visualization"]
 authors = ["you"]
 edition = "2021"
 
