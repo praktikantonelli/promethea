@@ -2,5 +2,12 @@
 name = "server"
 version = "0.1.0"
 edition = "2024"
+repository = "https://github.com/praktikantonelli/promethea"
+readme = "../../../README.md"
+license = "MIT OR Apache-2.0"
+description = "The Rust web server for Promethea as a web application"
+keywords = ["ebook", "library", "metadata", "EPUB"]
+categories = ["gui", "visualization"]
+authors = ["praktikantonelli"]
 
 [dependencies]
