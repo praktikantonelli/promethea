@@ -1,10 +1,11 @@
 use crate::database::{add_book, create_new_db, fetch_books, get_init_status, open_existing_db};
-use crate::state::{AppState, APP_CONFIG_PATH};
+use crate::state::{APP_CONFIG_PATH, AppState};
 use std::path::PathBuf;
 use tauri::Manager;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_plugin_store::StoreExt;
-use tracing_subscriber::{fmt, EnvFilter};
+#[cfg(not(debug_assertions))]
+use tracing_subscriber::{EnvFilter, fmt};
 
 mod database;
 mod errors;
