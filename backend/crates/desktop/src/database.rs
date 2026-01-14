@@ -1,5 +1,5 @@
 use crate::errors::Error;
-use crate::state::{AppState, APP_CONFIG_PATH, LIBRARY_DATABASE_NAME};
+use crate::state::{APP_CONFIG_PATH, AppState, LIBRARY_DATABASE_NAME};
 use chrono::Local;
 use epub::doc::EpubDoc;
 use futures::future::join_all;
@@ -15,7 +15,7 @@ use std::time::Instant;
 use tauri::{AppHandle, Emitter, State};
 use tauri_plugin_store::StoreExt;
 use tokio::task;
-use tracing::{info_span, instrument, Instrument};
+use tracing::{Instrument, info_span, instrument};
 
 async fn resolve_sort_with_fallback<F, Fut, E>(
     key: String,
