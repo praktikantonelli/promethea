@@ -17,18 +17,18 @@ use tauri_plugin_store::StoreExt;
 use tokio::task;
 use tracing::{Instrument, info_span, instrument};
 
-async fn resolve_sort_with_fallback<F, Fut, E>(
-    key: String,
-    primary: F,
-    fallback: fn(&str) -> String,
+async fn resolve_sort_with_fallback<Primary, PrimaryFut, Fallback, E>(
+    primary: Primary,
+    fallback: Fallback,
 ) -> String
 where
-    F: Fn(&str) -> Fut,
-    Fut: Future<Output = Result<Option<String>, E>>,
+    Primary: FnOnce() -> PrimaryFut,
+    PrimaryFut: Future<Output = Result<Option<String>, E>>,
+    Fallback: FnOnce() -> String,
 {
-    match primary(&key).await {
+    match primary().await {
         Ok(Some(v)) => v,
-        _ => fallback(&key),
+        _ => fallback(),
     }
 }
 
@@ -184,10 +184,11 @@ pub async fn add_book(
     let title_sort = get_title_sort(&title);
     let authors = metadata.contributors;
     let authors_sort = join_all(authors.iter().map(|key| async move {
-        match db.try_fetch_author_sort(&key.name).await {
-            Ok(Some(v)) => v,
-            _ => get_name_sort(&key.name),
-        }
+        resolve_sort_with_fallback(
+            || db.try_fetch_author_sort(&key.name),
+            || get_name_sort(&key.name),
+        )
+        .await
     }))
     .await;
     let authors = zip(authors, authors_sort)
@@ -201,10 +202,11 @@ pub async fn add_book(
     // Series sort string(s) => Same as authors
     let series = metadata.series;
     let series_sort = join_all(series.iter().map(|key| async move {
-        match db.try_fetch_series_sort(&key.title).await {
-            Ok(Some(v)) => v,
-            _ => get_title_sort(&key.title),
-        }
+        resolve_sort_with_fallback(
+            || db.try_fetch_series_sort(&key.title),
+            || get_title_sort(&key.title),
+        )
+        .await
     }))
     .await;
     let series_and_volume = zip(series, series_sort)
