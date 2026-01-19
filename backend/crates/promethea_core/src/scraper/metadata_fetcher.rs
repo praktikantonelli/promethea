@@ -74,7 +74,7 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
     let page_count = extract_page_count(&metadata, &amazon_id);
     let language = extract_language(&metadata, &amazon_id);
     let series = extract_series(&metadata, &amazon_id)?;
-    let goodreads_id = Some(goodreads_id.to_string());
+    let goodreads_id = Some(goodreads_id.to_owned());
 
     Ok(BookMetadata {
         title,
@@ -103,7 +103,7 @@ async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError
         None => {
             error!("Failed to scrape book metadata");
             return Err(ScraperError::ScrapeError(
-                "Failed to scrape book metadata".to_string(),
+                "Failed to scrape book metadata".to_owned(),
             ));
         }
         Some(m) => serde_json::from_str(&m.text().collect::<String>())?,
@@ -119,7 +119,7 @@ fn extract_amazon_id(metadata: &Value, goodreads_id: &str) -> Result<String, Scr
     let Some(amazon_id) = to_string(amazon_id) else {
         error!("Failed to scrape Amazon ID");
         return Err(ScraperError::ScrapeError(
-            "Failed to scrape Amazon ID".to_string(),
+            "Failed to scrape Amazon ID".to_owned(),
         ));
     };
 
@@ -134,13 +134,13 @@ fn extract_title_and_subtitle(
     let Some(title) = to_string(title) else {
         error!("Failed to scrape book title");
         return Err(ScraperError::ScrapeError(
-            "Failed to scrape book title".to_string(),
+            "Failed to scrape book title".to_owned(),
         ));
     };
 
     match title.split_once(':') {
-        Some((title, subtitle)) => Ok((title.to_string(), Some(subtitle.trim().to_string()))),
-        None => Ok((title.to_string(), None)),
+        Some((title, subtitle)) => Ok((title.to_owned(), Some(subtitle.trim().to_owned()))),
+        None => Ok((title.to_owned(), None)),
     }
 }
 
@@ -221,7 +221,7 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
                 .and_then(|x| {
                     x.strip_prefix("https://www.goodreads.com/author/show/")
                         .and_then(|rest| rest.split('.').next())
-                        .map(|s| s.to_string())
+                        .map(|s| s.to_owned())
                 })
         })
         .unwrap();
@@ -377,40 +377,40 @@ mod tests {
     async fn fetch_metadata_test() {
         let expected_series = vec![
             BookSeries {
-                title: "Percy Jackson and the Olympians".to_string(),
+                title: "Percy Jackson and the Olympians".to_owned(),
                 number: 5.0,
-                goodreads_id: "40736".to_string(),
+                goodreads_id: "40736".to_owned(),
             },
             BookSeries {
-                title: "Camp Half-Blood Chronicles".to_string(),
+                title: "Camp Half-Blood Chronicles".to_owned(),
                 number: 5.0,
-                goodreads_id: "183923".to_string(),
+                goodreads_id: "183923".to_owned(),
             },
             BookSeries {
-                title: "Coleccionable Percy Jackson".to_string(),
+                title: "Coleccionable Percy Jackson".to_owned(),
                 number: 5.0,
-                goodreads_id: "399169".to_string(),
+                goodreads_id: "399169".to_owned(),
             },
         ];
         let expected_contributors = vec![BookContributor {
-            name: "Rick Riordan".to_string(),
-            role: "Author".to_string(),
-            goodreads_id: "15872".to_string(),
+            name: "Rick Riordan".to_owned(),
+            role: "Author".to_owned(),
+            goodreads_id: "15872".to_owned(),
         }];
         let expected_genres = vec![
-            "Fantasy".to_string(),
-            "Young Adult".to_string(),
-            "Mythology".to_string(),
-            "Fiction".to_string(),
-            "Percy Jackson".to_string(),
-            "Middle Grade".to_string(),
-            "Adventure".to_string(),
-            "Greek Mythology".to_string(),
-            "Urban Fantasy".to_string(),
-            "Childrens".to_string(),
+            "Fantasy".to_owned(),
+            "Young Adult".to_owned(),
+            "Mythology".to_owned(),
+            "Fiction".to_owned(),
+            "Percy Jackson".to_owned(),
+            "Middle Grade".to_owned(),
+            "Adventure".to_owned(),
+            "Greek Mythology".to_owned(),
+            "Urban Fantasy".to_owned(),
+            "Childrens".to_owned(),
         ];
         let expected_metadata = BookMetadata {
-            title: "The Last Olympian".to_string(),
+            title: "The Last Olympian".to_owned(),
             subtitle: None,
             description: Some("All year the half-bloods have been preparing for battle against the Titans, knowing the odds of victory are grim. \
             Kronos's army is stronger than ever, and with every god and half-blood he recruits, the evil Titan's power only grows.\
@@ -418,16 +418,16 @@ mod tests {
             where Mount Olympus stands virtually unguarded. Now it's up to Percy Jackson and an army of young demigods to stop the Lord of Time. \
             <br /><br />In this momentous final book in the <i>New York Times</i> best-selling series, the long-awaited prophecy surrounding \
             Percy's sixteenth birthday unfolds. And as the battle for Western civilization rages on the streets of Manhattan, Percy faces a \
-            terrifying suspicion that he may be fighting against his own fate.".to_string()),
-            publisher: Some("Disney-Hyperion Books".to_string()),
+            terrifying suspicion that he may be fighting against his own fate.".to_owned()),
+            publisher: Some("Disney-Hyperion Books".to_owned()),
             publication_date: Some(DateTime::parse_from_rfc3339("2009-05-05T07:00:00Z").unwrap().to_utc()),
-            isbn: Some("1423101472".to_string()),
+            isbn: Some("1423101472".to_owned()),
             contributors: expected_contributors,
             genres: expected_genres,
             series: expected_series,
             page_count: Some(381),
-            language: Some("English".to_string()),
-            image_url: Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_string()),
+            language: Some("English".to_owned()),
+            image_url: Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_owned()),
             goodreads_id: Some(String::from("4556058")),
 
         };
@@ -439,16 +439,16 @@ mod tests {
     #[tokio::test]
     async fn fetch_metadata_contributor_with_no_legacy_id() {
         let expected_contributor = BookContributor {
-            name: "Mark Zug".to_string(),
-            role: "Illustrations".to_string(),
-            goodreads_id: "619712".to_string(),
+            name: "Mark Zug".to_owned(),
+            role: "Illustrations".to_owned(),
+            goodreads_id: "619712".to_owned(),
         };
         let metadata = extract_book_metadata("7355137").await.unwrap();
         let contributor = fetch_contributor(
             &metadata,
             (
-                "Illustrations".to_string(),
-                "Contributor:kca://author/amzn1.gr.author.v1.pVNrjuvKvXYyslKm1pwHxQ".to_string(),
+                "Illustrations".to_owned(),
+                "Contributor:kca://author/amzn1.gr.author.v1.pVNrjuvKvXYyslKm1pwHxQ".to_owned(),
             ),
         )
         .unwrap();
@@ -459,9 +459,9 @@ mod tests {
     async fn test_multiple_contributors_single_author() {
         // Darke - Angie Sage, Mark Zug(Illustrator)
         let expected_authors = vec![BookContributor {
-            name: "Angie Sage".to_string(),
-            role: "Author".to_string(),
-            goodreads_id: "157663".to_string(),
+            name: "Angie Sage".to_owned(),
+            role: "Author".to_owned(),
+            goodreads_id: "157663".to_owned(),
         }];
         let metadata = fetch_metadata("7355137").await.unwrap();
         assert_eq!(expected_authors, metadata.contributors);
@@ -472,14 +472,14 @@ mod tests {
         // A Memory of Light - Robert Jordan, Brandon Sanderson
         let expected_authors = [
             BookContributor {
-                name: "Brandon Sanderson".to_string(),
-                role: "Author".to_string(),
-                goodreads_id: "38550".to_string(),
+                name: "Brandon Sanderson".to_owned(),
+                role: "Author".to_owned(),
+                goodreads_id: "38550".to_owned(),
             },
             BookContributor {
-                name: "Robert Jordan".to_string(),
-                role: "Author".to_string(),
-                goodreads_id: "6252".to_string(),
+                name: "Robert Jordan".to_owned(),
+                role: "Author".to_owned(),
+                goodreads_id: "6252".to_owned(),
             },
         ];
         let contributors = fetch_metadata("7743175").await.unwrap().contributors;

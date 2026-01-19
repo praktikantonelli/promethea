@@ -130,7 +130,7 @@ mod tests {
         let book_title = "The Last Magician";
         assert_eq!(
             fetch_id_from_title(book_title).await.unwrap(),
-            Some("30312855".to_string())
+            Some("30312855".to_owned())
         );
     }
 
@@ -148,7 +148,7 @@ mod tests {
             fetch_id_from_title_and_author(book_title, book_author)
                 .await
                 .unwrap(),
-            Some("6137154".to_string())
+            Some("6137154".to_owned())
         );
     }
 
@@ -169,7 +169,7 @@ mod tests {
         let isbn = "9780063021426";
         assert_eq!(
             fetch_id_from_isbn(isbn).await.unwrap(),
-            Some("57945316".to_string())
+            Some("57945316".to_owned())
         );
     }
 
