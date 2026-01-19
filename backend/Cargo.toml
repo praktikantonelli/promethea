@@ -18,7 +18,11 @@ suspicious = "warn"
 complexity = "warn"
 perf = "warn"
 style = "warn"
+# allow values with no return and no ; to return
 implicit_return = { level = "allow", priority = 1 }
+# allow using ? to bubble up errors
 question_mark_used = { level = "allow", priority = 1 }
+# allow usage of restriction = "warn"
 blanket_clippy_restriction_lints = { level = "allow", priority = 1 }
+# allow functions that are only called once
 single_call_fn = { level = "allow", priority = 1 }
