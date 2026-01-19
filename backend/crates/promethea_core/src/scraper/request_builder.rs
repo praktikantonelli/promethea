@@ -26,13 +26,13 @@ pub struct MetadataRequestBuilder<T: RequestState> {
 
 impl Default for MetadataRequestBuilder<EmptyState> {
     fn default() -> Self {
-        MetadataRequestBuilder::new()
+        Self::new()
     }
 }
 
 impl MetadataRequestBuilder<EmptyState> {
     fn new() -> Self {
-        MetadataRequestBuilder { state: EmptyState }
+        Self { state: EmptyState }
     }
 
     pub fn with_id(self, id: &str) -> MetadataRequestBuilder<IdState> {
