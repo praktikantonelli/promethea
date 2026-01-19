@@ -15,18 +15,18 @@ pub enum ScraperError {
 
 impl From<reqwest::Error> for ScraperError {
     fn from(error: reqwest::Error) -> Self {
-        ScraperError::FetchError(error)
+        Self::FetchError(error)
     }
 }
 
 impl From<SelectorErrorKind<'static>> for ScraperError {
     fn from(error: SelectorErrorKind<'static>) -> Self {
-        ScraperError::ParseError(error.to_string())
+        Self::ParseError(error.to_string())
     }
 }
 
 impl From<serde_json::Error> for ScraperError {
     fn from(error: serde_json::Error) -> Self {
-        ScraperError::SerializeError(error)
+        Self::SerializeError(error)
     }
 }
