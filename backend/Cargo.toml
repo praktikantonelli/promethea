@@ -20,3 +20,4 @@ perf = "warn"
 style = "warn"
 implicit_return = { level = "allow", priority = 1 }
 question_mark_used = { level = "allow", priority = 1 }
+blanket_clippy_restriction_lints = { level = "allow", priority = 1 }
