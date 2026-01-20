@@ -456,7 +456,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_multiple_contributors_single_author() {
+    async fn multiple_contributors_single_author() {
         // Darke - Angie Sage, Mark Zug(Illustrator)
         let expected_authors = vec![BookContributor {
             name: "Angie Sage".to_owned(),
@@ -468,7 +468,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_multiple_contributors_multiple_authors() {
+    async fn multiple_contributors_multiple_authors() {
         // A Memory of Light - Robert Jordan, Brandon Sanderson
         let expected_authors = [
             BookContributor {
