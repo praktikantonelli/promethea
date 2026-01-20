@@ -2,15 +2,12 @@ pub fn get_name_sort(author_name: &str) -> String {
     // Takes the full name of an author and produces a string according to which the name should
     // be sorted. General logic: Sort by last "word" in name and comma-separate it from everything
     // else in the name, e.g. `Guy Le Best => Best, Guy Le`
-    let mut tokens = author_name.split_whitespace().collect::<Vec<&str>>();
+    let tokens = author_name.split_whitespace().collect::<Vec<&str>>();
 
-    match tokens.len() {
-        0 => String::new(),
-        1 => String::from(tokens[0]),
-        _ => {
-            let determining_name = tokens.pop().unwrap();
-            format!("{}, {}", determining_name, tokens.join(" "))
-        }
+    match tokens.as_slice().split_last() {
+        None => String::new(),
+        Some((only, &[])) => (*only).to_owned(),
+        Some((last, rest)) => format!("{}, {}", last, rest.join(" ")),
     }
 }
 
