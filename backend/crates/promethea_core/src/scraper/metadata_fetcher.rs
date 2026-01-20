@@ -114,6 +114,10 @@ async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError
 
 fn extract_amazon_id(metadata: &Value, goodreads_id: &str) -> Result<String, ScraperError> {
     let amazon_id_key = format!("getBookByLegacyId({{\"legacyId\":\"{goodreads_id}\"}})");
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let amazon_id =
         &metadata["props"]["pageProps"]["apolloState"]["ROOT_QUERY"][amazon_id_key]["__ref"];
     let Some(amazon_id) = to_string(amazon_id) else {
@@ -130,6 +134,10 @@ fn extract_title_and_subtitle(
     metadata: &Value,
     amazon_id: &str,
 ) -> Result<(String, Option<String>), ScraperError> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let title = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["title"];
     let Some(title) = to_string(title) else {
         error!("Failed to scrape book title");
@@ -145,11 +153,19 @@ fn extract_title_and_subtitle(
 }
 
 fn extract_description(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let description = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["description"];
     to_string(description)
 }
 
 fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let url = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["imageUrl"];
     to_string(url)
 }
@@ -157,6 +173,10 @@ fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
 fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
     let mut contributors = Vec::new();
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let primary =
         metadata["props"]["pageProps"]["apolloState"][amazon_id]["primaryContributorEdge"]
             .as_object()
@@ -174,6 +194,10 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
         None => (),
     }
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let Some(secondary) =
         metadata["props"]["pageProps"]["apolloState"][amazon_id]["secondaryContributorEdges"]
             .as_array()
@@ -184,6 +208,10 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
             .collect();
     };
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     for contributor in secondary {
         let role = to_string(&contributor["role"]);
         let key = to_string(&contributor["node"]["__ref"]);
@@ -209,9 +237,21 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 }
 
 fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let contributor = &metadata["props"]["pageProps"]["apolloState"][&key]["name"];
     let name = to_string(contributor);
     // First, try to extract Goodreads ID from "legacyId" field
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let goodreads_id = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
         .as_i64()
         .map(|x| x.to_string())
@@ -238,12 +278,20 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
 }
 
 fn extract_genres(metadata: &Value, amazon_id: &str) -> Vec<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let genres = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookGenres"].as_array();
 
     let Some(genres) = genres else {
         return vec![];
     };
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     genres
         .iter()
         .filter_map(|genre| {
@@ -256,12 +304,20 @@ fn extract_genres(metadata: &Value, amazon_id: &str) -> Vec<String> {
 }
 
 fn extract_publisher(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let publisher =
         &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publisher"];
     to_string(publisher)
 }
 
 fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     match &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publicationTime"] {
         Value::Null => None,
         Value::Number(number) => {
@@ -278,21 +334,37 @@ fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTim
 }
 
 fn extract_isbn(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let isbn = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["isbn"];
     if let Some(i) = to_string(isbn) {
         return Some(i);
     }
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let isbn13 = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["isbn13"];
     if let Some(i) = to_string(isbn13) {
         return Some(i);
     }
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let asin = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["asin"];
     to_string(asin)
 }
 
 fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let count =
         metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["numPages"].as_i64();
     match count {
@@ -302,16 +374,28 @@ fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
 }
 
 fn extract_language(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let language =
         &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["language"]["name"];
     to_string(language)
 }
 
 fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, ScraperError> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let series_array = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookSeries"]
         .as_array()
         .unwrap();
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let series_info = series_array
         .iter()
         .filter_map(|series| {

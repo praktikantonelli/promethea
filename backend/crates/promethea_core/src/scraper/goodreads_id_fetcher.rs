@@ -23,6 +23,10 @@ pub async fn fetch_id_from_isbn(isbn: &str) -> Result<Option<String>, ScraperErr
 
     let metadata: Value = serde_json::from_str(metadata)?;
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let goodreads_id = metadata["props"]["pageProps"]["params"]["book_id"]
         .as_str()
         .expect("Failed to extract Goodreads ID from ISBN search results");
