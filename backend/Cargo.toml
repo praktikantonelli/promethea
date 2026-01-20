@@ -6,6 +6,14 @@ resolver = "2"
 
 [workspace.lints.rust]
 warnings = "deny"
+deprecated-safe = "deny"
+future-incompatible = "deny"
+keyword-idents = "deny"
+let-underscore = "deny"
+nonstandard-style = "deny"
+refining-impl-trait = "deny"
+unknown-or-malformed-diagnostic-attributes = "deny"
+unused = "deny"
 
 [workspace.lints.clippy]
 all = "warn"
