@@ -37,19 +37,19 @@ impl MetadataRequestBuilder<EmptyState> {
 
     pub fn with_id(self, id: &str) -> MetadataRequestBuilder<IdState> {
         MetadataRequestBuilder {
-            state: IdState(id.to_string()),
+            state: IdState(id.to_owned()),
         }
     }
 
     pub fn with_isbn(self, isbn: &str) -> MetadataRequestBuilder<IsbnState> {
         MetadataRequestBuilder {
-            state: IsbnState(isbn.to_string()),
+            state: IsbnState(isbn.to_owned()),
         }
     }
 
     pub fn with_title(self, title: &str) -> MetadataRequestBuilder<TitleState> {
         MetadataRequestBuilder {
-            state: TitleState(title.to_string()),
+            state: TitleState(title.to_owned()),
         }
     }
 }
@@ -57,7 +57,7 @@ impl MetadataRequestBuilder<EmptyState> {
 impl MetadataRequestBuilder<TitleState> {
     pub fn with_author(self, author: &str) -> MetadataRequestBuilder<TitleWithAuthorState> {
         MetadataRequestBuilder {
-            state: TitleWithAuthorState(self.state.0, author.to_string()),
+            state: TitleWithAuthorState(self.state.0, author.to_owned()),
         }
     }
 

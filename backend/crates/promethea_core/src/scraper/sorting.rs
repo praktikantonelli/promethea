@@ -26,7 +26,7 @@ pub fn get_title_sort(title: &str) -> String {
             return format!("{trimmed_remainder}, {prefix}");
         }
     }
-    title.to_string()
+    title.to_owned()
 }
 
 #[cfg(test)]
