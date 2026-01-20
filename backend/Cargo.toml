@@ -28,3 +28,5 @@ blanket_clippy_restriction_lints = { level = "allow", priority = 1 }
 single_call_fn = { level = "allow", priority = 1 }
 # allow multiple versions of same crate because this is not controllable for indirect dependencies
 multiple_crate_versions = { level = "allow", priority = 1 }
+# allow locally disabling specific lints
+allow_attributes = { level = "allow", priority = 1 }
