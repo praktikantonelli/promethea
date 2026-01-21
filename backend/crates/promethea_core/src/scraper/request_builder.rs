@@ -33,7 +33,7 @@ impl Default for MetadataRequestBuilder<EmptyState> {
 }
 
 impl MetadataRequestBuilder<EmptyState> {
-    fn new() -> Self {
+    const fn new() -> Self {
         Self { state: EmptyState }
     }
 
