@@ -40,3 +40,5 @@ multiple_crate_versions = { level = "allow", priority = 1 }
 allow_attributes = { level = "allow", priority = 1 }
 # do not enforce alphabetical ordering
 arbitrary_source_item_ordering = { level = "allow", priority = 1 }
+# use mod.rs files in modules
+mod_module_files = { level = "allow", priority = 1 }
