@@ -1,3 +1,4 @@
+#[must_use]
 pub fn get_name_sort(author_name: &str) -> String {
     // Takes the full name of an author and produces a string according to which the name should
     // be sorted. General logic: Sort by last "word" in name and comma-separate it from everything
@@ -11,6 +12,7 @@ pub fn get_name_sort(author_name: &str) -> String {
     }
 }
 
+#[must_use]
 pub fn get_title_sort(title: &str) -> String {
     // Required patterns:
     // the everythingelse -> everythingelse, the e.g. The Hobbit
