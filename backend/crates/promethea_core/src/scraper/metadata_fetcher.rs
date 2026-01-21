@@ -326,18 +326,18 @@ fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTim
         reason = "`serde_json::Value` indexing never panics"
     )]
     #[allow(clippy::pattern_type_mismatch, reason = "false positive")]
-    match &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publicationTime"] {
-        Value::Null => None,
-        Value::Number(number) => {
-            let timestamp = number.as_i64().and_then(DateTime::from_timestamp_millis);
+    if let Value::Number(number) =
+        &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publicationTime"]
+    {
+        let timestamp = number.as_i64().and_then(DateTime::from_timestamp_millis);
 
-            if timestamp.is_none() {
-                warn!("Failed to parse publication date");
-            }
-
-            timestamp
+        if timestamp.is_none() {
+            warn!("Failed to parse publication date");
         }
-        _ => panic!("Publication date must be a timestamp"),
+        timestamp
+    } else {
+        warn!("No publication date in JSON found!");
+        None
     }
 }
 
