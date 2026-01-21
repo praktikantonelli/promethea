@@ -7,6 +7,7 @@ use crate::scraper::{
 };
 
 pub trait RequestState {}
+#[allow(clippy::exhaustive_structs, reason = "Empty state will remain empty")]
 pub struct EmptyState;
 pub struct IdState(String);
 pub struct IsbnState(String);

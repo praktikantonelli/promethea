@@ -1,6 +1,7 @@
 use scraper::error::SelectorErrorKind;
 
 /// Custom error type for handling errors in the Goodreads metadata scraper.
+#[non_exhaustive]
 #[derive(Debug)]
 pub enum ScraperError {
     /// Error that occurs during the HTTP request to Goodreads, originating from `reqwest`.

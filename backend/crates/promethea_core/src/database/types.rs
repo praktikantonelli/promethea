@@ -1,6 +1,7 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
+#[non_exhaustive]
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct BookRecord {
     pub book_id: i64,
@@ -17,6 +18,7 @@ pub struct BookRecord {
     pub date_modified: NaiveDateTime,
 }
 
+#[non_exhaustive]
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct AuthorRecord {
     pub name: String,
@@ -24,6 +26,7 @@ pub struct AuthorRecord {
     pub goodreads_id: i64,
 }
 
+#[non_exhaustive]
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct SeriesAndVolumeRecord {
     pub series: String,
@@ -32,6 +35,7 @@ pub struct SeriesAndVolumeRecord {
     pub goodreads_id: i64,
 }
 
+#[non_exhaustive]
 #[derive(Debug, thiserror::Error)]
 pub enum InsertBookError {
     #[error("book already exists (goodreads_id={0})")]

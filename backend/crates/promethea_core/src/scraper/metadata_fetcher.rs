@@ -7,6 +7,7 @@ use scraper::{Html, Selector};
 use serde_json::Value;
 
 /// The primary data structure containing the metadata of a book.
+#[non_exhaustive]
 #[derive(Debug, PartialEq)]
 pub struct BookMetadata {
     /// The main title of the book.
@@ -38,6 +39,7 @@ pub struct BookMetadata {
 }
 
 /// Represents an individual who contributed to the book, such as an author or editor.
+#[non_exhaustive]
 #[derive(Debug, PartialEq)]
 pub struct BookContributor {
     /// The name of the contributor.
@@ -49,6 +51,7 @@ pub struct BookContributor {
 }
 
 /// Represents series information for a book, including the series title and book's position within the series.
+#[non_exhaustive]
 #[derive(Debug, PartialEq)]
 pub struct BookSeries {
     /// The title of the series.
