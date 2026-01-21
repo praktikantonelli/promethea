@@ -73,7 +73,7 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
     let isbn = extract_isbn(&metadata, &amazon_id);
     let page_count = extract_page_count(&metadata, &amazon_id);
     let language = extract_language(&metadata, &amazon_id);
-    let series = extract_series(&metadata, &amazon_id)?;
+    let series = extract_series(&metadata, &amazon_id);
     let goodreads_id = Some(goodreads_id.to_owned());
 
     Ok(BookMetadata {
@@ -383,7 +383,7 @@ fn extract_language(metadata: &Value, amazon_id: &str) -> Option<String> {
     to_string(language)
 }
 
-fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, ScraperError> {
+fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
@@ -432,7 +432,7 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, 
             })
         })
         .collect::<Vec<BookSeries>>();
-    Ok(series_info)
+    series_info
 }
 
 fn to_string(value: &Value) -> Option<String> {
