@@ -455,7 +455,7 @@ fn to_string(value: &Value) -> Option<String> {
 fn extract_id_from_url(url: &Value) -> Option<String> {
     let url = url.as_str()?;
     let replaced = url.replace("https://www.goodreads.com/series/", "");
-    let id_raw = replaced.split("-").next()?;
+    let id_raw = replaced.split('-').next()?;
     let id = String::from(id_raw);
     Some(id)
 }
