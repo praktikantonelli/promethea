@@ -155,7 +155,7 @@ fn extract_title_and_subtitle(
 
     match title.split_once(':') {
         Some((title, subtitle)) => Ok((title.to_owned(), Some(subtitle.trim().to_owned()))),
-        None => Ok((title.to_owned(), None)),
+        None => Ok((title.clone(), None)),
     }
 }
 
