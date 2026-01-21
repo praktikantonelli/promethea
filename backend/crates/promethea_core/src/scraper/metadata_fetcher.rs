@@ -268,7 +268,7 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
                 .and_then(|x| {
                     x.strip_prefix("https://www.goodreads.com/author/show/")
                         .and_then(|rest| rest.split('.').next())
-                        .map(|string| string.to_owned())
+                        .map(str::to_owned)
                 })
         })
         .unwrap();
