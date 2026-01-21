@@ -106,7 +106,7 @@ async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError
     let metadata_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#)?;
     let metadata = &document.select(&metadata_selector).next();
 
-    let metadata = match metadata {
+    let metadata = match *metadata {
         None => {
             error!("Failed to scrape book metadata");
             return Err(ScraperError::ScrapeError(
@@ -325,6 +325,7 @@ fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTim
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
+    #[allow(clippy::pattern_type_mismatch, reason = "false positive")]
     match &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publicationTime"] {
         Value::Null => None,
         Value::Number(number) => {

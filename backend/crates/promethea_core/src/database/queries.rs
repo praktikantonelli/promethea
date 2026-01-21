@@ -238,6 +238,10 @@ impl Db {
     }
 }
 
+#[allow(
+    clippy::pattern_type_mismatch,
+    reason = "False positive, this is the idiomatic pattern"
+)]
 fn is_sqlite_unique_violation(error: &sqlx::Error) -> bool {
     // Check for unique violation by searching for matching text in error message
     match error {
