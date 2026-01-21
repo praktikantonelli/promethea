@@ -141,18 +141,18 @@ impl Db {
         // rollback previous SQL query
         let book_id = match book_id_res {
             Ok(id) => id,
-            Err(e) => {
-                if is_sqlite_unique_violation(&e) {
+            Err(error) => {
+                if is_sqlite_unique_violation(&error) {
                     tx.rollback().await.ok();
                     return Err(InsertBookError::BookAlreadyExists(book.goodreads_id));
                 }
-                return Err(InsertBookError::Db(e));
+                return Err(InsertBookError::Db(error));
             }
         };
 
         // handle authors
-        for a in &book.authors {
-            let author_goodreads_id = a.goodreads_id;
+        for author_record in &book.authors {
+            let author_goodreads_id = author_record.goodreads_id;
             let author_id: i64 = sqlx::query!(
                 r#"
                     INSERT INTO authors(name, sort, goodreads_id)
@@ -162,8 +162,8 @@ impl Db {
                         sort = excluded.sort
                     RETURNING id;
                 "#,
-                a.name,
-                a.sort,
+                author_record.name,
+                author_record.sort,
                 author_goodreads_id
             )
             .fetch_one(&mut *tx)
@@ -220,9 +220,9 @@ impl Db {
     }
 }
 
-fn is_sqlite_unique_violation(e: &sqlx::Error) -> bool {
+fn is_sqlite_unique_violation(error: &sqlx::Error) -> bool {
     // Check for unique violation by searching for matching text in error message
-    match e {
+    match error {
         sqlx::Error::Database(db_err) => db_err.message().contains("UNIQUE constraint failed"),
         _ => false,
     }

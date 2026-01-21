@@ -106,7 +106,7 @@ async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError
                 "Failed to scrape book metadata".to_owned(),
             ));
         }
-        Some(m) => serde_json::from_str(&m.text().collect::<String>())?,
+        Some(element) => serde_json::from_str(&element.text().collect::<String>())?,
     };
 
     Ok(metadata)
@@ -204,7 +204,7 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
     else {
         return contributors
             .into_iter()
-            .filter(|s| !s.name.to_lowercase().eq("unknown author"))
+            .filter(|contributor| !contributor.name.to_lowercase().eq("unknown author"))
             .collect();
     };
 
@@ -232,7 +232,7 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 
     contributors
         .into_iter()
-        .filter(|s| !s.name.to_lowercase().eq("unknown author"))
+        .filter(|contributor| !contributor.name.to_lowercase().eq("unknown author"))
         .collect()
 }
 
@@ -261,7 +261,7 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
                 .and_then(|x| {
                     x.strip_prefix("https://www.goodreads.com/author/show/")
                         .and_then(|rest| rest.split('.').next())
-                        .map(|s| s.to_owned())
+                        .map(|string| string.to_owned())
                 })
         })
         .unwrap();
@@ -369,7 +369,7 @@ fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
         metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["numPages"].as_i64();
     match count {
         Some(0) => None,
-        c => c,
+        val => val,
     }
 }
 
@@ -401,8 +401,8 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, 
         .filter_map(|series| {
             let Some(number) = series["userPosition"]
                 .as_str()
-                .map(|s| s.split('-').next().unwrap_or(""))
-                .and_then(|s| s.parse::<f32>().ok())
+                .map(|string| string.split('-').next().unwrap_or(""))
+                .and_then(|string| string.parse::<f32>().ok())
             else {
                 warn!("Failed to parse series number");
                 return None;
@@ -440,8 +440,8 @@ fn to_string(value: &Value) -> Option<String> {
     value
         .as_str()
         .map(str::trim)
-        .map(|s| re.replace_all(s, " ").to_string())
-        .filter(|s| !s.is_empty())
+        .map(|string| re.replace_all(string, " ").to_string())
+        .filter(|string| !string.is_empty())
 }
 
 fn extract_id_from_url(url: &Value) -> Option<String> {

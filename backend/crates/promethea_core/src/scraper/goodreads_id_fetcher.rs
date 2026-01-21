@@ -33,7 +33,7 @@ pub async fn fetch_id_from_isbn(isbn: &str) -> Result<Option<String>, ScraperErr
 
     let goodreads_id = goodreads_id
         .chars()
-        .take_while(|c| c.is_numeric())
+        .take_while(|character| character.is_numeric())
         .collect::<String>();
 
     Ok(Some(goodreads_id))
@@ -103,11 +103,11 @@ async fn search_books(query: &str) -> Result<Vec<(String, String, String)>, Scra
 fn matches(str1: &str, str2: &str) -> bool {
     let str1 = str1
         .chars()
-        .filter(|c| c.is_alphanumeric())
+        .filter(|character| character.is_alphanumeric())
         .collect::<String>();
     let str2 = str2
         .chars()
-        .filter(|c| c.is_alphanumeric())
+        .filter(|character| character.is_alphanumeric())
         .collect::<String>();
 
     str1.to_lowercase().contains(&str2.to_lowercase())
@@ -121,7 +121,7 @@ fn extract_goodreads_id(url: &str) -> String {
         .next()
         .expect("Failed to extract Goodreads ID")
         .chars()
-        .take_while(|c| c.is_numeric())
+        .take_while(|character| character.is_numeric())
         .collect::<String>()
 }
 
