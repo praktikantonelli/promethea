@@ -13,18 +13,21 @@ pub enum ScraperError {
     SerializeError(serde_json::Error),
 }
 
+#[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 impl From<reqwest::Error> for ScraperError {
     fn from(error: reqwest::Error) -> Self {
         Self::FetchError(error)
     }
 }
 
+#[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 impl From<SelectorErrorKind<'static>> for ScraperError {
     fn from(error: SelectorErrorKind<'static>) -> Self {
         Self::ParseError(error.to_string())
     }
 }
 
+#[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 impl From<serde_json::Error> for ScraperError {
     fn from(error: serde_json::Error) -> Self {
         Self::SerializeError(error)

@@ -4,12 +4,17 @@ use scraper::{Html, Selector};
 use serde_json::Value;
 use urlencoding::encode;
 
+#[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 pub async fn verify_id_exists(id: &str) -> bool {
     let url = format!("https://www.goodreads.com/book/show/{id}");
     let response = get(&url).await.expect("Failed to fetch book page");
     response.status().is_success()
 }
 
+#[allow(
+    clippy::missing_inline_in_public_items,
+    reason = "Called rarely, large function"
+)]
 pub async fn fetch_id_from_isbn(isbn: &str) -> Result<Option<String>, ScraperError> {
     let url = format!("https://www.goodreads.com/search?q={}", encode(isbn));
     let document = Html::parse_document(&get(&url).await?.text().await?);
@@ -39,6 +44,7 @@ pub async fn fetch_id_from_isbn(isbn: &str) -> Result<Option<String>, ScraperErr
     Ok(Some(goodreads_id))
 }
 
+#[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 pub async fn fetch_id_from_title(title: &str) -> Result<Option<String>, ScraperError> {
     let results = search_books(title).await?;
 
@@ -51,6 +57,7 @@ pub async fn fetch_id_from_title(title: &str) -> Result<Option<String>, ScraperE
     Ok(None)
 }
 
+#[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 pub async fn fetch_id_from_title_and_author(
     title: &str,
     author: &str,

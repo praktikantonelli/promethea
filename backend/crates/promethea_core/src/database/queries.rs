@@ -7,6 +7,10 @@ pub struct Db {
 }
 
 impl Db {
+    #[allow(
+        clippy::missing_inline_in_public_items,
+        reason = "Called once at start of program"
+    )]
     pub async fn init(path: &Path) -> Result<Self, sqlx::Error> {
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
@@ -17,10 +21,18 @@ impl Db {
         Ok(Self { pool })
     }
 
+    #[allow(
+        clippy::missing_inline_in_public_items,
+        reason = "Called once at end of program"
+    )]
     pub async fn close(&self) {
         self.pool.close().await;
     }
 
+    #[allow(
+        clippy::missing_inline_in_public_items,
+        reason = "Large function, called only when table updates"
+    )]
     pub async fn fetch_books_query(&self) -> Result<Vec<BookRecord>, sqlx::Error> {
         let books: Vec<BookRecord> = sqlx::query_as(
             "WITH series_info AS (
@@ -81,6 +93,7 @@ impl Db {
         Ok(books)
     }
 
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn try_fetch_author_sort(&self, name: &str) -> Result<Option<String>, sqlx::Error> {
         let sort = sqlx::query!("SELECT sort FROM authors WHERE name LIKE ?", name)
             .fetch_one(&self.pool)
@@ -90,6 +103,7 @@ impl Db {
         Ok(Some(sort))
     }
 
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn try_fetch_series_sort(&self, name: &str) -> Result<Option<String>, sqlx::Error> {
         let sort = sqlx::query!("SELECT sort FROM series WHERE name LIKE ?", name)
             .fetch_one(&self.pool)
@@ -99,6 +113,10 @@ impl Db {
         Ok(Some(sort))
     }
 
+    #[allow(
+        clippy::missing_inline_in_public_items,
+        reason = "Called rarely, large function"
+    )]
     pub async fn insert_book(&self, book: &BookRecord) -> Result<(), InsertBookError> {
         // Query outline:
         // 1. Insert book (title, sort, date_added, date_published, last_modified, number_of_pages, goodreads_id)

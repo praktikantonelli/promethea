@@ -25,6 +25,7 @@ pub struct MetadataRequestBuilder<T: RequestState> {
 }
 
 impl Default for MetadataRequestBuilder<EmptyState> {
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     fn default() -> Self {
         Self::new()
     }
@@ -36,6 +37,7 @@ impl MetadataRequestBuilder<EmptyState> {
     }
 
     #[must_use]
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub fn with_id(self, id: &str) -> MetadataRequestBuilder<IdState> {
         MetadataRequestBuilder {
             state: IdState(id.to_owned()),
@@ -43,6 +45,7 @@ impl MetadataRequestBuilder<EmptyState> {
     }
 
     #[must_use]
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub fn with_isbn(self, isbn: &str) -> MetadataRequestBuilder<IsbnState> {
         MetadataRequestBuilder {
             state: IsbnState(isbn.to_owned()),
@@ -50,6 +53,7 @@ impl MetadataRequestBuilder<EmptyState> {
     }
 
     #[must_use]
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub fn with_title(self, title: &str) -> MetadataRequestBuilder<TitleState> {
         MetadataRequestBuilder {
             state: TitleState(title.to_owned()),
@@ -59,12 +63,14 @@ impl MetadataRequestBuilder<EmptyState> {
 
 impl MetadataRequestBuilder<TitleState> {
     #[must_use]
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub fn with_author(self, author: &str) -> MetadataRequestBuilder<TitleWithAuthorState> {
         MetadataRequestBuilder {
             state: TitleWithAuthorState(self.state.0, author.to_owned()),
         }
     }
 
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn execute(&self) -> Result<Option<BookMetadata>, ScraperError> {
         let title = &self.state.0;
         let goodreads_id = fetch_id_from_title(title).await?;
@@ -76,6 +82,7 @@ impl MetadataRequestBuilder<TitleState> {
 }
 
 impl MetadataRequestBuilder<IdState> {
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn execute(&self) -> Result<Option<BookMetadata>, ScraperError> {
         let id = &self.state.0;
         if !verify_id_exists(id).await {
@@ -86,6 +93,7 @@ impl MetadataRequestBuilder<IdState> {
 }
 
 impl MetadataRequestBuilder<IsbnState> {
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn execute(&self) -> Result<Option<BookMetadata>, ScraperError> {
         let isbn = &self.state.0;
         let goodreads_id = fetch_id_from_isbn(isbn).await?;
@@ -97,6 +105,7 @@ impl MetadataRequestBuilder<IsbnState> {
 }
 
 impl MetadataRequestBuilder<TitleWithAuthorState> {
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn execute(&self) -> Result<Option<BookMetadata>, ScraperError> {
         let title = &self.state.0;
         let author = &self.state.1;

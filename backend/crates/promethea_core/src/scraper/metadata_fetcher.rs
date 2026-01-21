@@ -59,6 +59,10 @@ pub struct BookSeries {
     pub goodreads_id: String,
 }
 
+#[allow(
+    clippy::missing_inline_in_public_items,
+    reason = "Called rarely, large function"
+)]
 pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperError> {
     let metadata = extract_book_metadata(goodreads_id).await?;
     let amazon_id = extract_amazon_id(&metadata, goodreads_id)?;
