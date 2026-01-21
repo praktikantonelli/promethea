@@ -161,7 +161,7 @@ impl Db {
             Ok(id) => id,
             Err(error) => {
                 if is_sqlite_unique_violation(&error) {
-                    tx.rollback().await.ok();
+                    tx.rollback().await?;
                     return Err(InsertBookError::BookAlreadyExists(book.goodreads_id));
                 }
                 return Err(InsertBookError::Db(error));

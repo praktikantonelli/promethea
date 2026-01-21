@@ -192,10 +192,12 @@ pub async fn add_book(
     }))
     .await;
     let authors = zip(authors, authors_sort)
-        .map(|(author, author_sort)| AuthorRecord {
-            name: author.name,
-            sort: author_sort,
-            goodreads_id: author.goodreads_id.parse().unwrap(),
+        .map(|(author, author_sort)| {
+            AuthorRecord::new(
+                author.name,
+                author_sort,
+                author.goodreads_id.parse().unwrap(),
+            )
         })
         .collect::<Vec<AuthorRecord>>();
 
@@ -210,11 +212,13 @@ pub async fn add_book(
     }))
     .await;
     let series_and_volume = zip(series, series_sort)
-        .map(|(series, series_sort)| SeriesAndVolumeRecord {
-            series: series.title,
-            sort: series_sort,
-            volume: series.number as f64,
-            goodreads_id: series.goodreads_id.parse().unwrap(),
+        .map(|(series, series_sort)| {
+            SeriesAndVolumeRecord::new(
+                series.title,
+                series_sort,
+                series.number as f64,
+                series.goodreads_id.parse().unwrap(),
+            )
         })
         .collect::<Vec<SeriesAndVolumeRecord>>();
     // Date added => get today's date
@@ -223,18 +227,18 @@ pub async fn add_book(
     let date_updated = date_added;
 
     // Assemble data into SQL query
-    let book_record = BookRecord {
-        book_id: -1,
+    let book_record = BookRecord::new(
+        -1,
         title,
-        sort: title_sort,
+        title_sort,
         authors,
         series_and_volume,
-        number_of_pages: metadata.page_count.unwrap(),
-        goodreads_id: metadata.goodreads_id.unwrap().parse().unwrap(),
-        date_added: date_added.naive_utc(),
-        date_published: metadata.publication_date.unwrap().naive_utc(),
-        date_modified: date_updated.naive_utc(),
-    };
+        metadata.page_count.unwrap(),
+        metadata.goodreads_id.unwrap().parse().unwrap(),
+        date_added.naive_utc(),
+        metadata.publication_date.unwrap().naive_utc(),
+        date_updated.naive_utc(),
+    );
 
     let read_guard = state.db.read().await;
     let db = match &*read_guard {
