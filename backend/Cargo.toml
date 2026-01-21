@@ -38,3 +38,5 @@ single_call_fn = { level = "allow", priority = 1 }
 multiple_crate_versions = { level = "allow", priority = 1 }
 # allow locally disabling specific lints
 allow_attributes = { level = "allow", priority = 1 }
+# do not enforce alphabetical ordering
+arbitrary_source_item_ordering = { level = "allow", priority = 1 }
