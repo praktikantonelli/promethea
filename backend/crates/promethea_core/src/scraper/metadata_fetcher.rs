@@ -263,13 +263,10 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
         .as_i64()
         .map(|x| x.to_string())
         .or_else(|| {
-            metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"]
-                .as_str()
-                .and_then(|x| {
-                    x.strip_prefix("https://www.goodreads.com/author/show/")
-                        .and_then(|rest| rest.split('.').next())
-                        .map(str::to_owned)
-                })
+            let id = metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"].as_str()?;
+            id.strip_prefix("https://www.goodreads.com/author/show/")
+                .and_then(|rest| rest.split('.').next())
+                .map(str::to_owned)
         })
         .unwrap();
 
