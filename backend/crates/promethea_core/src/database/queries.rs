@@ -244,8 +244,9 @@ impl Db {
 )]
 fn is_sqlite_unique_violation(error: &sqlx::Error) -> bool {
     // Check for unique violation by searching for matching text in error message
-    match error {
-        sqlx::Error::Database(db_err) => db_err.message().contains("UNIQUE constraint failed"),
-        _ => false,
+    if let sqlx::Error::Database(db_err) = error {
+        db_err.message().contains("UNIQUE constraint failed")
+    } else {
+        false
     }
 }
