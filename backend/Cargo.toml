@@ -44,3 +44,5 @@ arbitrary_source_item_ordering = { level = "allow", priority = 1 }
 mod_module_files = { level = "allow", priority = 1 }
 # allow module names to be contained in struct/enum names
 module_name_repetitions = { level = "allow", priority = 1 }
+# allow shadowing
+shadow_reuse = { level = "allow", priority = 1 }
