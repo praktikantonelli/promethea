@@ -220,19 +220,21 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
         reason = "`serde_json::Value` indexing never panics"
     )]
     for contributor in secondary {
-        let role = to_string(&contributor["role"]);
-        let key = to_string(&contributor["node"]["__ref"]);
-        if role.is_none() || key.is_none() {
-            warn!("Failed to parse contributor");
+        let Some(role) = to_string(&contributor["role"]) else {
+            warn!("Failed to parse contributor role");
             continue;
-        }
+        };
+        let Some(key) = to_string(&contributor["node"]["__ref"]) else {
+            warn!("Failed to parse contributor key");
+            continue;
+        };
         // Only keep contributors that are authors
-        if role.as_ref().unwrap() != "Author" {
+        if role != "Author" {
             info!("Contributor not an author, skipping...");
             continue;
         }
 
-        if let Some(contributor) = fetch_contributor(metadata, (role.unwrap(), key.unwrap())) {
+        if let Some(contributor) = fetch_contributor(metadata, (role, key)) {
             contributors.push(contributor);
         }
     }
@@ -255,11 +257,7 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    let goodreads_id = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
+    let Some(goodreads_id) = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
         .as_i64()
         .map(|x| x.to_string())
         .or_else(|| {
@@ -268,7 +266,10 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
                 .and_then(|rest| rest.split('.').next())
                 .map(str::to_owned)
         })
-        .unwrap();
+    else {
+        warn!("Failed to parse Goodreads ID");
+        return None;
+    };
 
     if name.is_none() {
         warn!("Failed to parse contributor");
@@ -389,14 +390,19 @@ fn extract_language(metadata: &Value, amazon_id: &str) -> Option<String> {
 }
 
 fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
+    let empty_vec: Vec<Value> = Vec::new();
+
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
     let series_array = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookSeries"]
         .as_array()
-        .unwrap();
-
+        .unwrap_or(&empty_vec);
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
@@ -441,12 +447,17 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
 }
 
 fn to_string(value: &Value) -> Option<String> {
-    let re = Regex::new(r"\s{2,}").expect("Regex must be valid");
-    value
-        .as_str()
-        .map(str::trim)
-        .map(|string| re.replace_all(string, " ").to_string())
-        .filter(|string| !string.is_empty())
+    match Regex::new(r"\s{2,}") {
+        Ok(re) => value
+            .as_str()
+            .map(str::trim)
+            .map(|string| re.replace_all(string, " ").to_string())
+            .filter(|string| !string.is_empty()),
+        Err(error) => {
+            warn!("Failed to construct regex for {value}, {error}");
+            None
+        }
+    }
 }
 
 fn extract_id_from_url(url: &Value) -> Option<String> {
@@ -458,6 +469,10 @@ fn extract_id_from_url(url: &Value) -> Option<String> {
 }
 
 #[cfg(test)]
+#[allow(
+    clippy::unwrap_used,
+    reason = "Tests are constructed with known values"
+)]
 mod tests {
     use super::*;
     use pretty_assertions::assert_eq;

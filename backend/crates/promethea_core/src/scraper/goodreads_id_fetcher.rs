@@ -1,4 +1,5 @@
 use crate::scraper::errors::ScraperError;
+use log::warn;
 use reqwest::get;
 use scraper::{Html, Selector};
 use serde_json::Value;
@@ -7,8 +8,13 @@ use urlencoding::encode;
 #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 pub async fn verify_id_exists(id: &str) -> bool {
     let url = format!("https://www.goodreads.com/book/show/{id}");
-    let response = get(&url).await.expect("Failed to fetch book page");
-    response.status().is_success()
+    match get(&url).await {
+        Ok(response) => response.status().is_success(),
+        Err(error) => {
+            warn!("Failed to fetch book page for id {id}: {error}");
+            false
+        }
+    }
 }
 
 #[allow(
@@ -34,7 +40,9 @@ pub async fn fetch_id_from_isbn(isbn: &str) -> Result<Option<String>, ScraperErr
     )]
     let goodreads_id = metadata["props"]["pageProps"]["params"]["book_id"]
         .as_str()
-        .expect("Failed to extract Goodreads ID from ISBN search results");
+        .ok_or(ScraperError::ParseError(
+            "Failed to extract Goodreads ID from ISBN search results".to_owned(),
+        ))?;
 
     let goodreads_id = goodreads_id
         .chars()
@@ -96,10 +104,9 @@ async fn search_books(query: &str) -> Result<Vec<(String, String, String)>, Scra
     {
         let found_title = title.text().collect::<String>();
         let found_author = author.text().collect::<String>();
-        let found_link = title
-            .value()
-            .attr("href")
-            .expect("Failed to extract link from search result");
+        let found_link = title.value().attr("href").ok_or(ScraperError::ParseError(
+            "Failed to extract link from search result".to_owned(),
+        ))?;
         let found_id = extract_goodreads_id(found_link);
 
         results.push((found_title, found_author, found_id));
@@ -123,16 +130,20 @@ fn matches(str1: &str, str2: &str) -> bool {
 fn extract_goodreads_id(url: &str) -> String {
     url.splitn(4, '/')
         .nth(3)
-        .expect("Failed to extract Goodreads ID")
+        .unwrap_or("")
         .split('?')
         .next()
-        .expect("Failed to extract Goodreads ID")
+        .unwrap_or("")
         .chars()
         .take_while(|character| character.is_numeric())
         .collect::<String>()
 }
 
 #[cfg(test)]
+#[allow(
+    clippy::unwrap_used,
+    reason = "Tests are predefined and guaranteed to be Some/Ok"
+)]
 mod tests {
     use super::*;
 
