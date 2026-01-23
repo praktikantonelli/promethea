@@ -17,6 +17,10 @@ use tauri::async_runtime;
     clippy::missing_inline_in_public_items,
     reason = "Executed once per run, never accross crate boundaries"
 )]
+#[allow(
+    clippy::print_stderr,
+    reason = "Tracing might not be available here if run_safe() failed before its initialization"
+)]
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     if let Err(error) = run_safe() {
