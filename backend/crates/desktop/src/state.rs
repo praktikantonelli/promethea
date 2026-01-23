@@ -2,7 +2,10 @@ use promethea_core::database::queries::Db;
 use std::path::PathBuf;
 use tokio::sync::RwLock;
 
+/// Name of the config file that is stored in the default Tauri config location
+/// Windows: C:\Users\${user}\AppData\Roaming\com.lucaa.promethea\promethea-config.json
 pub const APP_CONFIG_PATH: &str = "promethea-config.json";
+/// Name of the `SQLite` database file that represents the library
 pub const LIBRARY_DATABASE_NAME: &str = "library.db";
 
 pub struct AppState {
