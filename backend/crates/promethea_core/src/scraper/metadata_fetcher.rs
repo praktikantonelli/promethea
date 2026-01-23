@@ -241,12 +241,12 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
-    for contributor in secondary {
-        let Some(role) = to_string(&contributor["role"]) else {
+    for contrib in secondary {
+        let Some(role) = to_string(&contrib["role"]) else {
             warn!("Failed to parse contributor role");
             continue;
         };
-        let Some(key) = to_string(&contributor["node"]["__ref"]) else {
+        let Some(key) = to_string(&contrib["node"]["__ref"]) else {
             warn!("Failed to parse contributor key");
             continue;
         };
