@@ -56,7 +56,9 @@ pub async fn create_new_db(
     folder: String,
 ) -> Result<(), PrometheaError> {
     let db_file_path = PathBuf::from(folder).join(PathBuf::from(LIBRARY_DATABASE_NAME));
-    File::create(db_file_path.clone()).unwrap();
+    File::create(db_file_path.clone()).map_err(|error| {
+        PrometheaError::Other(format!("Failed to create database file: {error}"))
+    })?;
 
     // update config store
     let store = app.store(APP_CONFIG_PATH)?;
@@ -152,9 +154,13 @@ pub async fn add_book(
             let t0 = Instant::now();
 
             // Extract bare minimum metadata (title + author(s)) from EPUB file
-            let doc = EpubDoc::new(path).unwrap();
+            let doc = EpubDoc::new(path).map_err(|error| {
+                PrometheaError::Other(format!("Failed to open EPUB file: {error}"))
+            })?;
 
-            let title = doc.get_title().unwrap();
+            let title = doc.get_title().ok_or(PrometheaError::Other(
+                "Failed to extract title from EPUB file!".to_owned(),
+            ))?;
             let authors = doc
                 .metadata
                 .iter()
