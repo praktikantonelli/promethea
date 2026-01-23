@@ -36,6 +36,16 @@ jobs:
         with:
           workspaces: "backend -> target"
 
+      - name: Install Linux system dependencies (Tauri)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
+
+
       - name: Cargo Test (workspace)
         run: cargo test --all-targets --locked
 
