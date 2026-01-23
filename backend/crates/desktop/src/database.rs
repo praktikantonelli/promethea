@@ -230,7 +230,7 @@ pub async fn add_book(
             SeriesAndVolumeRecord::new(
                 series.title,
                 series_sort,
-                series.number as f64,
+                f64::from(series.number),
                 series.goodreads_id.parse().unwrap(),
             )
         })
