@@ -1,4 +1,4 @@
-use crate::errors::Error;
+use crate::errors::PrometheaError;
 use crate::state::{APP_CONFIG_PATH, AppState, LIBRARY_DATABASE_NAME};
 use chrono::Local;
 use core::future::Future;
@@ -45,7 +45,7 @@ pub async fn create_new_db(
     state: State<'_, AppState>,
     app: AppHandle,
     folder: String,
-) -> Result<(), Error> {
+) -> Result<(), PrometheaError> {
     let db_file_path = PathBuf::from(folder).join(PathBuf::from(LIBRARY_DATABASE_NAME));
     File::create(db_file_path.clone()).unwrap();
 
@@ -67,7 +67,7 @@ pub async fn open_existing_db(
     state: State<'_, AppState>,
     app: AppHandle,
     path: String,
-) -> Result<(), Error> {
+) -> Result<(), PrometheaError> {
     let db_file_path = PathBuf::from(path);
 
     let store = app.store(APP_CONFIG_PATH)?;
@@ -120,7 +120,7 @@ pub async fn add_book(
     app: AppHandle,
     state: State<'_, AppState>,
     path: PathBuf,
-) -> Result<(), Error> {
+) -> Result<(), PrometheaError> {
     tracing::info!("Received request to add book from {path:?}");
 
     // Phase 1: Extract title + author(s) from EPUB file
@@ -148,11 +148,11 @@ pub async fn add_book(
                 author_count = authors.len(),
                 "epub metadata extracted"
             );
-            Ok::<_, Error>((title, authors))
+            Ok::<_, PrometheaError>((title, authors))
         }
     })
     .await
-    .map_err(|err| Error::Other(err.to_string()))??;
+    .map_err(|err| PrometheaError::Other(err.to_string()))??;
 
     // Phase 2: Use found title and author(s) to scrape Goodreads for metadata
     let first_author = authors.first().cloned().unwrap_or_default();
@@ -167,21 +167,21 @@ pub async fn add_book(
         let result = request
             .execute()
             .await
-            .map_err(|err| Error::Other(format!("{err:?}")))?;
+            .map_err(|err| PrometheaError::Other(format!("{err:?}")))?;
 
         tracing::info!(
             elapsed_ms = t0.elapsed().as_millis(),
             found = result.is_some(),
             "metadata scraping done"
         );
-        Ok::<_, Error>(result)
+        Ok::<_, PrometheaError>(result)
     }
     .instrument(scrape_span)
     .await?;
 
     let Some(metadata) = metadata else {
         tracing::info!("no metadat found");
-        return Err(Error::Other(
+        return Err(PrometheaError::Other(
             "Failed to find metadata for given book".to_owned(),
         ));
     };
@@ -190,7 +190,7 @@ pub async fn add_book(
 
     let Some(db) = db_state.as_ref() else {
         tracing::warn!("Database currently not available");
-        return Err(Error::Other(
+        return Err(PrometheaError::Other(
             "Failed to get database connection from app state".to_owned(),
         ));
     };
@@ -256,7 +256,7 @@ pub async fn add_book(
 
     if let Err(err) = db.insert_book(&book_record).await {
         tracing::error!("Failed to add book: {err}");
-        return Err(Error::Other(err.to_string()));
+        return Err(PrometheaError::Other(err.to_string()));
     }
 
     tracing::info!("Successfully added book");
