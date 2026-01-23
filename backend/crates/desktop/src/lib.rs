@@ -77,12 +77,18 @@ fn run_safe() -> Result<(), Error> {
             }
             app.handle().plugin(tauri_plugin_log)?;
 
-            let store = app.store(APP_CONFIG_PATH).unwrap();
+            let store = app.store(APP_CONFIG_PATH)?;
             if let Some(db_path) = store.get("library-path") {
                 log::info!("Using database at {db_path:?}");
                 let app_state = app.state::<AppState>().clone();
                 async_runtime::block_on(async move {
-                    let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
+                    let path = PathBuf::from(
+                        db_path
+                            .get("value")
+                            .unwrap_or(&serde_json::Value::Null)
+                            .as_str()
+                            .unwrap_or(""),
+                    );
                     if let Err(err) = app_state.connect_db_with_path(path).await {
                         log::error!("DB init on startup failed: {err}");
                     } else {
@@ -101,7 +107,6 @@ fn run_safe() -> Result<(), Error> {
             fetch_books,
             add_book
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .run(tauri::generate_context!())?;
     Ok(())
 }
