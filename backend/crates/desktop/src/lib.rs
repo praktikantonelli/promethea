@@ -45,13 +45,11 @@ pub fn run() {
             #[cfg(debug_assertions)]
             {
                 if enable_devtools {
-                    println!("DevTools enabled via .env");
                     // With debug assertions, use CrabNebula dev tools plugin
                     let mut devtools_builder = tauri_plugin_devtools::Builder::default();
                     devtools_builder.attach_logger(logger);
                     app.handle().plugin(devtools_builder.init())?;
                 } else {
-                    println!("DevTools disabled via .env");
                     tauri_plugin_log::attach_logger(max_level, logger)?;
                 }
             }
