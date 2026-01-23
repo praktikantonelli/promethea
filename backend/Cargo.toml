@@ -1,7 +1,7 @@
 [workspace]
 
 members = ["crates/desktop", "crates/promethea_core", "crates/server"]
-default-members = ["crates/promethea_core", "crates/server"]
+default-members = ["crates/promethea_core", "crates/server", "crates/desktop"]
 resolver = "2"
 
 [workspace.lints.rust]
