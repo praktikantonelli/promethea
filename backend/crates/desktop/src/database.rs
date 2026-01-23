@@ -18,6 +18,8 @@ use tauri_plugin_store::StoreExt as _;
 use tokio::task;
 use tracing::{Instrument as _, info_span, instrument};
 
+/// Wrapper that tries to fetch a value with an async fn and uses a synchronous fallback in case
+/// the first operation fails
 async fn resolve_sort_with_fallback<Primary, PrimaryFut, Fallback, E>(
     primary: Primary,
     fallback: Fallback,
@@ -33,13 +35,20 @@ where
     }
 }
 
+/// Represents the database's state, differing only between loaded and not yet loaded
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "status", rename_all = "snake_case")]
 pub enum DbInitStatus {
+    /// database is ready to be used
     Loaded,
-    NeedsSetup { reason: Option<String> },
+    /// database is not yet initialized
+    NeedsSetup {
+        /// optionally contains a string explaining why the database has not yet initialized
+        reason: Option<String>,
+    },
 }
 
+/// Creates a new `SQLite` database at a given path writes the path into the Tauri store
 #[tauri::command]
 pub async fn create_new_db(
     state: State<'_, AppState>,
@@ -62,6 +71,7 @@ pub async fn create_new_db(
     Ok(())
 }
 
+/// Opens an existing database at the given path and updates the stored value in the Tauri store
 #[tauri::command]
 pub async fn open_existing_db(
     state: State<'_, AppState>,
@@ -82,6 +92,7 @@ pub async fn open_existing_db(
     Ok(())
 }
 
+/// Fetches the database's initialization status
 #[tauri::command]
 pub async fn get_init_status(state: State<'_, AppState>) -> Result<DbInitStatus, ()> {
     if state.db.read().await.is_some() {
@@ -93,6 +104,8 @@ pub async fn get_init_status(state: State<'_, AppState>) -> Result<DbInitStatus,
     }
 }
 
+/// Wrapper around fetch query that returns a vector containing all books and their metadata, to be
+/// displayed in the GUI as a list/table/card stack
 #[tauri::command]
 pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, String> {
     let db_state = &*state.db.read().await;
@@ -106,6 +119,8 @@ pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, 
     }
 }
 
+/// Given a path to an EPUB file, extracts title and author(s) and uses that to fetch metadata,
+/// then inserts all data into the database
 #[allow(
     clippy::significant_drop_tightening,
     reason = "Problem with references due to multiple queries with single Db instance"
