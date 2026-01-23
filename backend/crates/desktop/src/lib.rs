@@ -22,7 +22,7 @@ use tauri::async_runtime;
 
 #[allow(
     clippy::missing_inline_in_public_items,
-    reason = "Executed once per run, never accross crate boundaries"
+    reason = "Executed once per run, never across crate boundaries"
 )]
 #[allow(
     clippy::print_stderr,
