@@ -1,6 +1,6 @@
 use crate::errors::PrometheaError;
 use crate::state::{APP_CONFIG_PATH, AppState, LIBRARY_DATABASE_NAME};
-use chrono::Local;
+use chrono::{DateTime, Local};
 use core::future::Future;
 use core::iter::zip;
 use epub::doc::EpubDoc;
@@ -229,7 +229,7 @@ pub async fn add_book(
             AuthorRecord::new(
                 author.name,
                 author_sort,
-                author.goodreads_id.parse().unwrap(),
+                author.goodreads_id.parse().unwrap_or(-1),
             )
         })
         .collect::<Vec<AuthorRecord>>();
@@ -250,7 +250,7 @@ pub async fn add_book(
                 series.title,
                 series_sort,
                 f64::from(series.number),
-                series.goodreads_id.parse().unwrap(),
+                series.goodreads_id.parse().unwrap_or(-1),
             )
         })
         .collect::<Vec<SeriesAndVolumeRecord>>();
@@ -266,10 +266,17 @@ pub async fn add_book(
         title_sort,
         authors,
         series_and_volume,
-        metadata.page_count.unwrap(),
-        metadata.goodreads_id.unwrap().parse().unwrap(),
+        metadata.page_count.unwrap_or(0),
+        metadata
+            .goodreads_id
+            .unwrap_or(String::new())
+            .parse()
+            .unwrap_or(-1),
         date_added.naive_utc(),
-        metadata.publication_date.unwrap().naive_utc(),
+        metadata
+            .publication_date
+            .unwrap_or_else(DateTime::default)
+            .naive_utc(),
         date_updated.naive_utc(),
     );
 
