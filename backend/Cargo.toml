@@ -52,3 +52,5 @@ pub_use = { level = "allow", priority = 1 }
 items_after_statements = { level = "allow", priority = 1 }
 # allow unreachable!(), as it's used in Tauri macros
 unreachable = { level = "allow", priority = 1 }
+# allow let _ = fn_with_must_use(), this is used in #[tauri::command]
+let_underscore_must_use = { level = "allow", priority = 1 }
