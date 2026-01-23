@@ -73,7 +73,7 @@ pub fn run() {
                     } else {
                         log::info!("DB connected successfully");
                     }
-                })
+                });
             } else {
                 log::info!("No database path in config, wait for user to provide one");
             }
