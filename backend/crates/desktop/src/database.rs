@@ -125,6 +125,10 @@ pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, 
     clippy::significant_drop_tightening,
     reason = "Problem with references due to multiple queries with single Db instance"
 )]
+#[allow(
+    clippy::too_many_lines,
+    reason = "Okay for now, will be refactored later"
+)]
 #[instrument(
     name = "cmd.add_book",
     skip(app, state),
