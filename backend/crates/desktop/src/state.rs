@@ -21,9 +21,9 @@ impl AppState {
         }
     }
     pub async fn connect_db_with_path(&self, path: PathBuf) -> anyhow::Result<()> {
-        log::info!("Creating SQLite pool for DB at {path:?}");
+        log::info!("Creating SQLite pool for DB at {}", path.display());
         let db = Db::init(&path).await?;
-        log::info!("Successfully opened database at {path:?}");
+        log::info!("Successfully opened database at {}", path.display());
 
         let mut guard = self.db.write().await;
         // guard.replace(pool) puts pool into Option<SqlitePool> and returns the contained value if

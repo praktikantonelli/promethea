@@ -51,7 +51,10 @@ pub async fn create_new_db(
     // update config store
     let store = app.store(APP_CONFIG_PATH)?;
     store.set("library-path", json!({ "value": db_file_path.to_str() }));
-    log::info!("Updated database path in store to {db_file_path:?}");
+    log::info!(
+        "Updated database path in store to {}",
+        db_file_path.display()
+    );
 
     state.connect_db_with_path(db_file_path).await?;
 
@@ -68,7 +71,10 @@ pub async fn open_existing_db(
 
     let store = app.store(APP_CONFIG_PATH)?;
     store.set("library-path", json!({ "value": db_file_path.to_str() }));
-    log::info!("Updated database path in store to {db_file_path:?}");
+    log::info!(
+        "Updated database path in store to {}",
+        db_file_path.display()
+    );
 
     state.connect_db_with_path(db_file_path).await?;
 
