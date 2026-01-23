@@ -1,6 +1,8 @@
 use crate::errors::Error;
 use crate::state::{APP_CONFIG_PATH, AppState, LIBRARY_DATABASE_NAME};
 use chrono::Local;
+use core::future::Future;
+use core::iter::zip;
 use epub::doc::EpubDoc;
 use futures::future::join_all;
 use promethea_core::database::types::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
@@ -8,8 +10,6 @@ use promethea_core::scraper::request_builder::MetadataRequestBuilder;
 use promethea_core::scraper::sorting::{get_name_sort, get_title_sort};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::future::Future;
-use std::iter::zip;
 use std::path::PathBuf;
 use std::time::Instant;
 use tauri::{AppHandle, Emitter as _, State};
