@@ -140,7 +140,7 @@ pub async fn add_book(
 
     // Phase 1: Extract title + author(s) from EPUB file
     let parse_span = info_span!("epub.parse");
-    let (title, authors) = task::spawn_blocking({
+    let (title, author_names) = task::spawn_blocking({
         let path = path.clone();
         move || {
             let _e = parse_span.enter();
@@ -170,7 +170,7 @@ pub async fn add_book(
     .map_err(|err| PrometheaError::Other(err.to_string()))??;
 
     // Phase 2: Use found title and author(s) to scrape Goodreads for metadata
-    let first_author = authors.first().cloned().unwrap_or_default();
+    let first_author = author_names.first().cloned().unwrap_or_default();
     let scrape_span = info_span!("metadata.scrape", title = %title, author = %first_author);
     let metadata = async {
         let t0 = Instant::now();
