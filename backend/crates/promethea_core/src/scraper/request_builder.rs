@@ -22,6 +22,8 @@ impl RequestState for TitleWithAuthorState {}
 
 /// Builder for constructing a metadata request.
 pub struct MetadataRequestBuilder<T: RequestState> {
+    /// Represents the type of data used to fetch the metadata: no data, Goodreads ID, ISBN, title
+    /// or title and author
     state: T,
 }
 
@@ -33,6 +35,8 @@ impl Default for MetadataRequestBuilder<EmptyState> {
 }
 
 impl MetadataRequestBuilder<EmptyState> {
+    /// Constructor function for default empty state. Use this in combination with any of the other
+    /// generic implementations to construct a new `MetadataRequestBuilder` and modify its state.
     const fn new() -> Self {
         Self { state: EmptyState }
     }
@@ -71,6 +75,10 @@ impl MetadataRequestBuilder<TitleState> {
         }
     }
 
+    /// Execute the HTTP request using the book's title as the input parameter
+    /// # Errors
+    /// Returns an error if the HTTP request fails or if no Goodreads ID can be extracted from the
+    /// response, or if the metadata cannot be fetched  with this Goodreads ID
     #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn execute(&self) -> Result<Option<BookMetadata>, ScraperError> {
         let title = &self.state.0;
@@ -83,6 +91,9 @@ impl MetadataRequestBuilder<TitleState> {
 }
 
 impl MetadataRequestBuilder<IdState> {
+    /// Execute the HTTP request using the book's Goodreads ID as the input parameter
+    /// # Errors
+    /// Returns an error if the HTTP request fails
     #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn execute(&self) -> Result<Option<BookMetadata>, ScraperError> {
         let id = &self.state.0;
@@ -94,6 +105,11 @@ impl MetadataRequestBuilder<IdState> {
 }
 
 impl MetadataRequestBuilder<IsbnState> {
+    /// Execute the HTTP request using the book's ISBN to fetch its Goodreads ID, then use that to
+    /// fetch the metadata.
+    /// # Errors
+    /// Fails if the Goodreads ID cannot be fetched and if the metadata cannot be fetched with the
+    /// Goodreads ID
     #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn execute(&self) -> Result<Option<BookMetadata>, ScraperError> {
         let isbn = &self.state.0;
@@ -106,6 +122,11 @@ impl MetadataRequestBuilder<IsbnState> {
 }
 
 impl MetadataRequestBuilder<TitleWithAuthorState> {
+    /// Execute the HTTP request using the book's title and author to fetch its Goodreads ID, then use that to
+    /// fetch the metadata.
+    /// # Errors
+    /// Fails if the Goodreads ID cannot be fetched and if the metadata cannot be fetched with the
+    /// Goodreads ID
     #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
     pub async fn execute(&self) -> Result<Option<BookMetadata>, ScraperError> {
         let title = &self.state.0;
