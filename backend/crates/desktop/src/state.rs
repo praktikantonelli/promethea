@@ -25,15 +25,16 @@ impl AppState {
         let db = Db::init(&path).await?;
         log::info!("Successfully opened database at {}", path.display());
 
-        let mut guard = self.db.write().await;
-        // guard.replace(pool) puts pool into Option<SqlitePool> and returns the contained value if
-        // there was one
-        if let Some(old) = guard.replace(db) {
-            // if Option<SqlitePool> had value, close pool
-            log::info!("Found old SQLite pool in AppDb state, closing...");
-            old.close().await;
+        let old = self.db.write().await.replace(db);
+        match old {
+            Some(old_db) => {
+                log::info!("Found old SQLite pool in AppDb state, closing...");
+                old_db.close().await;
+            }
+            None => {
+                log::info!("No old SQLite pool in AppDb, nothing to do.");
+            }
         }
-
         Ok(())
     }
 }

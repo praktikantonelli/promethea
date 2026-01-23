@@ -94,17 +94,21 @@ pub async fn get_init_status(state: State<'_, AppState>) -> Result<DbInitStatus,
 
 #[tauri::command]
 pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, String> {
-    let read_guard = state.db.read().await;
-    if let Some(db) = &*read_guard {
-        let books = db.fetch_books_query();
-        return books
+    let db_state = &*state.db.read().await;
+    match db_state.as_ref() {
+        Some(db) => db
+            .fetch_books_query()
             .await
-            .map_err(|err| format!("Failed to run query: {err}"));
-    }
+            .map_err(|err| format!("Failed to run fetch books query: {err}")),
 
-    Err(String::from("Database pool unavailable"))
+        None => Err(String::from("Database pool unavailable")),
+    }
 }
 
+#[allow(
+    clippy::significant_drop_tightening,
+    reason = "Problem with references due to multiple queries with single Db instance"
+)]
 #[instrument(
     name = "cmd.add_book",
     skip(app, state),
@@ -181,8 +185,9 @@ pub async fn add_book(
         ));
     };
 
-    let read_guard = state.db.read().await;
-    let Some(db) = &*read_guard else {
+    let db_state = state.db.read().await;
+
+    let Some(db) = db_state.as_ref() else {
         tracing::warn!("Database currently not available");
         return Err(Error::Other(
             "Failed to get database connection from app state".to_string(),
@@ -248,14 +253,6 @@ pub async fn add_book(
         date_updated.naive_utc(),
     );
 
-    let read_guard = state.db.read().await;
-    let db = match &*read_guard {
-        Some(db) => db,
-        None => {
-            tracing::error!("Could not get DB read guard!");
-            return Err(Error::Other("Could not get DB read guard".into()));
-        }
-    };
     if let Err(err) = db.insert_book(&book_record).await {
         tracing::error!("Failed to add book: {err}");
         return Err(Error::Other(err.to_string()));
