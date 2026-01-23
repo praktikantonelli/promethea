@@ -1,3 +1,6 @@
+//! `desktop`
+//!
+//! This crate contains everything Tauri-specific for promethea
 use crate::database::{add_book, create_new_db, fetch_books, get_init_status, open_existing_db};
 use crate::state::{APP_CONFIG_PATH, AppState};
 use anyhow::Error;
@@ -7,8 +10,12 @@ use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_plugin_store::StoreExt as _;
 #[cfg(not(debug_assertions))]
 use tracing_subscriber::{EnvFilter, fmt};
+/// Database module, holds everything dealing with accessing the database from the Tauri
+/// application
 mod database;
+/// Error types
 mod errors;
+/// App state management
 mod state;
 use std::env;
 use tauri::async_runtime;
@@ -28,6 +35,10 @@ pub fn run() {
     }
 }
 
+/// Encapsulated run function that allows returning errors instead of always panicking on `Err` or
+/// `None` variants. Note that, since `run()` is the entry point for mobile, it has to keep its
+/// signature of not returning anything.
+#[allow(clippy::exit, reason = "Happens in Tauri macro, cannot be avoided")]
 fn run_safe() -> Result<(), Error> {
     #[cfg(not(debug_assertions))]
     {
