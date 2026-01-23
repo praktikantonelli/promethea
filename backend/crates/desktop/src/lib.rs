@@ -12,6 +12,10 @@ mod state;
 use std::env;
 use tauri::async_runtime;
 
+#[allow(
+    clippy::missing_inline_in_public_items,
+    reason = "Executed once per run, never accross crate boundaries"
+)]
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     #[cfg(not(debug_assertions))]
