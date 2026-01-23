@@ -12,10 +12,10 @@ use std::future::Future;
 use std::iter::zip;
 use std::path::PathBuf;
 use std::time::Instant;
-use tauri::{AppHandle, Emitter, State};
-use tauri_plugin_store::StoreExt;
+use tauri::{AppHandle, Emitter as _, State};
+use tauri_plugin_store::StoreExt as _;
 use tokio::task;
-use tracing::{Instrument, info_span, instrument};
+use tracing::{Instrument as _, info_span, instrument};
 
 async fn resolve_sort_with_fallback<Primary, PrimaryFut, Fallback, E>(
     primary: Primary,
