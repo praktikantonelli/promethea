@@ -18,7 +18,7 @@ impl serde::Serialize for Error {
 }
 
 impl From<anyhow::Error> for Error {
-    fn from(e: anyhow::Error) -> Self {
-        Error::Other(e.to_string())
+    fn from(err: anyhow::Error) -> Self {
+        Error::Other(err.to_string())
     }
 }

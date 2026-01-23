@@ -23,7 +23,7 @@ pub fn run() {
             .expect("Unable to set global tracing subscriber");
     }
     let enable_devtools = std::env::var("ENABLE_DEVTOOLS")
-        .map(|v| v == "true" || v == "1")
+        .map(|val| val == "true" || val == "1")
         .unwrap_or(false);
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_process::init())

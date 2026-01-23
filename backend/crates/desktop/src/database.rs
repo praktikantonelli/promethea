@@ -27,7 +27,7 @@ where
     Fallback: FnOnce() -> String,
 {
     match primary().await {
-        Ok(Some(v)) => v,
+        Ok(Some(val)) => val,
         _ => fallback(),
     }
 }
@@ -91,7 +91,9 @@ pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, 
     let read_guard = state.db.read().await;
     if let Some(db) = &*read_guard {
         let books = db.fetch_books_query();
-        return books.await.map_err(|e| format!("Failed to run query: {e}"));
+        return books
+            .await
+            .map_err(|err| format!("Failed to run query: {err}"));
     }
 
     Err(String::from("Database pool unavailable"))
@@ -126,8 +128,8 @@ pub async fn add_book(
             let authors = doc
                 .metadata
                 .iter()
-                .filter(|e| e.property == "creator")
-                .map(|e| e.value.clone())
+                .filter(|item| item.property == "creator")
+                .map(|item| item.value.clone())
                 .collect::<Vec<String>>();
 
             tracing::info!(
@@ -139,7 +141,7 @@ pub async fn add_book(
         }
     })
     .await
-    .map_err(|e| Error::Other(e.to_string()))??;
+    .map_err(|err| Error::Other(err.to_string()))??;
 
     // Phase 2: Use found title and author(s) to scrape Goodreads for metadata
     let first_author = authors.first().cloned().unwrap_or_default();
@@ -154,7 +156,7 @@ pub async fn add_book(
         let result = request
             .execute()
             .await
-            .map_err(|e| Error::Other(format!("{e:?}")))?;
+            .map_err(|err| Error::Other(format!("{err:?}")))?;
 
         tracing::info!(
             elapsed_ms = t0.elapsed().as_millis(),
@@ -248,9 +250,9 @@ pub async fn add_book(
             return Err(Error::Other("Could not get DB read guard".into()));
         }
     };
-    if let Err(e) = db.insert_book(&book_record).await {
-        tracing::error!("Failed to add book: {e}");
-        return Err(Error::Other(e.to_string()));
+    if let Err(err) = db.insert_book(&book_record).await {
+        tracing::error!("Failed to add book: {err}");
+        return Err(Error::Other(err.to_string()));
     }
 
     tracing::info!("Successfully added book");
