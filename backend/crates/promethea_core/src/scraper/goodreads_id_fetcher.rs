@@ -17,6 +17,9 @@ pub async fn verify_id_exists(id: &str) -> bool {
     }
 }
 
+/// Given ISBN, fetches Goodreads ID
+/// # Errors
+/// The function fails if the search for the book fails.
 #[allow(
     clippy::missing_inline_in_public_items,
     reason = "Called rarely, large function"
@@ -52,6 +55,9 @@ pub async fn fetch_id_from_isbn(isbn: &str) -> Result<Option<String>, ScraperErr
     Ok(Some(goodreads_id))
 }
 
+/// Given title, fetches Goodreads ID
+/// # Errors
+/// The function fails if the search for the book fails.
 #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 pub async fn fetch_id_from_title(title: &str) -> Result<Option<String>, ScraperError> {
     let results = search_books(title).await?;
@@ -65,6 +71,9 @@ pub async fn fetch_id_from_title(title: &str) -> Result<Option<String>, ScraperE
     Ok(None)
 }
 
+/// Given title and author, fetches Goodreads ID
+/// # Errors
+/// The function fails if the search for the book fails.
 #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 pub async fn fetch_id_from_title_and_author(
     title: &str,
@@ -89,6 +98,10 @@ pub async fn fetch_id_from_title_and_author(
     Ok(None)
 }
 
+/// Tries to query Goodreads with a given query (e.g., title and author as one string).
+/// # Errors
+/// Returns an error if fetching or parsing the website fails, or if no link to the specified query
+/// can be extracted
 async fn search_books(query: &str) -> Result<Vec<(String, String, String)>, ScraperError> {
     let url = format!("https://www.goodreads.com/search?q={}", encode(query));
 
@@ -114,6 +127,8 @@ async fn search_books(query: &str) -> Result<Vec<(String, String, String)>, Scra
     Ok(results)
 }
 
+/// Helper function to determine if two strings match, ignoring upper and lower case as well as
+/// interpunctuations in initials.
 fn matches(str1: &str, str2: &str) -> bool {
     let str1 = str1
         .chars()
@@ -127,6 +142,7 @@ fn matches(str1: &str, str2: &str) -> bool {
     str1.to_lowercase().contains(&str2.to_lowercase())
 }
 
+/// Tries and extracts the Goodreads ID out of a Goodreads URL
 fn extract_goodreads_id(url: &str) -> String {
     url.splitn(4, '/')
         .nth(3)
