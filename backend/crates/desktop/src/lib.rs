@@ -6,12 +6,12 @@ use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_plugin_store::StoreExt;
 #[cfg(not(debug_assertions))]
 use tracing_subscriber::{EnvFilter, fmt};
-
 mod database;
 mod errors;
 mod state;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
+#[allow(clippy::items_after_statements, reason = "Used by Tauri, cannot avoid")]
 pub fn run() {
     #[cfg(not(debug_assertions))]
     {
