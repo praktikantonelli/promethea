@@ -12,6 +12,7 @@ mod state;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 #[allow(clippy::items_after_statements, reason = "Used by Tauri, cannot avoid")]
+#[allow(clippy::pub_use, reason = "Used by Tauri, cannot avoid")]
 pub fn run() {
     #[cfg(not(debug_assertions))]
     {
