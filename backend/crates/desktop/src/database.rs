@@ -181,7 +181,7 @@ pub async fn add_book(
     let Some(metadata) = metadata else {
         tracing::info!("no metadat found");
         return Err(Error::Other(
-            "Failed to find metadata for given book".to_string(),
+            "Failed to find metadata for given book".to_owned(),
         ));
     };
 
@@ -190,7 +190,7 @@ pub async fn add_book(
     let Some(db) = db_state.as_ref() else {
         tracing::warn!("Database currently not available");
         return Err(Error::Other(
-            "Failed to get database connection from app state".to_string(),
+            "Failed to get database connection from app state".to_owned(),
         ));
     };
 
