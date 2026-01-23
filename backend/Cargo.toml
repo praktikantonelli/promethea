@@ -50,3 +50,5 @@ shadow_reuse = { level = "allow", priority = 1 }
 pub_use = { level = "allow", priority = 1 }
 # allow nested declarations, also used by #[tauri::command]
 items_after_statements = { level = "allow", priority = 1 }
+# allow unreachable!(), as it's used in Tauri macros
+unreachable = { level = "allow", priority = 1 }
