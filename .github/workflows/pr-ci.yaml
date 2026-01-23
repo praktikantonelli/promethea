@@ -149,4 +149,18 @@ jobs:
         shell: pwsh
         run: pnpm -C e2e-tests test
 
-    
+  clippy:
+    name: Clippy (backend)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Run clippy (fail on warnings)
+        run: cargo clippy --manifest-path backend/Cargo.toml -- -D warnings
