@@ -1,5 +1,6 @@
 use crate::database::{add_book, create_new_db, fetch_books, get_init_status, open_existing_db};
 use crate::state::{APP_CONFIG_PATH, AppState};
+use anyhow::Error;
 use std::path::PathBuf;
 use tauri::Manager as _;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
@@ -18,6 +19,12 @@ use tauri::async_runtime;
 )]
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    if let Err(error) = run_safe() {
+        eprintln!("Failed to start Promethea! Error: {error}");
+    }
+}
+
+fn run_safe() -> Result<(), Error> {
     #[cfg(not(debug_assertions))]
     {
         let subscriber = fmt()
@@ -92,4 +99,5 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+    Ok(())
 }
