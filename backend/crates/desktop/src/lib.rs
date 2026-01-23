@@ -9,6 +9,8 @@ use tracing_subscriber::{EnvFilter, fmt};
 mod database;
 mod errors;
 mod state;
+use std::env;
+use tauri::async_runtime;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -21,7 +23,7 @@ pub fn run() {
         tracing::subscriber::set_global_default(subscriber)
             .expect("Unable to set global tracing subscriber");
     }
-    let enable_devtools = std::env::var("ENABLE_DEVTOOLS")
+    let enable_devtools = env::var("ENABLE_DEVTOOLS")
         .map(|val| val == "true" || val == "1")
         .unwrap_or(false);
     let builder = tauri::Builder::default()
@@ -64,7 +66,7 @@ pub fn run() {
             if let Some(db_path) = store.get("library-path") {
                 log::info!("Using database at {db_path:?}");
                 let app_state = app.state::<AppState>().clone();
-                tauri::async_runtime::block_on(async move {
+                async_runtime::block_on(async move {
                     let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
                     if let Err(err) = app_state.connect_db_with_path(path).await {
                         log::error!("DB init on startup failed: {err}");

@@ -10,6 +10,7 @@ use promethea_core::scraper::request_builder::MetadataRequestBuilder;
 use promethea_core::scraper::sorting::{get_name_sort, get_title_sort};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::fs::File;
 use std::path::PathBuf;
 use std::time::Instant;
 use tauri::{AppHandle, Emitter as _, State};
@@ -46,7 +47,7 @@ pub async fn create_new_db(
     folder: String,
 ) -> Result<(), Error> {
     let db_file_path = PathBuf::from(folder).join(PathBuf::from(LIBRARY_DATABASE_NAME));
-    std::fs::File::create(db_file_path.clone()).unwrap();
+    File::create(db_file_path.clone()).unwrap();
 
     // update config store
     let store = app.store(APP_CONFIG_PATH)?;
