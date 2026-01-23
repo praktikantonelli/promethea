@@ -205,7 +205,7 @@ pub async fn add_book(
     .await?;
 
     let Some(metadata) = metadata else {
-        tracing::info!("no metadat found");
+        tracing::info!("no metadata found");
         return Err(PrometheaError::Other(
             "Failed to find metadata for given book".to_owned(),
         ));
