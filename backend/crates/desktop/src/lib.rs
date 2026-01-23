@@ -1,17 +1,45 @@
+//! `desktop`
+//!
+//! This crate contains everything Tauri-specific for promethea
 use crate::database::{add_book, create_new_db, fetch_books, get_init_status, open_existing_db};
-use crate::state::{AppState, APP_CONFIG_PATH};
+use crate::state::{APP_CONFIG_PATH, AppState};
+use anyhow::Error;
 use std::path::PathBuf;
-use tauri::Manager;
+use tauri::Manager as _;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
-use tauri_plugin_store::StoreExt;
-use tracing_subscriber::{fmt, EnvFilter};
-
+use tauri_plugin_store::StoreExt as _;
+#[cfg(not(debug_assertions))]
+use tracing_subscriber::{EnvFilter, fmt};
+/// Database module, holds everything dealing with accessing the database from the Tauri
+/// application
 mod database;
+/// Error types
 mod errors;
+/// App state management
 mod state;
+use std::env;
+use tauri::async_runtime;
 
+#[allow(
+    clippy::missing_inline_in_public_items,
+    reason = "Executed once per run, never across crate boundaries"
+)]
+#[allow(
+    clippy::print_stderr,
+    reason = "Tracing might not be available here if run_safe() failed before its initialization"
+)]
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    if let Err(error) = run_safe() {
+        eprintln!("Failed to start Promethea! Error: {error}");
+    }
+}
+
+/// Encapsulated run function that allows returning errors instead of always panicking on `Err` or
+/// `None` variants. Note that, since `run()` is the entry point for mobile, it has to keep its
+/// signature of not returning anything.
+#[allow(clippy::exit, reason = "Happens in Tauri macro, cannot be avoided")]
+fn run_safe() -> Result<(), Error> {
     #[cfg(not(debug_assertions))]
     {
         let subscriber = fmt()
@@ -21,8 +49,8 @@ pub fn run() {
         tracing::subscriber::set_global_default(subscriber)
             .expect("Unable to set global tracing subscriber");
     }
-    let enable_devtools = std::env::var("ENABLE_DEVTOOLS")
-        .map(|v| v == "true" || v == "1")
+    let enable_devtools = env::var("ENABLE_DEVTOOLS")
+        .map(|val| val == "true" || val == "1")
         .unwrap_or(false);
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
@@ -45,13 +73,11 @@ pub fn run() {
             #[cfg(debug_assertions)]
             {
                 if enable_devtools {
-                    println!("DevTools enabled via .env");
                     // With debug assertions, use CrabNebula dev tools plugin
                     let mut devtools_builder = tauri_plugin_devtools::Builder::default();
                     devtools_builder.attach_logger(logger);
                     app.handle().plugin(devtools_builder.init())?;
                 } else {
-                    println!("DevTools disabled via .env");
                     tauri_plugin_log::attach_logger(max_level, logger)?;
                 }
             }
@@ -62,18 +88,24 @@ pub fn run() {
             }
             app.handle().plugin(tauri_plugin_log)?;
 
-            let store = app.store(APP_CONFIG_PATH).unwrap();
+            let store = app.store(APP_CONFIG_PATH)?;
             if let Some(db_path) = store.get("library-path") {
                 log::info!("Using database at {db_path:?}");
                 let app_state = app.state::<AppState>().clone();
-                tauri::async_runtime::block_on(async move {
-                    let path = PathBuf::from(db_path.get("value").unwrap().as_str().unwrap());
+                async_runtime::block_on(async move {
+                    let path = PathBuf::from(
+                        db_path
+                            .get("value")
+                            .unwrap_or(&serde_json::Value::Null)
+                            .as_str()
+                            .unwrap_or(""),
+                    );
                     if let Err(err) = app_state.connect_db_with_path(path).await {
                         log::error!("DB init on startup failed: {err}");
                     } else {
                         log::info!("DB connected successfully");
                     }
-                })
+                });
             } else {
                 log::info!("No database path in config, wait for user to provide one");
             }
@@ -86,6 +118,6 @@ pub fn run() {
             fetch_books,
             add_book
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .run(tauri::generate_context!())?;
+    Ok(())
 }

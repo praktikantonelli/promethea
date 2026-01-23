@@ -1,9 +1,17 @@
 [package]
 name = "promethea"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
-edition = "2021"
+repository = "https://github.com/praktikantonelli/promethea"
+readme = "../../../README.md"
+license = "MIT OR Apache-2.0"
+description = "The Tauri application behind Promethea"
+keywords = ["ebook", "library", "metadata", "EPUB"]
+categories = ["gui", "visualization"]
+authors = ["praktikantonelli"]
+edition = "2024"
+
+[lints]
+workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -7,6 +7,7 @@ use scraper::{Html, Selector};
 use serde_json::Value;
 
 /// The primary data structure containing the metadata of a book.
+#[non_exhaustive]
 #[derive(Debug, PartialEq)]
 pub struct BookMetadata {
     /// The main title of the book.
@@ -38,6 +39,7 @@ pub struct BookMetadata {
 }
 
 /// Represents an individual who contributed to the book, such as an author or editor.
+#[non_exhaustive]
 #[derive(Debug, PartialEq)]
 pub struct BookContributor {
     /// The name of the contributor.
@@ -49,6 +51,7 @@ pub struct BookContributor {
 }
 
 /// Represents series information for a book, including the series title and book's position within the series.
+#[non_exhaustive]
 #[derive(Debug, PartialEq)]
 pub struct BookSeries {
     /// The title of the series.
@@ -59,6 +62,14 @@ pub struct BookSeries {
     pub goodreads_id: String,
 }
 
+/// Fetches all metadata of a book given its Goodreads ID
+/// # Errors
+/// This function fails if fetching the JSON data from the scraper fails or if the Amazon ID cannot
+/// be extracted.
+#[allow(
+    clippy::missing_inline_in_public_items,
+    reason = "Called rarely, large function"
+)]
 pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperError> {
     let metadata = extract_book_metadata(goodreads_id).await?;
     let amazon_id = extract_amazon_id(&metadata, goodreads_id)?;
@@ -73,8 +84,8 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
     let isbn = extract_isbn(&metadata, &amazon_id);
     let page_count = extract_page_count(&metadata, &amazon_id);
     let language = extract_language(&metadata, &amazon_id);
-    let series = extract_series(&metadata, &amazon_id)?;
-    let goodreads_id = Some(goodreads_id.to_string());
+    let series = extract_series(&metadata, &amazon_id);
+    let goodreads_id = Some(goodreads_id.to_owned());
 
     Ok(BookMetadata {
         title,
@@ -93,70 +104,108 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
     })
 }
 
+/// Takes a Goodreads ID and extracts the metadata JSON from its corresponding website
+/// # Errors
+/// This function fails if the HTTP request fails or if parsing the extracting the JSON from the
+/// HTML page fails
 async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError> {
     let url = format!("https://www.goodreads.com/book/show/{goodreads_id}");
     let document = Html::parse_document(&get(&url).await?.text().await?);
     let metadata_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#)?;
     let metadata = &document.select(&metadata_selector).next();
 
-    let metadata = match metadata {
+    let metadata = match *metadata {
         None => {
             error!("Failed to scrape book metadata");
             return Err(ScraperError::ScrapeError(
-                "Failed to scrape book metadata".to_string(),
+                "Failed to scrape book metadata".to_owned(),
             ));
         }
-        Some(m) => serde_json::from_str(&m.text().collect::<String>())?,
+        Some(element) => serde_json::from_str(&element.text().collect::<String>())?,
     };
 
     Ok(metadata)
 }
 
+/// Extracts a book's Amazon ID based on its Goodreads ID from the JSON metadata
+/// # Errors
+/// Fails if the Amazon ID cannot be extracted
 fn extract_amazon_id(metadata: &Value, goodreads_id: &str) -> Result<String, ScraperError> {
     let amazon_id_key = format!("getBookByLegacyId({{\"legacyId\":\"{goodreads_id}\"}})");
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let amazon_id =
         &metadata["props"]["pageProps"]["apolloState"]["ROOT_QUERY"][amazon_id_key]["__ref"];
     let Some(amazon_id) = to_string(amazon_id) else {
         error!("Failed to scrape Amazon ID");
         return Err(ScraperError::ScrapeError(
-            "Failed to scrape Amazon ID".to_string(),
+            "Failed to scrape Amazon ID".to_owned(),
         ));
     };
 
     Ok(amazon_id)
 }
 
+/// Extracts title and subtitle out of metadata JSON
+/// # Errors
+/// Fails if the title cannot be extracted. Missing subtitle is not an error, as not every book has
+/// a subtitle.
 fn extract_title_and_subtitle(
     metadata: &Value,
     amazon_id: &str,
 ) -> Result<(String, Option<String>), ScraperError> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let title = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["title"];
     let Some(title) = to_string(title) else {
         error!("Failed to scrape book title");
         return Err(ScraperError::ScrapeError(
-            "Failed to scrape book title".to_string(),
+            "Failed to scrape book title".to_owned(),
         ));
     };
 
     match title.split_once(':') {
-        Some((title, subtitle)) => Ok((title.to_string(), Some(subtitle.trim().to_string()))),
-        None => Ok((title.to_string(), None)),
+        Some((title, subtitle)) => Ok((title.to_owned(), Some(subtitle.trim().to_owned()))),
+        None => Ok((title.clone(), None)),
     }
 }
 
+/// Extracts the description from the metadata JSON. A book may not have a description, so this
+/// function returns `Option`.
 fn extract_description(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let description = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["description"];
     to_string(description)
 }
 
+/// Extracts a book's image URL from the metadata JSON. A book may not have an image, so this
+/// function returns `Option`
 fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let url = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["imageUrl"];
     to_string(url)
 }
 
+/// Extracts all contributors of a book from its metatada JSON and filters out any non-authors. A
+/// book may have more than one author, so this function returns a vector. In case of problems, the
+/// function returns an empty vector.
 fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
     let mut contributors = Vec::new();
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let primary =
         metadata["props"]["pageProps"]["apolloState"][amazon_id]["primaryContributorEdge"]
             .as_object()
@@ -174,57 +223,76 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
         None => (),
     }
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let Some(secondary) =
         metadata["props"]["pageProps"]["apolloState"][amazon_id]["secondaryContributorEdges"]
             .as_array()
     else {
         return contributors
             .into_iter()
-            .filter(|s| !s.name.to_lowercase().eq("unknown author"))
+            .filter(|contributor| !contributor.name.to_lowercase().eq("unknown author"))
             .collect();
     };
 
-    for contributor in secondary {
-        let role = to_string(&contributor["role"]);
-        let key = to_string(&contributor["node"]["__ref"]);
-        if role.is_none() || key.is_none() {
-            warn!("Failed to parse contributor");
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    for contrib in secondary {
+        let Some(role) = to_string(&contrib["role"]) else {
+            warn!("Failed to parse contributor role");
             continue;
-        }
+        };
+        let Some(key) = to_string(&contrib["node"]["__ref"]) else {
+            warn!("Failed to parse contributor key");
+            continue;
+        };
         // Only keep contributors that are authors
-        if role.as_ref().unwrap() != "Author" {
+        if role != "Author" {
             info!("Contributor not an author, skipping...");
             continue;
         }
 
-        if let Some(contributor) = fetch_contributor(metadata, (role.unwrap(), key.unwrap())) {
+        if let Some(contributor) = fetch_contributor(metadata, (role, key)) {
             contributors.push(contributor);
         }
     }
 
     contributors
         .into_iter()
-        .filter(|s| !s.name.to_lowercase().eq("unknown author"))
+        .filter(|contributor| !contributor.name.to_lowercase().eq("unknown author"))
         .collect()
 }
 
+/// Parses metadata JSON and extracts all contributors including their name, role and Goodreads ID
 fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let contributor = &metadata["props"]["pageProps"]["apolloState"][&key]["name"];
     let name = to_string(contributor);
     // First, try to extract Goodreads ID from "legacyId" field
-    let goodreads_id = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let Some(goodreads_id) = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
         .as_i64()
         .map(|x| x.to_string())
         .or_else(|| {
-            metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"]
-                .as_str()
-                .and_then(|x| {
-                    x.strip_prefix("https://www.goodreads.com/author/show/")
-                        .and_then(|rest| rest.split('.').next())
-                        .map(|s| s.to_string())
-                })
+            let id = metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"].as_str()?;
+            id.strip_prefix("https://www.goodreads.com/author/show/")
+                .and_then(|rest| rest.split('.').next())
+                .map(str::to_owned)
         })
-        .unwrap();
+    else {
+        warn!("Failed to parse Goodreads ID");
+        return None;
+    };
 
     if name.is_none() {
         warn!("Failed to parse contributor");
@@ -237,13 +305,22 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
     })
 }
 
+/// Extracts a book's genres from its metadata JSON
 fn extract_genres(metadata: &Value, amazon_id: &str) -> Vec<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let genres = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookGenres"].as_array();
 
     let Some(genres) = genres else {
         return vec![];
     };
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     genres
         .iter()
         .filter_map(|genre| {
@@ -255,70 +332,120 @@ fn extract_genres(metadata: &Value, amazon_id: &str) -> Vec<String> {
         .collect()
 }
 
+/// Extracts a book's publishers from its metadata JSON
 fn extract_publisher(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let publisher =
         &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publisher"];
     to_string(publisher)
 }
 
+/// Extracts a book's publication date from its metadata JSON
 fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
-    match &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publicationTime"] {
-        Value::Null => None,
-        Value::Number(number) => {
-            let timestamp = number.as_i64().and_then(DateTime::from_timestamp_millis);
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    #[allow(clippy::pattern_type_mismatch, reason = "false positive")]
+    if let Value::Number(number) =
+        &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publicationTime"]
+    {
+        let timestamp = number.as_i64().and_then(DateTime::from_timestamp_millis);
 
-            if timestamp.is_none() {
-                warn!("Failed to parse publication date");
-            }
-
-            timestamp
+        if timestamp.is_none() {
+            warn!("Failed to parse publication date");
         }
-        _ => panic!("Publication date must be a timestamp"),
+        timestamp
+    } else {
+        warn!("No publication date in JSON found!");
+        None
     }
 }
 
+/// Extracts a book's ISBN from its metadata JSON
 fn extract_isbn(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let isbn = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["isbn"];
     if let Some(i) = to_string(isbn) {
         return Some(i);
     }
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let isbn13 = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["isbn13"];
     if let Some(i) = to_string(isbn13) {
         return Some(i);
     }
 
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let asin = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["asin"];
     to_string(asin)
 }
 
+/// Extracts a book's page count from its metadata JSON
 fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let count =
         metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["numPages"].as_i64();
     match count {
         Some(0) => None,
-        c => c,
+        val => val,
     }
 }
 
+/// Extracts a book's language from its metadata JSON
 fn extract_language(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let language =
         &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["language"]["name"];
     to_string(language)
 }
 
-fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, ScraperError> {
+/// Extracts a book's series from its metadata JSON. Because a book may belong to multiple series
+/// (or one series and one overarching universe etc.), this function returns a vector. A book with
+/// no series returns an empty vector.
+fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
+    let empty_vec: Vec<Value> = Vec::new();
+
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let series_array = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookSeries"]
         .as_array()
-        .unwrap();
-
+        .unwrap_or(&empty_vec);
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
     let series_info = series_array
         .iter()
         .filter_map(|series| {
             let Some(number) = series["userPosition"]
                 .as_str()
-                .map(|s| s.split('-').next().unwrap_or(""))
-                .and_then(|s| s.parse::<f32>().ok())
+                .map(|string| string.split('-').next().unwrap_or(""))
+                .and_then(|string| string.parse::<f32>().ok())
             else {
                 warn!("Failed to parse series number");
                 return None;
@@ -348,27 +475,39 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Result<Vec<BookSeries>, 
             })
         })
         .collect::<Vec<BookSeries>>();
-    Ok(series_info)
+    series_info
 }
 
+/// Helper function to easily convert a JSON `Value` into a `String` and replaces all whitespaces
+/// with just a single whitespace.
 fn to_string(value: &Value) -> Option<String> {
-    let re = Regex::new(r"\s{2,}").expect("Regex must be valid");
-    value
-        .as_str()
-        .map(str::trim)
-        .map(|s| re.replace_all(s, " ").to_string())
-        .filter(|s| !s.is_empty())
+    match Regex::new(r"\s{2,}") {
+        Ok(re) => value
+            .as_str()
+            .map(str::trim)
+            .map(|string| re.replace_all(string, " ").to_string())
+            .filter(|string| !string.is_empty()),
+        Err(error) => {
+            warn!("Failed to construct regex for {value}, {error}");
+            None
+        }
+    }
 }
 
+/// Helper function to extract the Goodreads ID from a URL.
 fn extract_id_from_url(url: &Value) -> Option<String> {
     let url = url.as_str()?;
     let replaced = url.replace("https://www.goodreads.com/series/", "");
-    let id_raw = replaced.split("-").next()?;
+    let id_raw = replaced.split('-').next()?;
     let id = String::from(id_raw);
     Some(id)
 }
 
 #[cfg(test)]
+#[allow(
+    clippy::unwrap_used,
+    reason = "Tests are constructed with known values"
+)]
 mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
@@ -377,40 +516,40 @@ mod tests {
     async fn fetch_metadata_test() {
         let expected_series = vec![
             BookSeries {
-                title: "Percy Jackson and the Olympians".to_string(),
+                title: "Percy Jackson and the Olympians".to_owned(),
                 number: 5.0,
-                goodreads_id: "40736".to_string(),
+                goodreads_id: "40736".to_owned(),
             },
             BookSeries {
-                title: "Camp Half-Blood Chronicles".to_string(),
+                title: "Camp Half-Blood Chronicles".to_owned(),
                 number: 5.0,
-                goodreads_id: "183923".to_string(),
+                goodreads_id: "183923".to_owned(),
             },
             BookSeries {
-                title: "Coleccionable Percy Jackson".to_string(),
+                title: "Coleccionable Percy Jackson".to_owned(),
                 number: 5.0,
-                goodreads_id: "399169".to_string(),
+                goodreads_id: "399169".to_owned(),
             },
         ];
         let expected_contributors = vec![BookContributor {
-            name: "Rick Riordan".to_string(),
-            role: "Author".to_string(),
-            goodreads_id: "15872".to_string(),
+            name: "Rick Riordan".to_owned(),
+            role: "Author".to_owned(),
+            goodreads_id: "15872".to_owned(),
         }];
         let expected_genres = vec![
-            "Fantasy".to_string(),
-            "Young Adult".to_string(),
-            "Mythology".to_string(),
-            "Fiction".to_string(),
-            "Percy Jackson".to_string(),
-            "Middle Grade".to_string(),
-            "Adventure".to_string(),
-            "Greek Mythology".to_string(),
-            "Urban Fantasy".to_string(),
-            "Childrens".to_string(),
+            "Fantasy".to_owned(),
+            "Young Adult".to_owned(),
+            "Mythology".to_owned(),
+            "Fiction".to_owned(),
+            "Percy Jackson".to_owned(),
+            "Middle Grade".to_owned(),
+            "Adventure".to_owned(),
+            "Greek Mythology".to_owned(),
+            "Urban Fantasy".to_owned(),
+            "Childrens".to_owned(),
         ];
         let expected_metadata = BookMetadata {
-            title: "The Last Olympian".to_string(),
+            title: "The Last Olympian".to_owned(),
             subtitle: None,
             description: Some("All year the half-bloods have been preparing for battle against the Titans, knowing the odds of victory are grim. \
             Kronos's army is stronger than ever, and with every god and half-blood he recruits, the evil Titan's power only grows.\
@@ -418,16 +557,16 @@ mod tests {
             where Mount Olympus stands virtually unguarded. Now it's up to Percy Jackson and an army of young demigods to stop the Lord of Time. \
             <br /><br />In this momentous final book in the <i>New York Times</i> best-selling series, the long-awaited prophecy surrounding \
             Percy's sixteenth birthday unfolds. And as the battle for Western civilization rages on the streets of Manhattan, Percy faces a \
-            terrifying suspicion that he may be fighting against his own fate.".to_string()),
-            publisher: Some("Disney-Hyperion Books".to_string()),
+            terrifying suspicion that he may be fighting against his own fate.".to_owned()),
+            publisher: Some("Disney-Hyperion Books".to_owned()),
             publication_date: Some(DateTime::parse_from_rfc3339("2009-05-05T07:00:00Z").unwrap().to_utc()),
-            isbn: Some("1423101472".to_string()),
+            isbn: Some("1423101472".to_owned()),
             contributors: expected_contributors,
             genres: expected_genres,
             series: expected_series,
             page_count: Some(381),
-            language: Some("English".to_string()),
-            image_url: Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_string()),
+            language: Some("English".to_owned()),
+            image_url: Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_owned()),
             goodreads_id: Some(String::from("4556058")),
 
         };
@@ -439,16 +578,16 @@ mod tests {
     #[tokio::test]
     async fn fetch_metadata_contributor_with_no_legacy_id() {
         let expected_contributor = BookContributor {
-            name: "Mark Zug".to_string(),
-            role: "Illustrations".to_string(),
-            goodreads_id: "619712".to_string(),
+            name: "Mark Zug".to_owned(),
+            role: "Illustrations".to_owned(),
+            goodreads_id: "619712".to_owned(),
         };
         let metadata = extract_book_metadata("7355137").await.unwrap();
         let contributor = fetch_contributor(
             &metadata,
             (
-                "Illustrations".to_string(),
-                "Contributor:kca://author/amzn1.gr.author.v1.pVNrjuvKvXYyslKm1pwHxQ".to_string(),
+                "Illustrations".to_owned(),
+                "Contributor:kca://author/amzn1.gr.author.v1.pVNrjuvKvXYyslKm1pwHxQ".to_owned(),
             ),
         )
         .unwrap();
@@ -456,30 +595,30 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_multiple_contributors_single_author() {
+    async fn multiple_contributors_single_author() {
         // Darke - Angie Sage, Mark Zug(Illustrator)
         let expected_authors = vec![BookContributor {
-            name: "Angie Sage".to_string(),
-            role: "Author".to_string(),
-            goodreads_id: "157663".to_string(),
+            name: "Angie Sage".to_owned(),
+            role: "Author".to_owned(),
+            goodreads_id: "157663".to_owned(),
         }];
         let metadata = fetch_metadata("7355137").await.unwrap();
         assert_eq!(expected_authors, metadata.contributors);
     }
 
     #[tokio::test]
-    async fn test_multiple_contributors_multiple_authors() {
+    async fn multiple_contributors_multiple_authors() {
         // A Memory of Light - Robert Jordan, Brandon Sanderson
         let expected_authors = [
             BookContributor {
-                name: "Brandon Sanderson".to_string(),
-                role: "Author".to_string(),
-                goodreads_id: "38550".to_string(),
+                name: "Brandon Sanderson".to_owned(),
+                role: "Author".to_owned(),
+                goodreads_id: "38550".to_owned(),
             },
             BookContributor {
-                name: "Robert Jordan".to_string(),
-                role: "Author".to_string(),
-                goodreads_id: "6252".to_string(),
+                name: "Robert Jordan".to_owned(),
+                role: "Author".to_owned(),
+                goodreads_id: "6252".to_owned(),
             },
         ];
         let contributors = fetch_metadata("7743175").await.unwrap().contributors;

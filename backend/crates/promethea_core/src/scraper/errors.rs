@@ -1,6 +1,7 @@
 use scraper::error::SelectorErrorKind;
 
 /// Custom error type for handling errors in the Goodreads metadata scraper.
+#[non_exhaustive]
 #[derive(Debug)]
 pub enum ScraperError {
     /// Error that occurs during the HTTP request to Goodreads, originating from `reqwest`.
@@ -13,20 +14,23 @@ pub enum ScraperError {
     SerializeError(serde_json::Error),
 }
 
+#[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 impl From<reqwest::Error> for ScraperError {
     fn from(error: reqwest::Error) -> Self {
-        ScraperError::FetchError(error)
+        Self::FetchError(error)
     }
 }
 
+#[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 impl From<SelectorErrorKind<'static>> for ScraperError {
     fn from(error: SelectorErrorKind<'static>) -> Self {
-        ScraperError::ParseError(error.to_string())
+        Self::ParseError(error.to_string())
     }
 }
 
+#[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
 impl From<serde_json::Error> for ScraperError {
     fn from(error: serde_json::Error) -> Self {
-        ScraperError::SerializeError(error)
+        Self::SerializeError(error)
     }
 }

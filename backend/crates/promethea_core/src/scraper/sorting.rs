@@ -1,19 +1,20 @@
+#[must_use]
+#[inline]
 pub fn get_name_sort(author_name: &str) -> String {
     // Takes the full name of an author and produces a string according to which the name should
     // be sorted. General logic: Sort by last "word" in name and comma-separate it from everything
     // else in the name, e.g. `Guy Le Best => Best, Guy Le`
-    let mut tokens = author_name.split_whitespace().collect::<Vec<&str>>();
+    let tokens = author_name.split_whitespace().collect::<Vec<&str>>();
 
-    match tokens.len() {
-        0 => String::new(),
-        1 => String::from(tokens[0]),
-        _ => {
-            let determining_name = tokens.pop().unwrap();
-            format!("{}, {}", determining_name, tokens.join(" "))
-        }
+    match tokens.as_slice().split_last() {
+        None => String::new(),
+        Some((only, &[])) => (*only).to_owned(),
+        Some((last, rest)) => format!("{}, {}", last, rest.join(" ")),
     }
 }
 
+#[must_use]
+#[inline]
 pub fn get_title_sort(title: &str) -> String {
     // Required patterns:
     // the everythingelse -> everythingelse, the e.g. The Hobbit
@@ -26,7 +27,7 @@ pub fn get_title_sort(title: &str) -> String {
             return format!("{trimmed_remainder}, {prefix}");
         }
     }
-    title.to_string()
+    title.to_owned()
 }
 
 #[cfg(test)]
@@ -35,7 +36,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn test_firstname_lastname() {
+    fn firstname_lastname() {
         let names = [
             String::from("Brandon Sanderson"),
             String::from("Robert Jordan"),
@@ -54,7 +55,7 @@ mod tests {
     }
 
     #[test]
-    fn test_firstname_middlename_lastname() {
+    fn firstname_middlename_lastname() {
         let names = [
             String::from("Guy Gavriel Kay"),
             String::from("Orson Scott Card"),
@@ -73,7 +74,7 @@ mod tests {
     }
 
     #[test]
-    fn test_firstname_m_lastname() {
+    fn firstname_m_lastname() {
         let names = [
             String::from("Michael J. Sullivan"),
             String::from("Arthur C. Clarke"),
@@ -94,7 +95,7 @@ mod tests {
     }
 
     #[test]
-    fn test_f_m_lastname() {
+    fn f_m_lastname() {
         let names = [
             String::from("R. R. Virdi"),
             String::from("S. A. Chakraborty"),
@@ -113,7 +114,7 @@ mod tests {
     }
 
     #[test]
-    fn test_firstname_m_m_lastname() {
+    fn firstname_m_m_lastname() {
         let names = [
             String::from("James S. A. Corey"),
             String::from("George R. R. Martin"),
@@ -130,7 +131,7 @@ mod tests {
     }
 
     #[test]
-    fn test_f_middlename_lastname() {
+    fn f_middlename_lastname() {
         let names = [
             String::from("R. Scott Bakker"),
             String::from("F. Scott Fitzgerald"),
@@ -147,7 +148,7 @@ mod tests {
     }
 
     #[test]
-    fn test_f_m_m_lastname() {
+    fn f_m_m_lastname() {
         let name = "J. R. R. Tolkien";
 
         let expected = String::from("Tolkien, J. R. R.");
@@ -157,7 +158,7 @@ mod tests {
     }
 
     #[test]
-    fn test_singlename() {
+    fn singlename() {
         let names = [String::from("Baoshu"), String::from("Madonna")];
 
         let expected = vec![String::from("Baoshu"), String::from("Madonna")];
@@ -168,7 +169,7 @@ mod tests {
     }
 
     #[test]
-    fn test_titles() {
+    fn titles() {
         let titles = [
             String::from("A Game of Thrones"),
             String::from("An Echo of Things to Come"),
