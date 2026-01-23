@@ -79,17 +79,17 @@ pub async fn fetch_id_from_title_and_author(
     title: &str,
     author: &str,
 ) -> Result<Option<String>, ScraperError> {
-    let results = search_books(title).await?;
+    let results_with_title = search_books(title).await?;
 
-    for (found_title, found_author, found_id) in results {
+    for (found_title, found_author, found_id) in results_with_title {
         if matches(&found_title, title) && matches(&found_author, author) {
             return Ok(Some(found_id));
         }
     }
 
-    let results = search_books(&format!("{title} {author}")).await?;
+    let results_with_title_author = search_books(&format!("{title} {author}")).await?;
 
-    for (found_title, found_author, found_id) in results {
+    for (found_title, found_author, found_id) in results_with_title_author {
         if matches(&found_title, title) && matches(&found_author, author) {
             return Ok(Some(found_id));
         }
