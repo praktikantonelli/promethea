@@ -12,26 +12,14 @@ use serde_json::Value;
 pub struct BookMetadata {
     /// The main title of the book.
     pub title: String,
-    /// An optional subtitle of the book.
-    pub subtitle: Option<String>,
-    /// An optional description or summary of the book.
-    pub description: Option<String>,
-    /// The publisher of the book, if available.
-    pub publisher: Option<String>,
     /// The publication date of the book, represented as a UTC datetime.
     pub publication_date: Option<DateTime<Utc>>,
-    /// The ISBN of the book, if available.
-    pub isbn: Option<String>,
     /// A list of contributors to the book, each represented as a `BookContributor`.
     pub contributors: Vec<BookContributor>,
-    /// A list of genres associated with the book.
-    pub genres: Vec<String>,
     /// A list of series information, if the book is part of a series, represented as a `BookSeries`.
     pub series: Vec<BookSeries>,
     /// The number of pages in the book, if available.
     pub page_count: Option<i64>,
-    /// The language of the book, if available.
-    pub language: Option<String>,
     /// A URL to an image of the book's cover, if available.
     pub image_url: Option<String>,
     /// The ID with which the book's metadata has been fetched
@@ -74,31 +62,20 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
     let metadata = extract_book_metadata(goodreads_id).await?;
     let amazon_id = extract_amazon_id(&metadata, goodreads_id)?;
 
-    let (title, subtitle) = extract_title_and_subtitle(&metadata, &amazon_id)?;
-    let description = extract_description(&metadata, &amazon_id);
+    let (title, _subtitle) = extract_title_and_subtitle(&metadata, &amazon_id)?;
     let image_url = extract_image_url(&metadata, &amazon_id);
     let contributors = extract_contributors(&metadata, &amazon_id);
-    let genres = extract_genres(&metadata, &amazon_id);
-    let publisher = extract_publisher(&metadata, &amazon_id);
     let publication_date = extract_publication_date(&metadata, &amazon_id);
-    let isbn = extract_isbn(&metadata, &amazon_id);
     let page_count = extract_page_count(&metadata, &amazon_id);
-    let language = extract_language(&metadata, &amazon_id);
     let series = extract_series(&metadata, &amazon_id);
     let goodreads_id = Some(goodreads_id.to_owned());
 
     Ok(BookMetadata {
         title,
-        subtitle,
-        description,
-        publisher,
         publication_date,
-        isbn,
         contributors,
-        genres,
         series,
         page_count,
-        language,
         image_url,
         goodreads_id,
     })
@@ -172,17 +149,6 @@ fn extract_title_and_subtitle(
         Some((title, subtitle)) => Ok((title.to_owned(), Some(subtitle.trim().to_owned()))),
         None => Ok((title.clone(), None)),
     }
-}
-
-/// Extracts the description from the metadata JSON. A book may not have a description, so this
-/// function returns `Option`.
-fn extract_description(metadata: &Value, amazon_id: &str) -> Option<String> {
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    let description = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["description"];
-    to_string(description)
 }
 
 /// Extracts a book's image URL from the metadata JSON. A book may not have an image, so this
@@ -305,44 +271,6 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
     })
 }
 
-/// Extracts a book's genres from its metadata JSON
-fn extract_genres(metadata: &Value, amazon_id: &str) -> Vec<String> {
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    let genres = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookGenres"].as_array();
-
-    let Some(genres) = genres else {
-        return vec![];
-    };
-
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    genres
-        .iter()
-        .filter_map(|genre| {
-            to_string(&genre["genre"]["name"]).or_else(|| {
-                warn!("Failed to parse genre name");
-                None
-            })
-        })
-        .collect()
-}
-
-/// Extracts a book's publishers from its metadata JSON
-fn extract_publisher(metadata: &Value, amazon_id: &str) -> Option<String> {
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    let publisher =
-        &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publisher"];
-    to_string(publisher)
-}
-
 /// Extracts a book's publication date from its metadata JSON
 fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
     #[allow(
@@ -365,34 +293,6 @@ fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTim
     }
 }
 
-/// Extracts a book's ISBN from its metadata JSON
-fn extract_isbn(metadata: &Value, amazon_id: &str) -> Option<String> {
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    let isbn = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["isbn"];
-    if let Some(i) = to_string(isbn) {
-        return Some(i);
-    }
-
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    let isbn13 = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["isbn13"];
-    if let Some(i) = to_string(isbn13) {
-        return Some(i);
-    }
-
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    let asin = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["asin"];
-    to_string(asin)
-}
-
 /// Extracts a book's page count from its metadata JSON
 fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
     #[allow(
@@ -405,17 +305,6 @@ fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
         Some(0) => None,
         val => val,
     }
-}
-
-/// Extracts a book's language from its metadata JSON
-fn extract_language(metadata: &Value, amazon_id: &str) -> Option<String> {
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    let language =
-        &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["language"]["name"];
-    to_string(language)
 }
 
 /// Extracts a book's series from its metadata JSON. Because a book may belong to multiple series
@@ -536,36 +425,12 @@ mod tests {
             role: "Author".to_owned(),
             goodreads_id: "15872".to_owned(),
         }];
-        let expected_genres = vec![
-            "Fantasy".to_owned(),
-            "Young Adult".to_owned(),
-            "Mythology".to_owned(),
-            "Fiction".to_owned(),
-            "Percy Jackson".to_owned(),
-            "Middle Grade".to_owned(),
-            "Adventure".to_owned(),
-            "Greek Mythology".to_owned(),
-            "Urban Fantasy".to_owned(),
-            "Childrens".to_owned(),
-        ];
         let expected_metadata = BookMetadata {
             title: "The Last Olympian".to_owned(),
-            subtitle: None,
-            description: Some("All year the half-bloods have been preparing for battle against the Titans, knowing the odds of victory are grim. \
-            Kronos's army is stronger than ever, and with every god and half-blood he recruits, the evil Titan's power only grows.\
-            <br /><br />While the Olympians struggle to contain the rampaging monster Typhon, Kronos begins his advance on New York City, \
-            where Mount Olympus stands virtually unguarded. Now it's up to Percy Jackson and an army of young demigods to stop the Lord of Time. \
-            <br /><br />In this momentous final book in the <i>New York Times</i> best-selling series, the long-awaited prophecy surrounding \
-            Percy's sixteenth birthday unfolds. And as the battle for Western civilization rages on the streets of Manhattan, Percy faces a \
-            terrifying suspicion that he may be fighting against his own fate.".to_owned()),
-            publisher: Some("Disney-Hyperion Books".to_owned()),
             publication_date: Some(DateTime::parse_from_rfc3339("2009-05-05T07:00:00Z").unwrap().to_utc()),
-            isbn: Some("1423101472".to_owned()),
             contributors: expected_contributors,
-            genres: expected_genres,
             series: expected_series,
             page_count: Some(381),
-            language: Some("English".to_owned()),
             image_url: Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_owned()),
             goodreads_id: Some(String::from("4556058")),
 
