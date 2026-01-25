@@ -2,7 +2,6 @@ use crate::scraper::errors::ScraperError;
 use log::warn;
 use reqwest::get;
 use scraper::{Html, Selector};
-use serde_json::Value;
 use urlencoding::encode;
 
 #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
@@ -15,44 +14,6 @@ pub async fn verify_id_exists(id: &str) -> bool {
             false
         }
     }
-}
-
-/// Given ISBN, fetches Goodreads ID
-/// # Errors
-/// The function fails if the search for the book fails.
-#[allow(
-    clippy::missing_inline_in_public_items,
-    reason = "Called rarely, large function"
-)]
-pub async fn fetch_id_from_isbn(isbn: &str) -> Result<Option<String>, ScraperError> {
-    let url = format!("https://www.goodreads.com/search?q={}", encode(isbn));
-    let document = Html::parse_document(&get(&url).await?.text().await?);
-
-    let metadata_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#)?;
-
-    let metadata = match document.select(&metadata_selector).next() {
-        Some(metadata) => &metadata.text().collect::<String>(),
-        None => return Ok(None),
-    };
-
-    let metadata: Value = serde_json::from_str(metadata)?;
-
-    #[allow(
-        clippy::indexing_slicing,
-        reason = "`serde_json::Value` indexing never panics"
-    )]
-    let goodreads_id = metadata["props"]["pageProps"]["params"]["book_id"]
-        .as_str()
-        .ok_or(ScraperError::ParseError(
-            "Failed to extract Goodreads ID from ISBN search results".to_owned(),
-        ))?;
-
-    let goodreads_id = goodreads_id
-        .chars()
-        .take_while(|character| character.is_numeric())
-        .collect::<String>();
-
-    Ok(Some(goodreads_id))
 }
 
 /// Given title, fetches Goodreads ID
@@ -200,21 +161,6 @@ mod tests {
                 .unwrap(),
             None
         );
-    }
-
-    #[tokio::test]
-    async fn fetch_id_from_isbn_test() {
-        let isbn = "9780063021426";
-        assert_eq!(
-            fetch_id_from_isbn(isbn).await.unwrap(),
-            Some("57945316".to_owned())
-        );
-    }
-
-    #[tokio::test]
-    async fn fetch_id_from_isbn_not_found_test() {
-        let isbn = "1234001592323";
-        assert_eq!(fetch_id_from_isbn(isbn).await.unwrap(), None);
     }
 
     #[tokio::test]
