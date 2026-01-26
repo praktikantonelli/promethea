@@ -185,14 +185,19 @@ pub async fn add_book(
     let metadata = async {
         let t0 = Instant::now();
 
-        let request = MetadataRequestBuilder::default()
-            .with_title(&title)
-            .with_author(&first_author);
+        // let request = MetadataRequestBuilder::default()
+        //     .with_title(&title)
+        //     .with_author(&first_author);
+        //
+        // let result = request
+        //     .execute()
+        //     .await
+        //     .map_err(|err| PrometheaError::Other(format!("{err:?}")))?;
 
-        let result = request
-            .execute()
-            .await
-            .map_err(|err| PrometheaError::Other(format!("{err:?}")))?;
+        let result = state
+            .metadata_request_client
+            .fetch_metadata(&title, &first_author)
+            .await?;
 
         tracing::info!(
             elapsed_ms = t0.elapsed().as_millis(),

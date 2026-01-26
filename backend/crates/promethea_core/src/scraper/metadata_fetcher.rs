@@ -85,7 +85,7 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
 /// # Errors
 /// This function fails if the HTTP request fails or if parsing the extracting the JSON from the
 /// HTML page fails
-async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError> {
+pub async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError> {
     let url = format!("https://www.goodreads.com/book/show/{goodreads_id}");
     let document = Html::parse_document(&get(&url).await?.text().await?);
     let metadata_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#)?;
@@ -107,7 +107,7 @@ async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError
 /// Extracts a book's Amazon ID based on its Goodreads ID from the JSON metadata
 /// # Errors
 /// Fails if the Amazon ID cannot be extracted
-fn extract_amazon_id(metadata: &Value, goodreads_id: &str) -> Result<String, ScraperError> {
+pub fn extract_amazon_id(metadata: &Value, goodreads_id: &str) -> Result<String, ScraperError> {
     let amazon_id_key = format!("getBookByLegacyId({{\"legacyId\":\"{goodreads_id}\"}})");
     #[allow(
         clippy::indexing_slicing,
@@ -129,7 +129,7 @@ fn extract_amazon_id(metadata: &Value, goodreads_id: &str) -> Result<String, Scr
 /// # Errors
 /// Fails if the title cannot be extracted. Missing subtitle is not an error, as not every book has
 /// a subtitle.
-fn extract_title_and_subtitle(
+pub fn extract_title_and_subtitle(
     metadata: &Value,
     amazon_id: &str,
 ) -> Result<(String, Option<String>), ScraperError> {
@@ -153,7 +153,7 @@ fn extract_title_and_subtitle(
 
 /// Extracts a book's image URL from the metadata JSON. A book may not have an image, so this
 /// function returns `Option`
-fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
+pub fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
@@ -165,7 +165,7 @@ fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
 /// Extracts all contributors of a book from its metatada JSON and filters out any non-authors. A
 /// book may have more than one author, so this function returns a vector. In case of problems, the
 /// function returns an empty vector.
-fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
+pub fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
     let mut contributors = Vec::new();
 
     #[allow(
@@ -234,7 +234,10 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
 }
 
 /// Parses metadata JSON and extracts all contributors including their name, role and Goodreads ID
-fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
+pub fn fetch_contributor(
+    metadata: &Value,
+    (role, key): (String, String),
+) -> Option<BookContributor> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
@@ -272,7 +275,7 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
 }
 
 /// Extracts a book's publication date from its metadata JSON
-fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
+pub fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
@@ -294,7 +297,7 @@ fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTim
 }
 
 /// Extracts a book's page count from its metadata JSON
-fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
+pub fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
@@ -310,7 +313,7 @@ fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
 /// Extracts a book's series from its metadata JSON. Because a book may belong to multiple series
 /// (or one series and one overarching universe etc.), this function returns a vector. A book with
 /// no series returns an empty vector.
-fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
+pub fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
     let empty_vec: Vec<Value> = Vec::new();
 
     #[allow(

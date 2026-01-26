@@ -1,5 +1,10 @@
 use crate::scraper::errors::ScraperError;
 use crate::scraper::goodreads_id_fetcher::{extract_goodreads_id, matches};
+use crate::scraper::metadata_fetcher::BookMetadata;
+use crate::scraper::metadata_fetcher::{
+    extract_amazon_id, extract_book_metadata, extract_contributors, extract_image_url,
+    extract_page_count, extract_publication_date, extract_series, extract_title_and_subtitle,
+};
 use core::time::Duration;
 use reqwest::redirect::Policy;
 
@@ -56,7 +61,7 @@ impl MetadataRequestClient {
     /// # Errors
     /// The function fails if the search for the book fails.
     #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
-    pub async fn fetch_goodreads_id(
+    async fn fetch_goodreads_id(
         &self,
         title: &str,
         author: &str,
@@ -112,5 +117,47 @@ impl MetadataRequestClient {
             results.push((found_title, found_author, found_id));
         }
         Ok(results)
+    }
+
+    /// Fetches metadata for a given title and author of a book
+    /// # Errors
+    /// Returns an error if the request fails
+    #[inline]
+    pub async fn fetch_metadata(
+        &self,
+        title: &str,
+        author: &str,
+    ) -> Result<Option<BookMetadata>, ScraperError> {
+        let goodreads_id = self.fetch_goodreads_id(title, author).await?;
+        match goodreads_id {
+            Some(id) => Ok(Some(self.get_metadata(&id).await?)),
+            None => Ok(None),
+        }
+    }
+
+    /// Handles the HTTP requests and subsequent extraction of data from the response
+    /// # Errors
+    /// Returns an error if any of the individual methods returns an error
+    async fn get_metadata(&self, goodreads_id: &str) -> Result<BookMetadata, ScraperError> {
+        let metadata = extract_book_metadata(goodreads_id).await?;
+        let amazon_id = extract_amazon_id(&metadata, goodreads_id)?;
+
+        let (title, _subtitle) = extract_title_and_subtitle(&metadata, &amazon_id)?;
+        let image_url = extract_image_url(&metadata, &amazon_id);
+        let contributors = extract_contributors(&metadata, &amazon_id);
+        let publication_date = extract_publication_date(&metadata, &amazon_id);
+        let page_count = extract_page_count(&metadata, &amazon_id);
+        let series = extract_series(&metadata, &amazon_id);
+        let goodreads_id = Some(goodreads_id.to_owned());
+
+        Ok(BookMetadata {
+            title,
+            publication_date,
+            contributors,
+            series,
+            page_count,
+            image_url,
+            goodreads_id,
+        })
     }
 }
