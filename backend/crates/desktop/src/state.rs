@@ -1,4 +1,5 @@
 use promethea_core::database::queries::Db;
+use promethea_core::scraper::client::MetadataRequestClient;
 use std::path::PathBuf;
 use tokio::sync::RwLock;
 
@@ -14,6 +15,8 @@ pub struct AppState {
     pub db: RwLock<Option<Db>>,
     /// Holds the last error state arising from accessing the database
     pub last_error: RwLock<Option<String>>,
+    /// A client for executing metadata requests
+    pub metadata_request_client: MetadataRequestClient,
 }
 
 impl AppState {
@@ -22,6 +25,7 @@ impl AppState {
         Self {
             db: RwLock::new(None),
             last_error: RwLock::new(None),
+            metadata_request_client: MetadataRequestClient::new().expect("Failed to create `MetadataRequestClient`!"),
         }
     }
 

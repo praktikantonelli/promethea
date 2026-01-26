@@ -14,7 +14,13 @@ pub struct MetadataRequestClient {
 
 impl MetadataRequestClient {
     /// Create a new HTTP request client, to be used for all subsequent metadata scraping requests
-    fn new() -> Result<Self, String> {
+    /// # Errors
+    /// Fails in case any of the reqwest `ClientBuilder` methods fail
+    #[allow(
+        clippy::missing_inline_in_public_items,
+        reason = "Called once per program run"
+    )]
+    pub fn new() -> Result<Self, String> {
         let mut headers = header::HeaderMap::new();
         headers.insert(
             header::ACCEPT,
