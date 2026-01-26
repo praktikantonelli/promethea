@@ -104,7 +104,7 @@ fn matches(str1: &str, str2: &str) -> bool {
 }
 
 /// Tries and extracts the Goodreads ID out of a Goodreads URL
-fn extract_goodreads_id(url: &str) -> String {
+pub fn extract_goodreads_id(url: &str) -> String {
     url.splitn(4, '/')
         .nth(3)
         .unwrap_or("")

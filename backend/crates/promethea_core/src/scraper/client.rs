@@ -1,7 +1,11 @@
+use crate::scraper::errors::ScraperError;
+use crate::scraper::goodreads_id_fetcher::extract_goodreads_id;
 use core::time::Duration;
 use reqwest::redirect::Policy;
 
 use reqwest::{ClientBuilder, header};
+use scraper::{Html, Selector};
+use urlencoding::encode;
 
 pub struct MetadataRequestClient {
     http_client: reqwest::Client,
@@ -52,5 +56,39 @@ impl MetadataRequestClient {
             .get(format!("https://goodreads.com/search?q={query}"))
             .send()
             .await?;
+    }
+
+    /// Tries to query Goodreads with a given query (e.g., title and author as one string).
+    /// # Errors
+    /// Returns an error if fetching or parsing the website fails, or if no link to the specified query
+    /// can be extracted
+    async fn search_books(
+        &self,
+        query: &str,
+    ) -> Result<Vec<(String, String, String)>, ScraperError> {
+        let url = format!("https://www.goodreads.com/search?q={}", encode(query));
+
+        //let document = Html::parse_document(&get(&url).await?.text().await?);
+        let document =
+            Html::parse_document(&self.http_client.get(&url).send().await?.text().await?);
+        let title_selector = Selector::parse(r#"a[class="bookTitle"]"#)?;
+        let author_selector = Selector::parse(r#"a[class="authorName"]"#)?;
+
+        let mut results = Vec::new();
+
+        for (title, author) in document
+            .select(&title_selector)
+            .zip(document.select(&author_selector))
+        {
+            let found_title = title.text().collect::<String>();
+            let found_author = author.text().collect::<String>();
+            let found_link = title.value().attr("href").ok_or(ScraperError::ParseError(
+                "Failed to extract link from search result".to_owned(),
+            ))?;
+            let found_id = extract_goodreads_id(found_link);
+
+            results.push((found_title, found_author, found_id));
+        }
+        Ok(results)
     }
 }
