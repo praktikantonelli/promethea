@@ -1,5 +1,5 @@
 use crate::scraper::errors::ScraperError;
-use crate::scraper::goodreads_id_fetcher::extract_goodreads_id;
+use crate::scraper::goodreads_id_fetcher::{extract_goodreads_id, matches};
 use core::time::Duration;
 use reqwest::redirect::Policy;
 
@@ -8,6 +8,7 @@ use scraper::{Html, Selector};
 use urlencoding::encode;
 
 pub struct MetadataRequestClient {
+    /// A HTTP client used to execute all GET requests for querying Goodreads
     http_client: reqwest::Client,
 }
 
@@ -44,18 +45,33 @@ impl MetadataRequestClient {
             .map_err(|err| format!("Failed to create HTTP request client for scraping: {err}"))
     }
 
-    /// Use title and author(s) to fetch a book's Goodreads ID
-    async fn fetch_goodreads_id(
+    /// Given title and author, fetches Goodreads ID. First attempts to only use title to keep the
+    /// query as concise as possible, only uses author as a fallback
+    /// # Errors
+    /// The function fails if the search for the book fails.
+    #[allow(clippy::missing_inline_in_public_items, reason = "Called rarely")]
+    pub async fn fetch_goodreads_id(
         &self,
-        title: String,
-        authors: Vec<String>,
-    ) -> Result<Option<i32>, String> {
-        let query = format!("{title} {}", authors.join(" "));
-        let result = &self
-            .http_client
-            .get(format!("https://goodreads.com/search?q={query}"))
-            .send()
-            .await?;
+        title: &str,
+        author: &str,
+    ) -> Result<Option<String>, ScraperError> {
+        let results_with_title = self.search_books(title).await?;
+
+        for (found_title, found_author, found_id) in results_with_title {
+            if matches(&found_title, title) && matches(&found_author, author) {
+                return Ok(Some(found_id));
+            }
+        }
+
+        let results_with_title_author = self.search_books(&format!("{title} {author}")).await?;
+
+        for (found_title, found_author, found_id) in results_with_title_author {
+            if matches(&found_title, title) && matches(&found_author, author) {
+                return Ok(Some(found_id));
+            }
+        }
+
+        Ok(None)
     }
 
     /// Tries to query Goodreads with a given query (e.g., title and author as one string).

@@ -90,7 +90,9 @@ async fn search_books(query: &str) -> Result<Vec<(String, String, String)>, Scra
 
 /// Helper function to determine if two strings match, ignoring upper and lower case as well as
 /// interpunctuations in initials.
-fn matches(str1: &str, str2: &str) -> bool {
+#[inline]
+#[must_use]
+pub fn matches(str1: &str, str2: &str) -> bool {
     let str1 = str1
         .chars()
         .filter(|character| character.is_alphanumeric())
@@ -104,6 +106,8 @@ fn matches(str1: &str, str2: &str) -> bool {
 }
 
 /// Tries and extracts the Goodreads ID out of a Goodreads URL
+#[inline]
+#[must_use]
 pub fn extract_goodreads_id(url: &str) -> String {
     url.splitn(4, '/')
         .nth(3)
