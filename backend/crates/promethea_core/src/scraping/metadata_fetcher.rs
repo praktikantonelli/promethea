@@ -2,8 +2,6 @@ use crate::scraping::errors::ScraperError;
 use chrono::{DateTime, Utc};
 use log::{error, info, warn};
 use regex::Regex;
-use reqwest::get;
-use scraper::{Html, Selector};
 use serde_json::Value;
 
 /// The primary data structure containing the metadata of a book.
@@ -48,61 +46,6 @@ pub struct BookSeries {
     pub number: f32,
     /// The Goodreads ID of the series
     pub goodreads_id: String,
-}
-
-/// Fetches all metadata of a book given its Goodreads ID
-/// # Errors
-/// This function fails if fetching the JSON data from the scraper fails or if the Amazon ID cannot
-/// be extracted.
-#[allow(
-    clippy::missing_inline_in_public_items,
-    reason = "Called rarely, large function"
-)]
-pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperError> {
-    let metadata = extract_book_metadata(goodreads_id).await?;
-    let amazon_id = extract_amazon_id(&metadata, goodreads_id)?;
-
-    let (title, _subtitle) = extract_title_and_subtitle(&metadata, &amazon_id)?;
-    let image_url = extract_image_url(&metadata, &amazon_id);
-    let contributors = extract_contributors(&metadata, &amazon_id);
-    let publication_date = extract_publication_date(&metadata, &amazon_id);
-    let page_count = extract_page_count(&metadata, &amazon_id);
-    let series = extract_series(&metadata, &amazon_id);
-    let goodreads_id = Some(goodreads_id.to_owned());
-
-    Ok(BookMetadata {
-        title,
-        publication_date,
-        contributors,
-        series,
-        page_count,
-        image_url,
-        goodreads_id,
-    })
-}
-
-/// Takes a Goodreads ID and extracts the metadata JSON from its corresponding website
-/// # Errors
-/// This function fails if the HTTP request fails or if parsing the extracted JSON from the
-/// HTML page fails
-#[inline]
-pub async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError> {
-    let url = format!("https://www.goodreads.com/book/show/{goodreads_id}");
-    let document = Html::parse_document(&get(&url).await?.text().await?);
-    let metadata_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#)?;
-    let metadata = &document.select(&metadata_selector).next();
-
-    let metadata = match *metadata {
-        None => {
-            error!("Failed to scrape book metadata");
-            return Err(ScraperError::ScrapeError(
-                "Failed to scrape book metadata".to_owned(),
-            ));
-        }
-        Some(element) => serde_json::from_str(&element.text().collect::<String>())?,
-    };
-
-    Ok(metadata)
 }
 
 /// Extracts a book's Amazon ID based on its Goodreads ID from the JSON metadata
@@ -404,106 +347,4 @@ fn extract_id_from_url(url: &Value) -> Option<String> {
     let id_raw = replaced.split('-').next()?;
     let id = String::from(id_raw);
     Some(id)
-}
-
-#[cfg(test)]
-#[allow(
-    clippy::unwrap_used,
-    reason = "Tests are constructed with known values"
-)]
-mod tests {
-    use super::*;
-    use pretty_assertions::assert_eq;
-
-    #[tokio::test]
-    async fn fetch_metadata_test() {
-        let expected_series = vec![
-            BookSeries {
-                title: "Percy Jackson and the Olympians".to_owned(),
-                number: 5.0,
-                goodreads_id: "40736".to_owned(),
-            },
-            BookSeries {
-                title: "Camp Half-Blood Chronicles".to_owned(),
-                number: 5.0,
-                goodreads_id: "183923".to_owned(),
-            },
-            BookSeries {
-                title: "Coleccionable Percy Jackson".to_owned(),
-                number: 5.0,
-                goodreads_id: "399169".to_owned(),
-            },
-        ];
-        let expected_contributors = vec![BookContributor {
-            name: "Rick Riordan".to_owned(),
-            role: "Author".to_owned(),
-            goodreads_id: "15872".to_owned(),
-        }];
-        let expected_metadata = BookMetadata {
-            title: "The Last Olympian".to_owned(),
-            publication_date: Some(DateTime::parse_from_rfc3339("2009-05-05T07:00:00Z").unwrap().to_utc()),
-            contributors: expected_contributors,
-            series: expected_series,
-            page_count: Some(381),
-            image_url: Some("https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723393514i/4556058.jpg".to_owned()),
-            goodreads_id: Some(String::from("4556058")),
-
-        };
-
-        let metadata = fetch_metadata("4556058").await.unwrap();
-        assert_eq!(metadata, expected_metadata);
-    }
-
-    #[tokio::test]
-    async fn fetch_metadata_contributor_with_no_legacy_id() {
-        let expected_contributor = BookContributor {
-            name: "Mark Zug".to_owned(),
-            role: "Illustrations".to_owned(),
-            goodreads_id: "619712".to_owned(),
-        };
-        let metadata = extract_book_metadata("7355137").await.unwrap();
-        let contributor = fetch_contributor(
-            &metadata,
-            (
-                "Illustrations".to_owned(),
-                "Contributor:kca://author/amzn1.gr.author.v1.pVNrjuvKvXYyslKm1pwHxQ".to_owned(),
-            ),
-        )
-        .unwrap();
-        assert_eq!(expected_contributor, contributor);
-    }
-
-    #[tokio::test]
-    async fn multiple_contributors_single_author() {
-        // Darke - Angie Sage, Mark Zug(Illustrator)
-        let expected_authors = vec![BookContributor {
-            name: "Angie Sage".to_owned(),
-            role: "Author".to_owned(),
-            goodreads_id: "157663".to_owned(),
-        }];
-        let metadata = fetch_metadata("7355137").await.unwrap();
-        assert_eq!(expected_authors, metadata.contributors);
-    }
-
-    #[tokio::test]
-    async fn multiple_contributors_multiple_authors() {
-        // A Memory of Light - Robert Jordan, Brandon Sanderson
-        let expected_authors = [
-            BookContributor {
-                name: "Brandon Sanderson".to_owned(),
-                role: "Author".to_owned(),
-                goodreads_id: "38550".to_owned(),
-            },
-            BookContributor {
-                name: "Robert Jordan".to_owned(),
-                role: "Author".to_owned(),
-                goodreads_id: "6252".to_owned(),
-            },
-        ];
-        let contributors = fetch_metadata("7743175").await.unwrap().contributors;
-        assert_eq!(contributors.len(), expected_authors.len());
-        for contributor in contributors {
-            assert!(expected_authors.contains(&contributor));
-        }
-    }
 }

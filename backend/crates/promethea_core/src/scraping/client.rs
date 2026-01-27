@@ -1,11 +1,13 @@
 use crate::scraping::errors::ScraperError;
 use crate::scraping::metadata_fetcher::BookMetadata;
 use crate::scraping::metadata_fetcher::{
-    extract_amazon_id, extract_book_metadata, extract_contributors, extract_image_url,
-    extract_page_count, extract_publication_date, extract_series, extract_title_and_subtitle,
+    extract_amazon_id, extract_contributors, extract_image_url, extract_page_count,
+    extract_publication_date, extract_series, extract_title_and_subtitle,
 };
 use core::time::Duration;
+use log::error;
 use reqwest::redirect::Policy;
+use serde_json::Value;
 
 use reqwest::{ClientBuilder, header};
 use scraper::{Html, Selector};
@@ -138,7 +140,7 @@ impl MetadataRequestClient {
     /// # Errors
     /// Returns an error if any of the individual methods returns an error
     async fn get_metadata(&self, goodreads_id: &str) -> Result<BookMetadata, ScraperError> {
-        let metadata = extract_book_metadata(goodreads_id).await?;
+        let metadata = self.extract_book_metadata(goodreads_id).await?;
         let amazon_id = extract_amazon_id(&metadata, goodreads_id)?;
 
         let (title, _subtitle) = extract_title_and_subtitle(&metadata, &amazon_id)?;
@@ -158,6 +160,31 @@ impl MetadataRequestClient {
             image_url,
             goodreads_id,
         })
+    }
+
+    /// Takes a Goodreads ID and extracts the metadata JSON from its corresponding website
+    /// # Errors
+    /// This function fails if the HTTP request fails or if parsing the extracted JSON from the
+    /// HTML page fails
+    #[inline]
+    pub async fn extract_book_metadata(&self, goodreads_id: &str) -> Result<Value, ScraperError> {
+        let url = format!("https://www.goodreads.com/book/show/{goodreads_id}");
+        let document =
+            Html::parse_document(&self.http_client.get(&url).send().await?.text().await?);
+        let metadata_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#)?;
+        let metadata = &document.select(&metadata_selector).next();
+
+        let metadata = match *metadata {
+            None => {
+                error!("Failed to scrape book metadata");
+                return Err(ScraperError::ScrapeError(
+                    "Failed to scrape book metadata".to_owned(),
+                ));
+            }
+            Some(element) => serde_json::from_str(&element.text().collect::<String>())?,
+        };
+
+        Ok(metadata)
     }
 }
 
