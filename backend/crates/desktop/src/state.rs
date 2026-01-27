@@ -21,13 +21,13 @@ pub struct AppState {
 
 impl AppState {
     /// Standard constructor
-    pub fn new() -> Self {
-        Self {
+    pub fn new() -> Result<Self, String> {
+        let metadata_request_client = MetadataRequestClient::new()?;
+        Ok(Self {
             db: RwLock::new(None),
             last_error: RwLock::new(None),
-            metadata_request_client: MetadataRequestClient::new()
-                .expect("Failed to create `MetadataRequestClient`!"),
-        }
+            metadata_request_client,
+        })
     }
 
     /// Takes an existing `AppState` instance and hooks it up with the provided path
