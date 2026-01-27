@@ -1,7 +1,6 @@
-use crate::scraper::errors::ScraperError;
-use crate::scraper::goodreads_id_fetcher::{extract_goodreads_id, matches};
-use crate::scraper::metadata_fetcher::BookMetadata;
-use crate::scraper::metadata_fetcher::{
+use crate::scraping::errors::ScraperError;
+use crate::scraping::metadata_fetcher::BookMetadata;
+use crate::scraping::metadata_fetcher::{
     extract_amazon_id, extract_book_metadata, extract_contributors, extract_image_url,
     extract_page_count, extract_publication_date, extract_series, extract_title_and_subtitle,
 };
@@ -160,4 +159,36 @@ impl MetadataRequestClient {
             goodreads_id,
         })
     }
+}
+
+/// Helper function to determine if two strings match, ignoring upper and lower case as well as
+/// interpunctuations in initials.
+#[inline]
+#[must_use]
+pub fn matches(str1: &str, str2: &str) -> bool {
+    let str1 = str1
+        .chars()
+        .filter(|character| character.is_alphanumeric())
+        .collect::<String>();
+    let str2 = str2
+        .chars()
+        .filter(|character| character.is_alphanumeric())
+        .collect::<String>();
+
+    str1.to_lowercase().contains(&str2.to_lowercase())
+}
+
+/// Tries and extracts the Goodreads ID out of a Goodreads URL
+#[inline]
+#[must_use]
+pub fn extract_goodreads_id(url: &str) -> String {
+    url.splitn(4, '/')
+        .nth(3)
+        .unwrap_or("")
+        .split('?')
+        .next()
+        .unwrap_or("")
+        .chars()
+        .take_while(|character| character.is_numeric())
+        .collect::<String>()
 }

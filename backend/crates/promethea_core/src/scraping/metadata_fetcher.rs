@@ -1,4 +1,4 @@
-use crate::scraper::errors::ScraperError;
+use crate::scraping::errors::ScraperError;
 use chrono::{DateTime, Utc};
 use log::{error, info, warn};
 use regex::Regex;
@@ -83,8 +83,9 @@ pub async fn fetch_metadata(goodreads_id: &str) -> Result<BookMetadata, ScraperE
 
 /// Takes a Goodreads ID and extracts the metadata JSON from its corresponding website
 /// # Errors
-/// This function fails if the HTTP request fails or if parsing the extracting the JSON from the
+/// This function fails if the HTTP request fails or if parsing the extracted JSON from the
 /// HTML page fails
+#[inline]
 pub async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperError> {
     let url = format!("https://www.goodreads.com/book/show/{goodreads_id}");
     let document = Html::parse_document(&get(&url).await?.text().await?);
@@ -107,6 +108,7 @@ pub async fn extract_book_metadata(goodreads_id: &str) -> Result<Value, ScraperE
 /// Extracts a book's Amazon ID based on its Goodreads ID from the JSON metadata
 /// # Errors
 /// Fails if the Amazon ID cannot be extracted
+#[inline]
 pub fn extract_amazon_id(metadata: &Value, goodreads_id: &str) -> Result<String, ScraperError> {
     let amazon_id_key = format!("getBookByLegacyId({{\"legacyId\":\"{goodreads_id}\"}})");
     #[allow(
@@ -129,6 +131,7 @@ pub fn extract_amazon_id(metadata: &Value, goodreads_id: &str) -> Result<String,
 /// # Errors
 /// Fails if the title cannot be extracted. Missing subtitle is not an error, as not every book has
 /// a subtitle.
+#[inline]
 pub fn extract_title_and_subtitle(
     metadata: &Value,
     amazon_id: &str,
@@ -153,6 +156,8 @@ pub fn extract_title_and_subtitle(
 
 /// Extracts a book's image URL from the metadata JSON. A book may not have an image, so this
 /// function returns `Option`
+#[inline]
+#[must_use]
 pub fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
     #[allow(
         clippy::indexing_slicing,
@@ -162,9 +167,9 @@ pub fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
     to_string(url)
 }
 
-/// Extracts all contributors of a book from its metatada JSON and filters out any non-authors. A
-/// book may have more than one author, so this function returns a vector. In case of problems, the
-/// function returns an empty vector.
+/// Extracts all contributors of a book from its metatada JSON and filters out any non-authors.
+#[inline]
+#[must_use]
 pub fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
     let mut contributors = Vec::new();
 
@@ -234,6 +239,8 @@ pub fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContri
 }
 
 /// Parses metadata JSON and extracts all contributors including their name, role and Goodreads ID
+#[inline]
+#[must_use]
 pub fn fetch_contributor(
     metadata: &Value,
     (role, key): (String, String),
@@ -275,6 +282,8 @@ pub fn fetch_contributor(
 }
 
 /// Extracts a book's publication date from its metadata JSON
+#[inline]
+#[must_use]
 pub fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
     #[allow(
         clippy::indexing_slicing,
@@ -297,6 +306,8 @@ pub fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<Dat
 }
 
 /// Extracts a book's page count from its metadata JSON
+#[inline]
+#[must_use]
 pub fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
     #[allow(
         clippy::indexing_slicing,
@@ -310,9 +321,9 @@ pub fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
     }
 }
 
-/// Extracts a book's series from its metadata JSON. Because a book may belong to multiple series
-/// (or one series and one overarching universe etc.), this function returns a vector. A book with
-/// no series returns an empty vector.
+/// Extracts a book's series from its metadata JSON
+#[inline]
+#[must_use]
 pub fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
     let empty_vec: Vec<Value> = Vec::new();
 

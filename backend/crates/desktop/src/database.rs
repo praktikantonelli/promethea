@@ -6,7 +6,7 @@ use core::iter::zip;
 use epub::doc::EpubDoc;
 use futures::future::join_all;
 use promethea_core::database::types::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
-use promethea_core::scraper::sorting::{get_name_sort, get_title_sort};
+use promethea_core::scraping::sorting::{get_name_sort, get_title_sort};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::fs::File;
