@@ -6,8 +6,7 @@ use core::iter::zip;
 use epub::doc::EpubDoc;
 use futures::future::join_all;
 use promethea_core::database::types::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
-use promethea_core::scraper::request_builder::MetadataRequestBuilder;
-use promethea_core::scraper::sorting::{get_name_sort, get_title_sort};
+use promethea_core::scraping::sorting::{get_name_sort, get_title_sort};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::fs::File;
@@ -185,12 +184,9 @@ pub async fn add_book(
     let metadata = async {
         let t0 = Instant::now();
 
-        let request = MetadataRequestBuilder::default()
-            .with_title(&title)
-            .with_author(&first_author);
-
-        let result = request
-            .execute()
+        let result = state
+            .metadata_request_client
+            .fetch_metadata(&title, &first_author)
             .await
             .map_err(|err| PrometheaError::Other(format!("{err:?}")))?;
 

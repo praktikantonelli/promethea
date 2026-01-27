@@ -6,4 +6,4 @@
 
 pub mod database;
 
-pub mod scraper;
+pub mod scraping;
