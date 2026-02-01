@@ -1,6 +1,6 @@
 # run cargo tests
 test:
-  cargo test --manifest-path backend/Cargo.toml
+  cargo test --all-targets --locked --manifest-path backend/Cargo.toml
 
 # run cargo clippy
 clippy:
