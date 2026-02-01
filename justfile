@@ -4,4 +4,4 @@ test:
 
 # run cargo clippy
 clippy:
-  cargo clippy --manifest-path backend/Cargo.toml
+  cargo clippy --manifest-path backend/Cargo.toml -- -D warnings
