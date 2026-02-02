@@ -1,5 +1,8 @@
 # Hexagonal Architecture
 
+## Status
+In progress
+
 ## Context
 
 Because the scope of this project is already quite big and will potentially only get bigger, a defined architecture on how to structure the different components is needed. This reduces coupling between components and ensures that the code remains readable and maintainable. 
