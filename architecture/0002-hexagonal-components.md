@@ -10,6 +10,8 @@ In order to ensure that each component truly stays separate, a hexagonal design 
 
 ## Architecture Overview
 
+Ports are defined as interfaces between the main application and each component. Each component implements its specific interface, thereby providing an adapter that hides business logic behind an API. Currently, there are three components: database access, file system access and metadata scraping. Each component will come with a trait that defines the necessary interface, and a struct for each component will implement the necessary trait. 
+
 ```mermaid
 ```
 
