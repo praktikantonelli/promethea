@@ -135,4 +135,4 @@ What is still being discussed is whether or not it even makes sense to introduce
 
 - The architecture is quite complex, and will require a lot of work to set up.
 - For an extra HTTP backend, some Tauri features cannot be used out of the box.
-- The architecture is a as-of-yet unknown concept; understanding and applying it will take time.
+- The architecture is an as-of-yet unknown concept; understanding and applying it will take time.
