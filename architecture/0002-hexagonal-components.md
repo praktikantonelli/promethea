@@ -15,108 +15,107 @@ In order to ensure that each component truly stays separate, a hexagonal design 
 
 Ports are defined as interfaces between the main application and each component. Each component implements its specific interface, thereby providing an adapter that hides business logic behind an API. Currently, there are three components: database access, file system access and metadata scraping. Each component will come with a trait that defines the necessary interface, and a struct for each component will implement the necessary trait. 
 
-```mermaid
-classDiagram
-direction LR
+```plantuml
+@startuml
+skinparam componentStyle rectangle
+skinparam shadowing false
 
-%% =========================
-%% Hosts / Transports
-%% =========================
-class TauriHost
-class ServerHost
+' =========================
+' Shared core (domain + application)
+' =========================
 
-%% =========================
-%% Core API
-%% =========================
-class CoreApp {
-  +addNewFile(input) Result
+
+
+
+package shared-core {
+  component "Application Services\n(Use Cases)" as App
+  component "Domain Model" as Domain
+
+  ' Inbound port(s)
+  interface  CoreApiPort
+  CoreApiPort ..> App : calls use cases
+
+  App --> Domain
+
+  ' Outbound ports (driven)
+  interface DatabasePort
+  interface FileSystemPort
+  interface WebScraperPort
+
+  App ..> DatabasePort
+  App ..> FileSystemPort
+  App ..> WebScraperPort
 }
 
-TauriHost o-- CoreApp : holds
-ServerHost o-- CoreApp : holds
+' =========================
+' Shared adapters (identical in desktop + server)
+' =========================
+package adapters {
+  component "DB Adapter" as SharedDbAdapter
+  component "FS Adapter" as SharedFsAdapter
+  component "Web Scraper Adapter" as SharedScraperAdapter
 
-%% =========================
-%% Use Cases (Orchestrators)
-%% =========================
-class UC_AddNewFile {
-  +execute(input) Result
+  SharedDbAdapter ..|> DatabasePort
+  SharedFsAdapter ..|> FileSystemPort
+  SharedScraperAdapter ..|> WebScraperPort
+}
+
+' =========================
+' Desktop host: inbound adapter + wiring
+' =========================
+package desktop-host {
+  component "Tauri Inbound Adapter\n(Commands/IPC)" as TauriInbound
+  TauriInbound ..|> CoreApiPort
+
+  component "Desktop Composition Root\n(wires core + shared adapters)" as DesktopWiring
+
+  DesktopWiring --> App
+  DesktopWiring --> TauriInbound
+  DesktopWiring --> SharedDbAdapter
+  DesktopWiring --> SharedFsAdapter
+  DesktopWiring --> SharedScraperAdapter
+}
+
+' =========================
+' Server host: inbound adapter + extra services + wiring
+' =========================
+package server-host {
+  component "HTTP Inbound Adapter" as RESTInbound
+  RESTInbound ..|> CoreApiPort
+
+  ' server-only inbound services (not in desktop)
+  component "Server-Only Services\n(inbound)" as ServerOnly
+  component "REST API Routes" as RestRoutes
+  component "Admin / Health / Metrics\n(or background jobs)" as Ops
+
+  RESTInbound --> RestRoutes
+  ServerOnly --> Ops
+
+  component "Server Composition Root\n(wires core + shared adapters + extras)" as ServerWiring
+
+  ServerWiring --> App
+  ServerWiring --> RESTInbound
+  ServerWiring --> SharedDbAdapter
+  ServerWiring --> SharedFsAdapter
+  ServerWiring --> SharedScraperAdapter
+  ServerWiring --> ServerOnly
 }
 
 
-CoreApp --> UC_AddNewFile : uses
 
-%% =========================
-%% Common Ports (shared)
-%% =========================
-class Port_Database {
-  <<interface>>
-}
-class Port_FileSystem {
-  <<interface>>
-}
-class Port_Scraper {
-  <<interface>>
-}
-class Port_Progress {
-  <<interface>>
-}
-class Port_Library {
-    <<interface>>
+package "Frontend" {
+
+  component DesktopFrontend
+  component ServerFrontend
+  interface ReactFrontend
+
+  ReactFrontend --> TauriInbound : IPC
+  ReactFrontend --> RESTInbound : REST
+  DesktopFrontend --|> ReactFrontend
+  ServerFrontend --|> ReactFrontend
 }
 
-UC_AddNewFile ..> Port_Database
-UC_AddNewFile ..> Port_FileSystem
-UC_AddNewFile ..> Port_Scraper
-UC_AddNewFile ..> Port_Progress : optional
-
-%% =========================
-%% Composition Roots (wiring)
-%% =========================
-class DesktopServices {
-  +db: Port_Database
-  +fs: Port_FileSystem
-  +scraper: Port_Scraper
-  +progress: Port_Progress
-}
-
-class ServerServices {
-  +db: Port_Database
-  +fs: Port_FileSystem
-  +scraper: Port_Scraper
-  +library: Port_Library
-  +progress: Port_Progress
-}
-
-CoreApp *-- DesktopServices : can be built with
-CoreApp *-- ServerServices : can be built with
-
-%% =========================
-%% Adapters (Implementations)
-%% =========================
-class Adapter_SqlDatabase
-class Adapter_NativeFs
-class Adapter_ReqwestScraper
-class Adapter_TauriProgress
-class Adapter_ServerProgress
-
-Port_Database <|.. Adapter_SqlDatabase
-Port_FileSystem <|.. Adapter_NativeFs 
-Port_Scraper <|.. Adapter_ReqwestScraper
-Port_Progress <|.. Adapter_TauriProgress
-Port_Progress <|.. Adapter_ServerProgress
-Port_Library <|.. Adapter_LibraryHost
-
-%% Wiring intent (dashed dependencies)
-DesktopServices ..> Port_FileSystem : uses
-DesktopServices ..> Port_Database : uses
-DesktopServices ..> Port_Scraper : uses
-DesktopServices ..> Port_Progress : uses
-
-ServerServices ..> Port_FileSystem : uses
-ServerServices ..> Port_Database : uses
-ServerServices ..> Port_Scraper : uses
-ServerServices ..> Port_Progress : uses
-ServerServices ..> Port_Library : uses
+@enduml
 
 
 ```
