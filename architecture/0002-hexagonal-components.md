@@ -119,8 +119,7 @@ package "Frontend" {
 
 
 ```
-
-What is still being discussed is whether or not it even makes sense to introduce interfaces for parts of the system that would only be implemented once. While it would be beneficial to introduce a clear interface between a component and its user, it still adds extra work and an additional layer of abstraction. For example, since only the server would host some REST endpoint to serve all books in the library, there's no real benefit to having an interface. In other cases, such as with the progress port, this is of course necessary. 
+While having interfaces for components that are implemented identically on both server and desktop side, having an interface is still the preferred way of operating here because interfaces force explicit considerations regarding the architecture. Also, given that this project is not a huge application with numerous components, the scope increase of adding some interfaces should be manageable. :
 
 ## Consequences
 
