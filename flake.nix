@@ -76,6 +76,7 @@
               gobject-introspection
               nodejs
               pnpm
+              just
             ];
             XDG_DATA_DIRS = lib.concatStringsSep ":" [
               "${gsettings-desktop-schemas}/share/gsettings-schemas/${gsettings-desktop-schemas.name}"
