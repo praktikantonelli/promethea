@@ -9,11 +9,11 @@ Because the scope of this project is already quite big and will potentially only
 
 ## Decision
 
-In order to ensure that each component truly stays separate, a hexagonal design is used, where each component handles only one responsibility, and any interaction with that area will only be possible through its component. An orchestrator is responsible for aggregating all components, and both the Tauri framework and a potential future server-only framework will only be thin wrappers around said orchestrator.
+In order to ensure that each component truly stays separate, a hexagonal design is used, where each component handles only one responsibility, and any interaction with that area will only be possible through its component. An orchestrator is responsible for aggregating all components, and both the Tauri framework and a potential future server-only framework will only be thin wrappers around said orchestrator. Use cases define typical workflows and are responsible for calling and using the adapters appropriately. 
 
 ## Architecture Overview
 
-Ports are defined as interfaces between the main application and each component. Each component implements its specific interface, thereby providing an adapter that hides business logic behind an API. Currently, there are three components: database access, file system access and metadata scraping. Each component will come with a trait that defines the necessary interface, and a struct for each component will implement the necessary trait. 
+The hexagonal design pattern is only followed loosely here because the scope and complexity of the application is not that large compared to typical use cases of hexagonal design. As such, not every adapter has a port. 
 
 ```plantuml
 @startuml
