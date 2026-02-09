@@ -118,7 +118,7 @@ package "Frontend" {
 
 
 ```
-While having interfaces for components that are implemented identically on both server and desktop side, having an interface is still the preferred way of operating here because interfaces force explicit considerations regarding the architecture. Also, given that this project is not a huge application with numerous components, the scope increase of adding some interfaces should be manageable. :
+In general, interfaces are only to be used when necessary, i.e., only when there are multiple implementations that need to shareable between desktop and server. As such, the adapters will not be associated with an interface for now. Those interfaces are currently not required, and if they at some point become a necessity, adding them will still be a manageable refactor. 
 
 ## Consequences
 
