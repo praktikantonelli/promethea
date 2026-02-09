@@ -28,7 +28,7 @@ skinparam shadowing false
 
 
 package shared-core {
-  component "Application Services\n(Use Cases)" as App
+  component "Use Cases" as App
   component "Domain Model" as Domain
 
   ' Inbound port(s)
@@ -83,10 +83,9 @@ package server-host {
   component "HTTP Inbound Adapter" as RESTInbound
   RESTInbound ..|> CoreApiPort
 
-  ' server-only inbound services (not in desktop)
   component "Server-Only Services\n(inbound)" as ServerOnly
   component "REST API Routes" as RestRoutes
-  component "Admin / Health / Metrics\n(or background jobs)" as Ops
+  component "Kobo Sync REST API" as Ops
 
   RESTInbound --> RestRoutes
   ServerOnly --> Ops
@@ -105,8 +104,8 @@ package server-host {
 
 package "Frontend" {
 
-  component DesktopFrontend
-  component ServerFrontend
+  component "Desktop Frontend" as DesktopFrontend
+  component "Server Frontend" as ServerFrontend
   interface ReactFrontend
 
   ReactFrontend --> TauriInbound : IPC
