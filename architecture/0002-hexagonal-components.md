@@ -13,7 +13,6 @@ In order to ensure that each component truly stays separate, a hexagonal design 
 
 ## Architecture Overview
 
-The hexagonal design pattern is only followed loosely here because the scope and complexity of the application is not that large compared to typical use cases of hexagonal design. As such, not every adapter has a port. 
 
 ```plantuml
 @startuml
@@ -115,10 +114,9 @@ package "Frontend" {
 }
 
 @enduml
-
-
 ```
-In general, interfaces are only to be used when necessary, i.e., only when there are multiple implementations that need to shareable between desktop and server. As such, the adapters will not be associated with an interface for now. Those interfaces are currently not required, and if they at some point become a necessity, adding them will still be a manageable refactor. 
+
+
 
 ## Consequences
 
