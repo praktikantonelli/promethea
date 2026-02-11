@@ -13,109 +13,134 @@ In order to ensure that each component truly stays separate, a hexagonal design 
 
 ## Architecture Overview
 
+```mermaid
+flowchart LR
 
-```plantuml
-@startuml
-skinparam componentStyle rectangle
-skinparam shadowing false
+  subgraph CORE[shared-core]
+    direction TB
 
-' =========================
-' Shared core (domain + application)
-' =========================
+    APP[Application Services]
+    DOMAIN[Domain Model]
 
+    CATALOG[CatalogUseCases]
+    META[MetadataUseCases]
+    READING[ReadingUseCases]
+    ANALYTICS[AnalyticsUseCases]
+    SYNC[DeviceSyncUseCases]
 
+    DBP[DatabasePort]
+    FSP[FileSystemPort]
+    METAPROV[MetadataProviderPort]
+    CLOCK[ClockPort]
+    IDX[SearchIndexPort]
 
+    APP --> DOMAIN
 
-package shared-core {
-  component "Use Cases" as App
-  component "Domain Model" as Domain
+    APP -.->|implements| CATALOG
+    APP -.->|implements| META
+    APP -.->|implements| READING
+    APP -.->|implements| ANALYTICS
+    APP -.->|implements| SYNC
 
-  ' Inbound port(s)
-  interface  CoreApiPort
-  CoreApiPort ..> App : calls use cases
+    APP --> DBP
+    APP --> FSP
+    APP --> METAPROV
+    APP --> CLOCK
+    APP --> IDX
+  end
 
-  App --> Domain
+  %% Blank title + in-subgraph label avoids edges crossing the "adapters" heading
+  subgraph ADAPTERS[ ]
+    direction TB
 
-  ' Outbound ports (driven)
-  interface DatabasePort
-  interface FileSystemPort
-  interface WebScraperPort
+    %% Inbound anchors (transparent) to force a bend on entry
+    AIN_DBP(( ))
+    AIN_FSP(( ))
+    AIN_METAPROV(( ))
+    AIN_CLOCK(( ))
+    AIN_IDX(( ))
+    style AIN_DBP fill:transparent,stroke:transparent
+    style AIN_FSP fill:transparent,stroke:transparent
+    style AIN_METAPROV fill:transparent,stroke:transparent
+    style AIN_CLOCK fill:transparent,stroke:transparent
+    style AIN_IDX fill:transparent,stroke:transparent
 
-  App ..> DatabasePort
-  App ..> FileSystemPort
-  App ..> WebScraperPort
-}
+    DBAD[DB Adapter]
+    FSAD[FS Adapter]
+    METAAD[Metadata Adapter]
+    CLOCKAD[Clock Adapter]
+    IDXAD[Index Adapter]
 
-' =========================
-' Shared adapters (identical in desktop + server)
-' =========================
-package adapters {
-  component "DB Adapter" as SharedDbAdapter
-  component "FS Adapter" as SharedFsAdapter
-  component "Web Scraper Adapter" as SharedScraperAdapter
+    %% Internal edges from anchors to adapters
+    AIN_DBP --> DBAD
+    AIN_FSP --> FSAD
+    AIN_METAPROV --> METAAD
+    AIN_CLOCK --> CLOCKAD
+    AIN_IDX --> IDXAD
 
-  SharedDbAdapter ..|> DatabasePort
-  SharedFsAdapter ..|> FileSystemPort
-  SharedScraperAdapter ..|> WebScraperPort
-}
+    ADAPTERS_LABEL[adapters]
+    style ADAPTERS_LABEL fill:transparent,stroke:transparent,color:#666
+  end
 
-' =========================
-' Desktop host: inbound adapter + wiring
-' =========================
-package desktop-host {
-  component "Tauri Inbound Adapter\n(Commands/IPC)" as TauriInbound
-  TauriInbound ..|> CoreApiPort
+  %% Cross-subgraph edges go to anchors first (this creates the "sharp bend")
+  DBP --> AIN_DBP
+  FSP --> AIN_FSP
+  METAPROV --> AIN_METAPROV
+  CLOCK --> AIN_CLOCK
+  IDX --> AIN_IDX
 
-  component "Desktop Composition Root\n(wires core + shared adapters)" as DesktopWiring
+  subgraph DESKTOP[desktop-host]
+    direction TB
 
-  DesktopWiring --> App
-  DesktopWiring --> TauriInbound
-  DesktopWiring --> SharedDbAdapter
-  DesktopWiring --> SharedFsAdapter
-  DesktopWiring --> SharedScraperAdapter
-}
+    TAURI[Tauri Inbound Adapter]
+    DW[Desktop Composition Root]
 
-' =========================
-' Server host: inbound adapter + extra services + wiring
-' =========================
-package server-host {
-  component "HTTP Inbound Adapter" as RESTInbound
-  RESTInbound ..|> CoreApiPort
+    TAURI -->|calls| CATALOG
+    TAURI -->|calls| META
+    TAURI -->|calls| READING
+    TAURI -->|calls| ANALYTICS
 
-  component "Server-Only Services\n(inbound)" as ServerOnly
-  component "REST API Routes" as RestRoutes
-  component "Kobo Sync REST API" as Ops
+    DW -->|constructs| APP
+    DW -->|injects| TAURI
 
-  RESTInbound --> RestRoutes
-  ServerOnly --> Ops
+    DW --> DBAD
+    DW --> FSAD
+    DW --> METAAD
+    DW --> CLOCKAD
+    DW --> IDXAD
+  end
 
-  component "Server Composition Root\n(wires core + shared adapters + extras)" as ServerWiring
+  subgraph SERVER[server-host future]
+    direction TB
 
-  ServerWiring --> App
-  ServerWiring --> RESTInbound
-  ServerWiring --> SharedDbAdapter
-  ServerWiring --> SharedFsAdapter
-  ServerWiring --> SharedScraperAdapter
-  ServerWiring --> ServerOnly
-}
+    HTTP[HTTP Inbound Adapter]
+    SW[Server Composition Root]
 
+    HTTP -->|calls| CATALOG
+    HTTP -->|calls| META
+    HTTP -->|calls| READING
+    HTTP -->|calls| ANALYTICS
+    HTTP -->|calls| SYNC
 
+    SW -->|constructs| APP
+    SW -->|injects| HTTP
 
-package "Frontend" {
+    SW --> DBAD
+    SW --> FSAD
+    SW --> METAAD
+    SW --> CLOCKAD
+    SW --> IDXAD
+  end
 
-  component "Desktop Frontend" as DesktopFrontend
-  component "Server Frontend" as ServerFrontend
-  interface ReactFrontend
+  subgraph FE[Frontend]
+    direction TB
 
-  ReactFrontend --> TauriInbound : IPC
-  ReactFrontend --> RESTInbound : REST
-  DesktopFrontend --|> ReactFrontend
-  ServerFrontend --|> ReactFrontend
-}
+    UI[React UI]
 
-@enduml
+    UI -->|IPC| TAURI
+    UI -->|REST future| HTTP
+  end
 ```
-
 
 
 ## Consequences
