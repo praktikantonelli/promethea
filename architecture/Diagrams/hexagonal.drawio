@@ -1,0 +1,143 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.6 Chrome/140.0.7339.249 Electron/38.8.0 Safari/537.36" version="29.3.6">
+  <diagram name="Page-1" id="Up1nXNHjsBMfPDB4wt9s">
+    <mxGraphModel dx="983" dy="663" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-10" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="720" width="290" x="480" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-7" parent="_OkqQ5-8P_d9M64oRFWS-10" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="720" width="290" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-39" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="Domain Model" vertex="1">
+          <mxGeometry height="30" width="100" x="152.79999999999998" y="86.9952380952381" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-40" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="CatalogUseCases" vertex="1">
+          <mxGeometry height="30" width="120" x="137.39999999999998" y="196.99571428571429" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-41" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="MetadataUseCases" vertex="1">
+          <mxGeometry height="30" width="130" x="126.79999999999998" y="256.99857142857144" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-42" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="ReadingUseCases" vertex="1">
+          <mxGeometry height="30" width="120" x="143.2" y="306.997619047619" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-43" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="AnalyticsUseCases" vertex="1">
+          <mxGeometry height="30" width="130" x="132.59999999999997" y="376.9966666666666" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-44" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="DatabasePort" vertex="1">
+          <mxGeometry height="30" width="100" x="152.79999999999998" y="486.9995238095238" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-45" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="FileSystemPort" vertex="1">
+          <mxGeometry height="30" width="100" x="151" y="555" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-46" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="MetadataProviderPort" vertex="1">
+          <mxGeometry height="30" width="140" x="129.20000000000005" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-47" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="ClockPort" vertex="1">
+          <mxGeometry height="30" width="80" x="50" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-48" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="DeviceSyncUseCases" vertex="1">
+          <mxGeometry height="30" width="140" x="-2.3999999999999773" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-49" parent="_OkqQ5-8P_d9M64oRFWS-10" style="whiteSpace=wrap;html=1;" value="SearchIndexPort" vertex="1">
+          <mxGeometry height="30" width="110" x="35.99999999999998" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-8" parent="_OkqQ5-8P_d9M64oRFWS-10" style="rounded=0;whiteSpace=wrap;html=1;" value="shared-core" vertex="1">
+          <mxGeometry height="30" width="90" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-56" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="334" width="150" x="870" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-3" parent="_OkqQ5-8P_d9M64oRFWS-56" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="" vertex="1">
+          <mxGeometry height="334" width="150" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-4" parent="_OkqQ5-8P_d9M64oRFWS-56" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="adapters" vertex="1">
+          <mxGeometry height="30" width="70" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-51" parent="_OkqQ5-8P_d9M64oRFWS-56" style="whiteSpace=wrap;html=1;container=0;" value="DB Adapter" vertex="1">
+          <mxGeometry height="30" width="80" x="34.99000000000001" y="159.9989473684211" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-52" parent="_OkqQ5-8P_d9M64oRFWS-56" style="whiteSpace=wrap;html=1;container=0;" value="FS Adapter" vertex="1">
+          <mxGeometry height="30" width="80" x="35" y="209.99684210526317" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-53" parent="_OkqQ5-8P_d9M64oRFWS-56" style="whiteSpace=wrap;html=1;container=0;" value="Metadata Adapter" vertex="1">
+          <mxGeometry height="30" width="120" x="15" y="114.00105263157894" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-54" parent="_OkqQ5-8P_d9M64oRFWS-56" style="whiteSpace=wrap;html=1;container=0;" value="Clock Adapter" vertex="1">
+          <mxGeometry height="30" width="89.23" x="30.379999999999995" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-55" parent="_OkqQ5-8P_d9M64oRFWS-56" style="whiteSpace=wrap;html=1;container=0;" value="Index Adapter" vertex="1">
+          <mxGeometry height="30" width="100" x="25" y="260.0047368421052" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-63" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="83" width="389.99999999999994" x="20" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-5" parent="_OkqQ5-8P_d9M64oRFWS-63" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="" vertex="1">
+          <mxGeometry height="83" width="389.99999999999994" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-33" edge="1" parent="_OkqQ5-8P_d9M64oRFWS-63" source="_OkqQ5-8P_d9M64oRFWS-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_OkqQ5-8P_d9M64oRFWS-32" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-34" connectable="0" parent="_OkqQ5-8P_d9M64oRFWS-33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];container=0;" value="injects" vertex="1">
+          <mxGeometry relative="1" x="-0.2921" y="-1" as="geometry">
+            <mxPoint x="8" y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-31" parent="_OkqQ5-8P_d9M64oRFWS-63" style="whiteSpace=wrap;html=1;container=0;" value="Server Composition Root" vertex="1">
+          <mxGeometry height="30" width="156" x="19.5" y="41" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-32" parent="_OkqQ5-8P_d9M64oRFWS-63" style="whiteSpace=wrap;html=1;container=0;" value="HTTP Inbound Adapter" vertex="1">
+          <mxGeometry height="30" width="146.25" x="224.99499999999998" y="41" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-6" parent="_OkqQ5-8P_d9M64oRFWS-63" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="server-host" vertex="1">
+          <mxGeometry height="30" width="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;container=0;" value="" vertex="1">
+          <mxGeometry height="100" width="380" x="30" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;container=0;" value="desktop-host" vertex="1">
+          <mxGeometry height="30" width="90" x="30" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-27" edge="1" parent="1" source="_OkqQ5-8P_d9M64oRFWS-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_OkqQ5-8P_d9M64oRFWS-26" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-28" connectable="0" parent="_OkqQ5-8P_d9M64oRFWS-27" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];container=0;" value="injects" vertex="1">
+          <mxGeometry relative="1" x="-0.2743" y="1" as="geometry">
+            <mxPoint x="7" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="Desktop Composition Root" vertex="1">
+          <mxGeometry height="30" width="170" x="40" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="Tauri Inbound Adapter" vertex="1">
+          <mxGeometry height="30" width="140" x="260" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-67" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="150" width="280" x="130" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-14" parent="_OkqQ5-8P_d9M64oRFWS-67" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="" vertex="1">
+          <mxGeometry height="150" width="280" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-15" parent="_OkqQ5-8P_d9M64oRFWS-67" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="frontend" vertex="1">
+          <mxGeometry height="30" width="70" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-17" parent="_OkqQ5-8P_d9M64oRFWS-67" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="React UI" vertex="1">
+          <mxGeometry height="30" width="70" x="22.269999999999996" y="59.75" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-66" edge="1" parent="_OkqQ5-8P_d9M64oRFWS-67" source="_OkqQ5-8P_d9M64oRFWS-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="_OkqQ5-8P_d9M64oRFWS-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-19" parent="_OkqQ5-8P_d9M64oRFWS-67" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="desktop" vertex="1">
+          <mxGeometry height="30" width="70" x="140" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-65" edge="1" parent="_OkqQ5-8P_d9M64oRFWS-67" source="_OkqQ5-8P_d9M64oRFWS-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="_OkqQ5-8P_d9M64oRFWS-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_OkqQ5-8P_d9M64oRFWS-18" parent="_OkqQ5-8P_d9M64oRFWS-67" style="rounded=0;whiteSpace=wrap;html=1;container=0;" value="server" vertex="1">
+          <mxGeometry height="30" width="60" x="140" y="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
