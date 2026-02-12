@@ -9,7 +9,7 @@ Because the scope of this project is already quite big and will potentially only
 
 ## Decision
 
-In order to ensure that each component truly stays separate, a hexagonal design is used, where each component handles only one responsibility, and any interaction with that area will only be possible through its component. An orchestrator is responsible for aggregating all components, and both the Tauri framework and a potential future server-only framework will only be thin wrappers around said orchestrator. Use cases define typical workflows and are responsible for calling and using the adapters appropriately. 
+A hexagonal design is pursued. Both desktop and server composition roots construct the application services, which will contain all use cases. Upon construction, the application services create all adapters, and each use case receives a shared reference to its needed ports (e.g., `MetadataUseCases` will need the `MetadataProviderPort` etc.). 
 
 ## Architecture Overview
 
