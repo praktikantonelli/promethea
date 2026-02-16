@@ -1,7 +1,7 @@
 # Hexagonal Architecture
 
 ## Status
-In progress
+Accepted
 
 ## Context
 
