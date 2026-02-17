@@ -1,6 +1,6 @@
 [workspace]
 
-members = ["crates/desktop", "crates/promethea_core", "crates/server"]
+members = [ "crates/adapters","crates/desktop", "crates/desktop-core", "crates/promethea_core", "crates/server", "crates/server-core", "crates/shared-core"]
 default-members = ["crates/promethea_core", "crates/server", "crates/desktop"]
 resolver = "2"
 
