@@ -3,6 +3,10 @@
 version = 4
 
 [[package]]
+name = "adapters"
+version = "0.1.0"
+
+[[package]]
 name = "adler2"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1041,6 +1045,10 @@ dependencies = [
  "quote",
  "syn 2.0.110",
 ]
+
+[[package]]
+name = "desktop-core"
+version = "0.1.0"
 
 [[package]]
 name = "devtools-core"
@@ -4840,6 +4848,10 @@ name = "server"
 version = "0.1.0"
 
 [[package]]
+name = "server-core"
+version = "0.1.0"
+
+[[package]]
 name = "servo_arc"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4888,6 +4900,10 @@ checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
 dependencies = [
  "lazy_static",
 ]
+
+[[package]]
+name = "shared-core"
+version = "0.1.0"
 
 [[package]]
 name = "shlex"
