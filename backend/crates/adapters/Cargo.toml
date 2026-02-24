@@ -11,6 +11,7 @@ authors = ["praktikantonelli"]
 description = "Adapter definitions following hexagonal architecture"
 
 [dependencies]
+shared-core = { path = "../shared-core/" }
 
 [lints]
 workspace = true
