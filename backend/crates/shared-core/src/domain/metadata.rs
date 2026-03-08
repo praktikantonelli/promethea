@@ -80,3 +80,16 @@ pub struct SeriesAndVolumeRecord {
     pub volume: f64,
     pub goodreads_id: i64,
 }
+
+impl SeriesAndVolumeRecord {
+    #[inline]
+    #[must_use]
+    pub const fn new(series: String, sort: String, volume: f64, goodreads_id: i64) -> Self {
+        Self {
+            series,
+            sort,
+            volume,
+            goodreads_id,
+        }
+    }
+}
