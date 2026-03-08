@@ -11,6 +11,13 @@ authors = ["praktikantonelli"]
 description = "The shared library for Promethea"
 
 [dependencies]
+sqlx = { version = "0.8.6", features = [
+  "sqlite",
+  "runtime-tokio-rustls",
+  "chrono",
+] }
+chrono = { version = "0.4.42", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
 
 [lints]
 workspace = true
