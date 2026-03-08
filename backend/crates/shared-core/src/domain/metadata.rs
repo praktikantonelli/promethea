@@ -60,6 +60,18 @@ pub struct AuthorRecord {
     pub goodreads_id: i64,
 }
 
+impl AuthorRecord {
+    #[must_use]
+    #[inline]
+    pub const fn new(name: String, sort: String, goodreads_id: i64) -> Self {
+        Self {
+            name,
+            sort,
+            goodreads_id,
+        }
+    }
+}
+
 #[non_exhaustive]
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct SeriesAndVolumeRecord {
