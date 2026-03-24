@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use crate::domain::metadata::BookRecord;
+use crate::domain::{errors::InsertBookError, metadata::BookRecord};
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 pub trait DatabasePort: Sized {
@@ -18,5 +18,5 @@ pub trait DatabasePort: Sized {
         series_title: &str,
     ) -> Result<Option<String>, sqlx::Error>;
 
-    async fn insert_book(&self, book: BookRecord) -> Result<(), sqlx::Error>;
+    async fn insert_book(&self, book: BookRecord) -> Result<(), InsertBookError>;
 }
