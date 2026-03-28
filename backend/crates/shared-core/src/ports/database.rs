@@ -3,7 +3,7 @@ use std::path::Path;
 use crate::domain::{errors::InsertBookError, metadata::BookRecord};
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
-pub trait DatabasePort: Sized {
+pub trait BookRepositoryPort: Sized {
     async fn init(path: &Path) -> Result<Self, sqlx::Error>; // TODO: replace sqlx:Error with own type
 
     async fn close(&self);
