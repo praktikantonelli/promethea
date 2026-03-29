@@ -21,7 +21,7 @@ pub trait BookRepositoryPort: Sized {
     async fn insert_book(&self, book: BookRecord) -> Result<(), InsertBookError>;
 }
 
-#[derive(thiserror::Error)]
+#[derive(thiserror::Error, Debug)]
 enum InsertBookError {
     #[error("book with title `{title}` already exists")]
     Conflict { title: String },
