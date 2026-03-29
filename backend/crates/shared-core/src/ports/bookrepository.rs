@@ -8,7 +8,7 @@ pub trait BookRepositoryPort: Sized {
 
     async fn open_existing(path: &Path) -> Result<Self, OpenExistingError>;
 
-    async fn close(&self);
+    async fn close(&self) -> Result<(), CloseError>;
 
     async fn fetch_all_books(&self) -> Result<Vec<BookRecord>, sqlx::Error>;
 
@@ -37,3 +37,6 @@ enum CreateNewError {}
 
 #[derive(thiserror::Error, Debug)]
 enum OpenExistingError {}
+
+#[derive(thiserror::Error, Debug)]
+enum CloseError {}
