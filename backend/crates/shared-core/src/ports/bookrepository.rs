@@ -26,26 +26,37 @@ pub trait BookRepositoryPort: Sized {
     async fn update_author(&self, author: AuthorRecord) -> Result<(), UpdateError>;
 }
 
+/// Error when trying to add a new book to the repository
 #[derive(thiserror::Error, Debug)]
 enum InsertBookError {
+    /// The book already exists in the repository
     #[error("book with title `{title}` already exists")]
-    Conflict { title: String },
+    Conflict {
+        /// Title of the duplicated book
+        title: String,
+    },
 
+    /// The repository is unavailable
     #[error("storage unavailable")]
     Unavailable,
 }
 
+/// Error when trying to create a new repository
 #[derive(thiserror::Error, Debug)]
 enum CreateNewError {}
 
+/// Error when trying to open an existing repository
 #[derive(thiserror::Error, Debug)]
 enum OpenExistingError {}
 
+/// Error when trying to close a repository connection
 #[derive(thiserror::Error, Debug)]
 enum CloseError {}
 
+/// Error fetching data from the repository
 #[derive(thiserror::Error, Debug)]
 enum FetchError {}
 
+/// Error updating data in the repository
 #[derive(thiserror::Error, Debug)]
 enum UpdateError {}
