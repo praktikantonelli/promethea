@@ -4,7 +4,9 @@ use crate::domain::metadata::BookRecord;
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 pub trait BookRepositoryPort: Sized {
-    async fn init(path: &Path) -> Result<Self, sqlx::Error>; // TODO: replace sqlx:Error with own type
+    async fn create_new(path: &Path) -> Result<Self, CreateNewError>;
+
+    async fn open_existing(path: &Path) -> Result<Self, OpenExistingError>;
 
     async fn close(&self);
 
@@ -29,3 +31,9 @@ enum InsertBookError {
     #[error("storage unavailable")]
     Unavailable,
 }
+
+#[derive(thiserror::Error, Debug)]
+enum CreateNewError {}
+
+#[derive(thiserror::Error, Debug)]
+enum OpenExistingError {}
