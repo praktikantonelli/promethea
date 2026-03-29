@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use crate::domain::metadata::BookRecord;
+use crate::domain::metadata::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 pub trait BookRepositoryPort: Sized {
@@ -14,12 +14,16 @@ pub trait BookRepositoryPort: Sized {
 
     async fn try_fetch_author_sort(&self, author_name: &str) -> Result<Option<String>, FetchError>;
 
-    async fn try_fetch_series_sort(
-        &self,
-        series_title: &str,
-    ) -> Result<Option<String>, sqlx::Error>;
+    async fn try_fetch_series_sort(&self, series_title: &str)
+    -> Result<Option<String>, FetchError>;
 
     async fn insert_book(&self, book: BookRecord) -> Result<(), InsertBookError>;
+
+    async fn update_book(&self, book: BookRecord) -> Result<(), UpdateError>;
+
+    async fn update_series(&self, series: SeriesAndVolumeRecord) -> Result<(), UpdateError>;
+
+    async fn update_author(&self, author: AuthorRecord) -> Result<(), UpdateError>;
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -42,3 +46,6 @@ enum CloseError {}
 
 #[derive(thiserror::Error, Debug)]
 enum FetchError {}
+
+#[derive(thiserror::Error, Debug)]
+enum UpdateError {}
