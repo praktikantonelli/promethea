@@ -10,10 +10,9 @@ pub trait BookRepositoryPort: Sized {
 
     async fn close(&self) -> Result<(), CloseError>;
 
-    async fn fetch_all_books(&self) -> Result<Vec<BookRecord>, sqlx::Error>;
+    async fn fetch_all_books(&self) -> Result<Vec<BookRecord>, FetchError>;
 
-    async fn try_fetch_author_sort(&self, author_name: &str)
-    -> Result<Option<String>, sqlx::Error>;
+    async fn try_fetch_author_sort(&self, author_name: &str) -> Result<Option<String>, FetchError>;
 
     async fn try_fetch_series_sort(
         &self,
@@ -40,3 +39,6 @@ enum OpenExistingError {}
 
 #[derive(thiserror::Error, Debug)]
 enum CloseError {}
+
+#[derive(thiserror::Error, Debug)]
+enum FetchError {}
