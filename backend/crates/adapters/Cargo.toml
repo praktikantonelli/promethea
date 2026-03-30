@@ -12,6 +12,11 @@ description = "Adapter definitions following hexagonal architecture"
 
 [dependencies]
 shared-core = { path = "../shared-core/" }
+sqlx = { version = "0.8.6", features = [
+  "sqlite",
+  "runtime-tokio-rustls",
+  "chrono",
+] }
 
 [lints]
 workspace = true
