@@ -17,6 +17,11 @@ sqlx = { version = "0.8.6", features = [
   "runtime-tokio-rustls",
   "chrono",
 ] }
+reqwest = { version = "0.13", default-features = false, features = [
+  "native-tls",
+  "json",
+] }
+scraper = "0.26.0"
 
 [lints]
 workspace = true
