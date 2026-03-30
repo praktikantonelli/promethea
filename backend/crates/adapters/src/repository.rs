@@ -1,4 +1,4 @@
-use shared_core::ports::bookrepository::BookRepositoryPort;
+use shared_core::ports::repository::BookRepositoryPort;
 
 pub struct DataBase {}
 
