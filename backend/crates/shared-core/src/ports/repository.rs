@@ -4,9 +4,7 @@ use crate::domain::metadata::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 pub trait BookRepositoryPort: Sized {
-    async fn create_new(path: &Path) -> Result<Self, CreateNewError>;
-
-    async fn open_existing(path: &Path) -> Result<Self, OpenExistingError>;
+    async fn open(path: &Path) -> Result<Self, OpenRepositoryError>;
 
     async fn close(&self) -> Result<(), CloseError>;
 
@@ -41,13 +39,9 @@ enum InsertBookError {
     Unavailable,
 }
 
-/// Error when trying to create a new repository
-#[derive(thiserror::Error, Debug)]
-enum CreateNewError {}
-
 /// Error when trying to open an existing repository
 #[derive(thiserror::Error, Debug)]
-enum OpenExistingError {}
+enum OpenRepositoryError {}
 
 /// Error when trying to close a repository connection
 #[derive(thiserror::Error, Debug)]
