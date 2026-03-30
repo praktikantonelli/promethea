@@ -1,5 +1,5 @@
 use shared_core::{domain::metadata::BookRecord, ports::repository::BookRepositoryPort};
-use sqlx::{Sqlite, SqlitePool, sqlite::SqliteConnectOptions};
+use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 
 pub struct DataBase {
     pool: SqlitePool,
@@ -104,6 +104,114 @@ impl BookRepositoryPort for DataBase {
         &self,
         book: shared_core::domain::metadata::BookRecord,
     ) -> Result<(), InsertBookError> {
+        let mut tx: Transaction<'_, Sqlite> = self.pool.begin().await?;
+
+        let book_goodreads_id = book.goodreads_id;
+        let number_of_pages = book.number_of_pages;
+
+        let book_id_res: Result<i64, sqlx::Error> = sqlx::query_scalar!(
+            r#"
+            INSERT INTO books (
+                title,
+                sort,
+                date_added,
+                date_published,
+                number_of_pages,
+                goodreads_id
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+                RETURNING id; 
+        "#,
+            book.title,
+            book.sort,
+            book.date_added,
+            book.date_published,
+            number_of_pages,
+            book_goodreads_id
+        )
+        .fetch_one(&mut *tx)
+        .await;
+
+        // If book was inserted successfully, fetch its internal ID, otherwise return early and
+        // rollback previous SQL query
+        let book_id = match book_id_res {
+            Ok(id) => id,
+            Err(error) => {
+                if is_sqlite_unique_violation(&error) {
+                    tx.rollback().await?;
+                    return Err(InsertBookError::BookAlreadyExists(book.goodreads_id));
+                }
+                return Err(InsertBookError::Db(error));
+            }
+        };
+
+        // handle authors
+        for author_record in &book.authors {
+            let author_goodreads_id = author_record.goodreads_id;
+            let author_id: i64 = sqlx::query!(
+                r#"
+                    INSERT INTO authors(name, sort, goodreads_id)
+                    VALUES (?, ?, ?)
+                    ON CONFLICT(goodreads_id) DO UPDATE SET
+                        name = excluded.name,
+                        sort = excluded.sort
+                    RETURNING id;
+                "#,
+                author_record.name,
+                author_record.sort,
+                author_goodreads_id
+            )
+            .fetch_one(&mut *tx)
+            .await?
+            .id;
+
+            sqlx::query!(
+                r#"
+                INSERT OR IGNORE INTO books_authors_link(book, author)
+                VALUES (?1, ?2);
+            "#,
+                book_id,
+                author_id
+            )
+            .execute(&mut *tx)
+            .await?;
+        }
+
+        // handle series
+        for sav in &book.series_and_volume {
+            let sav_goodreads_id = sav.goodreads_id;
+            let series_id: i64 = sqlx::query!(
+                r#"
+                INSERT INTO series(name, sort, goodreads_id)
+                VALUES (?, ?, ?)
+                ON CONFLICT(goodreads_id) DO UPDATE SET
+                    name = EXCLUDED.name,
+                    sort = EXCLUDED.sort
+                RETURNING id;
+            "#,
+                sav.series,
+                sav.sort,
+                sav_goodreads_id
+            )
+            .fetch_one(&mut *tx)
+            .await?
+            .id;
+
+            sqlx::query!(
+                r#"
+                INSERT INTO books_series_link(book, series, entry)
+                VALUES (?, ?, ?)
+            "#,
+                book_id,
+                series_id,
+                sav.volume
+            )
+            .execute(&mut *tx)
+            .await?;
+        }
+        tx.commit().await?;
+
+        Ok(())
     }
 
     async fn update_book(
