@@ -93,3 +93,5 @@ impl SeriesAndVolumeRecord {
         }
     }
 }
+
+pub struct GoodreadsId(i64);

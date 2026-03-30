@@ -1,3 +1,17 @@
-use crate::domain::metadata::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
+use crate::domain::metadata::{BookRecord, GoodreadsId};
 
-pub trait MetadataProviderPort {}
+#[allow(async_fn_in_trait, reason = "Only used in my own code")]
+pub trait MetadataProviderPort {
+    async fn create() -> Self;
+
+    async fn fetch_goodreads_id(&self) -> Result<GoodreadsId, FetchMetadataError>;
+
+    async fn fetch_metadata(
+        &self,
+        goodreads_id: GoodreadsId,
+    ) -> Result<BookRecord, FetchMetadataError>;
+}
+
+/// Error fetching metadata for book
+#[derive(thiserror::Error, Debug)]
+enum FetchMetadataError {}
