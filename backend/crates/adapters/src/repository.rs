@@ -93,6 +93,11 @@ impl BookRepositoryPort for DataBase {
         &self,
         series_title: &str,
     ) -> Result<Option<String>, FetchError> {
+        let sort = sqlx::query!("SELECT sort FROM series WHERE name LIKE ?", series_title)
+            .fetch_one(&self.pool)
+            .await?
+            .sort;
+        Ok(Some(sort))
     }
 
     async fn insert_book(
