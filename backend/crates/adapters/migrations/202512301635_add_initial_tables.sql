@@ -1,0 +1,58 @@
+CREATE TABLE IF NOT EXISTS authors (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL COLLATE NOCASE,
+    sort TEXT NOT NULL COLLATE NOCASE,
+    goodreads_id INTEGER,
+    UNIQUE(goodreads_id)
+);
+CREATE TABLE IF NOT EXISTS books (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL COLLATE NOCASE,
+    sort TEXT NOT NULL COLLATE NOCASE,
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_published TIMESTAMP,
+    last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    number_of_pages INTEGER NOT NULL DEFAULT 0 CHECK(number_of_pages >= 0),
+    goodreads_id INTEGER,
+    UNIQUE(goodreads_id)
+);
+CREATE TRIGGER IF NOT EXISTS trg_book_last_modified 
+AFTER UPDATE ON books
+FOR EACH ROW
+BEGIN
+  UPDATE books SET last_modified = CURRENT_TIMESTAMP WHERE id = OLD.id;
+END;
+CREATE TABLE IF NOT EXISTS series (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL COLLATE NOCASE,
+    sort TEXT NOT NULL COLLATE NOCASE,
+    goodreads_id INTEGER,
+    UNIQUE(goodreads_id)
+);
+CREATE TABLE IF NOT EXISTS read_books (
+    id INTEGER PRIMARY KEY,
+    book INTEGER NOT NULL,
+    start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    end_date TIMESTAMP,
+    FOREIGN KEY(book) REFERENCES books(id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS books_authors_link (
+    book INTEGER NOT NULL,
+    author INTEGER NOT NULL,
+    FOREIGN KEY(book) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY(author) REFERENCES authors(id) ON DELETE CASCADE,
+    PRIMARY KEY(book, author)
+);
+CREATE TABLE IF NOT EXISTS books_series_link (
+    book INTEGER NOT NULL,
+    series INTEGER NOT NULL,
+    entry REAL NOT NULL CHECK(entry >= 0),
+    FOREIGN KEY(book) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY(series) REFERENCES series(id) ON DELETE CASCADE,
+    UNIQUE(series, entry),
+    PRIMARY KEY(book, series)
+);
+
+CREATE INDEX IF NOT EXISTS idx_books_authors_author ON books_authors_link(author);
+CREATE INDEX IF NOT EXISTS idx_books_series_series  ON books_series_link(series);
+CREATE INDEX IF NOT EXISTS idx_read_books_book      ON read_books(book);
