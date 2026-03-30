@@ -6,7 +6,7 @@ use crate::domain::metadata::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 pub trait BookRepositoryPort: Sized {
     async fn open(path: &Path) -> Result<Self, OpenRepositoryError>;
 
-    async fn close(&self) -> Result<(), CloseError>;
+    async fn close(&self);
 
     async fn fetch_all_books(&self) -> Result<Vec<BookRecord>, FetchError>;
 
@@ -42,10 +42,6 @@ enum InsertBookError {
 /// Error when trying to open an existing repository
 #[derive(thiserror::Error, Debug)]
 enum OpenRepositoryError {}
-
-/// Error when trying to close a repository connection
-#[derive(thiserror::Error, Debug)]
-enum CloseError {}
 
 /// Error fetching data from the repository
 #[derive(thiserror::Error, Debug)]
