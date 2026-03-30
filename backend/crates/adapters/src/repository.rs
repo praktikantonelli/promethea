@@ -81,6 +81,12 @@ impl BookRepositoryPort for DataBase {
     }
 
     async fn try_fetch_author_sort(&self, author_name: &str) -> Result<Option<String>, FetchError> {
+        let sort = sqlx::query!("SELECT sort FROM authors WHERE name LIKE ?", author_name)
+            .fetch_one(&self.pool)
+            .await?
+            .sort;
+
+        Ok(Some(sort))
     }
 
     async fn try_fetch_series_sort(
