@@ -2,7 +2,7 @@ use crate::domain::metadata::{BookRecord, GoodreadsId};
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 pub trait MetadataProviderPort {
-    async fn create() -> Self;
+    fn create() -> Self;
 
     async fn fetch_goodreads_id(&self) -> Result<GoodreadsId, FetchMetadataError>;
 
