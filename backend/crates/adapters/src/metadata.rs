@@ -73,6 +73,17 @@ impl MetadataProviderPort for MetadataProvider {
         &self,
         goodreads_id: GoodreadsId,
     ) -> Result<BookRecord, FetchMetadataError> {
+        let url = format!("https://www.goodreads.com/book/show/{goodreads_id}");
+        let document = Html::parse_document(&self.http_client.get(&url).send().await?.text().await?);
+        let json_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#)?;
+        let json = &document.select(&json_selector).next();
+
+        let json = match *json {
+            None => {
+                return Err()
+            }
+            Some(element) => serde_json::from_str(&element.text().collect::<String>())?
+        }
     }
 }
 
