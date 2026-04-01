@@ -40,21 +40,11 @@ impl MetadataProviderPort for MetadataProvider {
             .map_err(|err| format!("Failed to create HTTP request client for scraping: {err}"))
     }
 
-    async fn fetch_goodreads_id(&self) -> Result<GoodreadsId, FetchMetadataError> {}
-
-    async fn fetch_metadata(
-        &self,
-        goodreads_id: GoodreadsId,
-    ) -> Result<BookRecord, FetchMetadataError> {
-    }
-}
-
-impl MetadataProvider {
-    async fn search(
+    async fn fetch_goodreads_id(
         &self,
         title: String,
         author: String,
-    ) -> Result<Option<GoodreadsId>, SearchError> {
+    ) -> Result<Option<GoodreadsId>, FetchMetadataError> {
         let query = format!("{} {}", title, author);
         let url = format!("https://www.goodreads.com/search?q={}", encode(&query));
 
@@ -77,6 +67,12 @@ impl MetadataProvider {
             }
         }
         Ok(None)
+    }
+
+    async fn fetch_metadata(
+        &self,
+        goodreads_id: GoodreadsId,
+    ) -> Result<BookRecord, FetchMetadataError> {
     }
 }
 

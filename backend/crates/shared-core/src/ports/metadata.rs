@@ -4,7 +4,11 @@ use crate::domain::metadata::{BookRecord, GoodreadsId};
 pub trait MetadataProviderPort {
     fn create() -> Self;
 
-    async fn fetch_goodreads_id(&self) -> Result<GoodreadsId, FetchMetadataError>;
+    async fn fetch_goodreads_id(
+        &self,
+        title: String,
+        author: String,
+    ) -> Result<Option<GoodreadsId>, FetchMetadataError>;
 
     async fn fetch_metadata(
         &self,
