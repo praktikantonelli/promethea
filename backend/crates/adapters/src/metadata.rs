@@ -2,6 +2,7 @@ use reqwest::{ClientBuilder, header};
 use scraper::{Html, Selector};
 use shared_core::domain::metadata::{BookRecord, GoodreadsId};
 use shared_core::ports::metadata::MetadataProviderPort;
+use urlencoding::encode;
 
 pub struct MetadataProvider {
     http_client: reqwest::Client,
@@ -47,3 +48,64 @@ impl MetadataProviderPort for MetadataProvider {
     ) -> Result<BookRecord, FetchMetadataError> {
     }
 }
+
+impl MetadataProvider {
+    async fn search(
+        &self,
+        title: String,
+        author: String,
+    ) -> Result<Option<GoodreadsId>, SearchError> {
+        let query = format!("{} {}", title, author);
+        let url = format!("https://www.goodreads.com/search?q={}", encode(&query));
+
+        let document =
+            Html::parse_document(&self.http_client.get(&url).send().await?.text().await?);
+        let title_selector = Selector::parse(r#"a[class="bookTitle"]"#)?;
+        let author_selector = Selector::parse(r#"a[class="authorName"]"#)?;
+
+        for (title, author) in document
+            .select(&title_selector)
+            .zip(document.select(&author_selector))
+        {
+            let found_title = title.text().collect::<String>();
+            let found_author = author.text().collect::<String>();
+            let found_link = title.value().attr("href")?;
+            let found_id = extract_goodreads_id_from_link(found_link)?;
+
+            if matches(&found_title, &title) && matches(&found_author, &author) {
+                return Ok(Some(found_id));
+            }
+        }
+        Ok(None)
+    }
+}
+
+fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, ExtractError> {
+    url.splitn(4, '/')
+        .nth(3)
+        .unwrap_or("")
+        .split('?')
+        .next()?
+        .chars()
+        .take_while(|character| character.is_numeric())
+        .collect::<String>()
+}
+
+pub fn matches(str1: &str, str2: &str) -> bool {
+    let str1 = str1
+        .chars()
+        .filter(|character| character.is_alphanumeric())
+        .collect::<String>();
+    let str2 = str2
+        .chars()
+        .filter(|character| character.is_alphanumeric())
+        .collect::<String>();
+
+    str1.to_lowercase().contains(&str2.to_lowercase())
+}
+
+#[derive(thiserror::Error, Debug)]
+enum SearchError {}
+
+#[derive(thiserror::Error, Debug)]
+enum ExtractError {}

@@ -10,6 +10,7 @@ dependencies = [
  "scraper 0.26.0",
  "shared-core",
  "sqlx",
+ "urlencoding",
 ]
 
 [[package]]
