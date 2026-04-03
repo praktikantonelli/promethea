@@ -100,10 +100,7 @@ impl BookRepositoryPort for DataBase {
         Ok(Some(sort))
     }
 
-    async fn insert_book(
-        &self,
-        book: shared_core::domain::metadata::BookRecord,
-    ) -> Result<(), InsertBookError> {
+    async fn insert_book(&self, book: BookRecord) -> Result<(), InsertBookError> {
         let mut tx: Transaction<'_, Sqlite> = self.pool.begin().await?;
 
         let book_goodreads_id = book.goodreads_id;
