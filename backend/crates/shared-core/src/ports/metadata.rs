@@ -1,4 +1,4 @@
-use crate::domain::metadata::{BookRecord, GoodreadsId};
+use crate::domain::{metadata::BookMetadata, records::GoodreadsId};
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 pub trait MetadataProviderPort {
@@ -13,7 +13,7 @@ pub trait MetadataProviderPort {
     async fn fetch_metadata(
         &self,
         goodreads_id: GoodreadsId,
-    ) -> Result<BookRecord, FetchMetadataError>;
+    ) -> Result<BookMetadata, FetchMetadataError>;
 }
 
 /// Error fetching metadata for book
