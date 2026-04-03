@@ -1,97 +1,47 @@
-use chrono::NaiveDateTime;
-use serde::{Deserialize, Serialize};
+use chrono::{DateTime, Utc};
 
+use super::records::GoodreadsId;
+
+/// The primary data structure containing the metadata of a book.
 #[non_exhaustive]
-#[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
-pub struct BookRecord {
-    pub book_id: i64,
+#[derive(Debug, PartialEq)]
+pub struct BookMetadata {
+    /// The main title of the book.
     pub title: String,
-    pub sort: String,
-    #[sqlx(json)]
-    pub authors: Vec<AuthorRecord>,
-    #[sqlx(json)]
-    pub series_and_volume: Vec<SeriesAndVolumeRecord>,
-    pub number_of_pages: i64,
-    pub goodreads_id: i64,
-    pub date_added: NaiveDateTime,
-    pub date_published: NaiveDateTime,
-    pub date_modified: NaiveDateTime,
+    /// The publication date of the book, represented as a UTC datetime.
+    pub publication_date: Option<DateTime<Utc>>,
+    /// A list of contributors to the book, each represented as a `BookContributor`.
+    pub contributors: Vec<BookContributor>,
+    /// A list of series information, if the book is part of a series, represented as a `BookSeries`.
+    pub series: Vec<BookSeries>,
+    /// The number of pages in the book, if available.
+    pub page_count: Option<i64>,
+    /// A URL to an image of the book's cover, if available.
+    pub image_url: Option<String>,
+    /// The ID with which the book's metadata has been fetched
+    pub goodreads_id: Option<GoodreadsId>,
 }
 
-impl BookRecord {
-    #[allow(
-        clippy::too_many_arguments,
-        reason = "Constructor, cannot have fewer arguments"
-    )]
-    #[must_use]
-    #[inline]
-    pub const fn new(
-        book_id: i64,
-        title: String,
-        sort: String,
-        authors: Vec<AuthorRecord>,
-        series_and_volume: Vec<SeriesAndVolumeRecord>,
-        number_of_pages: i64,
-        goodreads_id: i64,
-        date_added: NaiveDateTime,
-        date_published: NaiveDateTime,
-        date_modified: NaiveDateTime,
-    ) -> Self {
-        Self {
-            book_id,
-            title,
-            sort,
-            authors,
-            series_and_volume,
-            number_of_pages,
-            goodreads_id,
-            date_added,
-            date_published,
-            date_modified,
-        }
-    }
-}
-
+/// Represents an individual who contributed to the book, such as an author or editor.
 #[non_exhaustive]
-#[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
-pub struct AuthorRecord {
+#[derive(Debug, PartialEq)]
+pub struct BookContributor {
+    /// The name of the contributor.
     pub name: String,
-    pub sort: String,
-    pub goodreads_id: i64,
+    /// The role of the contributor, such as "Author" or "Illustrator".
+    pub role: String,
+    /// The Goodreads ID of the contributor
+    pub goodreads_id: String,
 }
 
-impl AuthorRecord {
-    #[must_use]
-    #[inline]
-    pub const fn new(name: String, sort: String, goodreads_id: i64) -> Self {
-        Self {
-            name,
-            sort,
-            goodreads_id,
-        }
-    }
-}
-
+/// Represents series information for a book, including the series title and book's position within the series.
 #[non_exhaustive]
-#[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
-pub struct SeriesAndVolumeRecord {
-    pub series: String,
-    pub sort: String,
-    pub volume: f64,
-    pub goodreads_id: i64,
+#[derive(Debug, PartialEq)]
+pub struct BookSeries {
+    /// The title of the series.
+    pub title: String,
+    /// The position of the book within the series, represented as a float to accommodate cases like "1.5".
+    pub number: f32,
+    /// The Goodreads ID of the series
+    pub goodreads_id: String,
 }
-
-impl SeriesAndVolumeRecord {
-    #[inline]
-    #[must_use]
-    pub const fn new(series: String, sort: String, volume: f64, goodreads_id: i64) -> Self {
-        Self {
-            series,
-            sort,
-            volume,
-            goodreads_id,
-        }
-    }
-}
-
-pub struct GoodreadsId(i64);
