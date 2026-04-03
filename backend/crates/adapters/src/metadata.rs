@@ -130,6 +130,250 @@ fn matches(str1: &str, str2: &str) -> bool {
     str1.to_lowercase().contains(&str2.to_lowercase())
 }
 
+fn extract_amazon_id(metadata: &Value, goodreads_id: &GoodreadsId) -> Result<String, ScraperError> {
+    let amazon_id_key = format!("getBookByLegacyId({{\"legacyId\":\"{goodreads_id}\"}})");
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let amazon_id =
+        &metadata["props"]["pageProps"]["apolloState"]["ROOT_QUERY"][amazon_id_key]["__ref"];
+    let Some(amazon_id) = to_string(amazon_id) else {
+        error!("Failed to scrape Amazon ID");
+        return Err(ScraperError::ScrapeError(
+            "Failed to scrape Amazon ID".to_owned(),
+        ));
+    };
+
+    Ok(amazon_id)
+}
+fn extract_title_and_subtitle(
+    metadata: &Value,
+    amazon_id: &str,
+) -> Result<(String, Option<String>), ScraperError> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let title = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["title"];
+    let Some(title) = to_string(title) else {
+        error!("Failed to scrape book title");
+        return Err(ScraperError::ScrapeError(
+            "Failed to scrape book title".to_owned(),
+        ));
+    };
+
+    match title.split_once(':') {
+        Some((title, subtitle)) => Ok((title.to_owned(), Some(subtitle.trim().to_owned()))),
+        None => Ok((title.clone(), None)),
+    }
+}
+
+fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let url = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["imageUrl"];
+    to_string(url)
+}
+
+fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
+    let mut contributors = Vec::new();
+
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let primary =
+        metadata["props"]["pageProps"]["apolloState"][amazon_id]["primaryContributorEdge"]
+            .as_object()
+            .map(|obj| (to_string(&obj["role"]), to_string(&obj["node"]["__ref"])));
+
+    match primary {
+        Some((Some(role), Some(reference))) => {
+            if let Some(contributor) = fetch_contributor(metadata, (role, reference)) {
+                contributors.push(contributor);
+            }
+        }
+        Some(_) => {
+            warn!("Failed to parse contributor");
+        }
+        None => (),
+    }
+
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let Some(secondary) =
+        metadata["props"]["pageProps"]["apolloState"][amazon_id]["secondaryContributorEdges"]
+            .as_array()
+    else {
+        return contributors
+            .into_iter()
+            .filter(|contributor| !contributor.name.to_lowercase().eq("unknown author"))
+            .collect();
+    };
+
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    for contrib in secondary {
+        let Some(role) = to_string(&contrib["role"]) else {
+            warn!("Failed to parse contributor role");
+            continue;
+        };
+        let Some(key) = to_string(&contrib["node"]["__ref"]) else {
+            warn!("Failed to parse contributor key");
+            continue;
+        };
+        // Only keep contributors that are authors
+        if role != "Author" {
+            info!("Contributor not an author, skipping...");
+            continue;
+        }
+
+        if let Some(contributor) = fetch_contributor(metadata, (role, key)) {
+            contributors.push(contributor);
+        }
+    }
+
+    contributors
+        .into_iter()
+        .filter(|contributor| !contributor.name.to_lowercase().eq("unknown author"))
+        .collect()
+}
+
+fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let contributor = &metadata["props"]["pageProps"]["apolloState"][&key]["name"];
+    let name = to_string(contributor);
+    // First, try to extract Goodreads ID from "legacyId" field
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let Some(goodreads_id) = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
+        .as_i64()
+        .map(|x| x.to_string())
+        .or_else(|| {
+            let id = metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"].as_str()?;
+            id.strip_prefix("https://www.goodreads.com/author/show/")
+                .and_then(|rest| rest.split('.').next())
+                .map(str::to_owned)
+        })
+    else {
+        warn!("Failed to parse Goodreads ID");
+        return None;
+    };
+
+    if name.is_none() {
+        warn!("Failed to parse contributor");
+    }
+
+    name.map(|n| BookContributor {
+        name: n,
+        role,
+        goodreads_id,
+    })
+}
+
+fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    #[allow(clippy::pattern_type_mismatch, reason = "false positive")]
+    if let Value::Number(number) =
+        &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publicationTime"]
+    {
+        let timestamp = number.as_i64().and_then(DateTime::from_timestamp_millis);
+
+        if timestamp.is_none() {
+            warn!("Failed to parse publication date");
+        }
+        timestamp
+    } else {
+        warn!("No publication date in JSON found!");
+        None
+    }
+}
+
+fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let count =
+        metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["numPages"].as_i64();
+    match count {
+        Some(0) => None,
+        val => val,
+    }
+}
+
+fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
+    let empty_vec: Vec<Value> = Vec::new();
+
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let series_array = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookSeries"]
+        .as_array()
+        .unwrap_or(&empty_vec);
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let series_info = series_array
+        .iter()
+        .filter_map(|series| {
+            let Some(number) = series["userPosition"]
+                .as_str()
+                .map(|string| string.split('-').next().unwrap_or(""))
+                .and_then(|string| string.parse::<f32>().ok())
+            else {
+                warn!("Failed to parse series number");
+                return None;
+            };
+
+            let Some(key) = to_string(&series["series"]["__ref"]) else {
+                warn!("Failed to parse series key");
+                return None;
+            };
+
+            let title = &metadata["props"]["pageProps"]["apolloState"][&key]["title"];
+            let Some(title) = to_string(title) else {
+                warn!("Failed to parse series title");
+                return None;
+            };
+
+            let web_url = &metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"];
+            let Some(goodreads_id) = extract_id_from_url(web_url) else {
+                warn!("Failed to parse series ID");
+                return None;
+            };
+
+            Some(BookSeries {
+                title,
+                number,
+                goodreads_id,
+            })
+        })
+        .collect::<Vec<BookSeries>>();
+    series_info
+}
+
 #[derive(thiserror::Error, Debug)]
 enum SearchError {}
 
