@@ -211,21 +211,9 @@ impl BookRepositoryPort for DataBase {
         Ok(())
     }
 
-    async fn update_book(
-        &self,
-        book: shared_core::domain::metadata::BookRecord,
-    ) -> Result<(), UpdateError> {
-    }
+    async fn update_book(&self, book: BookRecord) -> Result<(), UpdateError> {}
 
-    async fn update_series(
-        &self,
-        series: shared_core::domain::metadata::SeriesAndVolumeRecord,
-    ) -> Result<(), UpdateError> {
-    }
+    async fn update_series(&self, series: SeriesAndVolumeRecord) -> Result<(), UpdateError> {}
 
-    async fn update_author(
-        &self,
-        author: shared_core::domain::metadata::AuthorRecord,
-    ) -> Result<(), UpdateError> {
-    }
+    async fn update_author(&self, author: AuthorRecord) -> Result<(), UpdateError> {}
 }
