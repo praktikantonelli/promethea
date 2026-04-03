@@ -82,7 +82,7 @@ impl MetadataProviderPort for MetadataProvider {
 
         let json = match *json {
             None => {
-                return Err()
+                return Err(FetchMetadataError);
             }
             Some(element) => serde_json::from_str(&element.text().collect::<String>())?
         }
