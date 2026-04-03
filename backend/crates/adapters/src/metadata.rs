@@ -1,6 +1,7 @@
 use reqwest::{ClientBuilder, header};
 use scraper::{Html, Selector};
-use shared_core::domain::metadata::{BookRecord, GoodreadsId};
+use shared_core::domain::metadata::BookMetadata;
+use shared_core::domain::records::{BookRecord, GoodreadsId};
 use shared_core::ports::metadata::MetadataProviderPort;
 use urlencoding::encode;
 
