@@ -117,7 +117,7 @@ fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, ExtractErro
         .collect::<String>()
 }
 
-pub fn matches(str1: &str, str2: &str) -> bool {
+fn matches(str1: &str, str2: &str) -> bool {
     let str1 = str1
         .chars()
         .filter(|character| character.is_alphanumeric())
