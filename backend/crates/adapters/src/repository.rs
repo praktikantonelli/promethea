@@ -1,4 +1,4 @@
-use shared_core::{domain::metadata::BookRecord, ports::repository::BookRepositoryPort};
+use shared_core::{domain::records::BookRecord, ports::repository::BookRepositoryPort};
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 
 pub struct DataBase {
