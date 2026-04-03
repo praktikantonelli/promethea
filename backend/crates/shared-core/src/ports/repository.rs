@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use crate::domain::metadata::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
+use crate::domain::records::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 pub trait BookRepositoryPort: Sized {
