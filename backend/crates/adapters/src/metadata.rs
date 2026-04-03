@@ -84,8 +84,25 @@ impl MetadataProviderPort for MetadataProvider {
             None => {
                 return Err(FetchMetadataError);
             }
-            Some(element) => serde_json::from_str(&element.text().collect::<String>())?
-        }
+            Some(element) => serde_json::from_str(&element.text().collect::<String>())?,
+        };
+        let amazon_id = extract_amazon_id(&json, &goodreads_id);
+        let (title, subtitle) = extract_title_and_subtitle(&json, &amazon_id);
+        let image_url = extract_image_url(&metadata, &amazon_id);
+        let contributors = extract_contributors(&metadata, &amazon_id);
+        let publication_date = extract_publication_date(&metadata, &amazon_id);
+        let page_count = extract_page_count(&metadata, &amazon_id);
+        let series = extract_series(&metadata, &amazon_id);
+
+        Ok(BookMetadata {
+            title,
+            publication_date,
+            contributors,
+            series,
+            page_count,
+            image_url,
+            goodreads_id,
+        })
     }
 }
 
