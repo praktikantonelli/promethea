@@ -1,11 +1,11 @@
 use shared_core::{domain::records::BookRecord, ports::repository::BookRepositoryPort};
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 
-pub struct DataBase {
+pub struct Database {
     pool: SqlitePool,
 }
 
-impl BookRepositoryPort for DataBase {
+impl BookRepositoryPort for Database {
     async fn close(&self) {
         self.pool.close().await;
     }
@@ -208,7 +208,7 @@ impl BookRepositoryPort for DataBase {
     async fn update_author(&self, author: AuthorRecord) -> Result<(), UpdateError> {}
 }
 
-impl DataBase {
+impl Database {
     async fn open(path: &std::path::Path) -> Result<Self, OpenRepositoryError> {
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
