@@ -19,4 +19,5 @@ pub trait MetadataProviderPort {
 
 /// Error fetching metadata for book
 #[derive(thiserror::Error, Debug)]
+#[non_exhaustive]
 pub enum FetchMetadataError {}
