@@ -1,13 +1,10 @@
 use async_trait::async_trait;
-use std::path::Path;
 
 use crate::domain::records::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 #[async_trait]
-pub trait BookRepositoryPort: Sized {
-    async fn open(path: &Path) -> Result<Self, OpenRepositoryError>;
-
+pub trait BookRepositoryPort {
     async fn close(&self);
 
     async fn fetch_all_books(&self) -> Result<Vec<BookRecord>, FetchError>;

@@ -6,16 +6,6 @@ pub struct DataBase {
 }
 
 impl BookRepositoryPort for DataBase {
-    async fn open(path: &std::path::Path) -> Result<Self, OpenRepositoryError> {
-        let options = SqliteConnectOptions::new()
-            .foreign_keys(true)
-            .filename(path);
-        let pool = SqlitePool::connect_with(options).await?;
-        sqlx::migrate!().run(&pool).await?;
-
-        Ok(Self { pool })
-    }
-
     async fn close(&self) {
         self.pool.close().await;
     }
@@ -216,4 +206,16 @@ impl BookRepositoryPort for DataBase {
     async fn update_series(&self, series: SeriesAndVolumeRecord) -> Result<(), UpdateError> {}
 
     async fn update_author(&self, author: AuthorRecord) -> Result<(), UpdateError> {}
+}
+
+impl DataBase {
+    async fn open(path: &std::path::Path) -> Result<Self, OpenRepositoryError> {
+        let options = SqliteConnectOptions::new()
+            .foreign_keys(true)
+            .filename(path);
+        let pool = SqlitePool::connect_with(options).await?;
+        sqlx::migrate!().run(&pool).await?;
+
+        Ok(Self { pool })
+    }
 }
