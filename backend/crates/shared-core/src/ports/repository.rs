@@ -25,7 +25,8 @@ pub trait BookRepositoryPort {
 
 /// Error when trying to add a new book to the repository
 #[derive(thiserror::Error, Debug)]
-enum InsertBookError {
+#[non_exhaustive]
+pub enum InsertBookError {
     /// The book already exists in the repository
     #[error("book with title `{title}` already exists")]
     Conflict {
@@ -40,12 +41,15 @@ enum InsertBookError {
 
 /// Error when trying to open an existing repository
 #[derive(thiserror::Error, Debug)]
-enum OpenRepositoryError {}
+#[non_exhaustive]
+pub enum OpenRepositoryError {}
 
 /// Error fetching data from the repository
 #[derive(thiserror::Error, Debug)]
-enum FetchError {}
+#[non_exhaustive]
+pub enum FetchError {}
 
 /// Error updating data in the repository
 #[derive(thiserror::Error, Debug)]
-enum UpdateError {}
+#[non_exhaustive]
+pub enum UpdateError {}
