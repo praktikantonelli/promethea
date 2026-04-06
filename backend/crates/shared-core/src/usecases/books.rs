@@ -7,7 +7,14 @@ pub struct AddBookUseCase {
 }
 
 impl AddBookUseCase {
-    pub async fn execute(&self) -> Result<(), AddBookError> {}
+    pub async fn execute(&self) -> Result<(), AddBookError> {
+        // input: probably path to EPUB file or file itself
+        // extract title and author(s)
+        // fetch metadata
+        // insert metadata into DB
+        // move file to proper location in library folder
+        Ok(())
+    }
 }
 
 #[derive(thiserror::Error, Debug)]
