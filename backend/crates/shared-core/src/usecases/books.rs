@@ -7,6 +7,16 @@ pub struct AddBookUseCase {
 }
 
 impl AddBookUseCase {
+    #[inline]
+    pub fn new(
+        repository: Arc<dyn BookRepositoryPort + Send + Sync>,
+        metadata: Arc<dyn MetadataProviderPort + Send + Sync>,
+    ) -> Self {
+        Self {
+            repository,
+            metadata,
+        }
+    }
     /// Adds a book to the library, including updating the DB and the file system
     ///
     /// # Errors
