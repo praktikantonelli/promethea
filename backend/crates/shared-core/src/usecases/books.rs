@@ -2,8 +2,8 @@ use crate::ports::{metadata::MetadataProviderPort, repository::BookRepositoryPor
 use std::sync::Arc;
 
 pub struct AddBookUseCase {
-    repository: Arc<dyn BookRepositoryPort>,
-    metadata: Arc<dyn MetadataProviderPort>,
+    repository: Arc<dyn BookRepositoryPort + Send + Sync>,
+    metadata: Arc<dyn MetadataProviderPort + Send + Sync>,
 }
 
 impl AddBookUseCase {
