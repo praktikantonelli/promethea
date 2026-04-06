@@ -15,6 +15,7 @@ impl AddBookUseCase {
     /// - error communicating with DB
     /// - error fetching metadata
     /// - error with file system
+    #[inline]
     pub async fn execute(&self) -> Result<(), AddBookError> {
         // input: probably path to EPUB file or file itself
         // extract title and author(s)
