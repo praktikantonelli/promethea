@@ -7,6 +7,14 @@ pub struct AddBookUseCase {
 }
 
 impl AddBookUseCase {
+    /// Adds a book to the library, including updating the DB and the file system
+    ///
+    /// # Errors
+    /// Errors when the book cannot be added for multiple reasons, including
+    /// - duplicate book
+    /// - error communicating with DB
+    /// - error fetching metadata
+    /// - error with file system
     pub async fn execute(&self) -> Result<(), AddBookError> {
         // input: probably path to EPUB file or file itself
         // extract title and author(s)
