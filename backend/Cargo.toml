@@ -1,6 +1,14 @@
 [workspace]
 
-members = [ "crates/adapters","crates/desktop", "crates/desktop-core", "crates/promethea_core", "crates/server", "crates/server-core", "crates/shared-core"]
+members = [
+  "crates/adapters",
+  "crates/desktop",
+  "crates/desktop-core",
+  "crates/promethea_core",
+  "crates/server",
+  "crates/server-core",
+  "crates/shared-core",
+]
 default-members = ["crates/promethea_core", "crates/server", "crates/desktop"]
 resolver = "2"
 
@@ -54,3 +62,6 @@ items_after_statements = { level = "allow", priority = 1 }
 unreachable = { level = "allow", priority = 1 }
 # allow let _ = fn_with_must_use(), this is used in #[tauri::command]
 let_underscore_must_use = { level = "allow", priority = 1 }
+# allow imports through std, not intended as no_std project
+std_instead_of_alloc = { level = "allow", priority = 1 }
+std_instead_of_core = { level = "allow", priority = 1 }
