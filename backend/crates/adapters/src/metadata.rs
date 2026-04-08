@@ -12,8 +12,8 @@ pub struct MetadataProvider {
 impl MetadataProviderPort for MetadataProvider {
     async fn fetch_goodreads_id(
         &self,
-        title: String,
-        author: String,
+        title: &str,
+        author: &str,
     ) -> Result<Option<GoodreadsId>, FetchMetadataError> {
         let query = format!("{} {}", title, author);
         let url = format!("https://www.goodreads.com/search?q={}", encode(&query));
