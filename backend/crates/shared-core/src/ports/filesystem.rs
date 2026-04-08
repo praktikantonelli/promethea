@@ -12,8 +12,18 @@ pub trait FileSystemPort {
 
     async fn delete_file(&self, path: &Path) -> Result<(), FileSystemError>;
 
+    /// Extract the title of a book from an EPUB file
+    ///
+    /// # Errors
+    /// Returns an error if there is a problem with the file system, or if the title cannot be
+    /// extracted (e.g., because the file doesn't contain a title field).
     fn extract_title_from_epub(&self, path: &Path) -> Result<String, FileSystemError>;
 
+    /// Extract the author of a book from an EPUB file
+    ///
+    /// # Errors
+    /// Returns an error if there is a problem with the file system, or if the author cannot be
+    /// extracted (e.g., because the file doesn't contain an author field).
     fn extract_author_from_epub(&self, path: &Path) -> Result<String, FileSystemError>;
 }
 
