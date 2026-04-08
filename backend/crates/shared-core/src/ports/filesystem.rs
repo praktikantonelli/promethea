@@ -9,6 +9,10 @@ pub trait FileSystemPort {
     async fn copy_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError>;
 
     async fn delete_file(&self, path: &Path) -> Result<(), FileSystemError>;
+
+    fn extract_title_from_epub(&self, path: &Path) -> Result<String, FileSystemError>;
+
+    fn extract_author_from_epub(&self, path: &Path) -> Result<String, FileSystemError>;
 }
 
 /// Error with the file system
