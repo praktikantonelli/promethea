@@ -12,7 +12,10 @@ impl FileSystemPort for FileSystem {
 
     async fn delete_file(&self, path: &Path) -> Result<(), FileSystemError> {}
 
-    fn extract_title_from_epub(&self, path: &Path) -> Result<String, FileSystemError> {}
+    fn extract_title_from_epub(&self, path: &Path) -> Result<String, FileSystemError> {
+        let doc = EpubDoc::new(path)?;
+        doc.get_title()
+    }
 
     fn extract_author_from_epub(&self, path: &Path) -> Result<String, FileSystemError> {}
 }
