@@ -17,5 +17,14 @@ impl FileSystemPort for FileSystem {
         doc.get_title()
     }
 
-    fn extract_author_from_epub(&self, path: &Path) -> Result<String, FileSystemError> {}
+    fn extract_author_from_epub(&self, path: &Path) -> Result<String, FileSystemError> {
+        let doc = EpubDoc::new(path)?;
+        let authors = doc
+            .metadata
+            .iter()
+            .filter(|item| item.property == "creator")
+            .map(|item| item.value.clone())
+            .collect::<Vec<String>>();
+        Ok(authors.first()?)
+    }
 }
