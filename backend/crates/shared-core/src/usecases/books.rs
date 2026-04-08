@@ -1,6 +1,6 @@
 use crate::ports::{
     filesystem::{FileSystemError, FileSystemPort},
-    metadata::MetadataProviderPort,
+    metadata::{FetchMetadataError, MetadataProviderPort},
     repository::BookRepositoryPort,
 };
 use std::{path::PathBuf, sync::Arc};
@@ -48,6 +48,8 @@ impl AddBookUseCase {
 pub enum AddBookError {
     #[error("failed to extract value from EPUB file")]
     FileSystem(#[from] FileSystemError),
+    #[error("failed to fetch metadata")]
+    Metadata(#[from] FetchMetadataError),
 }
 
 #[non_exhaustive]
