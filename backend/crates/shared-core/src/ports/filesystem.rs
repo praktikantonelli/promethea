@@ -16,5 +16,6 @@ pub trait FileSystemPort {
 }
 
 /// Error with the file system
+#[non_exhaustive]
 #[derive(thiserror::Error, Debug)]
 pub enum FileSystemError {}
