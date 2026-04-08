@@ -42,10 +42,23 @@ impl AddBookUseCase {
     pub async fn execute(&self, input: AddBookInput) -> Result<AddBookOutput, AddBookError> {
         // input: probably path to EPUB file or file itself
         // extract title and author(s)
-        // fetch metadata
-        // insert metadata into DB
-        // move file to proper location in library folder
-        Ok(AddBookOutput {})
+        let path = input.input_path;
+        let title = self.filesystem.extract_title_from_epub(&path)?;
+        let author = self.filesystem.extract_author_from_epub(&path)?;
+        let goodreads_id_opt = self.metadata.fetch_goodreads_id(&title, &author).await?;
+        if let Some(goodreads_id) = goodreads_id_opt {
+            // fetch metadata
+            let metadata = self.metadata.fetch_metadata(goodreads_id).await?;
+            // insert metadata into DB
+            self.repository.insert_book(book);
+            // move file to proper location in library folder
+            Ok(AddBookOutput {})
+        } else {
+            Err(AddBookError::Metadata(FetchMetadataError::GoodreadsId {
+                title,
+                author,
+            }))
+        }
     }
 }
 
