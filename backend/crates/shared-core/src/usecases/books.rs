@@ -1,9 +1,12 @@
-use crate::ports::{metadata::MetadataProviderPort, repository::BookRepositoryPort};
+use crate::ports::{
+    filesystem::FileSystemPort, metadata::MetadataProviderPort, repository::BookRepositoryPort,
+};
 use std::{path::PathBuf, sync::Arc};
 
 pub struct AddBookUseCase {
     repository: Arc<dyn BookRepositoryPort + Send + Sync>,
     metadata: Arc<dyn MetadataProviderPort + Send + Sync>,
+    filesystem: Arc<dyn FileSystemPort + Send + Sync>,
 }
 
 impl AddBookUseCase {
@@ -11,10 +14,12 @@ impl AddBookUseCase {
     pub fn new(
         repository: Arc<dyn BookRepositoryPort + Send + Sync>,
         metadata: Arc<dyn MetadataProviderPort + Send + Sync>,
+        filesystem: Arc<dyn FileSystemPort + Send + Sync>,
     ) -> Self {
         Self {
             repository,
             metadata,
+            filesystem,
         }
     }
     /// Adds a book to the library, including updating the DB and the file system
