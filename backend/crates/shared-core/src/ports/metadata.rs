@@ -20,4 +20,9 @@ pub trait MetadataProviderPort {
 /// Error fetching metadata for book
 #[derive(thiserror::Error, Debug)]
 #[non_exhaustive]
-pub enum FetchMetadataError {}
+pub enum FetchMetadataError {
+    #[error("failed to fetch Goodreads ID for title `{title}` and author `{author}`")]
+    GoodreadsId { title: String, author: String },
+    #[error("failed to fetch metadata for Goodreads ID `{goodreads_id}`")]
+    Metadata { goodreads_id: GoodreadsId },
+}
