@@ -9,8 +9,11 @@ use crate::{
 use std::{path::PathBuf, sync::Arc};
 
 pub struct AddBookUseCase {
+    /// book repository adapter
     repository: Arc<dyn BookRepositoryPort + Send + Sync>,
+    /// metadata fetching adapter
     metadata: Arc<dyn MetadataProviderPort + Send + Sync>,
+    /// file system adapter
     filesystem: Arc<dyn FileSystemPort + Send + Sync>,
 }
 
