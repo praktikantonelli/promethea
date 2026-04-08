@@ -41,7 +41,10 @@ impl AddBookUseCase {
 pub enum AddBookError {}
 
 #[non_exhaustive]
-pub struct AddBookInput {}
+pub struct AddBookInput {
+    /// Path to EPUB file that should be added
+    input_path: PathBuf,
+}
 
 #[non_exhaustive]
 pub struct AddBookOutput {}
