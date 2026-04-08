@@ -1,6 +1,8 @@
+use async_trait::async_trait;
 use std::path::Path;
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
+#[async_trait]
 pub trait FileSystemPort {
     async fn create_file(&self, path: &Path) -> Result<(), FileSystemError>;
 
