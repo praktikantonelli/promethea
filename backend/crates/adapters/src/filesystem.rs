@@ -1,4 +1,4 @@
-use shared_core::ports::filesystem::FileSystemPort;
+use shared_core::ports::filesystem::{FileSystemError, FileSystemPort};
 use std::path::Path;
 
 pub struct FileSystem {}
