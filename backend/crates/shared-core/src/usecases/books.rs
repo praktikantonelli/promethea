@@ -1,7 +1,10 @@
-use crate::ports::{
-    filesystem::{FileSystemError, FileSystemPort},
-    metadata::{FetchMetadataError, MetadataProviderPort},
-    repository::BookRepositoryPort,
+use crate::{
+    domain::records::BookRecord,
+    ports::{
+        filesystem::{FileSystemError, FileSystemPort},
+        metadata::{FetchMetadataError, MetadataProviderPort},
+        repository::BookRepositoryPort,
+    },
 };
 use std::{path::PathBuf, sync::Arc};
 
