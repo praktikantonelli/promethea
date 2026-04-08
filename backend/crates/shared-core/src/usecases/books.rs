@@ -26,16 +26,22 @@ impl AddBookUseCase {
     /// - error fetching metadata
     /// - error with file system
     #[inline]
-    pub async fn execute(&self) -> Result<(), AddBookError> {
+    pub async fn execute(&self, input: AddBookInput) -> Result<AddBookOutput, AddBookError> {
         // input: probably path to EPUB file or file itself
         // extract title and author(s)
         // fetch metadata
         // insert metadata into DB
         // move file to proper location in library folder
-        Ok(())
+        Ok(AddBookOutput {})
     }
 }
 
 #[derive(thiserror::Error, Debug)]
 #[non_exhaustive]
 pub enum AddBookError {}
+
+#[non_exhaustive]
+pub struct AddBookInput {}
+
+#[non_exhaustive]
+pub struct AddBookOutput {}
