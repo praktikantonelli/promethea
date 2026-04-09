@@ -1,5 +1,6 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
+use std::fmt::{Display, Formatter};
 
 use super::metadata::BookMetadata;
 
@@ -116,3 +117,9 @@ impl SeriesAndVolumeRecord {
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct GoodreadsId(i64);
+
+impl Display for GoodreadsId {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
