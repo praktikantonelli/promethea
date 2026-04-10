@@ -1,8 +1,6 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
-use super::metadata::BookMetadata;
-
 #[non_exhaustive]
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct BookRecord {
