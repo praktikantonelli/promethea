@@ -14,7 +14,7 @@ pub trait BookRepositoryPort {
     async fn try_fetch_series_sort(&self, series_title: &str)
     -> Result<Option<String>, FetchError>;
 
-    async fn insert_book(&self, book: BookRecord) -> Result<(), InsertBookError>;
+    async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertBookError>;
 
     async fn update_book(&self, book: BookRecord) -> Result<(), UpdateError>;
 
