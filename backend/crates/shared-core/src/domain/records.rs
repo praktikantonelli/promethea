@@ -54,24 +54,6 @@ impl BookRecord {
     }
 }
 
-impl From<BookMetadata> for BookRecord {
-    fn from(value: BookMetadata) -> Self {
-        let current_date = chrono::Local::now().naive_utc();
-        Self {
-            book_id: -1, // this ID is generally set by the database
-            title: value.title,
-            sort: value.title,
-            authors: value.contributors,
-            series_and_volume: value.series,
-            goodreads_id: value.goodreads_id,
-            number_of_pages: value.page_count,
-            date_added: current_date,
-            date_published: value.publication_date.unwrap_or_default().naive_utc(),
-            date_modified: current_date,
-        }
-    }
-}
-
 #[non_exhaustive]
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct AuthorRecord {
