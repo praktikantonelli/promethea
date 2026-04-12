@@ -99,6 +99,15 @@ impl SeriesAndVolumeRecord {
 pub struct GoodreadsId(i64);
 
 impl Display for GoodreadsId {
+    #[inline]
+    #[allow(
+        clippy::min_ident_chars,
+        reason = "signature is defined by Display trait"
+    )]
+    #[allow(
+        clippy::absolute_paths,
+        reason = "importing would override default Result"
+    )]
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.0)
     }
