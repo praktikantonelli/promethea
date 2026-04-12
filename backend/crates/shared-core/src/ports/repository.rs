@@ -2,7 +2,7 @@ use async_trait::async_trait;
 
 use crate::domain::{
     metadata::BookMetadata,
-    records::{AuthorRecord, BookRecord, SeriesAndVolumeRecord},
+    records::{AuthorRecord, BookRecord, GoodreadsId, SeriesAndVolumeRecord},
 };
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
