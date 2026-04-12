@@ -1,6 +1,12 @@
 use async_trait::async_trait;
+use shared_core::ports::repository::{
+    FetchError, InsertBookError, OpenRepositoryError, UpdateError,
+};
 use shared_core::{
-    domain::{metadata::BookMetadata, records::BookRecord},
+    domain::{
+        metadata::BookMetadata, records::AuthorRecord, records::BookRecord,
+        records::SeriesAndVolumeRecord,
+    },
     ports::repository::BookRepositoryPort,
 };
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
