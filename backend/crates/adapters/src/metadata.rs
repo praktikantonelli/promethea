@@ -1,3 +1,4 @@
+use async_trait::async_trait;
 use reqwest::{ClientBuilder, header};
 use scraper::{Html, Selector};
 use shared_core::domain::metadata::BookMetadata;
@@ -9,6 +10,7 @@ pub struct MetadataProvider {
     http_client: reqwest::Client,
 }
 
+#[async_trait]
 impl MetadataProviderPort for MetadataProvider {
     async fn fetch_goodreads_id(
         &self,

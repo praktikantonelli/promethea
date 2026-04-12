@@ -1,9 +1,11 @@
+use async_trait::async_trait;
 use epub::doc::EpubDoc;
 use shared_core::ports::filesystem::{FileSystemError, FileSystemPort};
 use std::path::Path;
 
 pub struct FileSystem {}
 
+#[async_trait]
 impl FileSystemPort for FileSystem {
     async fn create_file(&self, path: &Path) -> Result<(), FileSystemError> {}
 
