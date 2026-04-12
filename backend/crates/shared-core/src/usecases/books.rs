@@ -66,6 +66,8 @@ pub enum AddBookError {
     FileSystem(#[from] FileSystemError),
     #[error("failed to fetch metadata")]
     Metadata(#[from] FetchMetadataError),
+    #[error("failed to insert book into repository")]
+    RepositoryError(#[from] InsertBookError),
 }
 
 #[non_exhaustive]
