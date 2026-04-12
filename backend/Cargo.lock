@@ -6,6 +6,7 @@ version = 4
 name = "adapters"
 version = "0.1.0"
 dependencies = [
+ "epub",
  "reqwest 0.13.2",
  "scraper 0.26.0",
  "shared-core",
@@ -5128,7 +5129,6 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "chrono",
- "epub",
  "serde",
  "sqlx",
  "thiserror 2.0.17",
