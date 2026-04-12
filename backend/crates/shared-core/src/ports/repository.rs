@@ -31,10 +31,10 @@ pub trait BookRepositoryPort {
 #[non_exhaustive]
 pub enum InsertBookError {
     /// The book already exists in the repository
-    #[error("book with title `{title}` already exists")]
+    #[error("book with Goodreads ID `{goodreads_id}` already exists")]
     Conflict {
-        /// Title of the duplicated book
-        title: String,
+        /// Goodrads ID of the duplicated book
+        goodreads_id: GoodreadsId,
     },
 
     /// The repository is unavailable
