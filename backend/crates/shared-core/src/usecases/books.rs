@@ -77,4 +77,4 @@ pub struct AddBookInput {
 }
 
 #[non_exhaustive]
-pub struct AddBookOutput {}
+pub struct AddBookOutput;
