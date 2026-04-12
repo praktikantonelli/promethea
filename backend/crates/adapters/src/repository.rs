@@ -137,7 +137,9 @@ impl BookRepositoryPort for Database {
             Err(error) => {
                 if is_sqlite_unique_violation(&error) {
                     tx.rollback().await?;
-                    return Err(InsertBookError::BookAlreadyExists(book.goodreads_id));
+                    return Err(InsertBookError::Conflict {
+                        goodreads_id: book.goodreads_id.unwrap(),
+                    });
                 }
                 return Err(InsertBookError::Db(error));
             }
