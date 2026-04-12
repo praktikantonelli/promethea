@@ -1,3 +1,4 @@
+use async_trait::async_trait;
 use shared_core::{
     domain::{metadata::BookMetadata, records::BookRecord},
     ports::repository::BookRepositoryPort,
@@ -8,6 +9,7 @@ pub struct Database {
     pool: SqlitePool,
 }
 
+#[async_trait]
 impl BookRepositoryPort for Database {
     async fn close(&self) {
         self.pool.close().await;
