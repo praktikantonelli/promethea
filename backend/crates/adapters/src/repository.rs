@@ -226,8 +226,13 @@ impl Database {
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
             .filename(path);
-        let pool = SqlitePool::connect_with(options).await?;
-        sqlx::migrate!().run(&pool).await?;
+        let pool = SqlitePool::connect_with(options)
+            .await
+            .map_err(RepositoryAdapterError::from)?;
+        sqlx::migrate!()
+            .run(&pool)
+            .await
+            .map_err(RepositoryAdapterError::from)?;
 
         Ok(Self { pool })
     }
