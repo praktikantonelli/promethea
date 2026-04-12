@@ -47,7 +47,7 @@ impl AddBookUseCase {
             // fetch metadata
             let metadata = self.metadata.fetch_metadata(goodreads_id).await?;
             // insert metadata into DB
-            self.repository.insert_book(book);
+            self.repository.insert_book(metadata).await?;
             // move file to proper location in library folder
             Ok(AddBookOutput {})
         } else {
