@@ -141,7 +141,7 @@ impl BookRepositoryPort for Database {
                         goodreads_id: book.goodreads_id.unwrap(),
                     });
                 }
-                return Err(InsertBookError::Db(error));
+                return Err(InsertBookError::Unavailable);
             }
         };
 
