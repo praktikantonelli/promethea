@@ -232,3 +232,34 @@ impl Database {
         Ok(Self { pool })
     }
 }
+
+/// Checks a returned `sqlx` error to see whether it is because of a unique constraint being
+/// violated by checking the error's attached message.
+#[allow(
+    clippy::pattern_type_mismatch,
+    reason = "False positive, this is the idiomatic pattern"
+)]
+fn is_sqlite_unique_violation(error: &sqlx::Error) -> bool {
+    // Check for unique violation by searching for matching text in error message
+    if let sqlx::Error::Database(db_err) = error {
+        db_err.message().contains("UNIQUE constraint failed")
+    } else {
+        false
+    }
+}
+
+#[derive(Debug, thiserror::Error)]
+enum RepositoryAdapterError {
+    #[error(transparent)]
+    SqlxError(#[from] sqlx::Error),
+    #[error(transparent)]
+    MigrateError(#[from] sqlx::migrate::MigrateError),
+}
+
+impl From<RepositoryAdapterError> for OpenRepositoryError {
+    fn from(value: RepositoryAdapterError) -> Self {}
+}
+
+impl From<RepositoryAdapterError> for InsertBookError {
+    fn from(value: RepositoryAdapterError) -> Self {}
+}
