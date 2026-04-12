@@ -25,6 +25,7 @@ scraper = "0.26.0"
 urlencoding = "2.1.3"
 epub = "2.1.5"
 async-trait = "0.1.89"
+thiserror = "2.0.18"
 
 [lints]
 workspace = true
