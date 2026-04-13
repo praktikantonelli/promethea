@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use std::path::PathBuf;
 
 use crate::domain::{
     metadata::BookMetadata,
@@ -45,7 +46,14 @@ pub enum InsertBookError {
 /// Error when trying to open an existing repository
 #[derive(thiserror::Error, Debug)]
 #[non_exhaustive]
-pub enum OpenRepositoryError {}
+pub enum OpenRepositoryError {
+    /// Path not available (e.g., file doesn't exist)
+    #[error("repository at `{path}` not found")]
+    Path { path: PathBuf },
+
+    #[error("failed to run initialize repository")]
+    Initialization,
+}
 
 /// Error fetching data from the repository
 #[derive(thiserror::Error, Debug)]
