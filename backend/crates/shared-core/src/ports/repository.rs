@@ -33,7 +33,7 @@ pub enum InsertBookError {
     /// The book already exists in the repository
     #[error("book with Goodreads ID `{goodreads_id}` already exists")]
     Conflict {
-        /// Goodrads ID of the duplicated book
+        /// Goodreads ID of the duplicated book
         goodreads_id: GoodreadsId,
     },
 
