@@ -257,19 +257,3 @@ fn is_sqlite_unique_violation(error: &sqlx::Error) -> bool {
         false
     }
 }
-
-#[derive(Debug, thiserror::Error)]
-enum RepositoryAdapterError {
-    #[error(transparent)]
-    SqlxError(#[from] sqlx::Error),
-    #[error(transparent)]
-    MigrateError(#[from] sqlx::migrate::MigrateError),
-}
-
-impl From<RepositoryAdapterError> for OpenRepositoryError {
-    fn from(value: RepositoryAdapterError) -> Self {}
-}
-
-impl From<RepositoryAdapterError> for InsertBookError {
-    fn from(value: RepositoryAdapterError) -> Self {}
-}
