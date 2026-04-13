@@ -79,14 +79,20 @@ impl BookRepositoryPort for Database {
         ",
         )
         .fetch_all(&self.pool)
-        .await?;
+        .await
+        .map_err(|error| FetchError::Generic {
+            message: error.to_string(),
+        })?;
         Ok(books)
     }
 
     async fn try_fetch_author_sort(&self, author_name: &str) -> Result<Option<String>, FetchError> {
         let sort = sqlx::query!("SELECT sort FROM authors WHERE name LIKE ?", author_name)
             .fetch_one(&self.pool)
-            .await?
+            .await
+            .map_err(|error| FetchError::Generic {
+                message: error.to_string(),
+            })?
             .sort;
 
         Ok(Some(sort))
@@ -98,7 +104,10 @@ impl BookRepositoryPort for Database {
     ) -> Result<Option<String>, FetchError> {
         let sort = sqlx::query!("SELECT sort FROM series WHERE name LIKE ?", series_title)
             .fetch_one(&self.pool)
-            .await?
+            .await
+            .map_err(|error| FetchError::Generic {
+                message: error.to_string(),
+            })?
             .sort;
         Ok(Some(sort))
     }
