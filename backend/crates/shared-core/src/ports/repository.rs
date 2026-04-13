@@ -58,9 +58,15 @@ pub enum OpenRepositoryError {
 /// Error fetching data from the repository
 #[derive(thiserror::Error, Debug)]
 #[non_exhaustive]
-pub enum FetchError {}
+pub enum FetchError {
+    #[error("failed to run fetch query: `{message}`")]
+    Generic { message: String },
+}
 
 /// Error updating data in the repository
 #[derive(thiserror::Error, Debug)]
 #[non_exhaustive]
-pub enum UpdateError {}
+pub enum UpdateError {
+    #[error("failed to run update query: `{message}`")]
+    Generic { message: String },
+}
