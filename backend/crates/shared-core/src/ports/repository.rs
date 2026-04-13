@@ -2,8 +2,8 @@ use async_trait::async_trait;
 use std::path::PathBuf;
 
 use crate::domain::{
-    metadata::BookMetadata,
-    records::{AuthorRecord, BookRecord, GoodreadsId, SeriesAndVolumeRecord},
+    metadata::{BookMetadata, GoodreadsId},
+    records::{AuthorRecord, BookRecord, SeriesAndVolumeRecord},
 };
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
