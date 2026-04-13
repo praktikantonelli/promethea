@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use async_trait::async_trait;
 use shared_core::ports::repository::{
     FetchError, InsertBookError, OpenRepositoryError, UpdateError,
@@ -226,13 +228,16 @@ impl Database {
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
             .filename(path);
-        let pool = SqlitePool::connect_with(options)
-            .await
-            .map_err(RepositoryAdapterError::from)?;
+        let pool =
+            SqlitePool::connect_with(options)
+                .await
+                .map_err(|_err| OpenRepositoryError::Path {
+                    path: PathBuf::from(path),
+                })?;
         sqlx::migrate!()
             .run(&pool)
             .await
-            .map_err(RepositoryAdapterError::from)?;
+            .map_err(|_err| OpenRepositoryError::Initialization)?;
 
         Ok(Self { pool })
     }
