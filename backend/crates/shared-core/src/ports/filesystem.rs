@@ -41,6 +41,13 @@ pub enum FileSystemError {
     Move {
         source_path: PathBuf,
         target_path: PathBuf,
+        message: String,
+    },
+    #[error("could not copy file from `{source_path}` to `{target_path}`: `{message}`")]
+    Copy {
+        source_path: PathBuf,
+        target_path: PathBuf,
+        message: String,
     },
     #[error("could not delete file at `{path}`")]
     Delete { path: PathBuf },
