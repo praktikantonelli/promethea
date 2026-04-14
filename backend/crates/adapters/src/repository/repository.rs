@@ -22,7 +22,7 @@ impl BookRepositoryPort for Database {
         self.pool.close().await;
     }
 
-    async fn fetch_all_books(&self) -> Result<Vec<BookRecord>, FetchError> {
+    async fn fetch_all_books(&self) -> Result<Vec<BookItem>, FetchError> {
         let books: Vec<BookRecord> = sqlx::query_as(
             "WITH series_info AS (
                 SELECT 
@@ -224,11 +224,11 @@ impl BookRepositoryPort for Database {
         Ok(())
     }
 
-    async fn update_book(&self, book: BookRecord) -> Result<(), UpdateError> {}
+    async fn update_book(&self, book: BookItem) -> Result<(), UpdateError> {}
 
-    async fn update_series(&self, series: SeriesAndVolumeRecord) -> Result<(), UpdateError> {}
+    async fn update_series(&self, series: SeriesAndVolumeItem) -> Result<(), UpdateError> {}
 
-    async fn update_author(&self, author: AuthorRecord) -> Result<(), UpdateError> {}
+    async fn update_author(&self, author: AuthorItem) -> Result<(), UpdateError> {}
 }
 
 impl Database {
