@@ -1,24 +1,6 @@
 use crate::domain::repository::GoodreadsId;
 use chrono::{DateTime, Utc};
-use std::fmt::{Display, Formatter};
 
-#[derive(Debug, PartialEq, Eq)]
-pub struct GoodreadsId(i64);
-
-impl Display for GoodreadsId {
-    #[inline]
-    #[allow(
-        clippy::min_ident_chars,
-        reason = "signature is defined by Display trait"
-    )]
-    #[allow(
-        clippy::absolute_paths,
-        reason = "importing would override default Result"
-    )]
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
 /// The primary data structure containing the metadata of a book.
 #[non_exhaustive]
 #[derive(Debug, PartialEq)]
