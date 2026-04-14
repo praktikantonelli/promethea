@@ -59,11 +59,11 @@ impl MetadataProviderPort for MetadataProvider {
         };
         let amazon_id = extract_amazon_id(&json, &goodreads_id);
         let (title, subtitle) = extract_title_and_subtitle(&json, &amazon_id);
-        let image_url = extract_image_url(&metadata, &amazon_id);
-        let contributors = extract_contributors(&metadata, &amazon_id);
-        let publication_date = extract_publication_date(&metadata, &amazon_id);
-        let page_count = extract_page_count(&metadata, &amazon_id);
-        let series = extract_series(&metadata, &amazon_id);
+        let image_url = extract_image_url(&json, &amazon_id);
+        let contributors = extract_contributors(&json, &amazon_id);
+        let publication_date = extract_publication_date(&json, &amazon_id);
+        let page_count = extract_page_count(&json, &amazon_id);
+        let series = extract_series(&json, &amazon_id);
 
         Ok(BookMetadata {
             title,
