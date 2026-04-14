@@ -9,7 +9,6 @@ use shared_core::domain::{
 use shared_core::ports::repository::{
     BookRepositoryPort, FetchError, InsertBookError, OpenRepositoryError, UpdateError,
 };
-use shared_core::{domain::metadata::BookMetadata, ports::repository::BookRepositoryPort};
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 
 pub struct Database {
