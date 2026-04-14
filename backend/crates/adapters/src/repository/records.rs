@@ -127,5 +127,7 @@ impl SeriesAndVolumeRecord {
 }
 
 impl From<SeriesAndVolumeRecord> for SeriesAndVolumeItem {
-    fn from(value: SeriesAndVolumeRecord) -> Self {}
+    fn from(value: SeriesAndVolumeRecord) -> Self {
+        Self::new(value.series, value.sort, value.volume, value.goodreads_id)
+    }
 }
