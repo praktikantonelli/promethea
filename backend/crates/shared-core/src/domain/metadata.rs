@@ -1,3 +1,4 @@
+use crate::domain::repository::GoodreadsId;
 use chrono::{DateTime, Utc};
 use std::fmt::{Display, Formatter};
 
