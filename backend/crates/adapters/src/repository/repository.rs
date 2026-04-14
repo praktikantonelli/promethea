@@ -81,7 +81,7 @@ impl BookRepositoryPort for Database {
         .map_err(|error| FetchError::Generic {
             message: error.to_string(),
         })?;
-        Ok(books)
+        Ok(books.into_iter().map(Into::into).collect())
     }
 
     async fn try_fetch_author_sort(&self, author_name: &str) -> Result<Option<String>, FetchError> {
