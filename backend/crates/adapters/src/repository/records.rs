@@ -1,5 +1,6 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
+use shared_core::domain::repository::{AuthorItem, BookItem, SeriesAndVolumeItem};
 
 #[non_exhaustive]
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
@@ -52,6 +53,10 @@ impl BookRecord {
     }
 }
 
+impl From<BookRecord> for BookItem {
+    fn from(value: BookRecord) -> Self {}
+}
+
 #[non_exhaustive]
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
 pub struct AuthorRecord {
@@ -70,6 +75,10 @@ impl AuthorRecord {
             goodreads_id,
         }
     }
+}
+
+impl From<AuthorRecord> for AuthorItem {
+    fn from(value: AuthorRecord) -> Self {}
 }
 
 #[non_exhaustive]
@@ -92,4 +101,8 @@ impl SeriesAndVolumeRecord {
             goodreads_id,
         }
     }
+}
+
+impl From<SeriesAndVolumeRecord> for SeriesAndVolumeItem {
+    fn from(value: SeriesAndVolumeRecord) -> Self {}
 }
