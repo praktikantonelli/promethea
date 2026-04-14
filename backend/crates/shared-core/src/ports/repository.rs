@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use crate::domain::{
     metadata::{BookMetadata, GoodreadsId},
-    records::{AuthorRecord, BookRecord, SeriesAndVolumeRecord},
+    repository::{AuthorItem, BookItem, SeriesAndVolumeItem},
 };
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
@@ -11,7 +11,7 @@ use crate::domain::{
 pub trait BookRepositoryPort {
     async fn close(&self);
 
-    async fn fetch_all_books(&self) -> Result<Vec<BookRecord>, FetchError>;
+    async fn fetch_all_books(&self) -> Result<Vec<BookItem>, FetchError>;
 
     async fn try_fetch_author_sort(&self, author_name: &str) -> Result<Option<String>, FetchError>;
 
@@ -20,11 +20,11 @@ pub trait BookRepositoryPort {
 
     async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertBookError>;
 
-    async fn update_book(&self, book: BookRecord) -> Result<(), UpdateError>;
+    async fn update_book(&self, book: BookItem) -> Result<(), UpdateError>;
 
-    async fn update_series(&self, series: SeriesAndVolumeRecord) -> Result<(), UpdateError>;
+    async fn update_series(&self, series: SeriesAndVolumeItem) -> Result<(), UpdateError>;
 
-    async fn update_author(&self, author: AuthorRecord) -> Result<(), UpdateError>;
+    async fn update_author(&self, author: AuthorItem) -> Result<(), UpdateError>;
 }
 
 /// Error when trying to add a new book to the repository
