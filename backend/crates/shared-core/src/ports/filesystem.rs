@@ -33,4 +33,6 @@ pub trait FileSystemPort {
 pub enum FileSystemError {
     #[error("error in file system: `{message}`")]
     Generic { message: String },
+    #[error("value not found: `{message}`")]
+    Value { message: String },
 }

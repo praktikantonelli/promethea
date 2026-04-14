@@ -21,8 +21,8 @@ impl FileSystemPort for FileSystem {
                 message: error.to_string(),
             })?
             .get_title()
-            .ok_or(FileSystemError::Generic {
-                message: "Failed to extract title".into(),
+            .ok_or(FileSystemError::Value {
+                message: format!("Could not extract title from {path:?}"),
             })
     }
 
