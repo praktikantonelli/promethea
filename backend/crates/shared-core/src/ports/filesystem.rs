@@ -49,6 +49,6 @@ pub enum FileSystemError {
         target_path: PathBuf,
         message: String,
     },
-    #[error("could not delete file at `{path}`")]
-    Delete { path: PathBuf },
+    #[error("could not delete file at `{path}`: `{message}`")]
+    Delete { path: PathBuf, message: String },
 }
