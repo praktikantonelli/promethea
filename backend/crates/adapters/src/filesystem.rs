@@ -27,7 +27,9 @@ impl FileSystemPort for FileSystem {
     }
 
     fn extract_author_from_epub(&self, path: &Path) -> Result<String, FileSystemError> {
-        let doc = EpubDoc::new(path)?;
+        let doc = EpubDoc::new(path).map_err(|error| FileSystemError::Generic {
+            message: error.to_string(),
+        })?;
         let authors = doc
             .metadata
             .iter()
