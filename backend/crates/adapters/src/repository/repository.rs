@@ -1,16 +1,11 @@
 use std::path::PathBuf;
 
+use super::records::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 use async_trait::async_trait;
 use shared_core::ports::repository::{
     FetchError, InsertBookError, OpenRepositoryError, UpdateError,
 };
-use shared_core::{
-    domain::{
-        metadata::BookMetadata, records::AuthorRecord, records::BookRecord,
-        records::SeriesAndVolumeRecord,
-    },
-    ports::repository::BookRepositoryPort,
-};
+use shared_core::{domain::metadata::BookMetadata, ports::repository::BookRepositoryPort};
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 
 pub struct Database {
