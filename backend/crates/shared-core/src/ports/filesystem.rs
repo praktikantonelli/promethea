@@ -35,9 +35,9 @@ pub enum FileSystemError {
     Generic { message: String },
     #[error("value not found: `{message}`")]
     Value { message: String },
-    #[error("could not create file at `{path}`")]
-    Creation { path: PathBuf },
-    #[error("could not move file from `{source_path}` to `{target_path}`")]
+    #[error("could not create file at `{path}`: `{message}`")]
+    Creation { path: PathBuf, message: String },
+    #[error("could not move file from `{source_path}` to `{target_path}`: `{message}`")]
     Move {
         source_path: PathBuf,
         target_path: PathBuf,
