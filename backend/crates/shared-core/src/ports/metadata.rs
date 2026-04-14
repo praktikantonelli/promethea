@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 
-use crate::domain::metadata::{BookMetadata, GoodreadsId};
+use crate::domain::metadata::BookMetadata;
+use crate::domain::repository::GoodreadsId;
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 #[async_trait]
