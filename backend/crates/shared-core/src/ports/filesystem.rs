@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 #[async_trait]
@@ -35,4 +35,13 @@ pub enum FileSystemError {
     Generic { message: String },
     #[error("value not found: `{message}`")]
     Value { message: String },
+    #[error("could not create file at `{path}`")]
+    Creation { path: PathBuf },
+    #[error("could not move file from `{source_path}` to `{target_path}`")]
+    Move {
+        source_path: PathBuf,
+        target_path: PathBuf,
+    },
+    #[error("could not delete file at `{path}`")]
+    Delete { path: PathBuf },
 }
