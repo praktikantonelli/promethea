@@ -54,7 +54,28 @@ impl BookRecord {
 }
 
 impl From<BookRecord> for BookItem {
-    fn from(value: BookRecord) -> Self {}
+    fn from(value: BookRecord) -> Self {
+        Self::new(
+            value.book_id,
+            value.title,
+            value.sort,
+            value
+                .authors
+                .iter()
+                .map(|element| element.to_owned().into())
+                .collect::<Vec<AuthorItem>>(),
+            value
+                .series_and_volume
+                .iter()
+                .map(|element| element.to_owned().into())
+                .collect::<Vec<SeriesAndVolumeItem>>(),
+            value.number_of_pages,
+            value.goodreads_id,
+            value.date_added,
+            value.date_published,
+            value.date_modified,
+        )
+    }
 }
 
 #[non_exhaustive]
