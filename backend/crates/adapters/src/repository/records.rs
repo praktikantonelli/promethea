@@ -1,6 +1,5 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
-use std::fmt::{Display, Formatter};
 
 #[non_exhaustive]
 #[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
