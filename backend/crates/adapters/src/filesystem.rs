@@ -1,13 +1,18 @@
 use async_trait::async_trait;
 use epub::doc::EpubDoc;
 use shared_core::ports::filesystem::{FileSystemError, FileSystemPort};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 pub struct FileSystem {}
 
 #[async_trait]
 impl FileSystemPort for FileSystem {
-    async fn create_file(&self, path: &Path) -> Result<(), FileSystemError> {}
+    async fn create_file(&self, path: &Path) -> Result<(), FileSystemError> {
+        std::fs::File::create_new(path).map_err(|_error| FileSystemError::Creation {
+            path: PathBuf::from(path),
+        })?;
+        Ok(())
+    }
 
     async fn move_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError> {}
 
