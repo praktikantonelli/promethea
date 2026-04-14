@@ -99,7 +99,9 @@ impl AuthorRecord {
 }
 
 impl From<AuthorRecord> for AuthorItem {
-    fn from(value: AuthorRecord) -> Self {}
+    fn from(value: AuthorRecord) -> Self {
+        Self::new(value.name, value.sort, value.goodreads_id)
+    }
 }
 
 #[non_exhaustive]
