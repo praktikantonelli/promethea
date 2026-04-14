@@ -22,7 +22,14 @@ impl FileSystemPort for FileSystem {
         Ok(())
     }
 
-    async fn copy_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError> {}
+    async fn copy_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError> {
+        std::fs::copy(source, target).map_err(|error| FileSystemError::Copy {
+            source_path: PathBuf::from(source),
+            target_path: PathBuf::from(target),
+            message: error.to_string(),
+        })?;
+        Ok(())
+    }
 
     async fn delete_file(&self, path: &Path) -> Result<(), FileSystemError> {}
 
