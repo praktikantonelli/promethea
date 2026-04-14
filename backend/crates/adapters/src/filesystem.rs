@@ -36,6 +36,11 @@ impl FileSystemPort for FileSystem {
             .filter(|item| item.property == "creator")
             .map(|item| item.value.clone())
             .collect::<Vec<String>>();
-        Ok(authors.first()?)
+        authors
+            .first()
+            .ok_or(FileSystemError::Value {
+                message: format!("Could not extract author from {path:?}"),
+            })
+            .cloned()
     }
 }
