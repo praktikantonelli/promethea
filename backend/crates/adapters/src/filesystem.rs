@@ -8,16 +8,18 @@ pub struct FileSystem {}
 #[async_trait]
 impl FileSystemPort for FileSystem {
     async fn create_file(&self, path: &Path) -> Result<(), FileSystemError> {
-        std::fs::File::create_new(path).map_err(|_error| FileSystemError::Creation {
+        std::fs::File::create_new(path).map_err(|error| FileSystemError::Creation {
             path: PathBuf::from(path),
+            message: error.to_string(),
         })?;
         Ok(())
     }
 
     async fn move_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError> {
-        std::fs::rename(source, target).map_err(|_error| FileSystemError::Move {
+        std::fs::rename(source, target).map_err(|error| FileSystemError::Move {
             source_path: PathBuf::from(source),
             target_path: PathBuf::from(target),
+            message: error.to_string(),
         })?;
         Ok(())
     }
