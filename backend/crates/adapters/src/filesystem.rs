@@ -14,7 +14,13 @@ impl FileSystemPort for FileSystem {
         Ok(())
     }
 
-    async fn move_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError> {}
+    async fn move_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError> {
+        std::fs::rename(source, target).map_err(|_error| FileSystemError::Move {
+            source_path: PathBuf::from(source),
+            target_path: PathBuf::from(target),
+        })?;
+        Ok(())
+    }
 
     async fn copy_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError> {}
 
