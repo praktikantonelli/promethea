@@ -2,8 +2,12 @@ use std::path::PathBuf;
 
 use super::records::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 use async_trait::async_trait;
+use shared_core::domain::{
+    metadata::BookMetadata,
+    repository::{AuthorItem, BookItem, SeriesAndVolumeItem},
+};
 use shared_core::ports::repository::{
-    FetchError, InsertBookError, OpenRepositoryError, UpdateError,
+    BookRepositoryPort, FetchError, InsertBookError, OpenRepositoryError, UpdateError,
 };
 use shared_core::{domain::metadata::BookMetadata, ports::repository::BookRepositoryPort};
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
