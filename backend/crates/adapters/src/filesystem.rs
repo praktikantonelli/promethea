@@ -33,7 +33,13 @@ impl FileSystemPort for FileSystem {
         Ok(())
     }
 
-    async fn delete_file(&self, path: &Path) -> Result<(), FileSystemError> {}
+    async fn delete_file(&self, path: &Path) -> Result<(), FileSystemError> {
+        std::fs::remove_file(path).map_err(|error| FileSystemError::Delete {
+            path: PathBuf::from(path),
+            message: error.to_string(),
+        })?;
+        Ok(())
+    }
 
     fn extract_title_from_epub(&self, path: &Path) -> Result<String, FileSystemError> {
         EpubDoc::new(path)
