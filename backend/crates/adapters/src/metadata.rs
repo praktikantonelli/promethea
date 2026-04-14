@@ -78,7 +78,7 @@ impl MetadataProviderPort for MetadataProvider {
 }
 
 fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, ExtractError> {
-    url.splitn(4, '/')
+    link.splitn(4, '/')
         .nth(3)
         .unwrap_or("")
         .split('?')
