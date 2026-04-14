@@ -3,7 +3,7 @@ use reqwest::{ClientBuilder, header};
 use scraper::{Html, Selector};
 use shared_core::domain::metadata::BookMetadata;
 use shared_core::domain::repository::GoodreadsId;
-use shared_core::ports::metadata::MetadataProviderPort;
+use shared_core::ports::metadata::{FetchMetadataError, MetadataProviderPort};
 use urlencoding::encode;
 
 pub struct MetadataProvider {
