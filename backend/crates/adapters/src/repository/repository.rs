@@ -111,7 +111,11 @@ impl BookRepositoryPort for Database {
     }
 
     async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertBookError> {
-        let mut tx: Transaction<'_, Sqlite> = self.pool.begin().await?;
+        let mut tx: Transaction<'_, Sqlite> = self
+            .pool
+            .begin()
+            .await
+            .map_err(|_error| InsertBookError::Unavailable)?;
 
         let book_goodreads_id = book.goodreads_id;
         let number_of_pages = book.number_of_pages;
