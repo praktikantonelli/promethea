@@ -110,3 +110,11 @@ impl Display for GoodreadsId {
         write!(f, "{}", self.0)
     }
 }
+
+impl GoodreadsId {
+    #[must_use]
+    #[inline]
+    pub const fn new(id: i64) -> Self {
+        Self(id)
+    }
+}

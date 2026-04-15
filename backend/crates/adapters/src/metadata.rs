@@ -260,11 +260,7 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
         warn!("Failed to parse contributor");
     }
 
-    name.map(|n| BookContributor {
-        name: n,
-        role,
-        goodreads_id,
-    })
+    name.map(|n| BookContributor::new(&n, &role, GoodreadsId::new(goodreads_id.parse::<i64>()?)))
 }
 
 fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
