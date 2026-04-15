@@ -28,4 +28,6 @@ pub enum FetchMetadataError {
     Metadata { goodreads_id: GoodreadsId },
     #[error("failed to extract value for key `{key}`: `{message}`")]
     Extraction { key: String, message: String },
+    #[error("failed setup in stage `{stage}`: `{message}`")]
+    Setup { stage: String, message: String },
 }
