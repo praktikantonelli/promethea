@@ -254,25 +254,20 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
-    let Some(goodreads_id) = metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"]
-        .as_i64()
-        .map(|x| x.to_string())
-        .or_else(|| {
-            let id = metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"].as_str()?;
-            id.strip_prefix("https://www.goodreads.com/author/show/")
-                .and_then(|rest| rest.split('.').next())
-                .map(str::to_owned)
-        })
-    else {
-        warn!("Failed to parse Goodreads ID");
-        return None;
-    };
+    let goodreads_id =
+        match metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"].as_i64() {
+            Some(id) => GoodreadsId::new(id),
+            None => {
+                let url = metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"].as_str()?;
+                extract_goodreads_id_from_link(url).ok()?
+            }
+        };
 
     if name.is_none() {
         warn!("Failed to parse contributor");
     }
 
-    name.map(|n| BookContributor::new(&n, &role, GoodreadsId::new(goodreads_id.parse::<i64>()?)))
+    name.map(|n| BookContributor::new(&n, &role, goodreads_id))
 }
 
 fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
