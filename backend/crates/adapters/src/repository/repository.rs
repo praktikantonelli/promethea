@@ -183,7 +183,12 @@ impl BookRepositoryPort for Database {
                 author_goodreads_id.0
             )
             .fetch_one(&mut *tx)
-            .await?
+            .await
+            .map_err(|error| InsertBookError::Entity {
+                entity: "author".into(),
+                name: author_record.name.clone(),
+                message: error.to_string(),
+            })?
             .id;
 
             sqlx::query!(
