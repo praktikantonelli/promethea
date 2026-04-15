@@ -87,14 +87,25 @@ impl MetadataProviderPort for MetadataProvider {
 }
 
 fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, FetchMetadataError> {
-    link.splitn(4, '/')
-        .nth(3)
-        .unwrap_or("")
-        .split('?')
-        .next()?
-        .chars()
-        .take_while(|character| character.is_numeric())
-        .collect::<String>()
+    Ok(GoodreadsId::new(
+        link.splitn(4, '/')
+            .nth(3)
+            .unwrap_or("")
+            .split('?')
+            .next()
+            .ok_or(FetchMetadataError::Extraction {
+                key: "Goodreads ID".to_owned(),
+                message: "failed to extract Goodreads ID from URL".to_owned(),
+            })?
+            .chars()
+            .take_while(|character| character.is_numeric())
+            .collect::<String>()
+            .parse::<i64>()
+            .map_err(|error| FetchMetadataError::Extraction {
+                key: "Goodreads ID".to_owned(),
+                message: error.to_string(),
+            })?,
+    ))
 }
 
 fn matches(str1: &str, str2: &str) -> bool {
