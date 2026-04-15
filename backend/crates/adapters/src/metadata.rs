@@ -344,11 +344,7 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
                 return None;
             };
 
-            Some(BookSeries {
-                title,
-                number,
-                goodreads_id,
-            })
+            Some(BookSeries::new(&title, number, goodreads_id))
         })
         .collect::<Vec<BookSeries>>();
     series_info
