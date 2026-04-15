@@ -93,7 +93,8 @@ impl SeriesAndVolumeItem {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-pub struct GoodreadsId(i64);
+#[non_exhaustive]
+pub struct GoodreadsId(pub i64);
 
 impl Display for GoodreadsId {
     #[inline]
