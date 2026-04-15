@@ -92,7 +92,7 @@ impl SeriesAndVolumeItem {
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 #[non_exhaustive]
 pub struct GoodreadsId(pub i64);
 
