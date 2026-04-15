@@ -258,7 +258,9 @@ impl BookRepositoryPort for Database {
                 message: error.to_string(),
             })?;
         }
-        tx.commit().await?;
+        tx.commit()
+            .await
+            .map_err(|_error| InsertBookError::Unavailable)?;
 
         Ok(())
     }
