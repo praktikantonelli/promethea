@@ -26,8 +26,24 @@ impl MetadataProviderPort for MetadataProvider {
         let query = format!("{} {}", title, author);
         let url = format!("https://www.goodreads.com/search?q={}", encode(&query));
 
-        let document =
-            Html::parse_document(&self.http_client.get(&url).send().await?.text().await?);
+        let document = Html::parse_document(
+            &self
+                .http_client
+                .get(&url)
+                .send()
+                .await
+                .map_err(|error| FetchMetadataError::Request {
+                    request_type: "GET".to_string(),
+                    url: url.to_string(),
+                    message: error.to_string(),
+                })?
+                .text()
+                .await
+                .map_err(|error| FetchMetadataError::Extraction {
+                    key: "HTTP Response".to_string(),
+                    message: error.to_string(),
+                })?,
+        );
         let title_selector = Selector::parse(r#"a[class="bookTitle"]"#).map_err(|error| {
             FetchMetadataError::Setup {
                 stage: "Title CSS Selector".to_owned(),
@@ -47,7 +63,14 @@ impl MetadataProviderPort for MetadataProvider {
         {
             let found_title = title_element.text().collect::<String>();
             let found_author = author_element.text().collect::<String>();
-            let found_link = title_element.value().attr("href")?;
+            let found_link =
+                title_element
+                    .value()
+                    .attr("href")
+                    .ok_or(FetchMetadataError::Extraction {
+                        key: "link".to_owned(),
+                        message: "no key named `href`".to_owned(),
+                    })?;
             let found_id = extract_goodreads_id_from_link(found_link)?;
 
             if matches(&found_title, &title) && matches(&found_author, &author) {
@@ -62,8 +85,24 @@ impl MetadataProviderPort for MetadataProvider {
         goodreads_id: GoodreadsId,
     ) -> Result<BookMetadata, FetchMetadataError> {
         let url = format!("https://www.goodreads.com/book/show/{goodreads_id}");
-        let document =
-            Html::parse_document(&self.http_client.get(&url).send().await?.text().await?);
+        let document = Html::parse_document(
+            &self
+                .http_client
+                .get(&url)
+                .send()
+                .await
+                .map_err(|error| FetchMetadataError::Request {
+                    request_type: "GET".to_owned(),
+                    url: url.to_owned(),
+                    message: error.to_string(),
+                })?
+                .text()
+                .await
+                .map_err(|error| FetchMetadataError::Extraction {
+                    key: "HTTP response".to_owned(),
+                    message: error.to_string(),
+                })?,
+        );
         let json_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#).map_err(|error| {
             FetchMetadataError::Setup {
                 stage: "JSON CSS Selector".to_owned(),
@@ -72,15 +111,20 @@ impl MetadataProviderPort for MetadataProvider {
         })?;
         let json = &document.select(&json_selector).next();
 
-        let json = match *json {
-            None => {
-                return Err(FetchMetadataError::Extraction {
-                    key: "JSON".into(),
-                    message: "no metadata JSON in Goodreads page".into(),
-                });
-            }
-            Some(element) => serde_json::from_str(&element.text().collect::<String>())?,
-        };
+        let json =
+            match *json {
+                None => {
+                    return Err(FetchMetadataError::Extraction {
+                        key: "JSON".into(),
+                        message: "no metadata JSON in Goodreads page".into(),
+                    });
+                }
+                Some(element) => serde_json::from_str(&element.text().collect::<String>())
+                    .map_err(|error| FetchMetadataError::Setup {
+                        stage: "Parse JSON from String".to_owned(),
+                        message: error.to_string(),
+                    })?,
+            };
         let amazon_id = extract_amazon_id(&json, &goodreads_id)?;
         let (title, subtitle) = extract_title_and_subtitle(&json, &amazon_id)?;
         let image_url = extract_image_url(&json, &amazon_id);
