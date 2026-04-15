@@ -26,13 +26,13 @@ impl MetadataProviderPort for MetadataProvider {
         let title_selector = Selector::parse(r#"a[class="bookTitle"]"#)?;
         let author_selector = Selector::parse(r#"a[class="authorName"]"#)?;
 
-        for (title, author) in document
+        for (title_element, author_element) in document
             .select(&title_selector)
             .zip(document.select(&author_selector))
         {
-            let found_title = title.text().collect::<String>();
-            let found_author = author.text().collect::<String>();
-            let found_link = title.value().attr("href")?;
+            let found_title = title_element.text().collect::<String>();
+            let found_author = author_element.text().collect::<String>();
+            let found_link = title_element.value().attr("href")?;
             let found_id = extract_goodreads_id_from_link(found_link)?;
 
             if matches(&found_title, &title) && matches(&found_author, &author) {
