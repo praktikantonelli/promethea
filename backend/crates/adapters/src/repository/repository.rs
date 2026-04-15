@@ -233,7 +233,12 @@ impl BookRepositoryPort for Database {
                 sav_goodreads_id.0
             )
             .fetch_one(&mut *tx)
-            .await?
+            .await
+            .map_err(|error| InsertBookError::Entity {
+                entity: "series".into(),
+                name: sav.title.clone(),
+                message: error.to_string(),
+            })?
             .id;
 
             sqlx::query!(
