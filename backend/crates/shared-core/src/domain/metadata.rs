@@ -21,6 +21,30 @@ pub struct BookMetadata {
     pub goodreads_id: GoodreadsId,
 }
 
+impl BookMetadata {
+    #[must_use]
+    #[inline]
+    pub fn new(
+        title: &str,
+        publication_date: Option<DateTime<Utc>>,
+        contributors: Vec<BookContributor>,
+        series: Vec<BookSeries>,
+        number_of_pages: Option<i64>,
+        image_url: Option<String>,
+        goodreads_id: GoodreadsId,
+    ) -> Self {
+        Self {
+            title: title.to_owned(),
+            publication_date,
+            contributors,
+            series,
+            number_of_pages,
+            image_url,
+            goodreads_id,
+        }
+    }
+}
+
 /// Represents an individual who contributed to the book, such as an author or editor.
 #[non_exhaustive]
 #[derive(Debug, PartialEq)]

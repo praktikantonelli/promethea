@@ -68,18 +68,18 @@ impl MetadataProviderPort for MetadataProvider {
         let image_url = extract_image_url(&json, &amazon_id);
         let contributors = extract_contributors(&json, &amazon_id);
         let publication_date = extract_publication_date(&json, &amazon_id);
-        let page_count = extract_page_count(&json, &amazon_id);
+        let number_of_pages = extract_page_count(&json, &amazon_id);
         let series = extract_series(&json, &amazon_id);
 
-        Ok(BookMetadata {
+        Ok(BookMetadata::new(
             title,
             publication_date,
             contributors,
             series,
-            page_count,
+            number_of_pages,
             image_url,
             goodreads_id,
-        })
+        ))
     }
 }
 
