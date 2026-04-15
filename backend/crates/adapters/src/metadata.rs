@@ -351,7 +351,7 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
 }
 
 impl MetadataProvider {
-    fn create() -> Self {
+    fn create() -> Result<Self, FetchMetadataError> {
         let mut headers = header::HeaderMap::new();
         headers.insert(
             header::ACCEPT,
