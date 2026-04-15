@@ -57,6 +57,18 @@ pub struct BookContributor {
     pub goodreads_id: GoodreadsId,
 }
 
+impl BookContributor {
+    #[must_use]
+    #[inline]
+    pub fn new(name: &str, role: &str, goodreads_id: GoodreadsId) -> Self {
+        Self {
+            name: name.to_owned(),
+            role: role.to_owned(),
+            goodreads_id,
+        }
+    }
+}
+
 /// Represents series information for a book, including the series title and book's position within the series.
 #[non_exhaustive]
 #[derive(Debug, PartialEq)]
@@ -67,4 +79,16 @@ pub struct BookSeries {
     pub number: f32,
     /// The Goodreads ID of the series
     pub goodreads_id: GoodreadsId,
+}
+
+impl BookSeries {
+    #[must_use]
+    #[inline]
+    pub fn new(title: &str, number: f32, goodreads_id: GoodreadsId) -> Self {
+        Self {
+            title: title.to_owned(),
+            number,
+            goodreads_id,
+        }
+    }
 }
