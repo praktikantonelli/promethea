@@ -28,8 +28,18 @@ impl MetadataProviderPort for MetadataProvider {
 
         let document =
             Html::parse_document(&self.http_client.get(&url).send().await?.text().await?);
-        let title_selector = Selector::parse(r#"a[class="bookTitle"]"#)?;
-        let author_selector = Selector::parse(r#"a[class="authorName"]"#)?;
+        let title_selector = Selector::parse(r#"a[class="bookTitle"]"#).map_err(|error| {
+            FetchMetadataError::Setup {
+                stage: "Title CSS Selector".to_owned(),
+                message: error.to_string(),
+            }
+        })?;
+        let author_selector = Selector::parse(r#"a[class="authorName"]"#).map_err(|error| {
+            FetchMetadataError::Setup {
+                stage: "Author CSS Selector".to_owned(),
+                message: error.to_string(),
+            }
+        })?;
 
         for (title_element, author_element) in document
             .select(&title_selector)
@@ -54,7 +64,12 @@ impl MetadataProviderPort for MetadataProvider {
         let url = format!("https://www.goodreads.com/book/show/{goodreads_id}");
         let document =
             Html::parse_document(&self.http_client.get(&url).send().await?.text().await?);
-        let json_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#)?;
+        let json_selector = Selector::parse(r#"script[id="__NEXT_DATA__"]"#).map_err(|error| {
+            FetchMetadataError::Setup {
+                stage: "JSON CSS Selector".to_owned(),
+                message: error.to_string(),
+            }
+        })?;
         let json = &document.select(&json_selector).next();
 
         let json = match *json {
@@ -386,7 +401,10 @@ impl MetadataProvider {
 
         client
             .map(|http_client| Self { http_client })
-            .map_err(|err| format!("Failed to create HTTP request client for scraping: {err}"))
+            .map_err(|error| FetchMetadataError::Setup {
+                stage: "Client Creation".to_owned(),
+                message: error.to_string(),
+            })
     }
 }
 
