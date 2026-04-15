@@ -2,6 +2,7 @@ use async_trait::async_trait;
 use log::{error, info, warn};
 use reqwest::{ClientBuilder, header};
 use scraper::{Html, Selector};
+use serde_json::Value;
 use shared_core::domain::metadata::BookMetadata;
 use shared_core::domain::repository::GoodreadsId;
 use shared_core::ports::metadata::{FetchMetadataError, MetadataProviderPort};

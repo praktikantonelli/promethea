@@ -30,6 +30,7 @@ chrono = "0.4.44"
 serde = "1.0.228"
 pretty_assertions = "1.4.1"
 log = "0.4.28"
+serde_json = "1.0.149"
 
 [lints]
 workspace = true
