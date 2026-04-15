@@ -147,9 +147,11 @@ impl BookRepositoryPort for Database {
             Ok(id) => id,
             Err(error) => {
                 if is_sqlite_unique_violation(&error) {
-                    tx.rollback().await?;
+                    tx.rollback()
+                        .await
+                        .map_err(|_error| InsertBookError::Unavailable)?;
                     return Err(InsertBookError::Conflict {
-                        goodreads_id: book.goodreads_id.unwrap(),
+                        goodreads_id: book.goodreads_id.clone(),
                     });
                 }
                 return Err(InsertBookError::Unavailable);
