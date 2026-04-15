@@ -1,10 +1,11 @@
 use async_trait::async_trait;
 use core::time::Duration;
 use log::{error, info, warn};
-use reqwest::{ClientBuilder, header};
+use reqwest::{ClientBuilder, header, redirect::Policy};
 use scraper::{Html, Selector};
 use serde_json::Value;
 use shared_core::domain::metadata::BookMetadata;
+use shared_core::domain::metadata::{BookContributor, BookSeries};
 use shared_core::domain::repository::GoodreadsId;
 use shared_core::ports::metadata::{FetchMetadataError, MetadataProviderPort};
 use urlencoding::encode;
