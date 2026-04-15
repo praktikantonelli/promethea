@@ -64,8 +64,8 @@ impl MetadataProviderPort for MetadataProvider {
             }
             Some(element) => serde_json::from_str(&element.text().collect::<String>())?,
         };
-        let amazon_id = extract_amazon_id(&json, &goodreads_id);
-        let (title, subtitle) = extract_title_and_subtitle(&json, &amazon_id);
+        let amazon_id = extract_amazon_id(&json, &goodreads_id)?;
+        let (title, subtitle) = extract_title_and_subtitle(&json, &amazon_id)?;
         let image_url = extract_image_url(&json, &amazon_id);
         let contributors = extract_contributors(&json, &amazon_id);
         let publication_date = extract_publication_date(&json, &amazon_id);
@@ -73,7 +73,7 @@ impl MetadataProviderPort for MetadataProvider {
         let series = extract_series(&json, &amazon_id);
 
         Ok(BookMetadata::new(
-            title,
+            &title,
             publication_date,
             contributors,
             series,
