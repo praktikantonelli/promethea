@@ -209,8 +209,16 @@ impl BookRepositoryPort for Database {
         }
 
         // handle series
-        for sav in &book.series_and_volume {
-            let sav_goodreads_id = sav.goodreads_id;
+        for sav in &book.series {
+            let sav_goodreads_id = sav.goodreads_id.clone();
+            let sort = match self
+                .try_fetch_series_sort(&sav.title)
+                .await
+                .map_err(|_error| InsertBookError::Unavailable)?
+            {
+                Some(string) => string,
+                None => get_title_sort(&sav.title),
+            };
             let series_id: i64 = sqlx::query!(
                 r#"
                 INSERT INTO series(name, sort, goodreads_id)
