@@ -179,8 +179,8 @@ impl BookRepositoryPort for Database {
                     RETURNING id;
                 "#,
                 author_record.name,
-                author_record.sort,
-                author_goodreads_id
+                sort,
+                author_goodreads_id.0
             )
             .fetch_one(&mut *tx)
             .await?
