@@ -30,4 +30,10 @@ pub enum FetchMetadataError {
     Extraction { key: String, message: String },
     #[error("failed setup in stage `{stage}`: `{message}`")]
     Setup { stage: String, message: String },
+    #[error("failed request `{request_type} `{url}`: `{message}`")]
+    Request {
+        request_type: String,
+        url: String,
+        message: String,
+    },
 }
