@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use super::records::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 use async_trait::async_trait;
 use shared_core::domain::{
