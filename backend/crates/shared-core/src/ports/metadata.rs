@@ -26,4 +26,6 @@ pub enum FetchMetadataError {
     GoodreadsId { title: String, author: String },
     #[error("failed to fetch metadata for Goodreads ID `{goodreads_id}`")]
     Metadata { goodreads_id: GoodreadsId },
+    #[error("failed to extract value for key `{key}`: `{message}`")]
+    Extraction { key: String, message: String },
 }
