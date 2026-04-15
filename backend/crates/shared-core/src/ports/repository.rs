@@ -3,7 +3,11 @@ use std::path::PathBuf;
 
 use crate::domain::{
     metadata::BookMetadata,
-    repository::{AuthorItem, BookItem, GoodreadsId, SeriesAndVolumeItem},
+    repository::{
+        //AuthorItem, SeriesAndVolumeItem
+        BookItem,
+        GoodreadsId,
+    },
 };
 
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]

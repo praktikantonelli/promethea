@@ -1,11 +1,20 @@
-use super::records::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
+use super::records::{
+    // AuthorRecord, SeriesAndVolumeRecord,
+    BookRecord,
+};
 use async_trait::async_trait;
 use shared_core::domain::{
     metadata::BookMetadata,
-    repository::{AuthorItem, BookItem, SeriesAndVolumeItem},
+    repository::{
+        //AuthorItem, SeriesAndVolumeItem,
+        BookItem,
+    },
 };
 use shared_core::ports::repository::{
-    BookRepositoryPort, FetchError, InsertBookError, OpenRepositoryError, UpdateError,
+    BookRepositoryPort,
+    FetchError,
+    InsertBookError,
+    OpenRepositoryError, // UpdateError,
 };
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 use std::path::PathBuf;
