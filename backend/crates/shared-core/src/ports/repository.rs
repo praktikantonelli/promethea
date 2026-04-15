@@ -41,6 +41,14 @@ pub enum InsertBookError {
     /// The repository is unavailable
     #[error("storage unavailable")]
     Unavailable,
+
+    /// Error inserting specific entity
+    #[error("could not insert `{entity}` `{name}`: `{message}`")]
+    Entity {
+        entity: String,
+        name: String,
+        message: String,
+    },
 }
 
 /// Error when trying to open an existing repository
