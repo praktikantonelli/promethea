@@ -265,11 +265,11 @@ impl BookRepositoryPort for Database {
         Ok(())
     }
 
-    async fn update_book(&self, book: BookItem) -> Result<(), UpdateError> {}
+    // async fn update_book(&self, book: BookItem) -> Result<(), UpdateError> {}
 
-    async fn update_series(&self, series: SeriesAndVolumeItem) -> Result<(), UpdateError> {}
+    // async fn update_series(&self, series: SeriesAndVolumeItem) -> Result<(), UpdateError> {}
 
-    async fn update_author(&self, author: AuthorItem) -> Result<(), UpdateError> {}
+    // async fn update_author(&self, author: AuthorItem) -> Result<(), UpdateError> {}
 }
 
 impl Database {

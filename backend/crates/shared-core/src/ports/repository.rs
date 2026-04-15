@@ -20,11 +20,11 @@ pub trait BookRepositoryPort {
 
     async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertBookError>;
 
-    async fn update_book(&self, book: BookItem) -> Result<(), UpdateError>;
+    // async fn update_book(&self, book: BookItem) -> Result<(), UpdateError>;
 
-    async fn update_series(&self, series: SeriesAndVolumeItem) -> Result<(), UpdateError>;
+    // async fn update_series(&self, series: SeriesAndVolumeItem) -> Result<(), UpdateError>;
 
-    async fn update_author(&self, author: AuthorItem) -> Result<(), UpdateError>;
+    // async fn update_author(&self, author: AuthorItem) -> Result<(), UpdateError>;
 }
 
 /// Error when trying to add a new book to the repository
