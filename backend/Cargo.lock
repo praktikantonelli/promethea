@@ -9,6 +9,8 @@ dependencies = [
  "async-trait",
  "chrono",
  "epub",
+ "log",
+ "pretty_assertions",
  "reqwest 0.13.2",
  "scraper 0.26.0",
  "serde",
