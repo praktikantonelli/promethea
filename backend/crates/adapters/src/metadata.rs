@@ -383,8 +383,18 @@ impl MetadataProvider {
     }
 }
 
-#[derive(thiserror::Error, Debug)]
-enum SearchError {}
-
-#[derive(thiserror::Error, Debug)]
-enum ExtractError {}
+/// Helper function to easily convert a JSON `Value` into a `String` and replaces all whitespaces
+/// with just a single whitespace.
+fn to_string(value: &Value) -> Option<String> {
+    match Regex::new(r"\s{2,}") {
+        Ok(re) => value
+            .as_str()
+            .map(str::trim)
+            .map(|string| re.replace_all(string, " ").to_string())
+            .filter(|string| !string.is_empty()),
+        Err(error) => {
+            warn!("Failed to construct regex for {value}, {error}");
+            None
+        }
+    }
+}
