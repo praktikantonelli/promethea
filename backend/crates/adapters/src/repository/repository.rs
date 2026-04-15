@@ -251,7 +251,12 @@ impl BookRepositoryPort for Database {
                 sav.number
             )
             .execute(&mut *tx)
-            .await?;
+            .await
+            .map_err(|error| InsertBookError::Entity {
+                entity: "books_series_link".into(),
+                name: sav.title.clone(),
+                message: error.to_string(),
+            })?;
         }
         tx.commit().await?;
 
