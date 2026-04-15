@@ -30,7 +30,7 @@ pub struct BookContributor {
     /// The role of the contributor, such as "Author" or "Illustrator".
     pub role: String,
     /// The Goodreads ID of the contributor
-    pub goodreads_id: String,
+    pub goodreads_id: GoodreadsId,
 }
 
 /// Represents series information for a book, including the series title and book's position within the series.
@@ -42,5 +42,5 @@ pub struct BookSeries {
     /// The position of the book within the series, represented as a float to accommodate cases like "1.5".
     pub number: f32,
     /// The Goodreads ID of the series
-    pub goodreads_id: String,
+    pub goodreads_id: GoodreadsId,
 }
