@@ -125,12 +125,11 @@ impl BookRepositoryPort for Database {
             INSERT INTO books (
                 title,
                 sort,
-                date_added,
                 date_published,
                 number_of_pages,
                 goodreads_id
             )
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
                 RETURNING id; 
         "#,
             book.title,
