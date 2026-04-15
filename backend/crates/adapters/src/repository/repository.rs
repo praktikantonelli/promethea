@@ -248,7 +248,7 @@ impl BookRepositoryPort for Database {
             "#,
                 book_id,
                 series_id,
-                sav.volume
+                sav.number
             )
             .execute(&mut *tx)
             .await?;
