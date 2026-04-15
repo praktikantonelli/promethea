@@ -116,7 +116,7 @@ impl BookRepositoryPort for Database {
             .await
             .map_err(|_error| InsertBookError::Unavailable)?;
 
-        let book_goodreads_id = book.goodreads_id;
+        let book_goodreads_id = book.goodreads_id.clone();
         let number_of_pages = book.number_of_pages;
 
         let book_id_res: Result<i64, sqlx::Error> = sqlx::query_scalar!(
@@ -137,7 +137,7 @@ impl BookRepositoryPort for Database {
             book.date_added,
             book.date_published,
             number_of_pages,
-            book_goodreads_id
+            book_goodreads_id.0
         )
         .fetch_one(&mut *tx)
         .await;
