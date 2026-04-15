@@ -228,9 +228,9 @@ impl BookRepositoryPort for Database {
                     sort = EXCLUDED.sort
                 RETURNING id;
             "#,
-                sav.series,
-                sav.sort,
-                sav_goodreads_id
+                sav.title,
+                sort,
+                sav_goodreads_id.0
             )
             .fetch_one(&mut *tx)
             .await?
