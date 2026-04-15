@@ -200,7 +200,12 @@ impl BookRepositoryPort for Database {
                 author_id
             )
             .execute(&mut *tx)
-            .await?;
+            .await
+            .map_err(|error| InsertBookError::Entity {
+                entity: "book_author_link".into(),
+                name: author_record.name.clone(),
+                message: error.to_string(),
+            })?;
         }
 
         // handle series
