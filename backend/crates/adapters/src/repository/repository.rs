@@ -159,8 +159,16 @@ impl BookRepositoryPort for Database {
         };
 
         // handle authors
-        for author_record in &book.authors {
-            let author_goodreads_id = author_record.goodreads_id;
+        for author_record in &book.contributors {
+            let author_goodreads_id = author_record.goodreads_id.clone();
+            let sort = match self
+                .try_fetch_author_sort(&author_record.name)
+                .await
+                .map_err(|_error| InsertBookError::Unavailable)?
+            {
+                Some(string) => string,
+                None => get_name_sort(&author_record.name),
+            };
             let author_id: i64 = sqlx::query!(
                 r#"
                     INSERT INTO authors(name, sort, goodreads_id)
