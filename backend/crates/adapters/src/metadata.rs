@@ -83,7 +83,7 @@ impl MetadataProviderPort for MetadataProvider {
     }
 }
 
-fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, ExtractError> {
+fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, FetchMetadataError> {
     link.splitn(4, '/')
         .nth(3)
         .unwrap_or("")
@@ -107,7 +107,10 @@ fn matches(str1: &str, str2: &str) -> bool {
     str1.to_lowercase().contains(&str2.to_lowercase())
 }
 
-fn extract_amazon_id(metadata: &Value, goodreads_id: &GoodreadsId) -> Result<String, ScraperError> {
+fn extract_amazon_id(
+    metadata: &Value,
+    goodreads_id: &GoodreadsId,
+) -> Result<String, FetchMetadataError> {
     let amazon_id_key = format!("getBookByLegacyId({{\"legacyId\":\"{goodreads_id}\"}})");
     #[allow(
         clippy::indexing_slicing,
@@ -117,9 +120,10 @@ fn extract_amazon_id(metadata: &Value, goodreads_id: &GoodreadsId) -> Result<Str
         &metadata["props"]["pageProps"]["apolloState"]["ROOT_QUERY"][amazon_id_key]["__ref"];
     let Some(amazon_id) = to_string(amazon_id) else {
         error!("Failed to scrape Amazon ID");
-        return Err(ScraperError::ScrapeError(
-            "Failed to scrape Amazon ID".to_owned(),
-        ));
+        return Err(FetchMetadataError::Extraction {
+            key: "Amazon ID".into(),
+            message: "failed to extract Amazon ID".into(),
+        });
     };
 
     Ok(amazon_id)
@@ -127,7 +131,7 @@ fn extract_amazon_id(metadata: &Value, goodreads_id: &GoodreadsId) -> Result<Str
 fn extract_title_and_subtitle(
     metadata: &Value,
     amazon_id: &str,
-) -> Result<(String, Option<String>), ScraperError> {
+) -> Result<(String, Option<String>), FetchMetadataError> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
@@ -135,9 +139,10 @@ fn extract_title_and_subtitle(
     let title = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["title"];
     let Some(title) = to_string(title) else {
         error!("Failed to scrape book title");
-        return Err(ScraperError::ScrapeError(
-            "Failed to scrape book title".to_owned(),
-        ));
+        return Err(FetchMetadataError::Extraction {
+            key: "title".into(),
+            message: "failed to extract title".into(),
+        });
     };
 
     match title.split_once(':') {
