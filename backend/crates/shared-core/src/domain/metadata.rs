@@ -14,11 +14,11 @@ pub struct BookMetadata {
     /// A list of series information, if the book is part of a series, represented as a `BookSeries`.
     pub series: Vec<BookSeries>,
     /// The number of pages in the book, if available.
-    pub page_count: Option<i64>,
+    pub number_of_pages: Option<i64>,
     /// A URL to an image of the book's cover, if available.
     pub image_url: Option<String>,
     /// The ID with which the book's metadata has been fetched
-    pub goodreads_id: Option<GoodreadsId>,
+    pub goodreads_id: GoodreadsId,
 }
 
 /// Represents an individual who contributed to the book, such as an author or editor.
