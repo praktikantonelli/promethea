@@ -8,6 +8,7 @@ use shared_core::ports::repository::{
     BookRepositoryPort, FetchError, InsertBookError, OpenRepositoryError, UpdateError,
 };
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
+use std::path::PathBuf;
 
 pub struct Database {
     pool: SqlitePool,
