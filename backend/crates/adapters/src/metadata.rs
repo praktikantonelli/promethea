@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use log::{error, info, warn};
 use reqwest::{ClientBuilder, header};
 use scraper::{Html, Selector};
 use shared_core::domain::metadata::BookMetadata;
