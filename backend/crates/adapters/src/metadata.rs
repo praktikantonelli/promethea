@@ -2,6 +2,7 @@ use async_trait::async_trait;
 use chrono::{DateTime, Utc};
 use core::time::Duration;
 use log::{error, info, warn};
+use regex::Regex;
 use reqwest::{ClientBuilder, header, redirect::Policy};
 use scraper::{Html, Selector};
 use serde_json::Value;
