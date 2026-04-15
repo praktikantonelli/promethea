@@ -56,7 +56,10 @@ impl MetadataProviderPort for MetadataProvider {
 
         let json = match *json {
             None => {
-                return Err(FetchMetadataError);
+                return Err(FetchMetadataError::Extraction {
+                    key: "JSON".into(),
+                    message: "no metadata JSON in Goodreads page".into(),
+                });
             }
             Some(element) => serde_json::from_str(&element.text().collect::<String>())?,
         };
