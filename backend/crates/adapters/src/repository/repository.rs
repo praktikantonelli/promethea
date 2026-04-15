@@ -118,6 +118,7 @@ impl BookRepositoryPort for Database {
 
         let book_goodreads_id = book.goodreads_id.clone();
         let number_of_pages = book.number_of_pages;
+        let sort = get_title_sort(&book.title);
 
         let book_id_res: Result<i64, sqlx::Error> = sqlx::query_scalar!(
             r#"
@@ -133,9 +134,8 @@ impl BookRepositoryPort for Database {
                 RETURNING id; 
         "#,
             book.title,
-            book.sort,
-            book.date_added,
-            book.date_published,
+            sort,
+            book.publication_date,
             number_of_pages,
             book_goodreads_id.0
         )
