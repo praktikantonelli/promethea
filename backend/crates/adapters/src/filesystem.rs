@@ -3,6 +3,7 @@ use epub::doc::EpubDoc;
 use shared_core::ports::filesystem::{FileSystemError, FileSystemPort};
 use std::path::{Path, PathBuf};
 
+#[non_exhaustive]
 pub struct FileSystem;
 
 #[async_trait]
