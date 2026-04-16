@@ -55,7 +55,7 @@ impl FileSystemPort for FileSystem {
             })?
             .get_title()
             .ok_or(FileSystemError::Value {
-                message: format!("Could not extract title from {path:?}"),
+                message: format!("Could not extract title from {}", path.display()),
             })
     }
 
@@ -73,7 +73,7 @@ impl FileSystemPort for FileSystem {
         authors
             .first()
             .ok_or(FileSystemError::Value {
-                message: format!("Could not extract author from {path:?}"),
+                message: format!("Could not extract author from {}", path.display()),
             })
             .cloned()
     }
