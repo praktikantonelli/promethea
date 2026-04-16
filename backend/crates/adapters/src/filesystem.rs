@@ -54,7 +54,7 @@ impl FileSystemPort for FileSystem {
                 message: error.to_string(),
             })?
             .get_title()
-            .ok_or(FileSystemError::Value {
+            .ok_or_else(|| FileSystemError::Value {
                 message: format!("Could not extract title from {}", path.display()),
             })
     }
@@ -72,7 +72,7 @@ impl FileSystemPort for FileSystem {
             .collect::<Vec<String>>();
         authors
             .first()
-            .ok_or(FileSystemError::Value {
+            .ok_or_else(|| FileSystemError::Value {
                 message: format!("Could not extract author from {}", path.display()),
             })
             .cloned()
