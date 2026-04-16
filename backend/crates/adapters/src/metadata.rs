@@ -13,6 +13,7 @@ use shared_core::ports::metadata::{FetchMetadataError, MetadataProviderPort};
 use urlencoding::encode;
 
 pub struct MetadataProvider {
+    /// persistent HTTP client to avoid overhead of creating one for every request
     http_client: reqwest::Client,
 }
 
@@ -145,6 +146,12 @@ impl MetadataProviderPort for MetadataProvider {
     }
 }
 
+/// takes a URL for a Goodreads link (book, author or series) and extracts the entity's Goodreads
+/// ID from it
+///
+/// # Errors
+/// This function returns an error when the supplied URL does not match the expected format and
+/// when parsing the numeric string to a numeric type fails
 fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, FetchMetadataError> {
     Ok(GoodreadsId::new(
         link.splitn(4, '/')
