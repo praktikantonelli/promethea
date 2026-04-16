@@ -1,5 +1,6 @@
 use shared_core::ports::clock::ClockPort;
 
-pub struct Clock {}
+#[non_exhaustive]
+pub struct Clock;
 
 impl ClockPort for Clock {}
