@@ -19,12 +19,13 @@ pub struct MetadataProvider {
 
 #[async_trait]
 impl MetadataProviderPort for MetadataProvider {
+    #[inline]
     async fn fetch_goodreads_id(
         &self,
         title: &str,
         author: &str,
     ) -> Result<Option<GoodreadsId>, FetchMetadataError> {
-        let query = format!("{} {}", title, author);
+        let query = format!("{title} {author}");
         let url = format!("https://www.goodreads.com/search?q={}", encode(&query));
 
         let document = Html::parse_document(
@@ -34,14 +35,14 @@ impl MetadataProviderPort for MetadataProvider {
                 .send()
                 .await
                 .map_err(|error| FetchMetadataError::Request {
-                    request_type: "GET".to_string(),
-                    url: url.to_string(),
+                    request_type: "GET".to_owned(),
+                    url,
                     message: error.to_string(),
                 })?
                 .text()
                 .await
                 .map_err(|error| FetchMetadataError::Extraction {
-                    key: "HTTP Response".to_string(),
+                    key: "HTTP Response".to_owned(),
                     message: error.to_string(),
                 })?,
         );
@@ -64,23 +65,22 @@ impl MetadataProviderPort for MetadataProvider {
         {
             let found_title = title_element.text().collect::<String>();
             let found_author = author_element.text().collect::<String>();
-            let found_link =
-                title_element
-                    .value()
-                    .attr("href")
-                    .ok_or(FetchMetadataError::Extraction {
-                        key: "link".to_owned(),
-                        message: "no key named `href`".to_owned(),
-                    })?;
+            let found_link = title_element.value().attr("href").ok_or_else(|| {
+                FetchMetadataError::Extraction {
+                    key: "link".to_owned(),
+                    message: "no key named `href`".to_owned(),
+                }
+            })?;
             let found_id = extract_goodreads_id_from_link(found_link)?;
 
-            if matches(&found_title, &title) && matches(&found_author, &author) {
+            if matches(&found_title, title) && matches(&found_author, author) {
                 return Ok(Some(found_id));
             }
         }
         Ok(None)
     }
 
+    #[inline]
     async fn fetch_metadata(
         &self,
         goodreads_id: GoodreadsId,
@@ -94,7 +94,7 @@ impl MetadataProviderPort for MetadataProvider {
                 .await
                 .map_err(|error| FetchMetadataError::Request {
                     request_type: "GET".to_owned(),
-                    url: url.to_owned(),
+                    url,
                     message: error.to_string(),
                 })?
                 .text()
@@ -127,7 +127,7 @@ impl MetadataProviderPort for MetadataProvider {
                     })?,
             };
         let amazon_id = extract_amazon_id(&json, &goodreads_id)?;
-        let (title, subtitle) = extract_title_and_subtitle(&json, &amazon_id)?;
+        let (title, _subtitle) = extract_title_and_subtitle(&json, &amazon_id)?;
         let image_url = extract_image_url(&json, &amazon_id);
         let contributors = extract_contributors(&json, &amazon_id);
         let publication_date = extract_publication_date(&json, &amazon_id);
@@ -159,7 +159,7 @@ fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, FetchMetada
             .unwrap_or("")
             .split('?')
             .next()
-            .ok_or(FetchMetadataError::Extraction {
+            .ok_or_else(|| FetchMetadataError::Extraction {
                 key: "Goodreads ID".to_owned(),
                 message: "failed to extract Goodreads ID from URL".to_owned(),
             })?
@@ -174,6 +174,8 @@ fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, FetchMetada
     ))
 }
 
+/// Helper function to determine if two strings match, ignoring upper and lower case as well as
+/// interpunctuations in initials.
 fn matches(str1: &str, str2: &str) -> bool {
     let str1 = str1
         .chars()
@@ -187,6 +189,9 @@ fn matches(str1: &str, str2: &str) -> bool {
     str1.to_lowercase().contains(&str2.to_lowercase())
 }
 
+/// Extracts a book's Amazon ID based on its Goodreads ID from the JSON metadata
+/// # Errors
+/// Fails if the Amazon ID cannot be extracted
 fn extract_amazon_id(
     metadata: &Value,
     goodreads_id: &GoodreadsId,
@@ -208,6 +213,11 @@ fn extract_amazon_id(
 
     Ok(amazon_id)
 }
+
+/// Extracts title and subtitle out of metadata JSON
+/// # Errors
+/// Fails if the title cannot be extracted. Missing subtitle is not an error, as not every book has
+/// a subtitle.
 fn extract_title_and_subtitle(
     metadata: &Value,
     amazon_id: &str,
@@ -231,6 +241,8 @@ fn extract_title_and_subtitle(
     }
 }
 
+/// Extracts a book's image URL from the metadata JSON. A book may not have an image, so this
+/// function returns `Option`
 fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
     #[allow(
         clippy::indexing_slicing,
@@ -240,6 +252,7 @@ fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
     to_string(url)
 }
 
+/// Extracts all contributors of a book from its metatada JSON and filters out any non-authors.
 fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
     let mut contributors = Vec::new();
 
@@ -308,6 +321,7 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
         .collect()
 }
 
+/// Parses metadata JSON and extracts all contributors including their name, role and Goodreads ID
 fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<BookContributor> {
     #[allow(
         clippy::indexing_slicing,
@@ -320,14 +334,14 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
-    let goodreads_id =
-        match metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"].as_i64() {
-            Some(id) => GoodreadsId::new(id),
-            None => {
-                let url = metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"].as_str()?;
-                extract_goodreads_id_from_link(url).ok()?
-            }
-        };
+    let goodreads_id = if let Some(id) =
+        metadata["props"]["pageProps"]["apolloState"][&key]["legacyId"].as_i64()
+    {
+        GoodreadsId::new(id)
+    } else {
+        let url = metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"].as_str()?;
+        extract_goodreads_id_from_link(url).ok()?
+    };
 
     if name.is_none() {
         warn!("Failed to parse contributor");
@@ -336,6 +350,7 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
     name.map(|n| BookContributor::new(&n, &role, goodreads_id))
 }
 
+/// Extracts a book's publication date from its metadata JSON
 fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
     #[allow(
         clippy::indexing_slicing,
@@ -357,6 +372,7 @@ fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTim
     }
 }
 
+/// Extracts a book's page count from its metadata JSON
 fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
     #[allow(
         clippy::indexing_slicing,
@@ -370,6 +386,7 @@ fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
     }
 }
 
+/// Extracts a book's series from its metadata JSON
 fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
     let empty_vec: Vec<Value> = Vec::new();
 
@@ -424,6 +441,9 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
 }
 
 impl MetadataProvider {
+    /// Create a new HTTP request client, to be used for all subsequent metadata scraping requests
+    /// # Errors
+    /// Fails in case any of the reqwest `ClientBuilder` methods fail
     fn create() -> Result<Self, FetchMetadataError> {
         let mut headers = header::HeaderMap::new();
         headers.insert(
