@@ -9,6 +9,7 @@ pub struct FileSystem;
 
 #[async_trait]
 impl FileSystemPort for FileSystem {
+    #[inline]
     async fn create_file(&self, path: &Path) -> Result<(), FileSystemError> {
         fs::File::create_new(path).map_err(|error| FileSystemError::Creation {
             path: PathBuf::from(path),
@@ -17,6 +18,7 @@ impl FileSystemPort for FileSystem {
         Ok(())
     }
 
+    #[inline]
     async fn move_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError> {
         fs::rename(source, target).map_err(|error| FileSystemError::Move {
             source_path: PathBuf::from(source),
@@ -26,6 +28,7 @@ impl FileSystemPort for FileSystem {
         Ok(())
     }
 
+    #[inline]
     async fn copy_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError> {
         fs::copy(source, target).map_err(|error| FileSystemError::Copy {
             source_path: PathBuf::from(source),
@@ -35,6 +38,7 @@ impl FileSystemPort for FileSystem {
         Ok(())
     }
 
+    #[inline]
     async fn delete_file(&self, path: &Path) -> Result<(), FileSystemError> {
         fs::remove_file(path).map_err(|error| FileSystemError::Delete {
             path: PathBuf::from(path),
@@ -43,6 +47,7 @@ impl FileSystemPort for FileSystem {
         Ok(())
     }
 
+    #[inline]
     fn extract_title_from_epub(&self, path: &Path) -> Result<String, FileSystemError> {
         EpubDoc::new(path)
             .map_err(|error| FileSystemError::Generic {
@@ -54,6 +59,7 @@ impl FileSystemPort for FileSystem {
             })
     }
 
+    #[inline]
     fn extract_author_from_epub(&self, path: &Path) -> Result<String, FileSystemError> {
         let doc = EpubDoc::new(path).map_err(|error| FileSystemError::Generic {
             message: error.to_string(),
