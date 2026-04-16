@@ -26,10 +26,12 @@ pub struct Database {
 
 #[async_trait]
 impl BookRepositoryPort for Database {
+    #[inline]
     async fn close(&self) {
         self.pool.close().await;
     }
 
+    #[inline]
     async fn fetch_all_books(&self) -> Result<Vec<BookItem>, FetchError> {
         let books: Vec<BookRecord> = sqlx::query_as(
             "WITH series_info AS (
@@ -93,6 +95,7 @@ impl BookRepositoryPort for Database {
         Ok(books.into_iter().map(Into::into).collect())
     }
 
+    #[inline]
     async fn try_fetch_author_sort(&self, author_name: &str) -> Result<Option<String>, FetchError> {
         let sort = sqlx::query!("SELECT sort FROM authors WHERE name LIKE ?", author_name)
             .fetch_one(&self.pool)
@@ -105,6 +108,7 @@ impl BookRepositoryPort for Database {
         Ok(Some(sort))
     }
 
+    #[inline]
     async fn try_fetch_series_sort(
         &self,
         series_title: &str,
@@ -119,6 +123,7 @@ impl BookRepositoryPort for Database {
         Ok(Some(sort))
     }
 
+    #[inline]
     async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertBookError> {
         let mut tx: Transaction<'_, Sqlite> = self
             .pool
