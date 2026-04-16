@@ -17,7 +17,7 @@ use shared_core::ports::repository::{
     OpenRepositoryError, // UpdateError,
 };
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 pub struct Database {
     /// pool used to execute queries in the `SQLite` database
@@ -288,7 +288,7 @@ impl BookRepositoryPort for Database {
 }
 
 impl Database {
-    async fn open(path: &std::path::Path) -> Result<Self, OpenRepositoryError> {
+    async fn open(path: &Path) -> Result<Self, OpenRepositoryError> {
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
             .filename(path);
