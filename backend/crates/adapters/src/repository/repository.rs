@@ -20,6 +20,7 @@ use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 use std::path::PathBuf;
 
 pub struct Database {
+    /// pool used to execute queries in the `SQLite` database
     pool: SqlitePool,
 }
 
