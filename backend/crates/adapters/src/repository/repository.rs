@@ -176,7 +176,7 @@ impl BookRepositoryPort for Database {
         // handle authors
         for author_record in &book.contributors {
             let author_goodreads_id = author_record.goodreads_id.clone();
-            let sort = match self
+            let author_sort = match self
                 .try_fetch_author_sort(&author_record.name)
                 .await
                 .map_err(|_error| InsertBookError::Unavailable)?
@@ -194,7 +194,7 @@ impl BookRepositoryPort for Database {
                     RETURNING id;
                 "#,
                 author_record.name,
-                sort,
+                author_sort,
                 author_goodreads_id.0
             )
             .fetch_one(&mut *tx)
@@ -226,7 +226,7 @@ impl BookRepositoryPort for Database {
         // handle series
         for sav in &book.series {
             let sav_goodreads_id = sav.goodreads_id.clone();
-            let sort = match self
+            let series_sort = match self
                 .try_fetch_series_sort(&sav.title)
                 .await
                 .map_err(|_error| InsertBookError::Unavailable)?
@@ -244,7 +244,7 @@ impl BookRepositoryPort for Database {
                 RETURNING id;
             "#,
                 sav.title,
-                sort,
+                series_sort,
                 sav_goodreads_id.0
             )
             .fetch_one(&mut *tx)
