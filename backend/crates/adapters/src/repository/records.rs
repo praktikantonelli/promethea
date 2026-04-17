@@ -54,6 +54,7 @@ impl BookRecord {
 }
 
 impl From<BookRecord> for BookItem {
+    #[inline]
     fn from(value: BookRecord) -> Self {
         Self::new(
             value.book_id,
@@ -99,6 +100,7 @@ impl AuthorRecord {
 }
 
 impl From<AuthorRecord> for AuthorItem {
+    #[inline]
     fn from(value: AuthorRecord) -> Self {
         Self::new(value.name, value.sort, value.goodreads_id)
     }
@@ -127,6 +129,7 @@ impl SeriesAndVolumeRecord {
 }
 
 impl From<SeriesAndVolumeRecord> for SeriesAndVolumeItem {
+    #[inline]
     fn from(value: SeriesAndVolumeRecord) -> Self {
         Self::new(value.series, value.sort, value.volume, value.goodreads_id)
     }
