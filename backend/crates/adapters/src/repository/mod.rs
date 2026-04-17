@@ -5,11 +5,8 @@ use records::{
     BookRecord,
 };
 use shared_core::domain::{
-    metadata::BookMetadata,
-    repository::{
-        //AuthorItem, SeriesAndVolumeItem,
-        BookItem,
-    },
+    metadata::{BookContributor, BookMetadata, BookSeries},
+    repository::BookItem,
 };
 use shared_core::ports::repository::{
     BookRepositoryPort,
@@ -17,7 +14,7 @@ use shared_core::ports::repository::{
     InsertError,
     OpenRepositoryError, // UpdateError,
 };
-use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
+use sqlx::{Sqlite, SqliteConnection, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
 use std::path::{Path, PathBuf};
 
 pub struct Database {
@@ -175,99 +172,11 @@ impl BookRepositoryPort for Database {
         };
 
         // handle authors
-        for author_record in &book.contributors {
-            let author_goodreads_id = author_record.goodreads_id.clone();
-            let author_sort = self
-                .try_fetch_author_sort(&author_record.name)
-                .await
-                .map_err(|_error| InsertError::Unavailable)?
-                .map_or_else(|| get_name_sort(&author_record.name), |string| string);
-            let author_id: i64 = sqlx::query!(
-                r#"
-                    INSERT INTO authors(name, sort, goodreads_id)
-                    VALUES (?, ?, ?)
-                    ON CONFLICT(goodreads_id) DO UPDATE SET
-                        name = excluded.name,
-                        sort = excluded.sort
-                    RETURNING id;
-                "#,
-                author_record.name,
-                author_sort,
-                author_goodreads_id.0
-            )
-            .fetch_one(&mut *tx)
-            .await
-            .map_err(|error| InsertError::Entity {
-                entity: "author".into(),
-                name: author_record.name.clone(),
-                message: error.to_string(),
-            })?
-            .id;
-
-            sqlx::query!(
-                r#"
-                INSERT OR IGNORE INTO books_authors_link(book, author)
-                VALUES (?1, ?2);
-            "#,
-                book_id,
-                author_id
-            )
-            .execute(&mut *tx)
-            .await
-            .map_err(|error| InsertError::Entity {
-                entity: "book_author_link".into(),
-                name: author_record.name.clone(),
-                message: error.to_string(),
-            })?;
-        }
+        self.insert_authors(&mut tx, book.contributors, book_id)
+            .await?;
 
         // handle series
-        for sav in &book.series {
-            let sav_goodreads_id = sav.goodreads_id.clone();
-            let series_sort = self
-                .try_fetch_series_sort(&sav.title)
-                .await
-                .map_err(|_error| InsertError::Unavailable)?
-                .map_or_else(|| get_title_sort(&sav.title), |string| string);
-            let series_id: i64 = sqlx::query!(
-                r#"
-                INSERT INTO series(name, sort, goodreads_id)
-                VALUES (?, ?, ?)
-                ON CONFLICT(goodreads_id) DO UPDATE SET
-                    name = EXCLUDED.name,
-                    sort = EXCLUDED.sort
-                RETURNING id;
-            "#,
-                sav.title,
-                series_sort,
-                sav_goodreads_id.0
-            )
-            .fetch_one(&mut *tx)
-            .await
-            .map_err(|error| InsertError::Entity {
-                entity: "series".into(),
-                name: sav.title.clone(),
-                message: error.to_string(),
-            })?
-            .id;
-
-            sqlx::query!(
-                r#"
-                INSERT INTO books_series_link(book, series, entry)
-                VALUES (?, ?, ?)
-            "#,
-                book_id,
-                series_id,
-                sav.number
-            )
-            .execute(&mut *tx)
-            .await
-            .map_err(|error| InsertError::Entity {
-                entity: "books_series_link".into(),
-                name: sav.title.clone(),
-                message: error.to_string(),
-            })?;
-        }
+        self.insert_series(&mut tx, book.series, book_id).await?;
         tx.commit()
             .await
             .map_err(|_error| InsertError::Unavailable)?;
@@ -283,7 +192,7 @@ impl BookRepositoryPort for Database {
 }
 
 impl Database {
-    /// tries to instantiate an instance that connects to an existing `SQLite` database
+    /// Tries to instantiate an instance that connects to an existing `SQLite` database
     ///
     /// # Errors
     /// Fails if the path doesn't exist or if running the migration fails
@@ -303,6 +212,125 @@ impl Database {
             .map_err(|_err| OpenRepositoryError::Initialization)?;
 
         Ok(Self { pool })
+    }
+
+    /// Insert all authors associated with a book
+    ///
+    /// # Errors
+    /// Fails if the new author cannot be created, if the repository is unavailable or if the link
+    /// between book and author cannot be created
+    async fn insert_authors(
+        &self,
+        conn: &mut SqliteConnection,
+        authors: Vec<BookContributor>,
+        book_id: i64,
+    ) -> Result<(), InsertError> {
+        for author_record in &authors {
+            let author_goodreads_id = author_record.goodreads_id.clone();
+            let author_sort = self
+                .try_fetch_author_sort(&author_record.name)
+                .await
+                .map_err(|_error| InsertError::Unavailable)?
+                .map_or_else(|| get_name_sort(&author_record.name), |string| string);
+            let author_id: i64 = sqlx::query!(
+                r#"
+                    INSERT INTO authors(name, sort, goodreads_id)
+                    VALUES (?, ?, ?)
+                    ON CONFLICT(goodreads_id) DO UPDATE SET
+                        name = excluded.name,
+                        sort = excluded.sort
+                    RETURNING id;
+                "#,
+                author_record.name,
+                author_sort,
+                author_goodreads_id.0
+            )
+            .fetch_one(&mut *conn)
+            .await
+            .map_err(|error| InsertError::Entity {
+                entity: "author".into(),
+                name: author_record.name.clone(),
+                message: error.to_string(),
+            })?
+            .id;
+
+            sqlx::query!(
+                r#"
+                INSERT OR IGNORE INTO books_authors_link(book, author)
+                VALUES (?1, ?2);
+            "#,
+                book_id,
+                author_id
+            )
+            .execute(&mut *conn)
+            .await
+            .map_err(|error| InsertError::Entity {
+                entity: "book_author_link".into(),
+                name: author_record.name.clone(),
+                message: error.to_string(),
+            })?;
+        }
+        Ok(())
+    }
+
+    /// Insert all series associated with a book
+    ///
+    /// # Errors
+    /// Fails if the new series cannot be created, if the repository is unavailable or if the link
+    /// between book and series cannot be created
+    async fn insert_series(
+        &self,
+        conn: &mut SqliteConnection,
+        series: Vec<BookSeries>,
+        book_id: i64,
+    ) -> Result<(), InsertError> {
+        for sav in &series {
+            let sav_goodreads_id = sav.goodreads_id.clone();
+            let series_sort = self
+                .try_fetch_series_sort(&sav.title)
+                .await
+                .map_err(|_error| InsertError::Unavailable)?
+                .map_or_else(|| get_title_sort(&sav.title), |string| string);
+            let series_id: i64 = sqlx::query!(
+                r#"
+                INSERT INTO series(name, sort, goodreads_id)
+                VALUES (?, ?, ?)
+                ON CONFLICT(goodreads_id) DO UPDATE SET
+                    name = EXCLUDED.name,
+                    sort = EXCLUDED.sort
+                RETURNING id;
+            "#,
+                sav.title,
+                series_sort,
+                sav_goodreads_id.0
+            )
+            .fetch_one(&mut *conn)
+            .await
+            .map_err(|error| InsertError::Entity {
+                entity: "series".into(),
+                name: sav.title.clone(),
+                message: error.to_string(),
+            })?
+            .id;
+
+            sqlx::query!(
+                r#"
+                INSERT INTO books_series_link(book, series, entry)
+                VALUES (?, ?, ?)
+            "#,
+                book_id,
+                series_id,
+                sav.number
+            )
+            .execute(&mut *conn)
+            .await
+            .map_err(|error| InsertError::Entity {
+                entity: "books_series_link".into(),
+                name: sav.title.clone(),
+                message: error.to_string(),
+            })?;
+        }
+        Ok(())
     }
 }
 
