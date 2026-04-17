@@ -22,7 +22,7 @@ pub trait BookRepositoryPort {
     async fn try_fetch_series_sort(&self, series_title: &str)
     -> Result<Option<String>, FetchError>;
 
-    async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertBookError>;
+    async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertError>;
 
     // async fn update_book(&self, book: BookItem) -> Result<(), UpdateError>;
 
@@ -34,7 +34,7 @@ pub trait BookRepositoryPort {
 /// Error when trying to add a new book to the repository
 #[derive(thiserror::Error, Debug)]
 #[non_exhaustive]
-pub enum InsertBookError {
+pub enum InsertError {
     /// The book already exists in the repository
     #[error("book with Goodreads ID `{goodreads_id}` already exists")]
     Conflict {

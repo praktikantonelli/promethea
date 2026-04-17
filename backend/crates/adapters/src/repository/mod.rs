@@ -14,7 +14,7 @@ use shared_core::domain::{
 use shared_core::ports::repository::{
     BookRepositoryPort,
     FetchError,
-    InsertBookError,
+    InsertError,
     OpenRepositoryError, // UpdateError,
 };
 use sqlx::{Sqlite, SqlitePool, Transaction, sqlite::SqliteConnectOptions};
@@ -125,12 +125,12 @@ impl BookRepositoryPort for Database {
     }
 
     #[inline]
-    async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertBookError> {
+    async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertError> {
         let mut tx: Transaction<'_, Sqlite> = self
             .pool
             .begin()
             .await
-            .map_err(|_error| InsertBookError::Unavailable)?;
+            .map_err(|_error| InsertError::Unavailable)?;
 
         let book_goodreads_id = book.goodreads_id.clone();
         let number_of_pages = book.number_of_pages;
@@ -165,12 +165,12 @@ impl BookRepositoryPort for Database {
                 if is_sqlite_unique_violation(&error) {
                     tx.rollback()
                         .await
-                        .map_err(|_error| InsertBookError::Unavailable)?;
-                    return Err(InsertBookError::Conflict {
+                        .map_err(|_error| InsertError::Unavailable)?;
+                    return Err(InsertError::Conflict {
                         goodreads_id: book.goodreads_id.clone(),
                     });
                 }
-                return Err(InsertBookError::Unavailable);
+                return Err(InsertError::Unavailable);
             }
         };
 
@@ -180,7 +180,7 @@ impl BookRepositoryPort for Database {
             let author_sort = self
                 .try_fetch_author_sort(&author_record.name)
                 .await
-                .map_err(|_error| InsertBookError::Unavailable)?
+                .map_err(|_error| InsertError::Unavailable)?
                 .map_or_else(|| get_name_sort(&author_record.name), |string| string);
             let author_id: i64 = sqlx::query!(
                 r#"
@@ -197,7 +197,7 @@ impl BookRepositoryPort for Database {
             )
             .fetch_one(&mut *tx)
             .await
-            .map_err(|error| InsertBookError::Entity {
+            .map_err(|error| InsertError::Entity {
                 entity: "author".into(),
                 name: author_record.name.clone(),
                 message: error.to_string(),
@@ -214,7 +214,7 @@ impl BookRepositoryPort for Database {
             )
             .execute(&mut *tx)
             .await
-            .map_err(|error| InsertBookError::Entity {
+            .map_err(|error| InsertError::Entity {
                 entity: "book_author_link".into(),
                 name: author_record.name.clone(),
                 message: error.to_string(),
@@ -227,7 +227,7 @@ impl BookRepositoryPort for Database {
             let series_sort = self
                 .try_fetch_series_sort(&sav.title)
                 .await
-                .map_err(|_error| InsertBookError::Unavailable)?
+                .map_err(|_error| InsertError::Unavailable)?
                 .map_or_else(|| get_title_sort(&sav.title), |string| string);
             let series_id: i64 = sqlx::query!(
                 r#"
@@ -244,7 +244,7 @@ impl BookRepositoryPort for Database {
             )
             .fetch_one(&mut *tx)
             .await
-            .map_err(|error| InsertBookError::Entity {
+            .map_err(|error| InsertError::Entity {
                 entity: "series".into(),
                 name: sav.title.clone(),
                 message: error.to_string(),
@@ -262,7 +262,7 @@ impl BookRepositoryPort for Database {
             )
             .execute(&mut *tx)
             .await
-            .map_err(|error| InsertBookError::Entity {
+            .map_err(|error| InsertError::Entity {
                 entity: "books_series_link".into(),
                 name: sav.title.clone(),
                 message: error.to_string(),
@@ -270,7 +270,7 @@ impl BookRepositoryPort for Database {
         }
         tx.commit()
             .await
-            .map_err(|_error| InsertBookError::Unavailable)?;
+            .map_err(|_error| InsertError::Unavailable)?;
 
         Ok(())
     }
