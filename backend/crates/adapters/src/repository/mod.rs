@@ -177,14 +177,11 @@ impl BookRepositoryPort for Database {
         // handle authors
         for author_record in &book.contributors {
             let author_goodreads_id = author_record.goodreads_id.clone();
-            let author_sort = match self
+            let author_sort = self
                 .try_fetch_author_sort(&author_record.name)
                 .await
                 .map_err(|_error| InsertBookError::Unavailable)?
-            {
-                Some(string) => string,
-                None => get_name_sort(&author_record.name),
-            };
+                .map_or_else(|| get_name_sort(&author_record.name), |string| string);
             let author_id: i64 = sqlx::query!(
                 r#"
                     INSERT INTO authors(name, sort, goodreads_id)
@@ -227,14 +224,11 @@ impl BookRepositoryPort for Database {
         // handle series
         for sav in &book.series {
             let sav_goodreads_id = sav.goodreads_id.clone();
-            let series_sort = match self
+            let series_sort = self
                 .try_fetch_series_sort(&sav.title)
                 .await
                 .map_err(|_error| InsertBookError::Unavailable)?
-            {
-                Some(string) => string,
-                None => get_title_sort(&sav.title),
-            };
+                .map_or_else(|| get_title_sort(&sav.title), |string| string);
             let series_id: i64 = sqlx::query!(
                 r#"
                 INSERT INTO series(name, sort, goodreads_id)
