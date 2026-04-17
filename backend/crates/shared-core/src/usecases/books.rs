@@ -1,7 +1,7 @@
 use crate::ports::{
     filesystem::{FileSystemError, FileSystemPort},
     metadata::{FetchMetadataError, MetadataProviderPort},
-    repository::{BookRepositoryPort, InsertBookError},
+    repository::{BookRepositoryPort, InsertError},
 };
 use std::{path::PathBuf, sync::Arc};
 
@@ -67,7 +67,7 @@ pub enum AddBookError {
     #[error("failed to fetch metadata")]
     Metadata(#[from] FetchMetadataError),
     #[error("failed to insert book into repository")]
-    RepositoryError(#[from] InsertBookError),
+    RepositoryError(#[from] InsertError),
 }
 
 #[non_exhaustive]
