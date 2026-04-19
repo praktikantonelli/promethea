@@ -4034,6 +4034,7 @@ dependencies = [
  "promethea_core",
  "serde",
  "serde_json",
+ "shared-core",
  "sqlx",
  "tauri",
  "tauri-build",

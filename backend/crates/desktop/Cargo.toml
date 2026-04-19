@@ -56,3 +56,5 @@ goodreads-metadata-scraper = "0.2.4"
 promethea_core = { path = "./../promethea_core/" }
 dotenvy = "0.15.7"
 futures = "0.3.31"
+
+shared-core = { path = "../shared-core/" }
