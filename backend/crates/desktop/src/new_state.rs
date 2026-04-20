@@ -9,6 +9,11 @@ use std::sync::RwLock;
 
 use crate::errors::PrometheaError;
 
+/// Name of the config file that is stored in the default Tauri config location
+pub const APP_CONFIG_PATH: &str = "promethea-config.json";
+/// Name of the `SQLite` database file that represents the library
+pub const LIBRARY_DATABASE_NAME: &str = "library.db";
+
 pub enum BackendState {
     /// backend not ready yet
     NeedsSetup,
