@@ -100,7 +100,17 @@ pub async fn open_existing_db(
         db_file_path.display()
     );
 
-    state.connect_db_with_path(db_file_path).await?;
+    {
+        let mut config = state.config.write().unwrap();
+        config.library_path = Some(db_file_path.clone());
+    }
+
+    let services = build_services(db_file_path).await?;
+
+    {
+        let mut backend = state.backend.write().unwrap();
+        *backend = BackendState::Ready(services);
+    }
 
     Ok(())
 }
