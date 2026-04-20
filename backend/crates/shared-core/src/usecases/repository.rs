@@ -10,6 +10,7 @@ pub struct CreateRepositoryUseCase {
 }
 
 impl CreateRepositoryUseCase {
+    #[inline]
     pub fn new(filesystem: Arc<dyn FileSystemPort + Send + Sync>) -> Self {
         Self { filesystem }
     }
@@ -25,6 +26,7 @@ impl CreateRepositoryUseCase {
     }
 }
 
+#[non_exhaustive]
 #[derive(Debug, thiserror::Error)]
 pub enum CreateRepositoryError {
     #[error(transparent)]
