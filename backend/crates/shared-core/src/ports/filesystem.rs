@@ -1,16 +1,13 @@
-use async_trait::async_trait;
 use std::path::{Path, PathBuf};
 
-#[allow(async_fn_in_trait, reason = "Only used in my own code")]
-#[async_trait]
 pub trait FileSystemPort {
-    async fn create_file(&self, path: &Path) -> Result<(), FileSystemError>;
+    fn create_file(&self, path: &Path) -> Result<(), FileSystemError>;
 
-    async fn move_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError>;
+    fn move_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError>;
 
-    async fn copy_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError>;
+    fn copy_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError>;
 
-    async fn delete_file(&self, path: &Path) -> Result<(), FileSystemError>;
+    fn delete_file(&self, path: &Path) -> Result<(), FileSystemError>;
 
     /// Extract the title of a book from an EPUB file
     ///
