@@ -1,7 +1,4 @@
-use crate::ports::{
-    filesystem::{FileSystemError, FileSystemPort},
-    repository::BookRepositoryPort,
-};
+use crate::ports::filesystem::{FileSystemError, FileSystemPort};
 use std::{path::Path, sync::Arc};
 
 pub struct CreateRepositoryUseCase {
@@ -31,11 +28,4 @@ impl CreateRepositoryUseCase {
 pub enum CreateRepositoryError {
     #[error(transparent)]
     Generic(#[from] FileSystemError),
-}
-
-pub struct OpenRepositoryUseCase {
-    /// file system adapter
-    filesystem: Arc<dyn FileSystemPort + Send + Sync>,
-    /// repository adapter
-    repository: Arc<dyn BookRepositoryPort + Send + Sync>,
 }
