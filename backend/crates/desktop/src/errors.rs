@@ -1,3 +1,5 @@
+use shared_core::ports::{metadata::FetchMetadataError, repository::OpenRepositoryError};
+
 /// The Promethea error type, DEPRECATED
 #[derive(Debug, thiserror::Error)]
 pub enum PrometheaError {
@@ -10,6 +12,12 @@ pub enum PrometheaError {
     /// Wildcard error for everything else
     #[error("{0}")]
     Other(String),
+    /// Error from repository
+    #[error(transparent)]
+    Repository(#[from] OpenRepositoryError),
+    /// Error from metadata fetcher
+    #[error(transparent)]
+    Metadata(#[from] FetchMetadataError),
 }
 
 impl serde::Serialize for PrometheaError {
