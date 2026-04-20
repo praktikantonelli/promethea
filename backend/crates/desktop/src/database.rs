@@ -9,7 +9,6 @@ use epub::doc::EpubDoc;
 use futures::future::join_all;
 use promethea_core::database::types::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 use promethea_core::scraping::sorting::{get_name_sort, get_title_sort};
-use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::fs::File;
 use std::path::PathBuf;
@@ -34,19 +33,6 @@ where
         Ok(Some(val)) => val,
         _ => fallback(),
     }
-}
-
-/// Represents the database's state, differing only between loaded and not yet loaded
-#[derive(Serialize, Deserialize)]
-#[serde(tag = "status", rename_all = "snake_case")]
-pub enum DbInitStatus {
-    /// database is ready to be used
-    Loaded,
-    /// database is not yet initialized
-    NeedsSetup {
-        /// optionally contains a string explaining why the database has not yet initialized
-        reason: Option<String>,
-    },
 }
 
 /// Creates a new `SQLite` database at a given path writes the path into the Tauri store
@@ -117,13 +103,12 @@ pub async fn open_existing_db(
 
 /// Fetches the database's initialization status
 #[tauri::command]
-pub async fn get_init_status(state: State<'_, AppState>) -> Result<DbInitStatus, ()> {
-    if state.db.read().await.is_some() {
-        Ok(DbInitStatus::Loaded)
+pub async fn get_init_status(state: State<'_, AppState>) -> Result<bool, ()> {
+    let config = state.config.read().unwrap();
+    if config.library_path.is_some() {
+        Ok(true)
     } else {
-        Ok(DbInitStatus::NeedsSetup {
-            reason: state.last_error.read().await.clone(),
-        })
+        Ok(false)
     }
 }
 
