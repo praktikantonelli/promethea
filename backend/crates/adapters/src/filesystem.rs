@@ -78,3 +78,12 @@ impl FileSystemPort for FileSystem {
             .cloned()
     }
 }
+
+#[allow(clippy::new_without_default, reason = "don't need that")]
+impl FileSystem {
+    #[inline]
+    #[must_use]
+    pub const fn new() -> Self {
+        Self {}
+    }
+}
