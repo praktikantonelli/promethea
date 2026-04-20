@@ -1,8 +1,6 @@
 use promethea_core::database::queries::Db;
 use promethea_core::scraping::client::MetadataRequestClient;
-use shared_core::usecases::books::AddBookUseCase;
 use std::path::PathBuf;
-use std::sync::Arc;
 use tokio::sync::RwLock;
 
 /// Name of the config file that is stored in the default Tauri config location
@@ -19,8 +17,6 @@ pub struct AppState {
     pub last_error: RwLock<Option<String>>,
     /// A client for executing metadata requests
     pub metadata_request_client: MetadataRequestClient,
-    /// Use case for adding a new book to the library
-    pub add_book: Arc<AddBookUseCase>,
 }
 
 impl AppState {
@@ -31,7 +27,6 @@ impl AppState {
             db: RwLock::new(None),
             last_error: RwLock::new(None),
             metadata_request_client,
-            add_book: AddBookUseCase::new(),
         })
     }
 
