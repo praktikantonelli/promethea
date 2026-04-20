@@ -2,9 +2,11 @@
 //!
 //! This crate contains everything Tauri-specific for promethea
 use crate::database::{add_book, create_new_db, fetch_books, get_init_status, open_existing_db};
-use crate::state::{APP_CONFIG_PATH, AppState};
+use crate::state::APP_CONFIG_PATH;
 use anyhow::Error;
+use new_state::{AppState, BackendState, RuntimeConfig, build_services};
 use std::path::PathBuf;
+use std::sync::{Arc, RwLock};
 use tauri::Manager as _;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_plugin_store::StoreExt as _;
@@ -15,6 +17,8 @@ use tracing_subscriber::{EnvFilter, fmt};
 mod database;
 /// Error types
 mod errors;
+/// New app state management
+mod new_state;
 /// App state management
 mod state;
 use std::env;
@@ -59,9 +63,6 @@ fn run_safe() -> Result<(), Error> {
         .plugin(tauri_plugin_dialog::init());
     builder
         .setup(move |app| {
-            // Let app manage SQLite database state
-            let state = AppState::new()?;
-            app.manage(state);
             let (tauri_plugin_log, max_level, logger) = tauri_plugin_log::Builder::default()
                 .with_colors(ColoredLevelConfig::default())
                 .level(log::LevelFilter::Info)
@@ -90,26 +91,22 @@ fn run_safe() -> Result<(), Error> {
             app.handle().plugin(tauri_plugin_log)?;
 
             let store = app.store(APP_CONFIG_PATH)?;
-            if let Some(db_path) = store.get("library-path") {
-                log::info!("Using database at {db_path:?}");
-                let app_state = app.state::<AppState>().clone();
-                async_runtime::block_on(async move {
-                    let path = PathBuf::from(
-                        db_path
-                            .get("value")
-                            .unwrap_or(&serde_json::Value::Null)
-                            .as_str()
-                            .unwrap_or(""),
-                    );
-                    if let Err(err) = app_state.connect_db_with_path(path).await {
-                        log::error!("DB init on startup failed: {err}");
-                    } else {
-                        log::info!("DB connected successfully");
-                    }
-                });
-            } else {
-                log::info!("No database path in config, wait for user to provide one");
-            }
+            let maybe_path = store
+                .get("library-path")
+                .and_then(|v| v.as_str().map(PathBuf::from));
+            let backend = match maybe_path.clone() {
+                Some(path) => match async_runtime::block_on(build_services(path)) {
+                    Ok(services) => BackendState::Ready(services),
+                    Err(_) => BackendState::NeedsSetup,
+                },
+                None => BackendState::NeedsSetup,
+            };
+            app.manage(AppState {
+                config: Arc::new(RwLock::new(RuntimeConfig {
+                    library_path: maybe_path,
+                })),
+                backend: Arc::new(RwLock::new(backend)),
+            });
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
