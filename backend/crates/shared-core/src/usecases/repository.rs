@@ -1,6 +1,6 @@
 use crate::ports::{
     filesystem::{FileSystemError, FileSystemPort},
-    repository::{BookRepositoryPort, InsertError},
+    repository::BookRepositoryPort,
 };
 use std::{path::PathBuf, sync::Arc};
 
