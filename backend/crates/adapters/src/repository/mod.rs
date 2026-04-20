@@ -196,7 +196,8 @@ impl Database {
     ///
     /// # Errors
     /// Fails if the path doesn't exist or if running the migration fails
-    async fn open(path: &Path) -> Result<Self, OpenRepositoryError> {
+    #[inline]
+    pub async fn open(path: &Path) -> Result<Self, OpenRepositoryError> {
         let options = SqliteConnectOptions::new()
             .foreign_keys(true)
             .filename(path);
