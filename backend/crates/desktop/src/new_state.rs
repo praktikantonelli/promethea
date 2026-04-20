@@ -3,7 +3,6 @@ use shared_core::ports::{
     filesystem::FileSystemPort, metadata::MetadataProviderPort, repository::BookRepositoryPort,
 };
 use shared_core::usecases::books::AddBookUseCase;
-use shared_core::usecases::repository::CreateRepositoryUseCase;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::RwLock;
@@ -24,7 +23,6 @@ pub enum BackendState {
 
 pub struct ApplicationServices {
     pub add_book: Arc<AddBookUseCase>,
-    pub create_repository: Arc<CreateRepositoryUseCase>,
 }
 
 pub struct RuntimeConfig {
@@ -50,10 +48,6 @@ pub async fn build_services(library_path: PathBuf) -> Result<ApplicationServices
         metadata,
         filesystem.clone(),
     ));
-    let create_repository = Arc::new(CreateRepositoryUseCase::new(filesystem));
 
-    Ok(ApplicationServices {
-        add_book,
-        create_repository,
-    })
+    Ok(ApplicationServices { add_book })
 }
