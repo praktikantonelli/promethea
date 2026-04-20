@@ -1,5 +1,7 @@
 use crate::errors::PrometheaError;
-use crate::new_state::{APP_CONFIG_PATH, AppState, LIBRARY_DATABASE_NAME};
+use crate::new_state::{
+    APP_CONFIG_PATH, AppState, BackendState, LIBRARY_DATABASE_NAME, build_services,
+};
 use chrono::{DateTime, Local};
 use core::future::Future;
 use core::iter::zip;
@@ -67,7 +69,17 @@ pub async fn create_new_db(
         db_file_path.display()
     );
 
-    state.connect_db_with_path(db_file_path).await?;
+    {
+        let mut config = state.config.write().unwrap();
+        config.library_path = Some(db_file_path.clone());
+    }
+
+    let services = build_services(db_file_path).await?;
+
+    {
+        let mut backend = state.backend.write().unwrap();
+        *backend = BackendState::Ready(services);
+    }
 
     Ok(())
 }
