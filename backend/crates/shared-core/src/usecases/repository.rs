@@ -2,7 +2,7 @@ use crate::ports::{
     filesystem::{FileSystemError, FileSystemPort},
     repository::BookRepositoryPort,
 };
-use std::{path::PathBuf, sync::Arc};
+use std::{path::Path, sync::Arc};
 
 pub struct CreateRepositoryUseCase {
     /// file system adapter
@@ -14,8 +14,13 @@ impl CreateRepositoryUseCase {
         Self { filesystem }
     }
 
-    pub fn execute(&self, path: PathBuf) -> Result<(), CreateRepositoryError> {
-        self.filesystem.create_file(&path)?;
+    /// Perform the task (create a new repository)
+    ///
+    /// # Errors
+    /// This method simply passes on all errors arising from all used ports
+    #[inline]
+    pub fn execute(&self, path: &Path) -> Result<(), CreateRepositoryError> {
+        self.filesystem.create_file(path)?;
         Ok(())
     }
 }
