@@ -1,12 +1,31 @@
 use std::path::{Path, PathBuf};
 
 pub trait FileSystemPort {
+    /// Create a file somewhere on the system
+    ///
+    /// # Errors
+    /// Returns an error if the file already exists or if there are permission errors
     fn create_file(&self, path: &Path) -> Result<(), FileSystemError>;
 
+    /// Move/rename a file somewhere on the system
+    ///
+    /// # Errors
+    /// Returns an error if the file types don't match (e.g., one path is a file, one a directory)
+    /// or if there are permission errors
     fn move_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError>;
 
+    /// Copy a file
+    ///
+    /// # Errors
+    /// Returns an error if the file types don't match (e.g., one path is a file, one a directory)
+    /// or if there are permission errors
     fn copy_file(&self, source: &Path, target: &Path) -> Result<(), FileSystemError>;
 
+    /// Delete a file
+    ///
+    /// # Errors
+    /// Returns an error if the file cannot be deleted, e.g., due to permission errors or because
+    /// the file doesn't exist
     fn delete_file(&self, path: &Path) -> Result<(), FileSystemError>;
 
     /// Extract the title of a book from an EPUB file
