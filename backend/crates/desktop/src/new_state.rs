@@ -1,0 +1,44 @@
+use adapters::{filesystem::FileSystem, metadata::MetadataProvider, repository::Database};
+use shared_core::ports::{
+    filesystem::FileSystemPort, metadata::MetadataProviderPort, repository::BookRepositoryPort,
+};
+use shared_core::usecases::books::AddBookUseCase;
+use std::path::PathBuf;
+use std::sync::Arc;
+use std::sync::RwLock;
+
+use crate::errors::PrometheaError;
+
+pub enum BackendState {
+    /// backend not ready yet
+    NeedsSetup,
+    /// backend ready and services up and running
+    Ready(ApplicationServices),
+}
+
+pub struct ApplicationServices {
+    pub add_book: Arc<AddBookUseCase>,
+}
+
+pub struct RuntimeConfig {
+    pub library_path: Option<PathBuf>,
+}
+
+#[non_exhaustive]
+pub struct AppState {
+    pub config: Arc<RwLock<RuntimeConfig>>,
+    pub backend: Arc<RwLock<BackendState>>,
+}
+
+/// Initializes all use cases and ports/adapters
+pub async fn build_services(library_path: PathBuf) -> Result<ApplicationServices, PrometheaError> {
+    let repository: Arc<dyn BookRepositoryPort + Send + Sync> =
+        Arc::new(Database::open(&library_path).await?);
+    let filesystem: Arc<dyn FileSystemPort + Send + Sync> = Arc::new(FileSystem::new());
+    let metadata: Arc<dyn MetadataProviderPort + Send + Sync> =
+        Arc::new(MetadataProvider::create()?);
+
+    let add_book = Arc::new(AddBookUseCase::new(repository, metadata, filesystem));
+
+    Ok(ApplicationServices { add_book })
+}
