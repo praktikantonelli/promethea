@@ -4024,6 +4024,7 @@ dependencies = [
 name = "promethea"
 version = "0.1.0"
 dependencies = [
+ "adapters",
  "anyhow",
  "chrono",
  "dotenvy",
