@@ -444,7 +444,8 @@ impl MetadataProvider {
     /// Create a new HTTP request client, to be used for all subsequent metadata scraping requests
     /// # Errors
     /// Fails in case any of the reqwest `ClientBuilder` methods fail
-    fn create() -> Result<Self, FetchMetadataError> {
+    #[inline]
+    pub fn create() -> Result<Self, FetchMetadataError> {
         let mut headers = header::HeaderMap::new();
         headers.insert(
             header::ACCEPT,
