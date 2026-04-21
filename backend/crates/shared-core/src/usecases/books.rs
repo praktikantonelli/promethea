@@ -76,5 +76,15 @@ pub struct AddBookInput {
     input_path: PathBuf,
 }
 
+impl AddBookInput {
+    #[inline]
+    #[must_use]
+    pub fn new(input_path: &Path) -> Self {
+        Self {
+            input_path: input_path.to_owned(),
+        }
+    }
+}
+
 #[non_exhaustive]
 pub struct AddBookOutput;
