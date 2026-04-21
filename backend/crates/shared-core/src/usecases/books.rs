@@ -3,7 +3,10 @@ use crate::ports::{
     metadata::{FetchMetadataError, MetadataProviderPort},
     repository::{BookRepositoryPort, InsertError},
 };
-use std::{path::PathBuf, sync::Arc};
+use std::{
+    path::{Path, PathBuf},
+    sync::Arc,
+};
 
 pub struct AddBookUseCase {
     /// book repository adapter
