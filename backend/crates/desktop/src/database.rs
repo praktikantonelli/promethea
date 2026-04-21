@@ -1,5 +1,5 @@
 use crate::errors::PrometheaError;
-use crate::new_state::{
+use crate::state::{
     APP_CONFIG_PATH, AppState, BackendState, LIBRARY_DATABASE_NAME, build_services,
 };
 use serde_json::json;

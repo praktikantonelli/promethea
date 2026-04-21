@@ -3,7 +3,7 @@
 //! This crate contains everything Tauri-specific for promethea
 use crate::database::{add_book, create_new_db, fetch_books, get_init_status, open_existing_db};
 use anyhow::Error;
-use new_state::{APP_CONFIG_PATH, AppState, BackendState, RuntimeConfig, build_services};
+use state::{APP_CONFIG_PATH, AppState, BackendState, RuntimeConfig, build_services};
 use std::path::PathBuf;
 use std::sync::{Arc, RwLock};
 use tauri::Manager as _;
@@ -17,7 +17,7 @@ mod database;
 /// Error types
 mod errors;
 /// New app state management
-mod new_state;
+mod state;
 /// App state management
 use std::env;
 use tauri::async_runtime;
