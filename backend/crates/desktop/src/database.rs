@@ -10,6 +10,7 @@ use futures::future::join_all;
 use promethea_core::database::types::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
 use promethea_core::scraping::sorting::{get_name_sort, get_title_sort};
 use serde_json::json;
+use shared_core::domain::repository::BookItem;
 use std::fs::File;
 use std::path::PathBuf;
 use std::time::Instant;
@@ -115,16 +116,20 @@ pub async fn get_init_status(state: State<'_, AppState>) -> Result<bool, ()> {
 /// Wrapper around fetch query that returns a vector containing all books and their metadata, to be
 /// displayed in the GUI as a list/table/card stack
 #[tauri::command]
-pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookRecord>, String> {
-    let db_state = &*state.db.read().await;
-    match db_state.as_ref() {
-        Some(db) => db
-            .fetch_books_query()
-            .await
-            .map_err(|err| format!("Failed to run fetch books query: {err}")),
+pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookItem>, String> {
+    let use_case = {
+        let backend = state.backend.read().unwrap();
 
-        None => Err(String::from("Database pool unavailable")),
-    }
+        match &*backend {
+            BackendState::NeedsSetup => return Err("not configured".into()),
+            BackendState::Ready(services) => services.fetch_books.clone(),
+        }
+    };
+    let output = use_case
+        .execute()
+        .await
+        .map_err(|error| error.to_string())?;
+    Ok(output.0)
 }
 
 /// Given a path to an EPUB file, extracts title and author(s) and uses that to fetch metadata,
