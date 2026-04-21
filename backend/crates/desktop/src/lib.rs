@@ -91,14 +91,14 @@ fn run_safe() -> Result<(), Error> {
             let store = app.store(APP_CONFIG_PATH)?;
             let maybe_path = store
                 .get("library-path")
-                .and_then(|v| v.as_str().map(PathBuf::from));
-            let backend = match maybe_path.clone() {
-                Some(path) => match async_runtime::block_on(build_services(path)) {
-                    Ok(services) => BackendState::Ready(services),
-                    Err(_) => BackendState::NeedsSetup,
+                .and_then(|value| value.as_str().map(PathBuf::from));
+            let backend = maybe_path.clone().map_or_else(
+                || BackendState::NeedsSetup,
+                |path| {
+                    async_runtime::block_on(build_services(path))
+                        .map_or_else(|_| BackendState::NeedsSetup, BackendState::Ready)
                 },
-                None => BackendState::NeedsSetup,
-            };
+            );
             app.manage(AppState {
                 config: Arc::new(RwLock::new(RuntimeConfig {
                     library_path: maybe_path,
