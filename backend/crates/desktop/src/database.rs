@@ -2,39 +2,13 @@ use crate::errors::PrometheaError;
 use crate::new_state::{
     APP_CONFIG_PATH, AppState, BackendState, LIBRARY_DATABASE_NAME, build_services,
 };
-use chrono::{DateTime, Local};
-use core::future::Future;
-use core::iter::zip;
-use epub::doc::EpubDoc;
-use futures::future::join_all;
-use promethea_core::database::types::{AuthorRecord, BookRecord, SeriesAndVolumeRecord};
-use promethea_core::scraping::sorting::{get_name_sort, get_title_sort};
 use serde_json::json;
 use shared_core::domain::repository::BookItem;
+use shared_core::usecases::books::AddBookInput;
 use std::fs::File;
 use std::path::PathBuf;
-use std::time::Instant;
 use tauri::{AppHandle, Emitter as _, State};
 use tauri_plugin_store::StoreExt as _;
-use tokio::task;
-use tracing::{Instrument as _, info_span, instrument};
-
-/// Wrapper that tries to fetch a value with an async fn and uses a synchronous fallback in case
-/// the first operation fails
-async fn resolve_sort_with_fallback<Primary, PrimaryFut, Fallback, E>(
-    primary: Primary,
-    fallback: Fallback,
-) -> String
-where
-    Primary: FnOnce() -> PrimaryFut,
-    PrimaryFut: Future<Output = Result<Option<String>, E>>,
-    Fallback: FnOnce() -> String,
-{
-    match primary().await {
-        Ok(Some(val)) => val,
-        _ => fallback(),
-    }
-}
 
 /// Creates a new `SQLite` database at a given path writes the path into the Tauri store
 #[tauri::command]
@@ -134,19 +108,6 @@ pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookItem>, St
 
 /// Given a path to an EPUB file, extracts title and author(s) and uses that to fetch metadata,
 /// then inserts all data into the database
-#[allow(
-    clippy::significant_drop_tightening,
-    reason = "Problem with references due to multiple queries with single Db instance"
-)]
-#[allow(
-    clippy::too_many_lines,
-    reason = "Okay for now, will be refactored later"
-)]
-#[instrument(
-    name = "cmd.add_book",
-    skip(app, state),
-    fields(path = ?path)
-)]
 #[tauri::command]
 pub async fn add_book(
     app: AppHandle,
