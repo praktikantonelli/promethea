@@ -15,6 +15,8 @@ pub const APP_CONFIG_PATH: &str = "promethea-config.json";
 /// Name of the `SQLite` database file that represents the library
 pub const LIBRARY_DATABASE_NAME: &str = "library.db";
 
+/// The state in which the backend is currently in. Starts as `NeedsSetup` and gets set to `Ready`
+/// when all services are up and running
 pub enum BackendState {
     /// backend not ready yet
     NeedsSetup,
@@ -22,18 +24,26 @@ pub enum BackendState {
     Ready(ApplicationServices),
 }
 
+/// Collects all use cases of the application
 pub struct ApplicationServices {
+    /// add a new book to the repository
     pub add_book: Arc<AddBookUseCase>,
+    /// fetch all owned books from the repository
     pub fetch_books: Arc<FetchBooksUseCase>,
 }
 
+/// Models all runtime data for the application
 pub struct RuntimeConfig {
+    /// current path where the book library is stored on disk
     pub library_path: Option<PathBuf>,
 }
 
 #[non_exhaustive]
+/// The state of the app, everything dealing with backend logic
 pub struct AppState {
+    /// runtime data of the app's state
     pub config: Arc<RwLock<RuntimeConfig>>,
+    /// backend state, including whether ready or not
     pub backend: Arc<RwLock<BackendState>>,
 }
 
