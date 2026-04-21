@@ -18,6 +18,12 @@ pub enum PrometheaError {
     /// Error from metadata fetcher
     #[error(transparent)]
     Metadata(#[from] FetchMetadataError),
+    /// Error arising from state
+    #[error("Error initializing state: `{message}`")]
+    State {
+        /// reason why state returned an error
+        message: String,
+    },
 }
 
 impl serde::Serialize for PrometheaError {
