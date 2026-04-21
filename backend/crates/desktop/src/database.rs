@@ -154,152 +154,21 @@ pub async fn add_book(
     path: PathBuf,
 ) -> Result<(), PrometheaError> {
     tracing::info!("Received request to add book from {path:?}");
+    let use_case = {
+        let backend = state.backend.read().unwrap();
 
-    // Phase 1: Extract title + author(s) from EPUB file
-    let parse_span = info_span!("epub.parse");
-    let (title, author_names) = task::spawn_blocking({
-        let path = path.clone();
-        move || {
-            let _e = parse_span.enter();
-
-            let t0 = Instant::now();
-
-            // Extract bare minimum metadata (title + author(s)) from EPUB file
-            let doc = EpubDoc::new(path).map_err(|error| {
-                PrometheaError::Other(format!("Failed to open EPUB file: {error}"))
-            })?;
-
-            let title = doc.get_title().ok_or(PrometheaError::Other(
-                "Failed to extract title from EPUB file!".to_owned(),
-            ))?;
-            let authors = doc
-                .metadata
-                .iter()
-                .filter(|item| item.property == "creator")
-                .map(|item| item.value.clone())
-                .collect::<Vec<String>>();
-
-            tracing::info!(
-                elapsed_ms = t0.elapsed().as_millis(),
-                author_count = authors.len(),
-                "epub metadata extracted"
-            );
-            Ok::<_, PrometheaError>((title, authors))
+        match &*backend {
+            BackendState::NeedsSetup => {
+                return Err(PrometheaError::Other("State not ready".to_owned()));
+            }
+            BackendState::Ready(services) => services.add_book.clone(),
         }
-    })
-    .await
-    .map_err(|err| PrometheaError::Other(err.to_string()))??;
-
-    // Phase 2: Use found title and author(s) to scrape Goodreads for metadata
-    let first_author = author_names.first().cloned().unwrap_or_default();
-    let scrape_span = info_span!("metadata.scrape", title = %title, author = %first_author);
-    let metadata = async {
-        let t0 = Instant::now();
-
-        let result = state
-            .metadata_request_client
-            .fetch_metadata(&title, &first_author)
-            .await
-            .map_err(|err| PrometheaError::Other(format!("{err:?}")))?;
-
-        tracing::info!(
-            elapsed_ms = t0.elapsed().as_millis(),
-            found = result.is_some(),
-            "metadata scraping done"
-        );
-        Ok::<_, PrometheaError>(result)
-    }
-    .instrument(scrape_span)
-    .await?;
-
-    let Some(metadata) = metadata else {
-        tracing::info!("no metadata found");
-        return Err(PrometheaError::Other(
-            "Failed to find metadata for given book".to_owned(),
-        ));
     };
-
-    let db_state = state.db.read().await;
-
-    let Some(db) = db_state.as_ref() else {
-        tracing::warn!("Database currently not available");
-        return Err(PrometheaError::Other(
-            "Failed to get database connection from app state".to_owned(),
-        ));
-    };
-
-    let title_sort = get_title_sort(&title);
-    let authors = metadata.contributors;
-    let authors_sort = join_all(authors.iter().map(|key| async move {
-        resolve_sort_with_fallback(
-            || db.try_fetch_author_sort(&key.name),
-            || get_name_sort(&key.name),
-        )
+    use_case
+        .execute(AddBookInput::new(&path))
         .await
-    }))
-    .await;
-    let authors = zip(authors, authors_sort)
-        .map(|(author, author_sort)| {
-            AuthorRecord::new(
-                author.name,
-                author_sort,
-                author.goodreads_id.parse().unwrap_or(-1),
-            )
-        })
-        .collect::<Vec<AuthorRecord>>();
+        .map_err(|error| PrometheaError::Other(error.to_string()))?;
 
-    // Series sort string(s) => Same as authors
-    let series = metadata.series;
-    let series_sort = join_all(series.iter().map(|key| async move {
-        resolve_sort_with_fallback(
-            || db.try_fetch_series_sort(&key.title),
-            || get_title_sort(&key.title),
-        )
-        .await
-    }))
-    .await;
-    let series_and_volume = zip(series, series_sort)
-        .map(|(series, series_sort)| {
-            SeriesAndVolumeRecord::new(
-                series.title,
-                series_sort,
-                f64::from(series.number),
-                series.goodreads_id.parse().unwrap_or(-1),
-            )
-        })
-        .collect::<Vec<SeriesAndVolumeRecord>>();
-    // Date added => get today's date
-    let date_added = Local::now().to_utc();
-    // Date updated => get today's date
-    let date_updated = date_added;
-
-    // Assemble data into SQL query
-    let book_record = BookRecord::new(
-        -1,
-        title,
-        title_sort,
-        authors,
-        series_and_volume,
-        metadata.page_count.unwrap_or(0),
-        metadata
-            .goodreads_id
-            .unwrap_or(String::new())
-            .parse()
-            .unwrap_or(-1),
-        date_added.naive_utc(),
-        metadata
-            .publication_date
-            .unwrap_or_else(DateTime::default)
-            .naive_utc(),
-        date_updated.naive_utc(),
-    );
-
-    if let Err(err) = db.insert_book(&book_record).await {
-        tracing::error!("Failed to add book: {err}");
-        return Err(PrometheaError::Other(err.to_string()));
-    }
-
-    tracing::info!("Successfully added book");
     app.emit("db:changed", ())?;
     Ok(())
 }
