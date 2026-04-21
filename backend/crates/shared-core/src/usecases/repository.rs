@@ -34,4 +34,4 @@ pub enum FetchBooksError {
 }
 
 #[non_exhaustive]
-pub struct FetchBooksOutput(Vec<BookItem>);
+pub struct FetchBooksOutput(pub Vec<BookItem>);
