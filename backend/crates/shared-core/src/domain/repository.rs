@@ -1,8 +1,9 @@
 use chrono::NaiveDateTime;
+use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
 #[non_exhaustive]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BookItem {
     pub book_id: i64,
     pub title: String,
@@ -51,7 +52,7 @@ impl BookItem {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AuthorItem {
     pub name: String,
     pub sort: String,
@@ -71,7 +72,7 @@ impl AuthorItem {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SeriesAndVolumeItem {
     pub series: String,
     pub sort: String,
