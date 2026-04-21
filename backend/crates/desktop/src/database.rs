@@ -31,14 +31,24 @@ pub async fn create_new_db(
     );
 
     {
-        let mut config = state.config.write().unwrap();
+        let mut config = state
+            .config
+            .write()
+            .map_err(|error| PrometheaError::State {
+                message: error.to_string(),
+            })?;
         config.library_path = Some(db_file_path.clone());
     }
 
     let services = build_services(db_file_path).await?;
 
     {
-        let mut backend = state.backend.write().unwrap();
+        let mut backend = state
+            .backend
+            .write()
+            .map_err(|error| PrometheaError::State {
+                message: error.to_string(),
+            })?;
         *backend = BackendState::Ready(services);
     }
 
@@ -62,14 +72,24 @@ pub async fn open_existing_db(
     );
 
     {
-        let mut config = state.config.write().unwrap();
+        let mut config = state
+            .config
+            .write()
+            .map_err(|error| PrometheaError::State {
+                message: error.to_string(),
+            })?;
         config.library_path = Some(db_file_path.clone());
     }
 
     let services = build_services(db_file_path).await?;
 
     {
-        let mut backend = state.backend.write().unwrap();
+        let mut backend = state
+            .backend
+            .write()
+            .map_err(|error| PrometheaError::State {
+                message: error.to_string(),
+            })?;
         *backend = BackendState::Ready(services);
     }
 
@@ -78,31 +98,38 @@ pub async fn open_existing_db(
 
 /// Fetches the database's initialization status
 #[tauri::command]
-pub async fn get_init_status(state: State<'_, AppState>) -> Result<bool, ()> {
-    let config = state.config.read().unwrap();
-    if config.library_path.is_some() {
-        Ok(true)
-    } else {
-        Ok(false)
-    }
+pub async fn get_init_status(state: State<'_, AppState>) -> Result<bool, PrometheaError> {
+    let config = state.config.read().map_err(|error| PrometheaError::State {
+        message: error.to_string(),
+    })?;
+    Ok(config.library_path.is_some())
 }
 
 /// Wrapper around fetch query that returns a vector containing all books and their metadata, to be
 /// displayed in the GUI as a list/table/card stack
 #[tauri::command]
-pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookItem>, String> {
+pub async fn fetch_books(state: State<'_, AppState>) -> Result<Vec<BookItem>, PrometheaError> {
     let use_case = {
-        let backend = state.backend.read().unwrap();
+        let backend = state
+            .backend
+            .read()
+            .map_err(|error| PrometheaError::State {
+                message: error.to_string(),
+            })?;
 
         match &*backend {
-            BackendState::NeedsSetup => return Err("not configured".into()),
+            BackendState::NeedsSetup => {
+                return Err(PrometheaError::State {
+                    message: "Backend not set up yet!".to_owned(),
+                });
+            }
             BackendState::Ready(services) => services.fetch_books.clone(),
         }
     };
     let output = use_case
         .execute()
         .await
-        .map_err(|error| error.to_string())?;
+        .map_err(|error| PrometheaError::Other(error.to_string()))?;
     Ok(output.0)
 }
 
@@ -116,7 +143,12 @@ pub async fn add_book(
 ) -> Result<(), PrometheaError> {
     tracing::info!("Received request to add book from {path:?}");
     let use_case = {
-        let backend = state.backend.read().unwrap();
+        let backend = state
+            .backend
+            .read()
+            .map_err(|error| PrometheaError::State {
+                message: error.to_string(),
+            })?;
 
         match &*backend {
             BackendState::NeedsSetup => {
