@@ -34,9 +34,3 @@ impl serde::Serialize for PrometheaError {
         serializer.serialize_str(self.to_string().as_ref())
     }
 }
-
-impl From<anyhow::Error> for PrometheaError {
-    fn from(err: anyhow::Error) -> Self {
-        Self::Other(err.to_string())
-    }
-}

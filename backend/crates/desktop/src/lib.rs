@@ -2,7 +2,7 @@
 //!
 //! This crate contains everything Tauri-specific for promethea
 use crate::database::{add_book, create_new_db, fetch_books, get_init_status, open_existing_db};
-use anyhow::Error;
+use errors::PrometheaError;
 use state::{APP_CONFIG_PATH, AppState, BackendState, RuntimeConfig, build_services};
 use std::path::PathBuf;
 use std::sync::{Arc, RwLock};
@@ -41,7 +41,7 @@ pub fn run() {
 /// `None` variants. Note that, since `run()` is the entry point for mobile, it has to keep its
 /// signature of not returning anything.
 #[allow(clippy::exit, reason = "Happens in Tauri macro, cannot be avoided")]
-fn run_safe() -> Result<(), Error> {
+fn run_safe() -> Result<(), PrometheaError> {
     #[cfg(not(debug_assertions))]
     {
         let subscriber = fmt()
