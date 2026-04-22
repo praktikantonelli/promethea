@@ -53,7 +53,6 @@ anyhow = { version = "1.0.100" }
 tauri-plugin-process = "2"
 epub = { version = "2.1.5" }
 goodreads-metadata-scraper = "0.2.4"
-promethea_core = { path = "./../promethea_core/" }
 dotenvy = "0.15.7"
 futures = "0.3.31"
 
