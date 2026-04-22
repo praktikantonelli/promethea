@@ -42,19 +42,8 @@ tracing-subscriber = { version = "0.3.22", default-features = false, features = 
   "env-filter",
   "std",
 ] }
-sqlx = { version = "0.8.6", features = [
-  "sqlite",
-  "runtime-tokio-rustls",
-  "chrono",
-] }
-tokio = { version = "1.47.1", features = ["macros", "rt-multi-thread"] }
-chrono = { version = "0.4.42", features = ["serde"] }
-anyhow = { version = "1.0.100" }
 tauri-plugin-process = "2"
-epub = { version = "2.1.5" }
-goodreads-metadata-scraper = "0.2.4"
 dotenvy = "0.15.7"
-futures = "0.3.31"
 
 shared-core = { path = "../shared-core/" }
 adapters = { path = "../adapters/" }
