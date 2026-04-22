@@ -89,9 +89,13 @@ fn run_safe() -> Result<(), Error> {
             app.handle().plugin(tauri_plugin_log)?;
 
             let store = app.store(APP_CONFIG_PATH)?;
-            let maybe_path = store
-                .get("library-path")
-                .and_then(|value| value.as_str().map(PathBuf::from));
+            let maybe_path = store.get("library-path").and_then(|value| {
+                value
+                    .get("value")
+                    .unwrap_or(&serde_json::Value::Null)
+                    .as_str()
+                    .map(PathBuf::from)
+            });
             let backend = maybe_path.clone().map_or_else(
                 || BackendState::NeedsSetup,
                 |path| {
