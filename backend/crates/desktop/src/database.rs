@@ -93,6 +93,9 @@ pub async fn open_existing_db(
         *backend = BackendState::Ready(services);
     }
 
+    // an existing DB might not be empty -> fetch books now
+    app.emit("db:changed", ())?;
+
     Ok(())
 }
 
