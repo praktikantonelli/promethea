@@ -6,7 +6,7 @@ use shared_core::usecases::books::AddBookUseCase;
 use shared_core::usecases::repository::FetchBooksUseCase;
 use std::path::PathBuf;
 use std::sync::Arc;
-use std::sync::RwLock;
+use tokio::sync::RwLock;
 
 use crate::errors::PrometheaError;
 

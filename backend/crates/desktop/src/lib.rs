@@ -5,10 +5,11 @@ use crate::database::{add_book, create_new_db, fetch_books, get_init_status, ope
 use errors::PrometheaError;
 use state::{APP_CONFIG_PATH, AppState, BackendState, RuntimeConfig, build_services};
 use std::path::PathBuf;
-use std::sync::{Arc, RwLock};
+use std::sync::Arc;
 use tauri::Manager as _;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_plugin_store::StoreExt as _;
+use tokio::sync::RwLock;
 #[cfg(not(debug_assertions))]
 use tracing_subscriber::{EnvFilter, fmt};
 /// Database module, holds everything dealing with accessing the database from the Tauri
