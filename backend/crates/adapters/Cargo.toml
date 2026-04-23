@@ -28,10 +28,12 @@ async-trait = "0.1.89"
 thiserror = "2.0.18"
 chrono = "0.4.44"
 serde = "1.0.228"
-pretty_assertions = "1.4.1"
 log = "0.4.28"
 serde_json = "1.0.149"
 regex = "1.12.2"
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"
 
 [lints]
 workspace = true
