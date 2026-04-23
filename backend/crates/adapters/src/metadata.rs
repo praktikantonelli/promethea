@@ -429,7 +429,8 @@ fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
             };
 
             let web_url = &metadata["props"]["pageProps"]["apolloState"][&key]["webUrl"];
-            let Ok(goodreads_id) = extract_goodreads_id_from_link(&web_url.to_string()) else {
+            let Ok(goodreads_id) = extract_goodreads_id_from_link(web_url.as_str().unwrap_or(""))
+            else {
                 warn!("Failed to parse series ID");
                 return None;
             };
