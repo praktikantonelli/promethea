@@ -1,23 +1,24 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
-use std::fmt::{Display, Formatter};
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct BookItem {
+#[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
+pub struct BookRecord {
     pub book_id: i64,
     pub title: String,
     pub sort: String,
-    pub authors: Vec<AuthorItem>,
-    pub series_and_volume: Vec<SeriesAndVolumeItem>,
+    #[sqlx(json)]
+    pub authors: Vec<AuthorRecord>,
+    #[sqlx(json)]
+    pub series_and_volume: Vec<SeriesAndVolumeRecord>,
     pub number_of_pages: i64,
     pub goodreads_id: i64,
     pub date_added: NaiveDateTime,
-    pub date_published: Option<NaiveDateTime>,
+    pub date_published: NaiveDateTime,
     pub date_modified: NaiveDateTime,
 }
 
-impl BookItem {
+impl BookRecord {
     #[allow(
         clippy::too_many_arguments,
         reason = "Constructor, cannot have fewer arguments"
@@ -28,12 +29,12 @@ impl BookItem {
         book_id: i64,
         title: String,
         sort: String,
-        authors: Vec<AuthorItem>,
-        series_and_volume: Vec<SeriesAndVolumeItem>,
+        authors: Vec<AuthorRecord>,
+        series_and_volume: Vec<SeriesAndVolumeRecord>,
         number_of_pages: i64,
         goodreads_id: i64,
         date_added: NaiveDateTime,
-        date_published: Option<NaiveDateTime>,
+        date_published: NaiveDateTime,
         date_modified: NaiveDateTime,
     ) -> Self {
         Self {
@@ -52,14 +53,14 @@ impl BookItem {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AuthorItem {
+#[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
+pub struct AuthorRecord {
     pub name: String,
     pub sort: String,
     pub goodreads_id: i64,
 }
 
-impl AuthorItem {
+impl AuthorRecord {
     #[must_use]
     #[inline]
     pub const fn new(name: String, sort: String, goodreads_id: i64) -> Self {
@@ -72,15 +73,15 @@ impl AuthorItem {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SeriesAndVolumeItem {
+#[derive(Serialize, Debug, Deserialize, Clone, sqlx::FromRow)]
+pub struct SeriesAndVolumeRecord {
     pub series: String,
     pub sort: String,
     pub volume: f64,
     pub goodreads_id: i64,
 }
 
-impl SeriesAndVolumeItem {
+impl SeriesAndVolumeRecord {
     #[inline]
     #[must_use]
     pub const fn new(series: String, sort: String, volume: f64, goodreads_id: i64) -> Self {
@@ -93,29 +94,12 @@ impl SeriesAndVolumeItem {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, Clone)]
 #[non_exhaustive]
-pub struct GoodreadsId(pub i64);
+#[derive(Debug, thiserror::Error)]
+pub enum InsertBookError {
+    #[error("book already exists (goodreads_id={0})")]
+    BookAlreadyExists(i64),
 
-impl Display for GoodreadsId {
-    #[inline]
-    #[allow(
-        clippy::min_ident_chars,
-        reason = "signature is defined by Display trait"
-    )]
-    #[allow(
-        clippy::absolute_paths,
-        reason = "importing would override default Result"
-    )]
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl GoodreadsId {
-    #[must_use]
-    #[inline]
-    pub const fn new(id: i64) -> Self {
-        Self(id)
-    }
+    #[error("database error: {0}")]
+    Db(#[from] sqlx::Error),
 }

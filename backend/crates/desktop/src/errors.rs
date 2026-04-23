@@ -1,5 +1,3 @@
-use shared_core::ports::{metadata::FetchMetadataError, repository::OpenRepositoryError};
-
 /// The Promethea error type, DEPRECATED
 #[derive(Debug, thiserror::Error)]
 pub enum PrometheaError {
@@ -12,18 +10,6 @@ pub enum PrometheaError {
     /// Wildcard error for everything else
     #[error("{0}")]
     Other(String),
-    /// Error from repository
-    #[error(transparent)]
-    Repository(#[from] OpenRepositoryError),
-    /// Error from metadata fetcher
-    #[error(transparent)]
-    Metadata(#[from] FetchMetadataError),
-    /// Error arising from state
-    #[error("Error initializing state: `{message}`")]
-    State {
-        /// reason why state returned an error
-        message: String,
-    },
 }
 
 impl serde::Serialize for PrometheaError {
@@ -32,5 +18,11 @@ impl serde::Serialize for PrometheaError {
         S: serde::Serializer,
     {
         serializer.serialize_str(self.to_string().as_ref())
+    }
+}
+
+impl From<anyhow::Error> for PrometheaError {
+    fn from(err: anyhow::Error) -> Self {
+        Self::Other(err.to_string())
     }
 }

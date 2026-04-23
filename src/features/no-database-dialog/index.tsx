@@ -11,30 +11,33 @@ import { open as dialogOpen } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";
 
+type DbInitStatus =
+  | { status: "loaded" }
+  | { status: "needs_setup"; reason?: string };
 
 function useDbInitStatus() {
-  const [ready, setReady] = useState<boolean>(false);
+  const [status, setStatus] = useState<DbInitStatus | null>(null);
 
   useEffect(() => {
     let alive = true;
-    invoke<boolean>("get_init_status")
-      .then((ready) => { if (alive) setReady(ready) })
-      .catch(() => { if (alive) setReady(false) });
+    invoke<DbInitStatus>("get_init_status")
+      .then((s) => alive && setStatus(s))
+      .catch(() => alive && setStatus({ status: "needs_setup", reason: "query failed" }));
     return () => {
       alive = false;
     };
   }, []);
 
   const refresh = useCallback(async () => {
-    const ready = await invoke<boolean>("get_init_status");
-    setReady(ready);
+    const s = await invoke<DbInitStatus>("get_init_status");
+    setStatus(s);
   }, []);
 
-  return { ready, setReady, refresh };
+  return { status, setStatus, refresh };
 }
 
 export default function NoDatabaseDialog() {
-  const { ready, setReady: _setReady, refresh } = useDbInitStatus();
+  const { status, setStatus: _setStatus, refresh } = useDbInitStatus();
 
   const handleCreateNew = useCallback(async () => {
     try {
@@ -66,10 +69,11 @@ export default function NoDatabaseDialog() {
     }
   }, [refresh]);
 
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
-    setOpen(!ready);
-  }, [ready]);
+    if (!status) return;
+    setOpen(status.status === "needs_setup");
+  }, [status]);
 
 
   return (
