@@ -1,7 +1,7 @@
 [workspace]
 
-members = ["crates/desktop", "crates/promethea_core", "crates/server"]
-default-members = ["crates/promethea_core", "crates/server", "crates/desktop"]
+members = ["crates/adapters", "crates/desktop", "crates/shared-core"]
+default-members = ["crates/shared-core", "crates/adapters", "crates/desktop"]
 resolver = "2"
 
 [workspace.lints.rust]
@@ -54,3 +54,12 @@ items_after_statements = { level = "allow", priority = 1 }
 unreachable = { level = "allow", priority = 1 }
 # allow let _ = fn_with_must_use(), this is used in #[tauri::command]
 let_underscore_must_use = { level = "allow", priority = 1 }
+# allow imports through std, not intended as no_std project
+std_instead_of_alloc = { level = "allow", priority = 1 }
+std_instead_of_core = { level = "allow", priority = 1 }
+# allow cloning ref-counted pointers, this is the whole purpose of them
+clone_on_ref_ptr = { level = "allow", priority = 1 }
+# use semicolon inside block -> disable outside block lint
+semicolon_outside_block = { level = "allow", priority = 1 }
+# allow matching with implicit references
+pattern_type_mismatch = { level = "allow", priority = 1 }

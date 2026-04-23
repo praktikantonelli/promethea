@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            INSERT INTO books (\n                title,\n                sort,\n                date_published,\n                number_of_pages,\n                goodreads_id\n            )\n            VALUES (?, ?, ?, ?, ?)\n                RETURNING id; \n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "bf9018899c8bad1e7206df8a2638e10e74a429c84c3b8f56ac318464d681472f"
+}
