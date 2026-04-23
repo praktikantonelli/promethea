@@ -52,7 +52,7 @@ impl AddBookUseCase {
             // insert metadata into DB
             self.repository.insert_book(metadata).await?;
             // move file to proper location in library folder
-            Ok(AddBookOutput {})
+            Ok(AddBookOutput)
         } else {
             Err(AddBookError::Metadata(FetchMetadataError::GoodreadsId {
                 title,
