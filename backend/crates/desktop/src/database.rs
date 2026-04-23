@@ -102,10 +102,21 @@ pub async fn open_existing_db(
 /// Fetches the database's initialization status
 #[tauri::command]
 pub async fn get_init_status(state: State<'_, AppState>) -> Result<bool, PrometheaError> {
+    let backend = state
+        .backend
+        .read()
+        .map_err(|error| PrometheaError::State {
+            message: error.to_string(),
+        })?;
     let config = state.config.read().map_err(|error| PrometheaError::State {
         message: error.to_string(),
     })?;
-    Ok(config.library_path.is_some())
+    if config.library_path.is_none() {
+        tracing::warn!("Database path not yet configured!");
+        Ok(false)
+    } else {
+        Ok(matches!(&*backend, BackendState::Ready(_)))
+    }
 }
 
 /// Wrapper around fetch query that returns a vector containing all books and their metadata, to be
