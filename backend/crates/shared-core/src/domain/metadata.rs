@@ -1,5 +1,5 @@
 use crate::domain::repository::GoodreadsId;
-use chrono::{DateTime, Utc};
+use chrono::NaiveDateTime;
 
 /// The primary data structure containing the metadata of a book.
 #[non_exhaustive]
@@ -8,7 +8,7 @@ pub struct BookMetadata {
     /// The main title of the book.
     pub title: String,
     /// The publication date of the book, represented as a UTC datetime.
-    pub publication_date: Option<DateTime<Utc>>,
+    pub publication_date: Option<NaiveDateTime>,
     /// A list of contributors to the book, each represented as a `BookContributor`.
     pub contributors: Vec<BookContributor>,
     /// A list of series information, if the book is part of a series, represented as a `BookSeries`.
@@ -26,7 +26,7 @@ impl BookMetadata {
     #[inline]
     pub fn new(
         title: &str,
-        publication_date: Option<DateTime<Utc>>,
+        publication_date: Option<NaiveDateTime>,
         contributors: Vec<BookContributor>,
         series: Vec<BookSeries>,
         number_of_pages: Option<i64>,

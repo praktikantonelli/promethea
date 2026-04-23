@@ -15,7 +15,7 @@ pub struct BookRecord {
     pub number_of_pages: i64,
     pub goodreads_id: i64,
     pub date_added: NaiveDateTime,
-    pub date_published: NaiveDateTime,
+    pub date_published: Option<NaiveDateTime>,
     pub date_modified: NaiveDateTime,
 }
 
@@ -35,7 +35,7 @@ impl BookRecord {
         number_of_pages: i64,
         goodreads_id: i64,
         date_added: NaiveDateTime,
-        date_published: NaiveDateTime,
+        date_published: Option<NaiveDateTime>,
         date_modified: NaiveDateTime,
     ) -> Self {
         Self {

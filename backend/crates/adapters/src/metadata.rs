@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, NaiveDateTime};
 use core::time::Duration;
 use log::{error, info, warn};
 use regex::Regex;
@@ -351,7 +351,7 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
 }
 
 /// Extracts a book's publication date from its metadata JSON
-fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTime<Utc>> {
+fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<NaiveDateTime> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
@@ -365,7 +365,7 @@ fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<DateTim
         if timestamp.is_none() {
             warn!("Failed to parse publication date");
         }
-        timestamp
+        timestamp.map(|date| date.naive_utc())
     } else {
         warn!("No publication date in JSON found!");
         None
