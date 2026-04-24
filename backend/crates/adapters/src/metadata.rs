@@ -496,3 +496,21 @@ fn to_string(value: &Value) -> Option<String> {
         }
     }
 }
+
+#[cfg(test)]
+#[allow(clippy::unwrap_used, reason = "Tests")]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[tokio::test]
+    async fn storm_front() {
+        let fetcher = MetadataProvider::create().unwrap();
+        let goodreads_id = fetcher
+            .fetch_goodreads_id("Storm Front", "Jim Butcher")
+            .await
+            .unwrap();
+
+        assert_eq!(goodreads_id, Some(GoodreadsId::new(47212)));
+    }
+}
