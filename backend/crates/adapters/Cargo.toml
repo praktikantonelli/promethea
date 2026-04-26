@@ -34,7 +34,7 @@ regex = "1.12.2"
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
-tokio = "1.52.1"
+tokio = { version = "1.52.1", features = ["macros"] }
 
 [lints]
 workspace = true
