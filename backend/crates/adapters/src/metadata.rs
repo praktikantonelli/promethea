@@ -15,55 +15,50 @@ use urlencoding::encode;
 pub struct MetadataProvider {
     /// persistent HTTP client to avoid overhead of creating one for every request
     http_client: reqwest::Client,
+    /// CSS selector for book titles
+    title_selector: Selector,
+    /// CSS selector for author names
+    author_selector: Selector,
 }
 
 #[async_trait]
 impl MetadataProviderPort for MetadataProvider {
     #[inline]
-    async fn fetch_goodreads_id(
+    async fn fetch_id_with_title(
+        &self,
+        title: &str,
+    ) -> Result<Option<GoodreadsId>, FetchMetadataError> {
+        let document = self.fetch_id(title).await?;
+
+        for title_element in document.select(&self.title_selector) {
+            let found_title = title_element.text().collect::<String>().trim().to_owned();
+            let found_link = title_element.value().attr("href").ok_or_else(|| {
+                FetchMetadataError::Extraction {
+                    key: "link".to_owned(),
+                    message: "no key named `href`".to_owned(),
+                }
+            })?;
+            let found_id = extract_goodreads_id_from_link(found_link)?;
+            if matches(&found_title, title) {
+                return Ok(Some(found_id));
+            }
+        }
+        Ok(None)
+    }
+    #[inline]
+    async fn fetch_id_with_title_and_author(
         &self,
         title: &str,
         author: &str,
     ) -> Result<Option<GoodreadsId>, FetchMetadataError> {
         let query = format!("{title} {author}");
-        let url = format!("https://www.goodreads.com/search?q={}", encode(&query));
-
-        let document = Html::parse_document(
-            &self
-                .http_client
-                .get(&url)
-                .send()
-                .await
-                .map_err(|error| FetchMetadataError::Request {
-                    request_type: "GET".to_owned(),
-                    url,
-                    message: error.to_string(),
-                })?
-                .text()
-                .await
-                .map_err(|error| FetchMetadataError::Extraction {
-                    key: "HTTP Response".to_owned(),
-                    message: error.to_string(),
-                })?,
-        );
-        let title_selector = Selector::parse(r#"a[class="bookTitle"]"#).map_err(|error| {
-            FetchMetadataError::Setup {
-                stage: "Title CSS Selector".to_owned(),
-                message: error.to_string(),
-            }
-        })?;
-        let author_selector = Selector::parse(r#"a[class="authorName"]"#).map_err(|error| {
-            FetchMetadataError::Setup {
-                stage: "Author CSS Selector".to_owned(),
-                message: error.to_string(),
-            }
-        })?;
+        let document = self.fetch_id(&query).await?;
 
         for (title_element, author_element) in document
-            .select(&title_selector)
-            .zip(document.select(&author_selector))
+            .select(&self.title_selector)
+            .zip(document.select(&self.author_selector))
         {
-            let found_title = title_element.text().collect::<String>();
+            let found_title = title_element.text().collect::<String>().trim().to_owned();
             let found_author = author_element.text().collect::<String>();
             let found_link = title_element.value().attr("href").ok_or_else(|| {
                 FetchMetadataError::Extraction {
@@ -458,6 +453,18 @@ impl MetadataProvider {
             header::ACCEPT_LANGUAGE,
             header::HeaderValue::from_static("en-US,en;q=0.9"),
         );
+        let title_selector = Selector::parse(r#"a[class="bookTitle"]"#).map_err(|error| {
+            FetchMetadataError::Setup {
+                stage: "Title CSS Selector".to_owned(),
+                message: error.to_string(),
+            }
+        })?;
+        let author_selector = Selector::parse(r#"a[class="authorName"]"#).map_err(|error| {
+            FetchMetadataError::Setup {
+                stage: "Author CSS Selector".to_owned(),
+                message: error.to_string(),
+            }
+        })?;
         let client = ClientBuilder::new()
             .user_agent(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
@@ -473,11 +480,44 @@ impl MetadataProvider {
             .build();
 
         client
-            .map(|http_client| Self { http_client })
+            .map(|http_client| Self {
+                http_client,
+                title_selector,
+                author_selector,
+            })
             .map_err(|error| FetchMetadataError::Setup {
                 stage: "Client Creation".to_owned(),
                 message: error.to_string(),
             })
+    }
+
+    /// Private fetcher function to execute queries on Goodreads
+    ///
+    /// # Errors
+    /// This function fails if the HTTP request cannot be sent, or if parsing the resulting HTTP
+    /// response fails
+    #[inline]
+    async fn fetch_id(&self, query: &str) -> Result<Html, FetchMetadataError> {
+        let url = format!("https://www.goodreads.com/search?q={}", encode(query));
+
+        Ok(Html::parse_document(
+            &self
+                .http_client
+                .get(&url)
+                .send()
+                .await
+                .map_err(|error| FetchMetadataError::Request {
+                    request_type: "GET".to_owned(),
+                    url,
+                    message: error.to_string(),
+                })?
+                .text()
+                .await
+                .map_err(|error| FetchMetadataError::Extraction {
+                    key: "HTTP Response".to_owned(),
+                    message: error.to_string(),
+                })?,
+        ))
     }
 }
 
@@ -506,10 +546,7 @@ mod tests {
     #[tokio::test]
     async fn storm_front() {
         let fetcher = MetadataProvider::create().unwrap();
-        let goodreads_id = fetcher
-            .fetch_goodreads_id("Storm Front", "Jim Butcher")
-            .await
-            .unwrap();
+        let goodreads_id = fetcher.fetch_id_with_title("Storm Front").await.unwrap();
 
         assert_eq!(goodreads_id, Some(GoodreadsId::new(47212)));
     }

@@ -45,7 +45,17 @@ impl AddBookUseCase {
         let path = input.input_path;
         let title = self.filesystem.extract_title_from_epub(&path)?;
         let author = self.filesystem.extract_author_from_epub(&path)?;
-        let goodreads_id_opt = self.metadata.fetch_goodreads_id(&title, &author).await?;
+
+        // first try fetching just with title, usually yields better results
+        let goodreads_id_opt = match self.metadata.fetch_id_with_title(&title).await? {
+            Some(id) => Some(id),
+            None => {
+                self.metadata
+                    .fetch_id_with_title_and_author(&title, &author)
+                    .await?
+            }
+        };
+
         if let Some(goodreads_id) = goodreads_id_opt {
             // fetch metadata
             let metadata = self.metadata.fetch_metadata(goodreads_id).await?;
