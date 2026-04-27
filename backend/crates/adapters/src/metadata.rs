@@ -539,6 +539,7 @@ fn to_string(value: &Value) -> Option<String> {
 
 #[cfg(test)]
 #[allow(clippy::unwrap_used, reason = "Tests")]
+#[allow(clippy::unreadable_literal, reason = "Tests")]
 mod tests {
 
     use super::*;
