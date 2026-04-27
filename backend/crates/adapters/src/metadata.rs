@@ -554,7 +554,8 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     #[tokio::test]
-    async fn storm_front_id() {
+    async fn book_id() {
+        // Storm Front by Jim Butcher
         let fetcher = MetadataProvider::create().unwrap();
         let goodreads_id = fetcher.fetch_id_with_title("Storm Front").await.unwrap();
 
@@ -562,7 +563,8 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn storm_front_metadata() {
+    async fn regular_book() {
+        // Storm Front by Jim Butcher
         let fetcher = MetadataProvider::create().unwrap();
         let metadata = fetcher
             .fetch_metadata(GoodreadsId::new(47212))
@@ -592,6 +594,74 @@ mod tests {
                 1.0,
                 GoodreadsId::new(40346)
             )]
+        );
+    }
+
+    #[tokio::test]
+    async fn book_with_two_series() {
+        // The Dragonbone Chair by Tad Williams
+        let fetcher = MetadataProvider::create().unwrap();
+        let metadata = fetcher
+            .fetch_metadata(GoodreadsId::new(91981))
+            .await
+            .unwrap();
+
+        assert_eq!(metadata.title, "The Dragonbone Chair".to_owned());
+        assert_eq!(
+            metadata.contributors,
+            vec![BookContributor::new(
+                "Tad Williams",
+                "Author",
+                GoodreadsId::new(6587)
+            )]
+        );
+        assert_eq!(
+            metadata.publication_date,
+            Some(NaiveDateTime::new(
+                NaiveDate::from_ymd_opt(2005, 3, 1).unwrap(),
+                NaiveTime::from_hms_opt(8, 0, 0).unwrap()
+            ))
+        );
+        assert_eq!(
+            metadata.series,
+            vec![
+                BookSeries::new("Memory, Sorrow, and Thorn", 1.0, GoodreadsId::new(49188)),
+                BookSeries::new("Osten Ard Saga", 1.0, GoodreadsId::new(214148))
+            ]
+        );
+    }
+
+    #[tokio::test]
+    async fn book_with_two_authors() {
+        // A Memory of Light by Robert Jordan & Brandon Sanderson
+        let fetcher = MetadataProvider::create().unwrap();
+        let metadata = fetcher
+            .fetch_metadata(GoodreadsId::new(7743175))
+            .await
+            .unwrap();
+
+        assert_eq!(metadata.title, "A Memory of Light".to_owned());
+        assert_eq!(
+            metadata.contributors,
+            vec![
+                BookContributor::new("Robert Jordan", "Author", GoodreadsId::new(6252)),
+                BookContributor::new("Brandon Sanderson", "Author", GoodreadsId::new(38550))
+            ]
+        );
+        assert_eq!(
+            metadata.publication_date,
+            Some(NaiveDateTime::new(
+                NaiveDate::from_ymd_opt(2013, 1, 8).unwrap(),
+                NaiveTime::from_hms_opt(8, 0, 0).unwrap()
+            ))
+        );
+        assert_eq!(
+            metadata.series,
+            vec![BookSeries::new(
+                "The Wheel of Time",
+                14.0,
+                GoodreadsId::new(41526)
+            ),]
         );
     }
 
