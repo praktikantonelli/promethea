@@ -148,25 +148,32 @@ impl MetadataProviderPort for MetadataProvider {
 /// This function returns an error when the supplied URL does not match the expected format and
 /// when parsing the numeric string to a numeric type fails
 fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, FetchMetadataError> {
-    Ok(GoodreadsId::new(
-        link.splitn(4, '/')
-            .nth(3)
-            .unwrap_or("")
-            .split('?')
-            .next()
-            .ok_or_else(|| FetchMetadataError::Extraction {
-                key: "Goodreads ID".to_owned(),
-                message: "failed to extract Goodreads ID from URL".to_owned(),
-            })?
+    let id = link.split('/').find_map(|segment| {
+        let digits_len = segment
             .chars()
-            .take_while(|character| character.is_numeric())
-            .collect::<String>()
-            .parse::<i64>()
-            .map_err(|error| FetchMetadataError::Extraction {
+            .take_while(char::is_ascii_digit)
+            .map(char::len_utf8)
+            .sum();
+
+        #[allow(
+            clippy::string_slice,
+            reason = "string is purely numeric at this point"
+        )]
+        (digits_len > 0).then(|| &segment[..digits_len])
+    });
+    if let Some(digits) = id {
+        Ok(GoodreadsId::new(digits.parse::<i64>().map_err(
+            |error| FetchMetadataError::Extraction {
                 key: "Goodreads ID".to_owned(),
                 message: error.to_string(),
-            })?,
-    ))
+            },
+        )?))
+    } else {
+        Err(FetchMetadataError::Extraction {
+            key: "Goodreads ID".to_owned(),
+            message: "Failed to extract from URL".to_owned(),
+        })
+    }
 }
 
 /// Helper function to determine if two strings match, ignoring upper and lower case as well as
