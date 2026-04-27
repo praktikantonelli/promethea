@@ -587,4 +587,31 @@ mod tests {
             )]
         );
     }
+
+    #[test]
+    fn extract_id_from_full_book_url() {
+        let url = "https://www.goodreads.com/book/show/250113304-makerborn";
+        assert_eq!(
+            GoodreadsId::new(250113304),
+            extract_goodreads_id_from_link(url).unwrap()
+        );
+    }
+
+    #[test]
+    fn extract_id_from_full_author_url() {
+        let url = "https://www.goodreads.com/author/show/69479676.Daymon_Ashcord";
+        assert_eq!(
+            GoodreadsId::new(69479676),
+            extract_goodreads_id_from_link(url).unwrap()
+        );
+    }
+
+    #[test]
+    fn extract_id_from_full_series_url() {
+        let url = "https://www.goodreads.com/series/40346-the-dresden-files";
+        assert_eq!(
+            GoodreadsId::new(40346),
+            extract_goodreads_id_from_link(url).unwrap()
+        );
+    }
 }
