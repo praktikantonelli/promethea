@@ -540,14 +540,50 @@ fn to_string(value: &Value) -> Option<String> {
 #[cfg(test)]
 #[allow(clippy::unwrap_used, reason = "Tests")]
 mod tests {
+
     use super::*;
+    use chrono::{NaiveDate, NaiveTime};
     use pretty_assertions::assert_eq;
 
     #[tokio::test]
-    async fn storm_front() {
+    async fn storm_front_id() {
         let fetcher = MetadataProvider::create().unwrap();
         let goodreads_id = fetcher.fetch_id_with_title("Storm Front").await.unwrap();
 
         assert_eq!(goodreads_id, Some(GoodreadsId::new(47212)));
+    }
+
+    #[tokio::test]
+    async fn storm_front_metadata() {
+        let fetcher = MetadataProvider::create().unwrap();
+        let metadata = fetcher
+            .fetch_metadata(GoodreadsId::new(47212))
+            .await
+            .unwrap();
+
+        assert_eq!(metadata.title, "Storm Front".to_owned());
+        assert_eq!(
+            metadata.contributors,
+            vec![BookContributor::new(
+                "Jim Butcher",
+                "Author",
+                GoodreadsId::new(10746)
+            )]
+        );
+        assert_eq!(
+            metadata.publication_date,
+            Some(NaiveDateTime::new(
+                NaiveDate::from_ymd_opt(2000, 4, 1).unwrap(),
+                NaiveTime::from_hms_opt(8, 0, 0).unwrap()
+            ))
+        );
+        assert_eq!(
+            metadata.series,
+            vec![BookSeries::new(
+                "The Dresden Files",
+                1.0,
+                GoodreadsId::new(40346)
+            )]
+        );
     }
 }
