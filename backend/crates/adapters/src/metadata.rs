@@ -15,55 +15,50 @@ use urlencoding::encode;
 pub struct MetadataProvider {
     /// persistent HTTP client to avoid overhead of creating one for every request
     http_client: reqwest::Client,
+    /// CSS selector for book titles
+    title_selector: Selector,
+    /// CSS selector for author names
+    author_selector: Selector,
 }
 
 #[async_trait]
 impl MetadataProviderPort for MetadataProvider {
     #[inline]
-    async fn fetch_goodreads_id(
+    async fn fetch_id_with_title(
+        &self,
+        title: &str,
+    ) -> Result<Option<GoodreadsId>, FetchMetadataError> {
+        let document = self.fetch_id(title).await?;
+
+        for title_element in document.select(&self.title_selector) {
+            let found_title = title_element.text().collect::<String>().trim().to_owned();
+            let found_link = title_element.value().attr("href").ok_or_else(|| {
+                FetchMetadataError::Extraction {
+                    key: "link".to_owned(),
+                    message: "no key named `href`".to_owned(),
+                }
+            })?;
+            let found_id = extract_goodreads_id_from_link(found_link)?;
+            if matches(&found_title, title) {
+                return Ok(Some(found_id));
+            }
+        }
+        Ok(None)
+    }
+    #[inline]
+    async fn fetch_id_with_title_and_author(
         &self,
         title: &str,
         author: &str,
     ) -> Result<Option<GoodreadsId>, FetchMetadataError> {
         let query = format!("{title} {author}");
-        let url = format!("https://www.goodreads.com/search?q={}", encode(&query));
-
-        let document = Html::parse_document(
-            &self
-                .http_client
-                .get(&url)
-                .send()
-                .await
-                .map_err(|error| FetchMetadataError::Request {
-                    request_type: "GET".to_owned(),
-                    url,
-                    message: error.to_string(),
-                })?
-                .text()
-                .await
-                .map_err(|error| FetchMetadataError::Extraction {
-                    key: "HTTP Response".to_owned(),
-                    message: error.to_string(),
-                })?,
-        );
-        let title_selector = Selector::parse(r#"a[class="bookTitle"]"#).map_err(|error| {
-            FetchMetadataError::Setup {
-                stage: "Title CSS Selector".to_owned(),
-                message: error.to_string(),
-            }
-        })?;
-        let author_selector = Selector::parse(r#"a[class="authorName"]"#).map_err(|error| {
-            FetchMetadataError::Setup {
-                stage: "Author CSS Selector".to_owned(),
-                message: error.to_string(),
-            }
-        })?;
+        let document = self.fetch_id(&query).await?;
 
         for (title_element, author_element) in document
-            .select(&title_selector)
-            .zip(document.select(&author_selector))
+            .select(&self.title_selector)
+            .zip(document.select(&self.author_selector))
         {
-            let found_title = title_element.text().collect::<String>();
+            let found_title = title_element.text().collect::<String>().trim().to_owned();
             let found_author = author_element.text().collect::<String>();
             let found_link = title_element.value().attr("href").ok_or_else(|| {
                 FetchMetadataError::Extraction {
@@ -153,25 +148,32 @@ impl MetadataProviderPort for MetadataProvider {
 /// This function returns an error when the supplied URL does not match the expected format and
 /// when parsing the numeric string to a numeric type fails
 fn extract_goodreads_id_from_link(link: &str) -> Result<GoodreadsId, FetchMetadataError> {
-    Ok(GoodreadsId::new(
-        link.splitn(4, '/')
-            .nth(3)
-            .unwrap_or("")
-            .split('?')
-            .next()
-            .ok_or_else(|| FetchMetadataError::Extraction {
-                key: "Goodreads ID".to_owned(),
-                message: "failed to extract Goodreads ID from URL".to_owned(),
-            })?
+    let id = link.split('/').find_map(|segment| {
+        let digits_len = segment
             .chars()
-            .take_while(|character| character.is_numeric())
-            .collect::<String>()
-            .parse::<i64>()
-            .map_err(|error| FetchMetadataError::Extraction {
+            .take_while(char::is_ascii_digit)
+            .map(char::len_utf8)
+            .sum();
+
+        #[allow(
+            clippy::string_slice,
+            reason = "string is purely numeric at this point"
+        )]
+        (digits_len > 0).then(|| &segment[..digits_len])
+    });
+    if let Some(digits) = id {
+        Ok(GoodreadsId::new(digits.parse::<i64>().map_err(
+            |error| FetchMetadataError::Extraction {
                 key: "Goodreads ID".to_owned(),
                 message: error.to_string(),
-            })?,
-    ))
+            },
+        )?))
+    } else {
+        Err(FetchMetadataError::Extraction {
+            key: "Goodreads ID".to_owned(),
+            message: "Failed to extract from URL".to_owned(),
+        })
+    }
 }
 
 /// Helper function to determine if two strings match, ignoring upper and lower case as well as
@@ -458,6 +460,18 @@ impl MetadataProvider {
             header::ACCEPT_LANGUAGE,
             header::HeaderValue::from_static("en-US,en;q=0.9"),
         );
+        let title_selector = Selector::parse(r#"a[class="bookTitle"]"#).map_err(|error| {
+            FetchMetadataError::Setup {
+                stage: "Title CSS Selector".to_owned(),
+                message: error.to_string(),
+            }
+        })?;
+        let author_selector = Selector::parse(r#"a[class="authorName"]"#).map_err(|error| {
+            FetchMetadataError::Setup {
+                stage: "Author CSS Selector".to_owned(),
+                message: error.to_string(),
+            }
+        })?;
         let client = ClientBuilder::new()
             .user_agent(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
@@ -473,11 +487,44 @@ impl MetadataProvider {
             .build();
 
         client
-            .map(|http_client| Self { http_client })
+            .map(|http_client| Self {
+                http_client,
+                title_selector,
+                author_selector,
+            })
             .map_err(|error| FetchMetadataError::Setup {
                 stage: "Client Creation".to_owned(),
                 message: error.to_string(),
             })
+    }
+
+    /// Private fetcher function to execute queries on Goodreads
+    ///
+    /// # Errors
+    /// This function fails if the HTTP request cannot be sent, or if parsing the resulting HTTP
+    /// response fails
+    #[inline]
+    async fn fetch_id(&self, query: &str) -> Result<Html, FetchMetadataError> {
+        let url = format!("https://www.goodreads.com/search?q={}", encode(query));
+
+        Ok(Html::parse_document(
+            &self
+                .http_client
+                .get(&url)
+                .send()
+                .await
+                .map_err(|error| FetchMetadataError::Request {
+                    request_type: "GET".to_owned(),
+                    url,
+                    message: error.to_string(),
+                })?
+                .text()
+                .await
+                .map_err(|error| FetchMetadataError::Extraction {
+                    key: "HTTP Response".to_owned(),
+                    message: error.to_string(),
+                })?,
+        ))
     }
 }
 
@@ -494,5 +541,156 @@ fn to_string(value: &Value) -> Option<String> {
             warn!("Failed to construct regex for {value}, {error}");
             None
         }
+    }
+}
+
+#[cfg(test)]
+#[allow(clippy::unwrap_used, reason = "Tests")]
+#[allow(clippy::unreadable_literal, reason = "Tests")]
+mod tests {
+
+    use super::*;
+    use chrono::{NaiveDate, NaiveTime};
+    use pretty_assertions::assert_eq;
+
+    #[tokio::test]
+    async fn book_id() {
+        // Storm Front by Jim Butcher
+        let fetcher = MetadataProvider::create().unwrap();
+        let goodreads_id = fetcher.fetch_id_with_title("Storm Front").await.unwrap();
+
+        assert_eq!(goodreads_id, Some(GoodreadsId::new(47212)));
+    }
+
+    #[tokio::test]
+    async fn regular_book() {
+        // Storm Front by Jim Butcher
+        let fetcher = MetadataProvider::create().unwrap();
+        let metadata = fetcher
+            .fetch_metadata(GoodreadsId::new(47212))
+            .await
+            .unwrap();
+
+        assert_eq!(metadata.title, "Storm Front".to_owned());
+        assert_eq!(
+            metadata.contributors,
+            vec![BookContributor::new(
+                "Jim Butcher",
+                "Author",
+                GoodreadsId::new(10746)
+            )]
+        );
+        assert_eq!(
+            metadata.publication_date,
+            Some(NaiveDateTime::new(
+                NaiveDate::from_ymd_opt(2000, 4, 1).unwrap(),
+                NaiveTime::from_hms_opt(8, 0, 0).unwrap()
+            ))
+        );
+        assert_eq!(
+            metadata.series,
+            vec![BookSeries::new(
+                "The Dresden Files",
+                1.0,
+                GoodreadsId::new(40346)
+            )]
+        );
+    }
+
+    #[tokio::test]
+    #[allow(clippy::non_ascii_literal, reason = "Czech title")]
+    async fn book_with_multiple_series() {
+        // The Dragonbone Chair by Tad Williams
+        let fetcher = MetadataProvider::create().unwrap();
+        let metadata = fetcher
+            .fetch_metadata(GoodreadsId::new(91981))
+            .await
+            .unwrap();
+
+        assert_eq!(metadata.title, "The Dragonbone Chair".to_owned());
+        assert_eq!(
+            metadata.contributors,
+            vec![BookContributor::new(
+                "Tad Williams",
+                "Author",
+                GoodreadsId::new(6587)
+            )]
+        );
+        assert_eq!(
+            metadata.publication_date,
+            Some(NaiveDateTime::new(
+                NaiveDate::from_ymd_opt(2005, 3, 1).unwrap(),
+                NaiveTime::from_hms_opt(8, 0, 0).unwrap()
+            ))
+        );
+        assert_eq!(
+            metadata.series,
+            vec![
+                BookSeries::new("Memory, Sorrow, and Thorn", 1.0, GoodreadsId::new(49188)),
+                BookSeries::new("Vzpomínka, Žal a Trn", 1.0, GoodreadsId::new(82376)),
+                BookSeries::new("Osten Ard Saga", 1.0, GoodreadsId::new(214148))
+            ]
+        );
+    }
+
+    #[tokio::test]
+    async fn book_with_two_authors() {
+        // A Memory of Light by Robert Jordan & Brandon Sanderson
+        let fetcher = MetadataProvider::create().unwrap();
+        let metadata = fetcher
+            .fetch_metadata(GoodreadsId::new(7743175))
+            .await
+            .unwrap();
+
+        assert_eq!(metadata.title, "A Memory of Light".to_owned());
+        assert_eq!(
+            metadata.contributors,
+            vec![
+                BookContributor::new("Robert Jordan", "Author", GoodreadsId::new(6252)),
+                BookContributor::new("Brandon Sanderson", "Author", GoodreadsId::new(38550))
+            ]
+        );
+        assert_eq!(
+            metadata.publication_date,
+            Some(NaiveDateTime::new(
+                NaiveDate::from_ymd_opt(2013, 1, 8).unwrap(),
+                NaiveTime::from_hms_opt(8, 0, 0).unwrap()
+            ))
+        );
+        assert_eq!(
+            metadata.series,
+            vec![BookSeries::new(
+                "The Wheel of Time",
+                14.0,
+                GoodreadsId::new(41526)
+            ),]
+        );
+    }
+
+    #[test]
+    fn extract_id_from_full_book_url() {
+        let url = "https://www.goodreads.com/book/show/250113304-makerborn";
+        assert_eq!(
+            GoodreadsId::new(250113304),
+            extract_goodreads_id_from_link(url).unwrap()
+        );
+    }
+
+    #[test]
+    fn extract_id_from_full_author_url() {
+        let url = "https://www.goodreads.com/author/show/69479676.Daymon_Ashcord";
+        assert_eq!(
+            GoodreadsId::new(69479676),
+            extract_goodreads_id_from_link(url).unwrap()
+        );
+    }
+
+    #[test]
+    fn extract_id_from_full_series_url() {
+        let url = "https://www.goodreads.com/series/40346-the-dresden-files";
+        assert_eq!(
+            GoodreadsId::new(40346),
+            extract_goodreads_id_from_link(url).unwrap()
+        );
     }
 }

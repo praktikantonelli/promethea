@@ -6,7 +6,11 @@ use crate::domain::repository::GoodreadsId;
 #[allow(async_fn_in_trait, reason = "Only used in my own code")]
 #[async_trait]
 pub trait MetadataProviderPort {
-    async fn fetch_goodreads_id(
+    async fn fetch_id_with_title(
+        &self,
+        title: &str,
+    ) -> Result<Option<GoodreadsId>, FetchMetadataError>;
+    async fn fetch_id_with_title_and_author(
         &self,
         title: &str,
         author: &str,
