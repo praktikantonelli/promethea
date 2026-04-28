@@ -598,7 +598,8 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn book_with_two_series() {
+    #[allow(clippy::non_ascii_literal, reason = "Czech title")]
+    async fn book_with_multiple_series() {
         // The Dragonbone Chair by Tad Williams
         let fetcher = MetadataProvider::create().unwrap();
         let metadata = fetcher
@@ -626,6 +627,7 @@ mod tests {
             metadata.series,
             vec![
                 BookSeries::new("Memory, Sorrow, and Thorn", 1.0, GoodreadsId::new(49188)),
+                BookSeries::new("Vzpomínka, Žal a Trn", 1.0, GoodreadsId::new(82376)),
                 BookSeries::new("Osten Ard Saga", 1.0, GoodreadsId::new(214148))
             ]
         );
