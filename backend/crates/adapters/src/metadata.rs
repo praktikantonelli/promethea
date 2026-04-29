@@ -121,13 +121,15 @@ impl MetadataProviderPort for MetadataProvider {
                         message: error.to_string(),
                     })?,
             };
-        let amazon_id = extract_amazon_id(&json, &goodreads_id)?;
-        let (title, _subtitle) = extract_title_and_subtitle(&json, &amazon_id)?;
-        let image_url = extract_image_url(&json, &amazon_id);
-        let contributors = extract_contributors(&json, &amazon_id);
-        let publication_date = extract_publication_date(&json, &amazon_id);
-        let number_of_pages = extract_page_count(&json, &amazon_id);
-        let series = extract_series(&json, &amazon_id);
+        let amazon_book_id = extract_amazon_book_id(&json, &goodreads_id)?;
+        let amazon_work_id = extract_amazon_work_id(&json, &amazon_book_id)?;
+
+        let (title, _subtitle) = extract_title_and_subtitle(&json, &amazon_book_id)?;
+        let image_url = extract_image_url(&json, &amazon_book_id);
+        let contributors = extract_contributors(&json, &amazon_book_id);
+        let publication_date = extract_publication_date(&json, &amazon_work_id);
+        let number_of_pages = extract_page_count(&json, &amazon_book_id);
+        let series = extract_series(&json, &amazon_book_id);
 
         Ok(BookMetadata::new(
             &title,
@@ -194,7 +196,7 @@ fn matches(str1: &str, str2: &str) -> bool {
 /// Extracts a book's Amazon ID based on its Goodreads ID from the JSON metadata
 /// # Errors
 /// Fails if the Amazon ID cannot be extracted
-fn extract_amazon_id(
+fn extract_amazon_book_id(
     metadata: &Value,
     goodreads_id: &GoodreadsId,
 ) -> Result<String, FetchMetadataError> {
@@ -209,11 +211,31 @@ fn extract_amazon_id(
         error!("Failed to scrape Amazon ID");
         return Err(FetchMetadataError::Extraction {
             key: "Amazon ID".into(),
-            message: "failed to extract Amazon ID".into(),
+            message: "failed to extract Amazon book ID".into(),
         });
     };
 
     Ok(amazon_id)
+}
+
+/// Extracts a work's Amazon ID based on the book's Goodreads ID from the JSON metadata
+/// # Errors
+/// Fails if the Amazon ID cannot be extracted
+fn extract_amazon_work_id(metadata: &Value, amazon_id: &str) -> Result<String, FetchMetadataError> {
+    #[allow(
+        clippy::indexing_slicing,
+        reason = "`serde_json::Value` indexing never panics"
+    )]
+    let amazon_work_id = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["work"]["__ref"];
+    let Some(amazon_work_id) = to_string(amazon_work_id) else {
+        error!("Failed to scrape Amazon ID");
+        return Err(FetchMetadataError::Extraction {
+            key: "Amazon ID".into(),
+            message: "failed to extract Amazon work ID".into(),
+        });
+    };
+
+    Ok(amazon_work_id)
 }
 
 /// Extracts title and subtitle out of metadata JSON
