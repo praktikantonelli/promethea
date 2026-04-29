@@ -210,7 +210,7 @@ fn extract_amazon_book_id(
     let Some(amazon_id) = to_string(amazon_id) else {
         error!("Failed to scrape Amazon ID");
         return Err(FetchMetadataError::Extraction {
-            key: "Amazon ID".into(),
+            key: "Amazon book ID".into(),
             message: "failed to extract Amazon book ID".into(),
         });
     };
@@ -230,7 +230,7 @@ fn extract_amazon_work_id(metadata: &Value, amazon_id: &str) -> Result<String, F
     let Some(amazon_work_id) = to_string(amazon_work_id) else {
         error!("Failed to scrape Amazon ID");
         return Err(FetchMetadataError::Extraction {
-            key: "Amazon ID".into(),
+            key: "Amazon work ID".into(),
             message: "failed to extract Amazon work ID".into(),
         });
     };
