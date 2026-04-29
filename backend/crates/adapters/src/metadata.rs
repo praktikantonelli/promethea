@@ -200,14 +200,14 @@ fn extract_amazon_book_id(
     metadata: &Value,
     goodreads_id: &GoodreadsId,
 ) -> Result<String, FetchMetadataError> {
-    let amazon_id_key = format!("getBookByLegacyId({{\"legacyId\":\"{goodreads_id}\"}})");
+    let amazon_book_id_key = format!("getBookByLegacyId({{\"legacyId\":\"{goodreads_id}\"}})");
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
-    let amazon_id =
-        &metadata["props"]["pageProps"]["apolloState"]["ROOT_QUERY"][amazon_id_key]["__ref"];
-    let Some(amazon_id) = to_string(amazon_id) else {
+    let amazon_book_id =
+        &metadata["props"]["pageProps"]["apolloState"]["ROOT_QUERY"][amazon_book_id_key]["__ref"];
+    let Some(amazon_book_id) = to_string(amazon_book_id) else {
         error!("Failed to scrape Amazon ID");
         return Err(FetchMetadataError::Extraction {
             key: "Amazon book ID".into(),
@@ -215,18 +215,22 @@ fn extract_amazon_book_id(
         });
     };
 
-    Ok(amazon_id)
+    Ok(amazon_book_id)
 }
 
-/// Extracts a work's Amazon ID based on the book's Goodreads ID from the JSON metadata
+/// Extracts a work's Amazon ID based on the book's Amazon ID from the JSON metadata
 /// # Errors
 /// Fails if the Amazon ID cannot be extracted
-fn extract_amazon_work_id(metadata: &Value, amazon_id: &str) -> Result<String, FetchMetadataError> {
+fn extract_amazon_work_id(
+    metadata: &Value,
+    amazon_book_id: &str,
+) -> Result<String, FetchMetadataError> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
-    let amazon_work_id = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["work"]["__ref"];
+    let amazon_work_id =
+        &metadata["props"]["pageProps"]["apolloState"][amazon_book_id]["work"]["__ref"];
     let Some(amazon_work_id) = to_string(amazon_work_id) else {
         error!("Failed to scrape Amazon ID");
         return Err(FetchMetadataError::Extraction {
@@ -244,13 +248,13 @@ fn extract_amazon_work_id(metadata: &Value, amazon_id: &str) -> Result<String, F
 /// a subtitle.
 fn extract_title_and_subtitle(
     metadata: &Value,
-    amazon_id: &str,
+    amazon_book_id: &str,
 ) -> Result<(String, Option<String>), FetchMetadataError> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
-    let title = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["title"];
+    let title = &metadata["props"]["pageProps"]["apolloState"][amazon_book_id]["title"];
     let Some(title) = to_string(title) else {
         error!("Failed to scrape book title");
         return Err(FetchMetadataError::Extraction {
@@ -267,17 +271,17 @@ fn extract_title_and_subtitle(
 
 /// Extracts a book's image URL from the metadata JSON. A book may not have an image, so this
 /// function returns `Option`
-fn extract_image_url(metadata: &Value, amazon_id: &str) -> Option<String> {
+fn extract_image_url(metadata: &Value, amazon_book_id: &str) -> Option<String> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
-    let url = &metadata["props"]["pageProps"]["apolloState"][amazon_id]["imageUrl"];
+    let url = &metadata["props"]["pageProps"]["apolloState"][amazon_book_id]["imageUrl"];
     to_string(url)
 }
 
 /// Extracts all contributors of a book from its metatada JSON and filters out any non-authors.
-fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributor> {
+fn extract_contributors(metadata: &Value, amazon_book_id: &str) -> Vec<BookContributor> {
     let mut contributors = Vec::new();
 
     #[allow(
@@ -285,7 +289,7 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
         reason = "`serde_json::Value` indexing never panics"
     )]
     let primary =
-        metadata["props"]["pageProps"]["apolloState"][amazon_id]["primaryContributorEdge"]
+        metadata["props"]["pageProps"]["apolloState"][amazon_book_id]["primaryContributorEdge"]
             .as_object()
             .map(|obj| (to_string(&obj["role"]), to_string(&obj["node"]["__ref"])));
 
@@ -306,7 +310,7 @@ fn extract_contributors(metadata: &Value, amazon_id: &str) -> Vec<BookContributo
         reason = "`serde_json::Value` indexing never panics"
     )]
     let Some(secondary) =
-        metadata["props"]["pageProps"]["apolloState"][amazon_id]["secondaryContributorEdges"]
+        metadata["props"]["pageProps"]["apolloState"][amazon_book_id]["secondaryContributorEdges"]
             .as_array()
     else {
         return contributors
@@ -375,14 +379,14 @@ fn fetch_contributor(metadata: &Value, (role, key): (String, String)) -> Option<
 }
 
 /// Extracts a book's publication date from its metadata JSON
-fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<NaiveDateTime> {
+fn extract_publication_date(metadata: &Value, amazon_work_id: &str) -> Option<NaiveDateTime> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
     #[allow(clippy::pattern_type_mismatch, reason = "false positive")]
     if let Value::Number(number) =
-        &metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["publicationTime"]
+        &metadata["props"]["pageProps"]["apolloState"][amazon_work_id]["details"]["publicationTime"]
     {
         let timestamp = number.as_i64().and_then(DateTime::from_timestamp_millis);
 
@@ -397,13 +401,14 @@ fn extract_publication_date(metadata: &Value, amazon_id: &str) -> Option<NaiveDa
 }
 
 /// Extracts a book's page count from its metadata JSON
-fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
+fn extract_page_count(metadata: &Value, amazon_book_id: &str) -> Option<i64> {
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
     let count =
-        metadata["props"]["pageProps"]["apolloState"][amazon_id]["details"]["numPages"].as_i64();
+        metadata["props"]["pageProps"]["apolloState"][amazon_book_id]["details"]["numPages"]
+            .as_i64();
     match count {
         Some(0) => None,
         val => val,
@@ -411,14 +416,14 @@ fn extract_page_count(metadata: &Value, amazon_id: &str) -> Option<i64> {
 }
 
 /// Extracts a book's series from its metadata JSON
-fn extract_series(metadata: &Value, amazon_id: &str) -> Vec<BookSeries> {
+fn extract_series(metadata: &Value, amazon_book_id: &str) -> Vec<BookSeries> {
     let empty_vec: Vec<Value> = Vec::new();
 
     #[allow(
         clippy::indexing_slicing,
         reason = "`serde_json::Value` indexing never panics"
     )]
-    let series_array = metadata["props"]["pageProps"]["apolloState"][amazon_id]["bookSeries"]
+    let series_array = metadata["props"]["pageProps"]["apolloState"][amazon_book_id]["bookSeries"]
         .as_array()
         .unwrap_or(&empty_vec);
     #[allow(
