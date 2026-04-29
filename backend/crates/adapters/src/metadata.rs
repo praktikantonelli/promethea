@@ -641,8 +641,8 @@ mod tests {
         assert_eq!(
             metadata.publication_date,
             Some(NaiveDateTime::new(
-                NaiveDate::from_ymd_opt(2005, 3, 1).unwrap(),
-                NaiveTime::from_hms_opt(8, 0, 0).unwrap()
+                NaiveDate::from_ymd_opt(1988, 10, 25).unwrap(),
+                NaiveTime::from_hms_opt(7, 0, 0).unwrap()
             ))
         );
         assert_eq!(
