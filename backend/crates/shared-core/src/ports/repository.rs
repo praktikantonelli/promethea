@@ -32,7 +32,7 @@ pub trait BookRepositoryPort {
 }
 
 /// Error when trying to add a new book to the repository
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, PartialEq)]
 #[non_exhaustive]
 pub enum InsertError {
     /// The book already exists in the repository
