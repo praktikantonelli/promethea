@@ -383,9 +383,14 @@ pub fn get_title_sort(title: &str) -> String {
 }
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used, reason = "Tests")]
 mod tests {
     use super::*;
+    use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
     use pretty_assertions::assert_eq;
+    use shared_core::domain::repository::GoodreadsId;
+    use std::fs;
+    use std::fs::File;
 
     #[test]
     fn firstname_lastname() {
@@ -547,5 +552,47 @@ mod tests {
         let results: Vec<String> = titles.iter().map(|title| get_title_sort(title)).collect();
 
         assert_eq!(expected, results);
+    }
+
+    #[tokio::test]
+    async fn duplicate_book() {
+        let _temp_db = File::create("temp.db").unwrap();
+        let db = Database::open(Path::new("temp.db")).await.unwrap();
+
+        let book = BookMetadata::new(
+            "The Hobbit",
+            Some(NaiveDateTime::new(
+                NaiveDate::from_ymd_opt(1937, 9, 21).unwrap(),
+                NaiveTime::from_hms_opt(8, 0, 0).unwrap(),
+            )),
+            vec![BookContributor::new(
+                "J. R. R. Tolkien",
+                "Author",
+                GoodreadsId::new(656_983),
+            )],
+            vec![BookSeries::new(
+                "Middle Earth",
+                1.0,
+                GoodreadsId::new(66175),
+            )],
+            Some(366),
+            Some(String::from(
+                "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1546071216i/5907.jpg",
+            )),
+            GoodreadsId::new(5907),
+        );
+
+        db.insert_book(book.clone()).await.unwrap();
+
+        // book is now in database already, assert that adding it a second time fails
+        let result = db.insert_book(book).await;
+        assert_eq!(
+            result,
+            Err(InsertError::Conflict {
+                goodreads_id: GoodreadsId::new(5907)
+            })
+        );
+
+        fs::remove_file("temp.db").unwrap();
     }
 }
