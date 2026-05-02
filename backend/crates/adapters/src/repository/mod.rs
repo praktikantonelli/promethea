@@ -409,6 +409,29 @@ mod tests {
         fs::remove_file(temp_file_path).unwrap();
     }
 
+    fn get_fake_book() -> BookMetadata {
+        BookMetadata::new(
+            "Some Title",
+            Some(NaiveDateTime::new(
+                NaiveDate::from_ymd_opt(1999, 9, 21).unwrap(),
+                NaiveTime::from_hms_opt(8, 0, 0).unwrap(),
+            )),
+            vec![BookContributor::new(
+                "Author Authorson",
+                "Author",
+                GoodreadsId::new(123_456),
+            )],
+            vec![BookSeries::new(
+                "The Epic Saga Cycle",
+                18.2,
+                GoodreadsId::new(11111),
+            )],
+            Some(328),
+            Some(String::from("https://www.veryrealurl.com/image.jpg")),
+            GoodreadsId::new(999),
+        )
+    }
+
     #[test]
     fn firstname_lastname() {
         let names = [
