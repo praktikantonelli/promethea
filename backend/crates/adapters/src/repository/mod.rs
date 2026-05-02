@@ -403,6 +403,7 @@ mod tests {
     use shared_core::domain::repository::GoodreadsId;
     use std::fs;
     use std::fs::File;
+    use std::path::Path;
 
     #[test]
     fn firstname_lastname() {
@@ -604,7 +605,8 @@ mod tests {
                 goodreads_id: GoodreadsId::new(5907)
             })
         );
-
-        fs::remove_file("temp.db").unwrap();
+        if Path::exists(Path::new("temp.db")) {
+            fs::remove_file("temp.db").unwrap();
+        }
     }
 }
