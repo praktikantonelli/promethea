@@ -123,11 +123,13 @@ impl BookRepositoryPort for Database {
 
     #[inline]
     async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertError> {
-        let mut tx: Transaction<'_, Sqlite> = self
-            .pool
-            .begin()
-            .await
-            .map_err(|_error| InsertError::Unavailable)?;
+        let mut tx: Transaction<'_, Sqlite> =
+            self.pool
+                .begin()
+                .await
+                .map_err(|error| InsertError::Unavailable {
+                    message: error.to_string(),
+                })?;
 
         let book_goodreads_id = book.goodreads_id.clone();
         let number_of_pages = book.number_of_pages;
@@ -162,12 +164,16 @@ impl BookRepositoryPort for Database {
                 if is_sqlite_unique_violation(&error) {
                     tx.rollback()
                         .await
-                        .map_err(|_error| InsertError::Unavailable)?;
+                        .map_err(|insert_error| InsertError::Unavailable {
+                            message: insert_error.to_string(),
+                        })?;
                     return Err(InsertError::Conflict {
                         goodreads_id: book.goodreads_id.clone(),
                     });
                 }
-                return Err(InsertError::Unavailable);
+                return Err(InsertError::Unavailable {
+                    message: String::from("failed to insert book"),
+                });
             }
         };
 
@@ -179,7 +185,9 @@ impl BookRepositoryPort for Database {
         self.insert_series(&mut tx, book.series, book_id).await?;
         tx.commit()
             .await
-            .map_err(|_error| InsertError::Unavailable)?;
+            .map_err(|error| InsertError::Unavailable {
+                message: error.to_string(),
+            })?;
 
         Ok(())
     }
@@ -231,7 +239,9 @@ impl Database {
             let author_sort = self
                 .try_fetch_author_sort(&author_record.name)
                 .await
-                .map_err(|_error| InsertError::Unavailable)?
+                .map_err(|error| InsertError::Unavailable {
+                    message: error.to_string(),
+                })?
                 .map_or_else(|| get_name_sort(&author_record.name), |string| string);
             let author_id: i64 = sqlx::query!(
                 r#"
@@ -290,7 +300,9 @@ impl Database {
             let series_sort = self
                 .try_fetch_series_sort(&sav.title)
                 .await
-                .map_err(|_error| InsertError::Unavailable)?
+                .map_err(|error| InsertError::Unavailable {
+                    message: error.to_string(),
+                })?
                 .map_or_else(|| get_title_sort(&sav.title), |string| string);
             let series_id: i64 = sqlx::query!(
                 r#"

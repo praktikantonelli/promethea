@@ -43,8 +43,8 @@ pub enum InsertError {
     },
 
     /// The repository is unavailable
-    #[error("storage unavailable")]
-    Unavailable,
+    #[error("storage unavailable: `{message}`")]
+    Unavailable { message: String },
 
     /// Error inserting specific entity
     #[error("could not insert `{entity}` `{name}`: `{message}`")]
