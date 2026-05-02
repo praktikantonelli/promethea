@@ -600,28 +600,7 @@ mod tests {
         let _temp_db = File::create(temp_file_path).unwrap();
         let db = Database::open(temp_file_path).await.unwrap();
 
-        let book = BookMetadata::new(
-            "The Hobbit",
-            Some(NaiveDateTime::new(
-                NaiveDate::from_ymd_opt(1937, 9, 21).unwrap(),
-                NaiveTime::from_hms_opt(8, 0, 0).unwrap(),
-            )),
-            vec![BookContributor::new(
-                "J. R. R. Tolkien",
-                "Author",
-                GoodreadsId::new(656_983),
-            )],
-            vec![BookSeries::new(
-                "Middle Earth",
-                1.0,
-                GoodreadsId::new(66175),
-            )],
-            Some(366),
-            Some(String::from(
-                "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1546071216i/5907.jpg",
-            )),
-            GoodreadsId::new(5907),
-        );
+        let book = get_fake_book();
 
         db.insert_book(book.clone()).await.unwrap();
 
@@ -630,7 +609,7 @@ mod tests {
         assert_eq!(
             result,
             Err(InsertError::Conflict {
-                goodreads_id: GoodreadsId::new(5907)
+                goodreads_id: GoodreadsId::new(999)
             })
         );
 
