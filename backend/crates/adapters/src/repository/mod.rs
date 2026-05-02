@@ -604,6 +604,7 @@ mod tests {
                 goodreads_id: GoodreadsId::new(5907)
             })
         );
+        db.close().await;
         if Path::exists(Path::new("temp.db")) {
             fs::remove_file("temp.db").unwrap();
         }
