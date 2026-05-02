@@ -404,6 +404,11 @@ mod tests {
     use std::fs::File;
     use std::path::Path;
 
+    async fn cleanup(db: Database, temp_file_path: &Path) {
+        db.close().await;
+        fs::remove_file(temp_file_path).unwrap();
+    }
+
     #[test]
     fn firstname_lastname() {
         let names = [
@@ -568,8 +573,9 @@ mod tests {
 
     #[tokio::test]
     async fn duplicate_book() {
-        let _temp_db = File::create("temp.db").unwrap();
-        let db = Database::open(Path::new("temp.db")).await.unwrap();
+        let temp_file_path = Path::new("temp.db");
+        let _temp_db = File::create(temp_file_path).unwrap();
+        let db = Database::open(temp_file_path).await.unwrap();
 
         let book = BookMetadata::new(
             "The Hobbit",
@@ -604,9 +610,7 @@ mod tests {
                 goodreads_id: GoodreadsId::new(5907)
             })
         );
-        db.close().await;
-        if Path::exists(Path::new("temp.db")) {
-            fs::remove_file("temp.db").unwrap();
-        }
+
+        cleanup(db, temp_file_path).await;
     }
 }
