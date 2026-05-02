@@ -396,6 +396,8 @@ pub fn get_title_sort(title: &str) -> String {
 #[cfg(test)]
 #[allow(clippy::unwrap_used, reason = "Tests")]
 mod tests {
+    use crate::repository::records::AuthorRecord;
+
     use super::*;
     use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
     use pretty_assertions::assert_eq;
@@ -592,6 +594,36 @@ mod tests {
         let results: Vec<String> = titles.iter().map(|title| get_title_sort(title)).collect();
 
         assert_eq!(expected, results);
+    }
+
+    #[tokio::test]
+    async fn add_and_fetch() {
+        let temp_file_path = Path::new("temp.db");
+        let _temp_db = File::create(temp_file_path).unwrap();
+        let db = Database::open(temp_file_path).await.unwrap();
+
+        let book = get_fake_book();
+
+        db.insert_book(book).await.unwrap();
+
+        // book should now be in there => verify that fetch returns it
+
+        let all_book_records = db.fetch_all_books().await.unwrap();
+
+        assert!(all_book_records.len() == 1);
+
+        let single_entry = all_book_records.first().unwrap();
+        assert_eq!(single_entry.book_id, 1); // only book => ID must be 1
+        assert_eq!(single_entry.title, "Some Title");
+        assert_eq!(single_entry.sort, "Some Title");
+        assert_eq!(
+            single_entry.authors.first().unwrap(),
+            AuthorRecord::new(
+                String::from("Author Authorson"),
+                String::from("Authorson, Author"),
+                123_456
+            )
+        );
     }
 
     #[tokio::test]
