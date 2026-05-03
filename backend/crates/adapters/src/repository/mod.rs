@@ -20,9 +20,6 @@ use std::path::{Path, PathBuf};
 pub struct Database {
     /// pool used to execute queries in the `SQLite` database
     pool: SqlitePool,
-    /// Sqlite connect options
-    #[cfg(test)]
-    opts: SqliteConnectOptions,
 }
 
 #[async_trait]
@@ -220,11 +217,7 @@ impl Database {
             .run(&pool)
             .await
             .map_err(|_err| OpenRepositoryError::Initialization)?;
-        Ok(Self {
-            pool,
-            #[cfg(test)]
-            opts,
-        })
+        Ok(Self { pool })
     }
 
     /// Insert all authors associated with a book
@@ -409,15 +402,6 @@ mod tests {
     use std::fs;
     use std::fs::File;
     use std::path::Path;
-
-    impl Drop for Database {
-        fn drop(&mut self) {
-            let path = self.opts.get_filename();
-            let mut this = Database {};
-            tokio::spawn(async move { self.close().await });
-            fs::remove_file(path).unwrap();
-        }
-    }
 
     fn get_fake_book() -> BookMetadata {
         BookMetadata::new(
@@ -637,6 +621,9 @@ mod tests {
         assert_eq!(single_series_entry.series, "The Epic Saga Cycle".to_owned());
         assert_eq!(single_series_entry.sort, "Epic Saga Cycle, The".to_owned());
         assert_eq!(single_series_entry.goodreads_id, 11111);
+
+        db.close().await;
+        fs::remove_file(temp_file_path).unwrap();
     }
 
     #[tokio::test]
@@ -657,5 +644,8 @@ mod tests {
                 goodreads_id: GoodreadsId::new(999)
             })
         );
+
+        db.close().await;
+        fs::remove_file(temp_file_path).unwrap();
     }
 }
