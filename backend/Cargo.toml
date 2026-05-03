@@ -63,3 +63,5 @@ clone_on_ref_ptr = { level = "allow", priority = 1 }
 semicolon_outside_block = { level = "allow", priority = 1 }
 # allow matching with implicit references
 pattern_type_mismatch = { level = "allow", priority = 1 }
+# when adding type suffix, do not separate with underscore
+unseparated_literal_suffix = { level = "allow", priority = 1 }

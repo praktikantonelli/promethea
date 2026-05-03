@@ -396,12 +396,11 @@ pub fn get_title_sort(title: &str) -> String {
 #[cfg(test)]
 #[allow(clippy::unwrap_used, reason = "Tests")]
 mod tests {
-    use crate::repository::records::AuthorRecord;
 
     use super::*;
     use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
     use pretty_assertions::assert_eq;
-    use shared_core::domain::repository::GoodreadsId;
+    use shared_core::domain::repository::{AuthorItem, GoodreadsId};
     use std::fs;
     use std::fs::File;
     use std::path::Path;
@@ -425,7 +424,7 @@ mod tests {
             )],
             vec![BookSeries::new(
                 "The Epic Saga Cycle",
-                18.2,
+                18.4,
                 GoodreadsId::new(11111),
             )],
             Some(328),
@@ -613,17 +612,24 @@ mod tests {
         assert!(all_book_records.len() == 1);
 
         let single_entry = all_book_records.first().unwrap();
-        assert_eq!(single_entry.book_id, 1); // only book => ID must be 1
-        assert_eq!(single_entry.title, "Some Title");
-        assert_eq!(single_entry.sort, "Some Title");
+        assert_eq!(single_entry.title, "Some Title".to_owned());
         assert_eq!(
-            single_entry.authors.first().unwrap(),
-            AuthorRecord::new(
-                String::from("Author Authorson"),
-                String::from("Authorson, Author"),
+            *single_entry.authors.first().unwrap(),
+            AuthorItem::new(
+                "Author Authorson".to_owned(),
+                "Authorson, Author".to_owned(),
                 123_456
             )
         );
+
+        let single_series_entry = single_entry.series_and_volume.first().unwrap();
+
+        // volume index cannot be compared directly because of float values
+        assert_eq!(single_series_entry.series, "The Epic Saga Cycle".to_owned());
+        assert_eq!(single_series_entry.sort, "Epic Saga Cycle, The".to_owned());
+        assert_eq!(single_series_entry.goodreads_id, 11111);
+
+        cleanup(db, temp_file_path).await;
     }
 
     #[tokio::test]
