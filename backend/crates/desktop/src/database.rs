@@ -5,75 +5,40 @@ use crate::state::{
 use serde_json::json;
 use shared_core::domain::repository::BookItem;
 use shared_core::usecases::books::AddBookInput;
-use std::fs::File;
 use std::path::PathBuf;
 use tauri::{AppHandle, Emitter as _, State};
 use tauri_plugin_store::StoreExt as _;
 
-/// Creates a new `SQLite` database at a given path writes the path into the Tauri store
 #[tauri::command]
-pub async fn create_new_db(
+/// Open a database connection, creating the database if it doesn't exist yet
+pub async fn open_db(
     state: State<'_, AppState>,
     app: AppHandle,
-    folder: String,
+    path_str: String,
 ) -> Result<(), PrometheaError> {
-    let db_file_path = PathBuf::from(folder).join(PathBuf::from(LIBRARY_DATABASE_NAME));
-    File::create(db_file_path.clone()).map_err(|error| {
-        PrometheaError::Other(format!("Failed to create database file: {error}"))
-    })?;
+    let mut path = PathBuf::from(path_str);
+    if path.is_dir() {
+        // path points to directory where a new file has to be created
+        path = path.join(PathBuf::from(LIBRARY_DATABASE_NAME));
+    }
 
-    // update config store
     let store = app.store(APP_CONFIG_PATH)?;
-    store.set("library-path", json!({ "value": db_file_path.to_str() }));
-    log::info!(
-        "Updated database path in store to {}",
-        db_file_path.display()
-    );
+    store.set("library-path", json!({ "value": path.to_str() }));
+    log::info!("Set database path in store to {}", path.display());
 
     {
         let mut config = state.config.write().await;
-        config.library_path = Some(db_file_path.clone());
+        config.library_path = Some(path.clone());
     }
 
-    let services = build_services(db_file_path).await?;
+    let services = build_services(path).await?;
 
     {
         let mut backend = state.backend.write().await;
         *backend = BackendState::Ready(services);
     }
 
-    Ok(())
-}
-
-/// Opens an existing database at the given path and updates the stored value in the Tauri store
-#[tauri::command]
-pub async fn open_existing_db(
-    state: State<'_, AppState>,
-    app: AppHandle,
-    path: String,
-) -> Result<(), PrometheaError> {
-    let db_file_path = PathBuf::from(path);
-
-    let store = app.store(APP_CONFIG_PATH)?;
-    store.set("library-path", json!({ "value": db_file_path.to_str() }));
-    log::info!(
-        "Updated database path in store to {}",
-        db_file_path.display()
-    );
-
-    {
-        let mut config = state.config.write().await;
-        config.library_path = Some(db_file_path.clone());
-    }
-
-    let services = build_services(db_file_path).await?;
-
-    {
-        let mut backend = state.backend.write().await;
-        *backend = BackendState::Ready(services);
-    }
-
-    // an existing DB might not be empty -> fetch books now
+    // if an existing DB was opened, it might already contain values
     app.emit("db:changed", ())?;
 
     Ok(())
