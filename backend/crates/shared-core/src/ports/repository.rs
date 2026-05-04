@@ -32,7 +32,7 @@ pub trait BookRepositoryPort {
 }
 
 /// Error when trying to add a new book to the repository
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, PartialEq)]
 #[non_exhaustive]
 pub enum InsertError {
     /// The book already exists in the repository
@@ -43,8 +43,8 @@ pub enum InsertError {
     },
 
     /// The repository is unavailable
-    #[error("storage unavailable")]
-    Unavailable,
+    #[error("storage unavailable: `{message}`")]
+    Unavailable { message: String },
 
     /// Error inserting specific entity
     #[error("could not insert `{entity}` `{name}`: `{message}`")]

@@ -95,15 +95,14 @@ impl BookRepositoryPort for Database {
 
     #[inline]
     async fn try_fetch_author_sort(&self, author_name: &str) -> Result<Option<String>, FetchError> {
-        let sort = sqlx::query!("SELECT sort FROM authors WHERE name LIKE ?", author_name)
-            .fetch_one(&self.pool)
+        let row = sqlx::query!("SELECT sort FROM authors WHERE name LIKE ?", author_name)
+            .fetch_optional(&self.pool)
             .await
             .map_err(|error| FetchError::Generic {
                 message: error.to_string(),
-            })?
-            .sort;
+            })?;
 
-        Ok(Some(sort))
+        Ok(row.map(|row| row.sort))
     }
 
     #[inline]
@@ -111,23 +110,25 @@ impl BookRepositoryPort for Database {
         &self,
         series_title: &str,
     ) -> Result<Option<String>, FetchError> {
-        let sort = sqlx::query!("SELECT sort FROM series WHERE name LIKE ?", series_title)
-            .fetch_one(&self.pool)
+        let row = sqlx::query!("SELECT sort FROM series WHERE name LIKE ?", series_title)
+            .fetch_optional(&self.pool)
             .await
             .map_err(|error| FetchError::Generic {
                 message: error.to_string(),
-            })?
-            .sort;
-        Ok(Some(sort))
+            })?;
+
+        Ok(row.map(|row| row.sort))
     }
 
     #[inline]
     async fn insert_book(&self, book: BookMetadata) -> Result<(), InsertError> {
-        let mut tx: Transaction<'_, Sqlite> = self
-            .pool
-            .begin()
-            .await
-            .map_err(|_error| InsertError::Unavailable)?;
+        let mut tx: Transaction<'_, Sqlite> =
+            self.pool
+                .begin()
+                .await
+                .map_err(|error| InsertError::Unavailable {
+                    message: error.to_string(),
+                })?;
 
         let book_goodreads_id = book.goodreads_id.clone();
         let number_of_pages = book.number_of_pages;
@@ -162,12 +163,16 @@ impl BookRepositoryPort for Database {
                 if is_sqlite_unique_violation(&error) {
                     tx.rollback()
                         .await
-                        .map_err(|_error| InsertError::Unavailable)?;
+                        .map_err(|insert_error| InsertError::Unavailable {
+                            message: insert_error.to_string(),
+                        })?;
                     return Err(InsertError::Conflict {
                         goodreads_id: book.goodreads_id.clone(),
                     });
                 }
-                return Err(InsertError::Unavailable);
+                return Err(InsertError::Unavailable {
+                    message: format!("failed to insert book: {error}"),
+                });
             }
         };
 
@@ -179,7 +184,9 @@ impl BookRepositoryPort for Database {
         self.insert_series(&mut tx, book.series, book_id).await?;
         tx.commit()
             .await
-            .map_err(|_error| InsertError::Unavailable)?;
+            .map_err(|error| InsertError::Unavailable {
+                message: error.to_string(),
+            })?;
 
         Ok(())
     }
@@ -195,23 +202,22 @@ impl Database {
     /// Tries to instantiate an instance that connects to an existing `SQLite` database
     ///
     /// # Errors
-    /// Fails if the path doesn't exist or if running the migration fails
+    /// Fails if the path doesn't cannot be opened or if running the migration fails
     #[inline]
     pub async fn open(path: &Path) -> Result<Self, OpenRepositoryError> {
-        let options = SqliteConnectOptions::new()
+        let opts = SqliteConnectOptions::new()
             .foreign_keys(true)
-            .filename(path);
-        let pool =
-            SqlitePool::connect_with(options)
-                .await
-                .map_err(|_err| OpenRepositoryError::Path {
-                    path: PathBuf::from(path),
-                })?;
+            .filename(path)
+            .create_if_missing(true);
+        let pool = SqlitePool::connect_with(opts.clone())
+            .await
+            .map_err(|_err| OpenRepositoryError::Path {
+                path: PathBuf::from(path),
+            })?;
         sqlx::migrate!()
             .run(&pool)
             .await
             .map_err(|_err| OpenRepositoryError::Initialization)?;
-
         Ok(Self { pool })
     }
 
@@ -231,7 +237,9 @@ impl Database {
             let author_sort = self
                 .try_fetch_author_sort(&author_record.name)
                 .await
-                .map_err(|_error| InsertError::Unavailable)?
+                .map_err(|error| InsertError::Unavailable {
+                    message: error.to_string(),
+                })?
                 .map_or_else(|| get_name_sort(&author_record.name), |string| string);
             let author_id: i64 = sqlx::query!(
                 r#"
@@ -290,7 +298,9 @@ impl Database {
             let series_sort = self
                 .try_fetch_series_sort(&sav.title)
                 .await
-                .map_err(|_error| InsertError::Unavailable)?
+                .map_err(|error| InsertError::Unavailable {
+                    message: error.to_string(),
+                })?
                 .map_or_else(|| get_title_sort(&sav.title), |string| string);
             let series_id: i64 = sqlx::query!(
                 r#"
@@ -383,9 +393,37 @@ pub fn get_title_sort(title: &str) -> String {
 }
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used, reason = "Tests")]
 mod tests {
+
     use super::*;
+    use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
     use pretty_assertions::assert_eq;
+    use shared_core::domain::repository::{AuthorItem, GoodreadsId};
+    use tempfile::tempdir;
+
+    fn get_fake_book() -> BookMetadata {
+        BookMetadata::new(
+            "Some Title",
+            Some(NaiveDateTime::new(
+                NaiveDate::from_ymd_opt(1999, 9, 21).unwrap(),
+                NaiveTime::from_hms_opt(8, 0, 0).unwrap(),
+            )),
+            vec![BookContributor::new(
+                "Author Authorson",
+                "Author",
+                GoodreadsId::new(123_456),
+            )],
+            vec![BookSeries::new(
+                "The Epic Saga Cycle",
+                18.4,
+                GoodreadsId::new(11111),
+            )],
+            Some(328),
+            Some(String::from("https://www.veryrealurl.com/image.jpg")),
+            GoodreadsId::new(999),
+        )
+    }
 
     #[test]
     fn firstname_lastname() {
@@ -547,5 +585,64 @@ mod tests {
         let results: Vec<String> = titles.iter().map(|title| get_title_sort(title)).collect();
 
         assert_eq!(expected, results);
+    }
+
+    #[tokio::test]
+    async fn add_and_fetch() {
+        let temp_dir = tempdir().unwrap();
+        let db_path = temp_dir.path().join("temp.db");
+        let db = Database::open(&db_path).await.unwrap();
+
+        let book = get_fake_book();
+
+        db.insert_book(book).await.unwrap();
+
+        // book should now be in there => verify that fetch returns it
+
+        let all_book_records = db.fetch_all_books().await.unwrap();
+
+        assert_eq!(all_book_records.len(), 1);
+
+        let single_entry = all_book_records.first().unwrap();
+        assert_eq!(single_entry.title, "Some Title".to_owned());
+        assert_eq!(
+            *single_entry.authors.first().unwrap(),
+            AuthorItem::new(
+                "Author Authorson".to_owned(),
+                "Authorson, Author".to_owned(),
+                123_456
+            )
+        );
+
+        let single_series_entry = single_entry.series_and_volume.first().unwrap();
+
+        // volume index cannot be compared directly because of float values
+        assert_eq!(single_series_entry.series, "The Epic Saga Cycle".to_owned());
+        assert_eq!(single_series_entry.sort, "Epic Saga Cycle, The".to_owned());
+        assert_eq!(single_series_entry.goodreads_id, 11111);
+
+        db.close().await;
+    }
+
+    #[tokio::test]
+    async fn duplicate_book() {
+        let temp_dir = tempdir().unwrap();
+        let db_path = temp_dir.path().join("temp.db");
+        let db = Database::open(&db_path).await.unwrap();
+
+        let book = get_fake_book();
+
+        db.insert_book(book.clone()).await.unwrap();
+
+        // book is now in database already, assert that adding it a second time fails
+        let result = db.insert_book(book).await;
+        assert_eq!(
+            result,
+            Err(InsertError::Conflict {
+                goodreads_id: GoodreadsId::new(999)
+            })
+        );
+
+        db.close().await;
     }
 }

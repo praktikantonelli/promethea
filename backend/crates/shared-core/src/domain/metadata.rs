@@ -3,7 +3,7 @@ use chrono::NaiveDateTime;
 
 /// The primary data structure containing the metadata of a book.
 #[non_exhaustive]
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct BookMetadata {
     /// The main title of the book.
     pub title: String,
@@ -47,7 +47,7 @@ impl BookMetadata {
 
 /// Represents an individual who contributed to the book, such as an author or editor.
 #[non_exhaustive]
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct BookContributor {
     /// The name of the contributor.
     pub name: String,
@@ -71,7 +71,7 @@ impl BookContributor {
 
 /// Represents series information for a book, including the series title and book's position within the series.
 #[non_exhaustive]
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct BookSeries {
     /// The title of the series.
     pub title: String,
