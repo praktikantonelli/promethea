@@ -400,9 +400,7 @@ mod tests {
     use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
     use pretty_assertions::assert_eq;
     use shared_core::domain::repository::{AuthorItem, GoodreadsId};
-    use std::fs;
-    use std::fs::File;
-    use std::path::Path;
+    use tempfile::tempdir;
 
     fn get_fake_book() -> BookMetadata {
         BookMetadata::new(
@@ -591,9 +589,9 @@ mod tests {
 
     #[tokio::test]
     async fn add_and_fetch() {
-        let temp_file_path = Path::new("temp.db");
-        let _temp_db = File::create(temp_file_path).unwrap();
-        let db = Database::open(temp_file_path).await.unwrap();
+        let temp_dir = tempdir().unwrap();
+        let db_path = temp_dir.path().join("temp.db");
+        let db = Database::open(&db_path).await.unwrap();
 
         let book = get_fake_book();
 
@@ -624,14 +622,13 @@ mod tests {
         assert_eq!(single_series_entry.goodreads_id, 11111);
 
         db.close().await;
-        fs::remove_file(temp_file_path).unwrap();
     }
 
     #[tokio::test]
     async fn duplicate_book() {
-        let temp_file_path = Path::new("temp.db");
-        let _temp_db = File::create(temp_file_path).unwrap();
-        let db = Database::open(temp_file_path).await.unwrap();
+        let temp_dir = tempdir().unwrap();
+        let db_path = temp_dir.path().join("temp.db");
+        let db = Database::open(&db_path).await.unwrap();
 
         let book = get_fake_book();
 
@@ -647,6 +644,5 @@ mod tests {
         );
 
         db.close().await;
-        fs::remove_file(temp_file_path).unwrap();
     }
 }
