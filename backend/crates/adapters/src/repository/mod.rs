@@ -202,7 +202,7 @@ impl Database {
     /// Tries to instantiate an instance that connects to an existing `SQLite` database
     ///
     /// # Errors
-    /// Fails if the path doesn't exist or if running the migration fails
+    /// Fails if the path doesn't cannot be opened or if running the migration fails
     #[inline]
     pub async fn open(path: &Path) -> Result<Self, OpenRepositoryError> {
         let opts = SqliteConnectOptions::new()
