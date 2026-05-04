@@ -207,7 +207,8 @@ impl Database {
     pub async fn open(path: &Path) -> Result<Self, OpenRepositoryError> {
         let opts = SqliteConnectOptions::new()
             .foreign_keys(true)
-            .filename(path);
+            .filename(path)
+            .create_if_missing(true);
         let pool = SqlitePool::connect_with(opts.clone())
             .await
             .map_err(|_err| OpenRepositoryError::Path {
