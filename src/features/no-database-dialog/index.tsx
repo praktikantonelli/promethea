@@ -13,7 +13,7 @@ import { useCallback, useEffect, useState } from "react";
 
 
 function useDbInitStatus() {
-  const [ready, setReady] = useState<boolean>(false);
+  const [ready, setReady] = useState<boolean | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -60,10 +60,16 @@ export default function NoDatabaseDialog() {
   )
 
 
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
-    setOpen(!ready);
+    if (ready !== null) {
+      setOpen(!ready);
+    }
   }, [ready]);
+
+  if (ready === null) {
+    return null;
+  }
 
 
   return (
