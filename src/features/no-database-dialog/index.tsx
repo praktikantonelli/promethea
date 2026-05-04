@@ -36,35 +36,29 @@ function useDbInitStatus() {
 export default function NoDatabaseDialog() {
   const { ready, setReady: _setReady, refresh } = useDbInitStatus();
 
-  const handleCreateNew = useCallback(async () => {
+  const handleLibrary = useCallback(async (action: string) => {
     try {
-      info("Create new button was clicked");
-      const folderPath = await dialogOpen({ multiple: false, directory: true });
-      if (!folderPath) {
-        debug("Create new cancelled by user!");
+      info(`${action} clicked`);
+      let args;
+      if (action == "CreateNew") {
+        args = { multiple: false, directory: true };
+      } else {
+        args = { multiple: false, directory: false, filters: [{ name: "library", extensions: ["db", "db3", "sqlite"] }] };
+      }
+      let pathStr = await dialogOpen(args);
+      if (!pathStr) {
+        debug("Dialog cancelled by user");
         return;
       }
-      await invoke("create_new_db", { folder: folderPath });
+      await invoke("open_db", { pathStr });
       await refresh();
-    } catch (e: any) {
-      error(`create_new_db failed: ${e?.message ?? String(e)}`);
-    }
-  }, [refresh]);
 
-  const handleOpenExisting = useCallback(async () => {
-    try {
-      info("Open existing button was clicked");
-      const filePath = await dialogOpen({ multiple: false, directory: false, filters: [{ name: "library", extensions: ["db", "db3", "sqlite"] }] });
-      if (!filePath) {
-        debug("Open existing cancelled by user!");
-        return;
-      }
-      await invoke("open_existing_db", { path: filePath });
-      await refresh();
     } catch (e: any) {
-      error(`open_existing_db failed: ${e?.message ?? String(e)}`)
+      error(`opening DB failed: ${e?.message ?? String(e)}`);
     }
-  }, [refresh]);
+  }, [refresh]
+  )
+
 
   const [open, setOpen] = useState<boolean>(true);
   useEffect(() => {
@@ -79,8 +73,8 @@ export default function NoDatabaseDialog() {
           <DialogTitle>No Database Configured Yet</DialogTitle>
           <DialogDescription>Either select an existing database file or choose a location to create a new one</DialogDescription>
           <div>
-            <Button onClick={handleCreateNew}>Create New</Button>
-            <Button onClick={handleOpenExisting}>Open Existing</Button>
+            <Button onClick={() => handleLibrary("CreateNew")}>Create New</Button>
+            <Button onClick={() => handleLibrary("OpenExisting")}>Open Existing</Button>
 
           </div>
         </DialogHeader>
