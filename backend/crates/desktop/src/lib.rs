@@ -1,7 +1,7 @@
 //! `desktop`
 //!
 //! This crate contains everything Tauri-specific for promethea
-use crate::database::{add_book, create_new_db, fetch_books, get_init_status, open_existing_db};
+use crate::database::{add_book, fetch_books, get_init_status, open_db};
 use errors::PrometheaError;
 use state::{APP_CONFIG_PATH, AppState, BackendState, RuntimeConfig, build_services};
 use std::path::PathBuf;
@@ -113,11 +113,10 @@ fn run_safe() -> Result<(), PrometheaError> {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            create_new_db,
-            open_existing_db,
             get_init_status,
             fetch_books,
-            add_book
+            add_book,
+            open_db
         ])
         .run(tauri::generate_context!())?;
     Ok(())
