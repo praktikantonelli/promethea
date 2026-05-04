@@ -171,7 +171,7 @@ impl BookRepositoryPort for Database {
                     });
                 }
                 return Err(InsertError::Unavailable {
-                    message: String::from("failed to insert book"),
+                    message: format!("failed to insert book: {error}"),
                 });
             }
         };
