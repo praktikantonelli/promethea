@@ -601,7 +601,7 @@ mod tests {
 
         let all_book_records = db.fetch_all_books().await.unwrap();
 
-        assert!(all_book_records.len() == 1);
+        assert_eq!(all_book_records.len(), 1);
 
         let single_entry = all_book_records.first().unwrap();
         assert_eq!(single_entry.title, "Some Title".to_owned());
