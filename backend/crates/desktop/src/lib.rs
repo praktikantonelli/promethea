@@ -10,8 +10,6 @@ use tauri::Manager as _;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_plugin_store::StoreExt as _;
 use tokio::sync::RwLock;
-#[cfg(not(debug_assertions))]
-use tracing_subscriber::{EnvFilter, fmt};
 /// Database module, holds everything dealing with accessing the database from the Tauri
 /// application
 mod database;
@@ -43,15 +41,6 @@ pub fn run() {
 /// signature of not returning anything.
 #[allow(clippy::exit, reason = "Happens in Tauri macro, cannot be avoided")]
 fn run_safe() -> Result<(), PrometheaError> {
-    #[cfg(not(debug_assertions))]
-    {
-        let subscriber = fmt()
-            .with_env_filter(EnvFilter::from_default_env())
-            .finish();
-
-        tracing::subscriber::set_global_default(subscriber)
-            .expect("Unable to set global tracing subscriber");
-    }
     let enable_devtools = env::var("ENABLE_DEVTOOLS")
         .map(|val| val == "true" || val == "1")
         .unwrap_or(false);
