@@ -2,6 +2,7 @@ use crate::errors::PrometheaError;
 use crate::state::{
     APP_CONFIG_PATH, AppState, BackendState, LIBRARY_DATABASE_NAME, build_services,
 };
+use log::{info, warn};
 use serde_json::json;
 use shared_core::domain::repository::BookItem;
 use shared_core::usecases::books::AddBookInput;
@@ -50,7 +51,7 @@ pub async fn get_init_status(state: State<'_, AppState>) -> Result<bool, Prometh
     let backend = state.backend.read().await;
     let config = state.config.read().await;
     if config.library_path.is_none() {
-        tracing::warn!("Database path not yet configured!");
+        warn!("Database path not yet configured!");
         Ok(false)
     } else {
         Ok(matches!(&*backend, BackendState::Ready(_)))
@@ -88,7 +89,7 @@ pub async fn add_book(
     state: State<'_, AppState>,
     path: PathBuf,
 ) -> Result<(), PrometheaError> {
-    tracing::info!("Received request to add book from {path:?}");
+    info!("Received request to add book from {}", path.display());
     let use_case = {
         let backend = state.backend.read().await;
 
