@@ -11,6 +11,12 @@ export default function AddBookButton() {
   const handleAddNewBook = useCallback(async () => {
     info("Add new book button clicked");
     const path = await dialogOpen({ multiple: false, directory: false, filters: [{ name: "Book", extensions: ["epub"] }] });
+
+    // if the user cancels, do nothing
+    if (!path || typeof path !== "string") {
+      return;
+    }
+
     await invoke("add_book", { path })
       .then(() => toast.success("Book successfully added"))
       .catch((error) => toast.error(error));
