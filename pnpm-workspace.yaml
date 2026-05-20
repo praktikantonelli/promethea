@@ -1,5 +1,0 @@
-packages:
-  - "."
-  - "e2e-tests"
-onlyBuiltDependencies:
-  - esbuild
