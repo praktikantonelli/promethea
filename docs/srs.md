@@ -1,10 +1,9 @@
 # Software Requirements Specification
-## For {{project name}}
+## For Promethea
 
 Version 0.1  
-Prepared by {{author}}  
-{{organization}}  
-{{date_modified}}
+Prepared by Luca Antonelli  
+2026-05-21
 
 ## Table of Contents
 <!-- TOC -->
@@ -35,9 +34,8 @@ Prepared by {{author}}
 ## Revision History
 
 | Name | Date | Reason For Changes | Version |
-|------|------|--------------------|---------|
-|      |      |                    |         |
-|      |      |                    |         |
+|--------------------|---------------|--------------------------|---------|
+| Luca Antonelli     | 2026-05-21    | Initial template filling | 0.1     |
 
 ## 1. Introduction
 💬 _Provides an overview of the document and orients the reader to the system being specified._
