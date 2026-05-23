@@ -43,13 +43,7 @@ Prepared by Luca Antonelli
 ➥ Briefly summarize the SRS’s purpose, product scope, intended audience, and how the document is organized. Do not include details here; reference the relevant sections instead.
 
 ### 1.1 Document Purpose
-💬 _Clarifies why this SRS exists, what it contains, and who should use it._
-
-➥ State the purpose of the SRS in 2–4 sentences. Name the primary audiences (e.g., product, engineering, QA, security, compliance, operations) and how they use it across the software lifecycle.
-
-💡 Tips:
-- Emphasize that the SRS defines what the system must do, not how it will do it.
-- Mention related documents (vision/scope, architecture, roadmap, contracts) if relevant.
+The purpose of this document is to define a detailed description of Promethea. It will explain the purpose and features of the system, its interfaces, and how it must operate. This document is intended as a versioned overview for the system, aimed at interested people and the developers.
 
 ### 1.2 Product Scope
 💬 _Defines the software product’s purpose, boundaries, and relationship to business goals._
