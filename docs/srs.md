@@ -38,9 +38,7 @@ Prepared by Luca Antonelli
 | Luca Antonelli     | 2026-05-21    | Initial template filling | 0.1     |
 
 ## 1. Introduction
-💬 _Provides an overview of the document and orients the reader to the system being specified._
-
-➥ Briefly summarize the SRS’s purpose, product scope, intended audience, and how the document is organized. Do not include details here; reference the relevant sections instead.
+What follows is a non-binding attempt at planning a software product mainly as a way of having a clear overview and structure for a larger software project called Promethea, a library manager for e-books with some extra quality-of-life features. 
 
 ### 1.1 Document Purpose
 The purpose of this document is to define a detailed description of Promethea. It will explain the purpose and features of the system, its interfaces, and how it must operate. This document is intended as a versioned overview for the system, aimed at interested people and the developers.
