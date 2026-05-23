@@ -47,17 +47,17 @@ The purpose of this document is to define a detailed description of Promethea. I
 This program will be a way of organizing a library of e-books for a regular user. It will be designed in a way to make working with e-books as frictionless as possible, aiming to automate as many repetitive tasks as possible. The goal is that an end user can manually do basic management on their library with as little manual input as possible. 
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
-➥ Help readers understand specialized terms and notation by providing a glossary of domain terms, acronyms, and abbreviations used in the SRS.
-
-💡 Tips:
-- Include terms that impact interpretation of requirements (e.g., “user,” “tenant,” “near real-time”).
-- Keep entries alphabetized and consistent across the document set.
 
 | Term | Definition                                                                                                                   |
 |------|------------------------------------------------------------------------------------------------------------------------------|
 | API  | Application Programming Interface - A set of definitions and protocols for building and integrating application software     |
 | SRS  | Software Requirements Specification - A document that describes the intended purpose, requirements, and nature of a software |
 | UI   | User Interface - The visual part of computer application through which a user interacts with a software                      |
+| EPUB | E-book format, most widely used|
+| Metadata | Data about a book; includes title, authors, series, publication date, ...|
+| Calibre | E-book management software written by Kovid Goyal |
+| Calibre-web | Web-based e-book library with support for Calibre libraries |
+| Service | Long-running process on a server, generally handling continuous tasks and processes |
 
 ### 1.4 References
 💬 _Lists external sources that are normative or informative for this SRS._
