@@ -44,13 +44,7 @@ What follows is a non-binding attempt at planning a software product mainly as a
 The purpose of this document is to define a detailed description of Promethea. It will explain the purpose and features of the system, its interfaces, and how it must operate. This document is intended as a versioned overview for the system, aimed at interested people and the developers.
 
 ### 1.2 Product Scope
-💬 _Defines the software product’s purpose, boundaries, and relationship to business goals._
-
-➥ Identify the product by name and version/release. In 3–5 sentences, describe its primary purpose, key capabilities, and intended outcomes. Clearly list inclusions and exclusions when this SRS covers part of a larger system. Focus on the “what” and “why.”
-
-💡 Tips:
-- Connect capabilities to business objectives and reference a separate vision/scope document if relevant.
-- Include a simple diagram if it clarifies boundaries within a larger system.
+This program will be a way of organizing a library of e-books for a regular user. It will be designed in a way to make working with e-books as frictionless as possible, aiming to automate as many repetitive tasks as possible. The goal is that an end user can manually do basic management on their library with as little manual input as possible. 
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
 ➥ Help readers understand specialized terms and notation by providing a glossary of domain terms, acronyms, and abbreviations used in the SRS.
