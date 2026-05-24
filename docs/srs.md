@@ -67,16 +67,15 @@ IEEE Computer Society, 1998
 The next chapter provides a rough overview of the software in order to provide context for the more in-depth requirements introduced in chapter 3. The latter is mainly aimed at developers, as it describes the project in a more technically detailed way. Chapter 4 provides details on how each requirement's fulfillment is to be verified. Finally, chapter 5 contains an appendix with any additional information required to understand this document. 
 
 ## 2. Product Overview
-💬 _Provides background and context influencing the product’s requirements._
 
 ### 2.1 Product Perspective
-💬 _Places the product within a larger ecosystem or lineage._
+There exist multiple great pieces of software that are great at managing e-book libraries and collections, most prominent among which is Calibre. Calibre has been a de-facto standard for many people over the years, but where it is extremely powerful in some regards, its feature set is also limited in others. The lacking features are mainly in the metadata restrictions it imposes (among which, a book may only belong to one series), and that its use case is strictly meant as a desktop app; it has no web-based view for servers, no full function in order to transfer books to an e-reader device, and its UI is slightly unaccustomed. 
 
-➥ Describe context and origin of the product, whether this is a new product, replacement, or member of a family. If part of a larger system, briefly explain relationships, external interfaces, and key dependencies. Include details on ownership, service level agreements (SLAs), and support models.
+A notable piece of software for at least part of this lack of features is Calibre-web, which provides a web-based service that can interact with a Calibre library and allow a user to interact with their library via web. However, said project also comes with limits, including limited interaction with the files themselves, changes to the library needing a manual update trigger, and a completely different UI from Calibre, making the two very different to use. 
 
-💡 Tips:
-- Highlight upstream/downstream systems and ownership boundaries.
-- A high-level context diagram may help to orient the reader.
+Finally, a lacking feature in both is the possibility to also track reading progress over time. Both programs allow a user to track which books have or have not been read yet, but this does not help with analytics. For this, many people fall back to Goodreads, which at least lets you keep track of which books are to be read, already read, currently being read, DNFed, or even on custom bookshelves. 
+
+While all three of the aforementioned projects are great in their own way, the fact that _three individual tools are needed to accomplish those tasks_ seems to suggest room for a unifying solution. Enter Promethea. 
 
 ### 2.2 Product Functions
 💬 _High-level summary of what the product enables users or systems to do._
