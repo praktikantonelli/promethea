@@ -60,7 +60,7 @@ This program will be a way of organizing a library of e-books for a regular user
 | Service | Long-running process on a server, generally handling continuous tasks and processes |
 
 ### 1.4 References
-IEEE. _IEEE Std 830-1998 EIII Recommended Practice for Software Requirements Specifications._ 
+IEEE. _IEEE Std 830-1998 IEEE Recommended Practice for Software Requirements Specifications._ 
 IEEE Computer Society, 1998
 
 ### 1.5 Document Overview
