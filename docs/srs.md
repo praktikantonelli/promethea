@@ -64,12 +64,7 @@ IEEE. _IEEE Std 830-1998 EIII Recommended Practice for Software Requirements Spe
 IEEE Computer Society, 1998
 
 ### 1.5 Document Overview
-💬 _Brief guide to the structure of the SRS so readers can quickly find what they need._
-
-➥ Summarize what each major section covers (Product Overview, Requirements, Verification, Appendixes), note any document conventions, and mention how updates and revision history are managed.
-
-💡 Tips:
-- Keep to 3–5 sentences focusing on navigation and conventions.
+The next chapter provides a rough overview of the software in order to provide context for the more in-depth requirements introduced in chapter 3. The latter is mainly aimed at developers, as it describes the project in a more technically detailed way. Chapter 4 provides details on how each requirement's fulfillment is to be verified. Finally, chapter 5 contains an appendix with any additional information required to understand this document. 
 
 ## 2. Product Overview
 💬 _Provides background and context influencing the product’s requirements._
