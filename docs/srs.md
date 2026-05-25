@@ -87,17 +87,7 @@ Promethea will allow a user to
 
 
 ### 2.3 Product Constraints
-💬 _Defines contextual limitations or conditions shaping design and implementation._
-
-➥ Describe constraints such as mandated interfaces, technology stacks, regulatory obligations, QoS baselines, hardware limitations, AI/ML model families, and organizational policies.
-
-💡 Tips:
-- State constraints as verifiable "must" statements (e.g., “must use FIPS 140–3 validated crypto modules”).
-- Distinguish external/internal and mandatory/preferred constraints.
-- Avoid design decisions unless truly binding.
-
-📝 Note:
-Requirements (Section 3) defines verifiable system obligations—specific behaviors or qualities the system shall exhibit in order to satisfy limits described in this section.
+The system must be written in Rust. It must provide basic encryption/security for anything that travels through the network. 
 
 ### 2.4 User Characteristics
 💬 _Defines the user groups and the attributes that affect requirements._
