@@ -90,13 +90,7 @@ Promethea will allow a user to
 The system must be written in Rust. It must provide basic encryption/security for anything that travels through the network. 
 
 ### 2.4 User Characteristics
-💬 _Defines the user groups and the attributes that affect requirements._
-
-➥ Identify user classes, roles, and personas, noting expertise, access levels, frequency of use, accessibility needs, and goals.
-
-💡 Tips:
-- Define user classes by behavior, not just titles.
-- Note localization and accessibility considerations that affect UI/UX requirements.
+There is only one type of user, which has access to the full features of the program. 
 
 ### 2.5 Assumptions and Dependencies
 💬 _External assumed factors or conditions, as opposed to known facts, that the project relies on._
