@@ -93,12 +93,7 @@ The system must be written in Rust. It must provide basic encryption/security fo
 There is only one type of user, which has access to the full features of the program. 
 
 ### 2.5 Assumptions and Dependencies
-💬 _External assumed factors or conditions, as opposed to known facts, that the project relies on._
-
-➥ List assumptions about environment, hardware, usage patterns, third-party components/services, and organizational support. List dependencies on external systems, libraries, or teams. For each, indicate potential impact if proven false.
-
-💡 Tips:
-- Link assumptions to risk register with owner and mitigation when available.
+There are no external dependencies aside from typical 3rd-party libraries for either frontend or backend.
 
 ### 2.6 Apportioning of Requirements
 💬 _Allocation of requirements across components or increments._
