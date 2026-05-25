@@ -78,13 +78,13 @@ Finally, a lacking feature in both is the possibility to also track reading prog
 While all three of the aforementioned projects are great in their own way, the fact that _three individual tools are needed to accomplish those tasks_ seems to suggest room for a unifying solution. Enter Promethea. 
 
 ### 2.2 Product Functions
-💬 _High-level summary of what the product enables users or systems to do._
+Promethea will allow a user to 
+- manage a library of e-books, including adding, editing and deleting them
+- manage metadata associated with each e-book
+- retrieve metadata automatically and manually
+- track their lists of books to be read, currently reading, already read and aborted reads
+- track their reading statistics
 
-➥ Provide a concise overview of the major functional areas/features. Defer detailed behaviors, data, and edge cases to Section 3.
-
-💡 Tips:
-- 5–10 bullets are often sufficient at this level, grouping related functions logically.
-- Include a top-level data flow or use case diagram if helpful.
 
 ### 2.3 Product Constraints
 💬 _Defines contextual limitations or conditions shaping design and implementation._
