@@ -90,10 +90,8 @@ Browser / Desktop / Mobile-oriented UI
 
 | Reference | Owner/Author | Version/Date | Type | Location |
 |-----------|--------------|--------------|------|----------|
-| Project requirements draft (`Promethea.md`) | Project owner | 2026-05-19 | Normative for product intent | `/mnt/data/Promethea.md` |
-| SRS template (`srs.md`) | Project owner/template source | 2026-05-26 | Normative for document structure | `/mnt/data/srs.md` |
-| Requirement template (`req-template.md`) | Project owner/template source | 2026-05-26 | Normative for individual requirement format | `/mnt/data/req-template.md` |
-| Architecture and milestone discussion | Project owner and assistant | 2026-05-26 | Informative planning input | Current conversation |
+| Project requirements draft (`srs.md`) | Luca Antonelli | 2026-05-26 | Normative for product intent | [`/docs/srs.md`](./srs.md) |
+| Requirement template (`req-template.md`) | Luca Antonelli/template source | 2026-05-26 | Normative for individual requirement format | [`/docs/requirements/req-template.md`](./requirements/req-template.md) |
 
 ### 1.5 Document Overview
 
