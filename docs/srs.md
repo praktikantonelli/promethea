@@ -225,381 +225,46 @@ This section defines externally observable product behavior grouped by library m
 
 
 #### 3.2.2 Browsing, Authors, and Series
-
-##### REQ-FUNC-011 — Display book card view
-- ID: REQ-FUNC-011
-- Status: planned
-- Date: 2026-05-26
-- Title: Display book card view
-- Statement: The system shall display a card-based overview of books with cover images when available.
-- Rationale: This is a stated calibre-web replacement requirement.
-- Acceptance Criteria:
-  - The book overview renders each visible book as a card.
-  - Each card displays title and cover image, or a generated placeholder when no cover is available.
-  - Selecting a card opens the book detail view.
-- Verification Method: Demonstration
-- More Information: Sorting and filtering controls are covered by REQ-FUNC-018.
-
-##### REQ-FUNC-012 — Display author detail view
-- ID: REQ-FUNC-012
-- Status: planned
-- Date: 2026-05-26
-- Title: Display author detail view
-- Statement: The system shall display all cataloged books associated with a selected author.
-- Rationale: Users need to browse a personal library by author.
-- Acceptance Criteria:
-  - An author detail page lists all books linked to the author.
-  - Books on the author detail page link to their book detail pages.
-  - The page displays the author image when an image asset exists.
-- Verification Method: Demonstration
-- More Information: Author roles such as translator/editor are TBD but should be represented in the data model.
-
-##### REQ-FUNC-013 — Manage author images
-- ID: REQ-FUNC-013
-- Status: planned
-- Date: 2026-05-26
-- Title: Manage author images
-- Statement: The system shall support displaying, automatically fetching, and manually setting author images.
-- Rationale: The draft requires author images and allows fetching either automatically or by pasted URL.
-- Acceptance Criteria:
-  - An author without an image can be assigned an image through a supported fetch or upload/download flow.
-  - An author with an image displays that image on author overview and detail views.
-  - The user can replace or remove an author image.
-- Verification Method: Test
-- More Information: Automatic source selection is provider-dependent and TBD.
-
-##### REQ-FUNC-014 — Display series detail view
-- ID: REQ-FUNC-014
-- Status: planned
-- Date: 2026-05-26
-- Title: Display series detail view
-- Statement: The system shall display all books belonging to a selected series.
-- Rationale: Series browsing is a stated calibre-web replacement requirement.
-- Acceptance Criteria:
-  - A series detail page lists all books assigned to the series.
-  - Series entries display ordering information when available.
-  - Books on the series detail page link to book detail pages.
-- Verification Method: Demonstration
-- More Information: Numbering/position model must support decimals or labels; exact allowed values are TBD.
-
-##### REQ-FUNC-015 — Support related series
-- ID: REQ-FUNC-015
-- Status: planned
-- Date: 2026-05-26
-- Title: Support related series
-- Statement: The system shall support relationships between series, including overarching series and contained series.
-- Rationale: The draft requires series views to include related series such as overarching or contained series.
-- Acceptance Criteria:
-  - A user can define a relationship between two series.
-  - The series detail page displays related series grouped or labeled by relationship type.
-  - The system prevents or reports invalid self-relations and relation cycles where cycles are disallowed by the chosen relation type.
-- Verification Method: Test
-- More Information: Allowed relation types should be finalized during domain-model design.
-
-##### REQ-FUNC-016 — Display author overview
-- ID: REQ-FUNC-016
-- Status: planned
-- Date: 2026-05-26
-- Title: Display author overview
-- Statement: The system shall provide a card-based overview of all authors whose books are in the library.
-- Rationale: The draft requires an overview of authors with card view.
-- Acceptance Criteria:
-  - The author overview includes every author linked to at least one cataloged book.
-  - Each author card displays the author name and image or placeholder.
-  - Selecting an author card opens the author detail view.
-- Verification Method: Demonstration
-- More Information: None.
-
-##### REQ-FUNC-017 — Display series overview
-- ID: REQ-FUNC-017
-- Status: planned
-- Date: 2026-05-26
-- Title: Display series overview
-- Statement: The system shall provide a card-based overview of all series whose books are in the library.
-- Rationale: The draft requires an overview of series with card view.
-- Acceptance Criteria:
-  - The series overview includes every series linked to at least one cataloged book.
-  - Each series card displays the series title and representative image or placeholder.
-  - Selecting a series card opens the series detail view.
-- Verification Method: Demonstration
-- More Information: None.
-
-##### REQ-FUNC-018 — Search and filter library
-- ID: REQ-FUNC-018
-- Status: proposed
-- Date: 2026-05-26
-- Title: Search and filter library
-- Statement: The system shall allow users to search and filter the catalog by at least title, author, and series.
-- Rationale: Search and filtering are necessary for practical library browsing once the catalog grows.
-- Acceptance Criteria:
-  - Search by title returns books with matching title fields.
-  - Search by author returns books linked to matching authors.
-  - Search by series returns books linked to matching series.
-  - No-result states are shown clearly.
-- Verification Method: Test
-- More Information: Advanced search over EPUB full text is out of initial scope unless explicitly added.
-
+| ID | Title |
+|----|-------|
+| [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md) | Display book card view |
+| [REQ-FUNC-012](./requirements/functional/REQ-FUNC-012.md) | Display author detail view |
+| [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md) | Manage author images |
+| [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md) | Display series detail view |
+| [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md) | Support related series |
+| [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md) | Display author overview |
+| [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md) | Display series overview |
+| [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md) | Search and filter library |
 
 #### 3.2.3 Reading Tracking and Analytics
-
-##### REQ-FUNC-019 — Track owned books
-- ID: REQ-FUNC-019
-- Status: planned
-- Date: 2026-05-26
-- Title: Track owned books
-- Statement: The system shall track whether a book or edition is owned by the user.
-- Rationale: The Goodreads-replacement goal includes tracking owned books.
-- Acceptance Criteria:
-  - A user can mark a book or edition as owned or not owned.
-  - Ownership status is persisted and visible on the book detail page.
-  - Owned books can be filtered or listed separately.
-- Verification Method: Test
-- More Information: Ownership granularity across work/edition/file is a domain-model decision to finalize.
-
-##### REQ-FUNC-020 — Track reading status
-- ID: REQ-FUNC-020
-- Status: planned
-- Date: 2026-05-26
-- Title: Track reading status
-- Statement: The system shall track reading status for books using defined statuses including at least unread, currently reading, read, and abandoned.
-- Rationale: The Goodreads-replacement goal requires reading-status tracking.
-- Acceptance Criteria:
-  - A user can set and update a book reading status.
-  - The current status is visible on the book detail page and in reading views.
-  - Changing a status records the change time or creates a reading event.
-- Verification Method: Test
-- More Information: Additional statuses such as want-to-read or paused are TBD.
-
-##### REQ-FUNC-021 — Track completed reads
-- ID: REQ-FUNC-021
-- Status: planned
-- Date: 2026-05-26
-- Title: Track completed reads
-- Statement: The system shall record completed-reading events for books marked as read.
-- Rationale: The system needs completion history to support analytics by period and rereads.
-- Acceptance Criteria:
-  - A user can record a finished date for a book.
-  - The system can store multiple completed-read events for the same book to represent rereads.
-  - Completed reads appear in analytics for the corresponding period.
-- Verification Method: Test
-- More Information: Exact reread UX is TBD.
-
-##### REQ-FUNC-022 — Track reading progress events
-- ID: REQ-FUNC-022
-- Status: proposed
-- Date: 2026-05-26
-- Title: Track reading progress events
-- Statement: The system shall allow recording reading progress events containing at least date/time and one progress measure such as page, percentage, or location.
-- Rationale: Reading progress supports reading-speed analytics and history beyond a single status field.
-- Acceptance Criteria:
-  - A user can create a progress event for a book.
-  - Progress events are associated with the correct book or edition.
-  - Invalid progress values are rejected or reported to the user.
-- Verification Method: Test
-- More Information: Which progress measures are mandatory depends on available page/location data and is TBD.
-
-##### REQ-FUNC-023 — Analyze books read per period
-- ID: REQ-FUNC-023
-- Status: planned
-- Date: 2026-05-26
-- Title: Analyze books read per period
-- Statement: The system shall provide analytics for number of books read per selected period.
-- Rationale: The draft explicitly lists books read per period as an analytics example.
-- Acceptance Criteria:
-  - The user can select or view at least monthly and yearly periods.
-  - The analytics result counts completed-reading events in the selected period.
-  - The result is visible as a table or chart.
-- Verification Method: Test
-- More Information: Specific chart design is outside this SRS.
-
-##### REQ-FUNC-024 — Analyze pages read per period
-- ID: REQ-FUNC-024
-- Status: planned
-- Date: 2026-05-26
-- Title: Analyze pages read per period
-- Statement: The system shall provide analytics for number of pages read per selected period when page-count or progress data is available.
-- Rationale: The draft explicitly lists pages read per period as an analytics example.
-- Acceptance Criteria:
-  - The system computes page totals from page counts and/or reading progress events according to documented rules.
-  - The analytics view indicates when page totals are unavailable due to missing page data.
-  - The user can view at least monthly and yearly page totals.
-- Verification Method: Analysis
-- More Information: Page calculation rules are TBD and should account for books without reliable page counts.
-
-##### REQ-FUNC-025 — Analyze books by author
-- ID: REQ-FUNC-025
-- Status: planned
-- Date: 2026-05-26
-- Title: Analyze books by author
-- Statement: The system shall provide analytics grouping read books by author.
-- Rationale: The draft explicitly lists books read grouped by author.
-- Acceptance Criteria:
-  - The analytics view displays counts of read books grouped by author.
-  - Books with multiple authors are counted according to documented attribution rules.
-  - The grouping can be inspected for at least the full library history.
-- Verification Method: Test
-- More Information: Multi-author attribution policy is TBD.
-
-##### REQ-FUNC-026 — Analyze reading speed by author
-- ID: REQ-FUNC-026
-- Status: planned
-- Date: 2026-05-26
-- Title: Analyze reading speed by author
-- Statement: The system shall provide analytics for reading speed grouped by author when sufficient progress and completion data exists.
-- Rationale: The draft explicitly lists reading speed grouped by author.
-- Acceptance Criteria:
-  - The analytics view displays reading-speed values grouped by author for books with sufficient data.
-  - The system indicates when speed cannot be calculated due to missing start, progress, finish, or page data.
-  - The calculation formula is documented and consistently applied.
-- Verification Method: Analysis
-- More Information: Reading speed unit is TBD, e.g. pages/day or books/month.
-
-##### REQ-FUNC-027 — Support remote updates through server
-- ID: REQ-FUNC-027
-- Status: planned
-- Date: 2026-05-26
-- Title: Support remote updates through server
-- Statement: The system shall allow authenticated users to update library metadata and reading data through the server from devices with internet connectivity.
-- Rationale: The draft requires updates from anywhere with internet connection.
-- Acceptance Criteria:
-  - A supported remote browser or client can authenticate to the server.
-  - The user can perform at least reading-status updates remotely.
-  - The server applies remote changes transactionally and returns success or failure.
-- Verification Method: Demonstration
-- More Information: Network exposure method, domain, VPN, or reverse proxy setup is deployment-specific and TBD.
-
+| ID | Title |
+|----|-------|
+| [REQ-FUNC-019](./requirements/functional/REQ-FUNC-019.md) | Track owned books |
+| [REQ-FUNC-020](./requirements/functional/REQ-FUNC-020.md) | Track reading status |
+| [REQ-FUNC-021](./requirements/functional/REQ-FUNC-021.md) | Track completed reads |
+| [REQ-FUNC-022](./requirements/functional/REQ-FUNC-022.md) | Track reading progress events |
+| [REQ-FUNC-023](./requirements/functional/REQ-FUNC-023.md) | Analyze books read per period |
+| [REQ-FUNC-024](./requirements/functional/REQ-FUNC-024.md) | Analyze pages read per period |
+| [REQ-FUNC-025](./requirements/functional/REQ-FUNC-025.md) | Analyze books by author |
+| [REQ-FUNC-026](./requirements/functional/REQ-FUNC-026.md) | Analyze reading speed by author |
+| [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md) | Support remote updates through server |
 
 #### 3.2.4 Automation and Job Processing
-
-##### REQ-FUNC-028 — Define automation rules on book import
-- ID: REQ-FUNC-028
-- Status: deferred
-- Date: 2026-05-26
-- Title: Define automation rules on book import
-- Statement: The system shall allow users to define automatic actions triggered when a book is added.
-- Rationale: The draft lists automatic actions when a book is added as a nice-to-have.
-- Acceptance Criteria:
-  - A user can create, enable, disable, and delete an import-triggered automation rule.
-  - A rule has a trigger, optional conditions, and one or more actions.
-  - The system records rule executions and failures.
-- Verification Method: Test
-- More Information: Deferred until metadata/import/automation milestone.
-
-##### REQ-FUNC-029 — Automation action for metadata fetching
-- ID: REQ-FUNC-029
-- Status: deferred
-- Date: 2026-05-26
-- Title: Automation action for metadata fetching
-- Statement: The system shall support an automation action that fetches metadata for newly imported books.
-- Rationale: The draft gives fetching metadata as an example automatic action.
-- Acceptance Criteria:
-  - An enabled rule can start a metadata-fetch job after import.
-  - The metadata result is either queued for review or applied according to rule configuration.
-  - Failures are recorded and visible in job or automation history.
-- Verification Method: Test
-- More Information: Human-review defaults should be conservative until provider confidence rules are defined.
-
-##### REQ-FUNC-030 — Automation action for EPUB search-and-replace
-- ID: REQ-FUNC-030
-- Status: deferred
-- Date: 2026-05-26
-- Title: Automation action for EPUB search-and-replace
-- Statement: The system shall support an automation action that performs configured search-and-replace operations in EPUB text.
-- Rationale: The draft gives search-and-replace in EPUB text as an example automatic action.
-- Acceptance Criteria:
-  - A user can configure a search pattern and replacement value within an automation rule.
-  - The system applies the replacement to a new EPUB version, not the only stored copy.
-  - The system reports the number of replacements or an error.
-- Verification Method: Test
-- More Information: Regex support, scope controls, and preview requirements are TBD.
-
-##### REQ-FUNC-031 — Run long operations as background jobs
-- ID: REQ-FUNC-031
-- Status: planned
-- Date: 2026-05-26
-- Title: Run long operations as background jobs
-- Statement: The system shall execute long-running operations such as import, metadata lookup, image download, EPUB modification, and device sync as trackable background jobs.
-- Rationale: Long operations should not block normal API responsiveness or leave users uncertain about progress.
-- Acceptance Criteria:
-  - Submitting a long operation returns a job identifier.
-  - The job has a status of queued, running, succeeded, failed, or canceled.
-  - Job failure includes a user-visible error message.
-- Verification Method: Test
-- More Information: Job cancellation behavior is TBD.
-
-##### REQ-FUNC-032 — Display job status
-- ID: REQ-FUNC-032
-- Status: planned
-- Date: 2026-05-26
-- Title: Display job status
-- Statement: The system shall display job status and recent job history to authenticated users.
-- Rationale: Users need feedback for imports, metadata fetching, image fetching, EPUB editing, and sync workflows.
-- Acceptance Criteria:
-  - The UI displays current status for active jobs.
-  - The UI displays at least the most recent completed and failed jobs.
-  - Selecting a failed job shows the failure reason when available.
-- Verification Method: Demonstration
-- More Information: Retention policy for job history is TBD.
-
+| ID | Title |
+|----|-------|
+| [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md) | Define automation rules on book import |
+| [REQ-FUNC-029](./requirements/functional/REQ-FUNC-029.md) | Automation action for metadata fetching |
+| [REQ-FUNC-030](./requirements/functional/REQ-FUNC-030.md) | Automation action for EPUB search-and-replace |
+| [REQ-FUNC-031](./requirements/functional/REQ-FUNC-031.md) | Run long operations as background jobs |
+| [REQ-FUNC-032](./requirements/functional/REQ-FUNC-032.md) | Display job status |
 
 #### 3.2.5 Deferred Device and Media Features
-
-##### REQ-FUNC-033 — Synchronize books to e-reader targets
-- ID: REQ-FUNC-033
-- Status: deferred
-- Date: 2026-05-26
-- Title: Synchronize books to e-reader targets
-- Statement: The system shall support synchronizing selected EPUB files to configured e-reader or folder targets.
-- Rationale: The project has a nice-to-have goal of replacing parts of Tolino cloud with automatic PC-to-e-reader syncing.
-- Acceptance Criteria:
-  - A user can select books and a configured target for sync.
-  - The system copies or updates selected files on the target according to target rules.
-  - Sync results are recorded per file.
-- Verification Method: Demonstration
-- More Information: Deferred until device sync milestone; exact e-reader support is TBD.
-
-##### REQ-FUNC-034 — Support audiobook records
-- ID: REQ-FUNC-034
-- Status: deferred
-- Date: 2026-05-26
-- Title: Support audiobook records
-- Statement: The system shall, in a future release, support catalog records and file assets for audiobooks in addition to e-books.
-- Rationale: The draft lists an Audiobookshelf replacement as a very optional future feature.
-- Acceptance Criteria:
-  - The data model can represent an audiobook edition or asset.
-  - The UI can display an audiobook associated with a work.
-  - The system can distinguish audiobook-specific metadata such as narrator and duration when implemented.
-- Verification Method: Inspection
-- More Information: Future feature; not required for initial stable release.
-
-##### REQ-FUNC-035 — Track book medium
-- ID: REQ-FUNC-035
-- Status: deferred
-- Date: 2026-05-26
-- Title: Track book medium
-- Statement: The system shall, in a future release, track book medium values including e-book, print, and audiobook.
-- Rationale: The draft lists book-medium tracking as a potential future feature.
-- Acceptance Criteria:
-  - A book or edition can be associated with a medium value.
-  - Ownership and reading views can distinguish records by medium.
-  - Unknown or unspecified medium can be represented without data loss.
-- Verification Method: Inspection
-- More Information: Future feature; early data model should avoid blocking this extension.
-
-##### REQ-FUNC-036 — Sync progress between e-book and audiobook
-- ID: REQ-FUNC-036
-- Status: deferred
-- Date: 2026-05-26
-- Title: Sync progress between e-book and audiobook
-- Statement: The system shall, in a future release, support progress synchronization between an e-book and audiobook representation of the same work.
-- Rationale: The draft lists progress sync between audiobook and e-book as a potential future feature.
-- Acceptance Criteria:
-  - The system can associate e-book and audiobook editions with the same work.
-  - The system can store mapping metadata or conversion rules for progress positions.
-  - The UI can show synchronized progress where mapping is available.
-- Verification Method: Analysis
-- More Information: Very optional future feature; exact synchronization model is TBD.
-
+| ID | Title |
+|----|-------|
+| [REQ-FUNC-033](./requirements/functional/REQ-FUNC-033.md) | Synchronize books to e-reader targets |
+| [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md) | Support audiobook records |
+| [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md) | Track book medium |
+| [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md) | Sync progress between e-book and audiobook |
 
 ### 3.3 Quality of Service
 

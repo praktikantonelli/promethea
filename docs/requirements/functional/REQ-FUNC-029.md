@@ -1,0 +1,13 @@
+# REQ-FUNC-029 — Automation action for metadata fetching
+- ID: REQ-FUNC-029
+- Status: deferred
+- Date: 2026-05-26
+- Title: Automation action for metadata fetching
+- Statement: The system shall support an automation action that fetches metadata for newly imported books.
+- Rationale: The draft gives fetching metadata as an example automatic action.
+- Acceptance Criteria:
+  - An enabled rule can start a metadata-fetch job after import.
+  - The metadata result is either queued for review or applied according to rule configuration.
+  - Failures are recorded and visible in job or automation history.
+- Verification Method: Test
+- More Information: Human-review defaults should be conservative until provider confidence rules are defined.

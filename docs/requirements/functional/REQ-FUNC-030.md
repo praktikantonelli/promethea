@@ -1,0 +1,13 @@
+# REQ-FUNC-030 — Automation action for EPUB search-and-replace
+- ID: REQ-FUNC-030
+- Status: deferred
+- Date: 2026-05-26
+- Title: Automation action for EPUB search-and-replace
+- Statement: The system shall support an automation action that performs configured search-and-replace operations in EPUB text.
+- Rationale: The draft gives search-and-replace in EPUB text as an example automatic action.
+- Acceptance Criteria:
+  - A user can configure a search pattern and replacement value within an automation rule.
+  - The system applies the replacement to a new EPUB version, not the only stored copy.
+  - The system reports the number of replacements or an error.
+- Verification Method: Test
+- More Information: Regex support, scope controls, and preview requirements are TBD.

@@ -1,0 +1,14 @@
+# REQ-FUNC-018 — Search and filter library
+- ID: REQ-FUNC-018
+- Status: proposed
+- Date: 2026-05-26
+- Title: Search and filter library
+- Statement: The system shall allow users to search and filter the catalog by at least title, author, and series.
+- Rationale: Search and filtering are necessary for practical library browsing once the catalog grows.
+- Acceptance Criteria:
+  - Search by title returns books with matching title fields.
+  - Search by author returns books linked to matching authors.
+  - Search by series returns books linked to matching series.
+  - No-result states are shown clearly.
+- Verification Method: Test
+- More Information: Advanced search over EPUB full text is out of initial scope unless explicitly added.

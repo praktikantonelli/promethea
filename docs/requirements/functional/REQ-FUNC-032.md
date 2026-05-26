@@ -1,0 +1,13 @@
+# REQ-FUNC-032 — Display job status
+- ID: REQ-FUNC-032
+- Status: planned
+- Date: 2026-05-26
+- Title: Display job status
+- Statement: The system shall display job status and recent job history to authenticated users.
+- Rationale: Users need feedback for imports, metadata fetching, image fetching, EPUB editing, and sync workflows.
+- Acceptance Criteria:
+  - The UI displays current status for active jobs.
+  - The UI displays at least the most recent completed and failed jobs.
+  - Selecting a failed job shows the failure reason when available.
+- Verification Method: Demonstration
+- More Information: Retention policy for job history is TBD.

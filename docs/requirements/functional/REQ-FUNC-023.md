@@ -1,0 +1,13 @@
+# REQ-FUNC-023 — Analyze books read per period
+- ID: REQ-FUNC-023
+- Status: planned
+- Date: 2026-05-26
+- Title: Analyze books read per period
+- Statement: The system shall provide analytics for number of books read per selected period.
+- Rationale: The draft explicitly lists books read per period as an analytics example.
+- Acceptance Criteria:
+  - The user can select or view at least monthly and yearly periods.
+  - The analytics result counts completed-reading events in the selected period.
+  - The result is visible as a table or chart.
+- Verification Method: Test
+- More Information: Specific chart design is outside this SRS.
