@@ -102,7 +102,7 @@ Section 2 describes Promethea in context, including user classes, assumptions, d
 
 Promethea is a new product intended to consolidate personal e-book management, web library browsing, and reading-status tracking into one self-hostable product. It is positioned as a replacement for selected personal workflows from Calibre, Goodreads, and calibre-web, with future possible expansion into Tolino-cloud-like e-reader sync and Audiobookshelf-like audiobook management.
 
-The expected architecture is a Rust backend exposing a REST API, a React TypeScript frontend reused across as many deployment contexts as practical, and persistent storage for catalog data plus managed file assets. The server is expected to be authoritative for remote clients; browser, desktop, and mobile-oriented clients should not directly modify the server database. Ownership, service-level agreements, and support model are TBD; the current assumption is a personal or small-household self-hosted product rather than a public multi-tenant SaaS.
+The expected architecture is a Rust backend exposing a REST API, a React TypeScript frontend reused across as many deployment contexts as practical, and persistent storage for catalog data plus managed file assets. The server is expected to be authoritative for remote clients; browser, desktop, and mobile-oriented clients should not directly modify the server database. Ownership, service-level agreements, and support model are TBD; the current assumption is a personal or small-household single-user self-hosted product rather than a public multi-tenant SaaS.
 
 ### 2.2 Product Functions
 
