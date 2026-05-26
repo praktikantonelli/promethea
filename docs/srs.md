@@ -185,125 +185,25 @@ This section defines user, hardware, and software-facing interfaces at a logical
 
 #### 3.1.1 User Interfaces
 
-##### REQ-INT-001 — Browser-based library user interface
-- ID: REQ-INT-001
-- Status: planned
-- Date: 2026-05-26
-- Title: Browser-based library user interface
-- Statement: The system shall provide a browser-based user interface for browsing, searching, importing, and editing the e-book library.
-- Rationale: The product is intended to replace calibre-web and support access from devices with an internet connection.
-- Acceptance Criteria:
-  - A user can open the application in a supported browser and view the library landing page.
-  - The UI exposes navigation to books, authors, series, reading tracker, imports, analytics, and settings.
-  - The UI communicates with the backend only through supported application interfaces.
-- Verification Method: Demonstration
-- More Information: Supported browser list is TBD; initial assumption is current evergreen desktop and mobile browsers.
-
-##### REQ-INT-002 — Responsive user interface
-- ID: REQ-INT-002
-- Status: proposed
-- Date: 2026-05-26
-- Title: Responsive user interface
-- Statement: The system shall provide responsive layouts for desktop/laptop screens and mobile-width screens.
-- Rationale: The project includes a nice-to-have goal of availability across desktop/laptop, server browser, and mobile contexts.
-- Acceptance Criteria:
-  - Book, author, series, and reading-status views remain usable at 390 px, 768 px, and 1280 px viewport widths.
-  - Primary navigation, search, and edit actions are reachable without horizontal scrolling at the tested viewport widths.
-  - Automated or manual UI checks cover at least one mobile-width and one desktop-width viewport.
-- Verification Method: Test
-- More Information: Native mobile applications are deferred; this requirement covers web responsiveness only.
+| ID | Title | 
+|----|-------|
+| [REQ-INT-001](./requirements/interfaces/REQ-INT-001.md) | Browser-based library user interface |
+| [REQ-INT-002](./requirements/interfaces/REQ-INT-002.md) | Responsive user interface |
 
 
 #### 3.1.2 Hardware Interfaces
 
-##### REQ-INT-007 — Mounted-folder e-reader sync interface
-- ID: REQ-INT-007
-- Status: deferred
-- Date: 2026-05-26
-- Title: Mounted-folder e-reader sync interface
-- Statement: The system shall support, when the device-sync feature is enabled, a folder-based sync target suitable for mounted e-readers or export directories.
-- Rationale: The project includes a nice-to-have Tolino-cloud replacement direction and automatic syncing between a PC device and an e-reader.
-- Acceptance Criteria:
-  - A user can configure a local or mounted folder as a sync target.
-  - The system can copy selected EPUB files to the configured target.
-  - The system records sync success or failure for each attempted file.
-- Verification Method: Demonstration
-- More Information: Deferred until the e-reader/device sync milestone. Exact Tolino capabilities and protocols are TBD.
-
-
+| ID | Title |
+|----|-------|
+| [REQ-INT-007](./requirements/interfaces/REQ-INT-007.md) | Mounted-folder e-reader sync interface |
 #### 3.1.3 Software Interfaces
-
-##### REQ-INT-003 — REST API interface
-- ID: REQ-INT-003
-- Status: planned
-- Date: 2026-05-26
-- Title: REST API interface
-- Statement: The system shall expose a REST API for client-server communication.
-- Rationale: The agreed server direction is a REST server, and remote clients must communicate through the server rather than directly touching persistent storage.
-- Acceptance Criteria:
-  - API endpoints use HTTP methods consistently for create, read, update, delete, import, job, and sync operations.
-  - Requests and responses use a documented JSON schema except where binary file transfer is explicitly specified.
-  - Mutating endpoints return deterministic success and error responses that can be handled by clients.
-- Verification Method: Inspection
-- More Information: The API specification should be published as OpenAPI or equivalent before v0.6.
-
-##### REQ-INT-004 — File import and download interface
-- ID: REQ-INT-004
-- Status: planned
-- Date: 2026-05-26
-- Title: File import and download interface
-- Statement: The system shall provide interfaces for importing EPUB files and downloading stored EPUB files where the authenticated user has access.
-- Rationale: Managing an e-book library requires ingesting book files and retrieving them for reading, backup, export, or device sync.
-- Acceptance Criteria:
-  - A valid EPUB file can be uploaded or imported through the supported UI/API flow.
-  - The system rejects non-EPUB files for EPUB-only import flows with a user-visible error.
-  - An authenticated user can download a stored EPUB file without corrupting the file contents.
-- Verification Method: Test
-- More Information: Additional formats are deferred until multi-medium support is approved.
-
-##### REQ-INT-005 — External metadata provider interface
-- ID: REQ-INT-005
-- Status: planned
-- Date: 2026-05-26
-- Title: External metadata provider interface
-- Statement: The system shall support integration with one or more external metadata providers through a provider abstraction.
-- Rationale: The project requires online metadata fetching while keeping the product independent from a single provider.
-- Acceptance Criteria:
-  - A metadata search request can be routed through at least one configured provider.
-  - Provider responses are normalized into a common candidate format.
-  - Provider errors are surfaced without crashing the import or edit workflow.
-- Verification Method: Test
-- More Information: Specific provider names, API keys, and rate limits are TBD.
-
-##### REQ-INT-006 — External image URL download interface
-- ID: REQ-INT-006
-- Status: planned
-- Date: 2026-05-26
-- Title: External image URL download interface
-- Statement: The system shall allow an authenticated user to paste an image URL for an author image and have the system download and store the image as an author asset.
-- Rationale: The draft explicitly asks for author images that can be fetched automatically or by pasted URL.
-- Acceptance Criteria:
-  - The UI accepts an image URL on the author edit/detail view.
-  - The backend downloads only supported image media types and rejects unsupported responses.
-  - The resulting image is displayed on the author detail page after successful download.
-  - The original URL is recorded as asset source metadata when available.
-- Verification Method: Test
-- More Information: Allowed image types and maximum download size are TBD and tracked as security/performance details.
-
-##### REQ-INT-008 — Client database isolation
-- ID: REQ-INT-008
-- Status: proposed
-- Date: 2026-05-26
-- Title: Client database isolation
-- Statement: The system shall not require desktop, mobile, or browser clients to access the server database file directly.
-- Rationale: The server should remain the authoritative consistency boundary for all clients, enabling SQLite or another local database to be used safely on the server.
-- Acceptance Criteria:
-  - All supported client mutations are expressed as API requests or local embedded-backend commands.
-  - No supported remote client workflow requires direct filesystem access to the server database.
-  - Integration tests verify that remote changes go through the server application layer.
-- Verification Method: Inspection
-- More Information: This requirement does not mandate SQLite; it preserves the option to use SQLite or another database behind the server.
-
+| ID | Title |
+|----|-------|
+| [REQ-INT-003](./requirements/interfaces/REQ-INT-003.md) | REST API interface
+| [REQ-INT-004](./requirements/interfaces/REQ-INT-004.md) | File import and download interface
+| [REQ-INT-005](./requirements/interfaces/REQ-INT-005.md) | External metadata provider interface
+| [REQ-INT-006](./requirements/interfaces/REQ-INT-006.md) | External image URL download interface
+| [REQ-INT-008](./requirements/interfaces/REQ-INT-008.md) | Client database isolation
 
 ### 3.2 Functional
 
