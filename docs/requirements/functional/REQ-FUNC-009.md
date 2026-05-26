@@ -1,0 +1,13 @@
+# REQ-FUNC-009 — Review metadata candidates
+- ID: REQ-FUNC-009
+- Status: planned
+- Date: 2026-05-26
+- Title: Review metadata candidates
+- Statement: The system shall present online metadata candidates for user review before applying them unless an enabled automation rule explicitly authorizes automatic application.
+- Rationale: Provider metadata may be incorrect, so a human review point prevents accidental catalog corruption.
+- Acceptance Criteria:
+  - Candidate values are shown alongside current catalog values.
+  - The user can accept, reject, or selectively apply candidate fields.
+  - The system records the selected source for applied candidate fields where practical.
+- Verification Method: Demonstration
+- More Information: Automation exceptions are governed by REQ-FUNC-028 and REQ-ML-001.

@@ -210,146 +210,18 @@ This section defines user, hardware, and software-facing interfaces at a logical
 This section defines externally observable product behavior grouped by library management, browsing, reading tracking, automation, and future media support.
 
 #### 3.2.1 Library Management and EPUB Processing
-
-##### REQ-FUNC-001 — Import EPUB files
-- ID: REQ-FUNC-001
-- Status: planned
-- Date: 2026-05-26
-- Title: Import EPUB files
-- Statement: The system shall import EPUB files into the library catalog.
-- Rationale: The Calibre-replacement goal depends on bringing existing e-book files under catalog management.
-- Acceptance Criteria:
-  - Given a valid EPUB file, the import flow creates a catalog record and a file asset record.
-  - The system stores enough import metadata to identify the source file, import time, and file checksum.
-  - The user receives a success or failure result for each imported file.
-- Verification Method: Test
-- More Information: Batch import and folder watching are later desktop/server enhancements.
-
-##### REQ-FUNC-002 — Persist catalog records and assets
-- ID: REQ-FUNC-002
-- Status: planned
-- Date: 2026-05-26
-- Title: Persist catalog records and assets
-- Statement: The system shall persist book metadata, author metadata, series metadata, reading data, and file/cover/author-image asset references across server restarts.
-- Rationale: The product is a long-lived personal library system and must not lose catalog state after normal restart.
-- Acceptance Criteria:
-  - After restart, previously imported books, authors, series, reading states, and asset links remain available.
-  - Stored assets remain addressable by stable identifiers.
-  - Catalog records and asset records remain referentially consistent after normal shutdown and restart.
-- Verification Method: Test
-- More Information: Exact database engine is TBD; initial design assumption is one authoritative server-side database plus asset directory.
-
-##### REQ-FUNC-003 — Extract EPUB metadata
-- ID: REQ-FUNC-003
-- Status: planned
-- Date: 2026-05-26
-- Title: Extract EPUB metadata
-- Statement: The system shall extract available title, author, identifier, language, publication, publisher, and cover metadata from imported EPUB files.
-- Rationale: Automatic extraction reduces manual entry and establishes the baseline catalog record.
-- Acceptance Criteria:
-  - For a test EPUB containing standard metadata, the imported catalog fields match the source metadata.
-  - If a metadata field is missing from the EPUB, the import still succeeds and marks the field blank or unknown.
-  - The import result identifies which fields were extracted and which were unavailable.
-- Verification Method: Test
-- More Information: Exact EPUB metadata fields may expand over time; current fields are a minimum set.
-
-##### REQ-FUNC-004 — Edit catalog metadata
-- ID: REQ-FUNC-004
-- Status: planned
-- Date: 2026-05-26
-- Title: Edit catalog metadata
-- Statement: The system shall allow an authenticated user to edit book, edition, author, and series metadata stored in the catalog.
-- Rationale: Manual correction is necessary because imported and provider-supplied metadata may be incomplete or incorrect.
-- Acceptance Criteria:
-  - The UI allows editing of at least title, sort title, author associations, series associations, description, language, publication date, identifiers, and cover association.
-  - Submitted edits are validated and persisted.
-  - After saving, the updated values are visible in the relevant book, author, and series views.
-- Verification Method: Test
-- More Information: Field-level validation rules are TBD and should be refined during UI/API design.
-
-##### REQ-FUNC-005 — Write metadata to EPUB files
-- ID: REQ-FUNC-005
-- Status: planned
-- Date: 2026-05-26
-- Title: Write metadata to EPUB files
-- Statement: The system shall support writing accepted metadata changes back into EPUB files.
-- Rationale: A Calibre replacement needs to modify the actual e-book file, not only the application catalog.
-- Acceptance Criteria:
-  - A user can request that catalog metadata be written to an EPUB file.
-  - After the operation, re-importing or re-reading the EPUB shows the updated metadata for supported fields.
-  - The operation reports unsupported fields rather than silently pretending to write them.
-- Verification Method: Test
-- More Information: Safe file versioning requirements apply; see REQ-FUNC-007 and REQ-REL-002.
-
-##### REQ-FUNC-006 — Edit EPUB content
-- ID: REQ-FUNC-006
-- Status: planned
-- Date: 2026-05-26
-- Title: Edit EPUB content
-- Statement: The system shall support authenticated editing of EPUB textual content for selected books.
-- Rationale: The draft explicitly requires editing e-book content, including later automation such as search-and-replace.
-- Acceptance Criteria:
-  - A user can open an EPUB content-edit workflow for an imported EPUB.
-  - The system can save a textual content change to a new EPUB file version.
-  - The user receives validation feedback if the edited EPUB cannot be saved in a usable package structure.
-- Verification Method: Demonstration
-- More Information: The granularity and UX of content editing are TBD; initial scope may be search-and-replace and limited XHTML editing.
-
-##### REQ-FUNC-007 — Version EPUB modifications
-- ID: REQ-FUNC-007
-- Status: planned
-- Date: 2026-05-26
-- Title: Version EPUB modifications
-- Statement: The system shall retain a recoverable previous EPUB file version before overwriting or replacing an EPUB through metadata, cover, or content edits.
-- Rationale: EPUB editing can damage files; preserving prior versions mitigates data-loss risk.
-- Acceptance Criteria:
-  - Before a write operation changes an EPUB, the previous version remains recoverable.
-  - The system records version creation time, operation type, and checksum.
-  - A user or administrator can identify the current version and at least one previous version.
-- Verification Method: Test
-- More Information: Retention limits are TBD; backup policy should define whether old versions are pruned.
-
-##### REQ-FUNC-008 — Fetch online metadata
-- ID: REQ-FUNC-008
-- Status: planned
-- Date: 2026-05-26
-- Title: Fetch online metadata
-- Statement: The system shall allow an authenticated user to fetch online metadata candidates for a book.
-- Rationale: Online metadata lookup is a stated Calibre-replacement must-have.
-- Acceptance Criteria:
-  - A user can trigger metadata lookup from an import review or book detail/edit view.
-  - The system submits relevant search inputs such as title, author, and identifier to configured providers.
-  - The system returns zero or more normalized candidates without overwriting catalog data automatically unless an approved automation rule applies.
-- Verification Method: Test
-- More Information: Specific providers and provider credentials are TBD.
-
-##### REQ-FUNC-009 — Review metadata candidates
-- ID: REQ-FUNC-009
-- Status: planned
-- Date: 2026-05-26
-- Title: Review metadata candidates
-- Statement: The system shall present online metadata candidates for user review before applying them unless an enabled automation rule explicitly authorizes automatic application.
-- Rationale: Provider metadata may be incorrect, so a human review point prevents accidental catalog corruption.
-- Acceptance Criteria:
-  - Candidate values are shown alongside current catalog values.
-  - The user can accept, reject, or selectively apply candidate fields.
-  - The system records the selected source for applied candidate fields where practical.
-- Verification Method: Demonstration
-- More Information: Automation exceptions are governed by REQ-FUNC-028 and REQ-ML-001.
-
-##### REQ-FUNC-010 — Detect duplicate imported books
-- ID: REQ-FUNC-010
-- Status: proposed
-- Date: 2026-05-26
-- Title: Detect duplicate imported books
-- Statement: The system shall detect likely duplicate imports using at least file checksum and available identifier/title-author comparisons.
-- Rationale: Duplicate detection prevents library clutter and accidental redundant storage.
-- Acceptance Criteria:
-  - An import with an identical checksum to an existing file is flagged as an exact duplicate.
-  - An import with matching ISBN or matching normalized title-author values is flagged as a possible duplicate.
-  - The user can choose whether to skip, merge, or keep a flagged possible duplicate.
-- Verification Method: Test
-- More Information: Merge semantics are TBD and should be refined before implementation.
+| ID | Title |
+|----|-------|
+| [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md) | Import EPUB files |
+| [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md) | Persist catalog records and assets |
+| [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md) | Extract EPUB metadata |
+| [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md) | Edit catalog metadata |
+| [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md) | Write metadata to EPUB files |
+| [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md) | Edit EPUB content |
+| [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md) | Version EPUB modification |
+| [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md) | Fetch online metadata |
+| [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) | Review metadata candidates |
+| [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md) | Detect duplicate imported books |
 
 
 #### 3.2.2 Browsing, Authors, and Series

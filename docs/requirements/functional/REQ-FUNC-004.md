@@ -1,0 +1,13 @@
+# REQ-FUNC-004 — Edit catalog metadata
+- ID: REQ-FUNC-004
+- Status: planned
+- Date: 2026-05-26
+- Title: Edit catalog metadata
+- Statement: The system shall allow an authenticated user to edit book, edition, author, and series metadata stored in the catalog.
+- Rationale: Manual correction is necessary because imported and provider-supplied metadata may be incomplete or incorrect.
+- Acceptance Criteria:
+  - The UI allows editing of at least title, sort title, author associations, series associations, description, language, publication date, identifiers, and cover association.
+  - Submitted edits are validated and persisted.
+  - After saving, the updated values are visible in the relevant book, author, and series views.
+- Verification Method: Test
+- More Information: Field-level validation rules are TBD and should be refined during UI/API design.
