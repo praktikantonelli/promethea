@@ -73,7 +73,6 @@ Browser / Desktop / Mobile-oriented UI
 |------|------------|
 | API | Application Programming Interface; a defined way for software components to communicate. |
 | Asset | A managed binary file such as an EPUB, cover image, author image, original import, or previous EPUB version. |
-| Axum | Rust web framework selected for the REST server unless changed through project change management. |
 | Book | A catalog entity representing a readable work or title in the library. Final work/edition/file modeling details are TBD. |
 | Calibre | Existing e-book management application whose personal library-management workflows Promethea aims to replace. |
 | calibre-web | Existing web UI for Calibre libraries whose browsing workflows Promethea aims to replace. |
@@ -126,7 +125,7 @@ Promethea enables users to:
 The following constraints shape the requirements in Section 3:
 
 - The backend must be implemented in Rust.
-- The server API must be REST-based and implemented with Axum unless changed later.
+- The server API must be REST-based.
 - The frontend must be implemented with React and TypeScript.
 - The frontend should be reused across browser, desktop, and mobile-oriented contexts as much as practical.
 - EPUB is the initial required e-book file format.
@@ -240,7 +239,7 @@ This section defines user, hardware, and software-facing interfaces at a logical
 - Date: 2026-05-26
 - Title: REST API interface
 - Statement: The system shall expose a REST API for client-server communication.
-- Rationale: The agreed server direction is an Axum REST server, and remote clients must communicate through the server rather than directly touching persistent storage.
+- Rationale: The agreed server direction is a REST server, and remote clients must communicate through the server rather than directly touching persistent storage.
 - Acceptance Criteria:
   - API endpoints use HTTP methods consistently for create, read, update, delete, import, job, and sync operations.
   - Requests and responses use a documented JSON schema except where binary file transfer is explicitly specified.
@@ -1186,17 +1185,17 @@ This section captures binding implementation constraints and delivery expectatio
 - Verification Method: Inspection
 - More Information: None.
 
-##### REQ-BUILD-002 — Axum REST server
+##### REQ-BUILD-002 — REST server
 - ID: REQ-BUILD-002
 - Status: planned
 - Date: 2026-05-26
-- Title: Axum REST server
-- Statement: The server REST API shall be implemented using Axum unless this requirement is formally changed.
-- Rationale: The architecture discussion selected an Axum REST server direction.
+- Title: REST server
+- Statement: The server REST API shall be implemented using a Rust library.
+- Rationale: The specific REST API library has not yet been selected.
 - Acceptance Criteria:
-  - The server routing layer uses Axum.
-  - REST endpoints are exposed by the Axum server application.
-  - The project documents any future change away from Axum as a breaking design decision.
+  - The server routing layer uses a Rust crate for REST API.
+  - REST endpoints are exposed by the library's server application.
+  - The project documents any future change away from a 3rd party REST API library as a breaking design decision.
 - Verification Method: Inspection
 - More Information: This is a design constraint because the user specified the server direction.
 
@@ -1327,7 +1326,7 @@ This section captures binding implementation constraints and delivery expectatio
 - Status: proposed
 - Date: 2026-05-26
 - Title: Reusable Rust core
-- Statement: The system shall keep core library, reading, metadata, EPUB, and automation logic reusable outside the Axum server entry point.
+- Statement: The system shall keep core library, reading, metadata, EPUB, and automation logic reusable outside the REST API server entry point.
 - Rationale: A reusable core reduces duplication when adding desktop or other clients.
 - Acceptance Criteria:
   - Core functions are callable from tests or non-server binaries without starting HTTP routes.
@@ -1651,7 +1650,7 @@ The following items are not supplied in the source material and should be answer
 | REQ-INST-002 | Configurable data directory | planned | 3.5 Design and Implementation Requirements |
 | REQ-INST-003 | Containerized deployment package | planned | 3.5 Design and Implementation Requirements |
 | REQ-BUILD-001 | Rust backend | planned | 3.5 Design and Implementation Requirements |
-| REQ-BUILD-002 | Axum REST server | planned | 3.5 Design and Implementation Requirements |
+| REQ-BUILD-002 | REST server | planned | 3.5 Design and Implementation Requirements |
 | REQ-BUILD-003 | React TypeScript frontend | planned | 3.5 Design and Implementation Requirements |
 | REQ-BUILD-004 | Continuous integration checks | proposed | 3.5 Design and Implementation Requirements |
 | REQ-DIST-001 | Server-browser deployment topology | planned | 3.5 Design and Implementation Requirements |
