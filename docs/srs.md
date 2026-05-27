@@ -382,20 +382,9 @@ This section captures binding implementation constraints and delivery expectatio
 
 
 #### 3.5.9 Proof of Concept
-
-##### REQ-POC-001 — SQLite server data-store proof of concept
-- ID: REQ-POC-001
-- Status: draft
-- Date: 2026-05-26
-- Title: SQLite server data-store proof of concept
-- Statement: The project shall validate whether a single authoritative server using a SQLite database satisfies expected concurrency and reliability needs before committing to SQLite for stable server releases.
-- Rationale: The architecture discussion identified SQLite as likely sufficient but exact workload and operational requirements remain unspecified.
-- Acceptance Criteria:
-  - The POC uses the same server-only write boundary required by REQ-INT-008.
-  - The POC includes concurrent read and write scenarios representative of expected use.
-  - The POC records whether SQLite is accepted, rejected, or accepted with constraints for the stable release.
-- Verification Method: Analysis
-- More Information: Clarification needed: expected concurrent users, write rate, background job load, and backup expectations.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-POC-001](./requirements/proof-of-concept/REQ-POC-001.md) | SQLite server data-store |
 
 
 #### 3.5.10 Change Management
