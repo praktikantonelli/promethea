@@ -1,0 +1,13 @@
+# REQ-COMP-003 — Privacy of reading data
+- ID: REQ-COMP-003
+- Status: planned
+- Date: 2026-05-26
+- Title: Privacy of reading data
+- Statement: The system shall treat reading status, ownership, reading history, and analytics as private user data protected by authentication in server deployments.
+- Rationale: Reading history can be personally sensitive, especially when remote access is enabled.
+- Acceptance Criteria:
+  - Unauthenticated users cannot retrieve reading history through protected APIs.
+  - Reading analytics are not publicly exposed unless an explicit sharing feature is later added.
+  - Backups and exports identify that reading data is included.
+- Verification Method: Test
+- More Information: Regulatory regime, if any, is TBD.

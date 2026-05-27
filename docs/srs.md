@@ -312,50 +312,12 @@ This section defines performance, security, reliability, availability, and obser
 
 
 ### 3.4 Compliance
-
 This section defines compliance-oriented requirements derived from user-content handling, external metadata/image sources, and privacy of reading data.
-
-#### REQ-COMP-001 — External source attribution
-- ID: REQ-COMP-001
-- Status: proposed
-- Date: 2026-05-26
-- Title: External source attribution
-- Statement: The system shall record the source provider or source URL for metadata, cover images, and author images when that information is available.
-- Rationale: Attribution supports auditability, troubleshooting, and compliance with provider terms.
-- Acceptance Criteria:
-  - Applied provider metadata records include provider identity when available.
-  - Downloaded image assets record source URL when available.
-  - The UI or admin export can inspect source information for an asset or applied metadata field.
-- Verification Method: Test
-- More Information: Provider-specific license and attribution display rules are TBD.
-
-#### REQ-COMP-002 — User-content responsibility notice
-- ID: REQ-COMP-002
-- Status: proposed
-- Date: 2026-05-26
-- Title: User-content responsibility notice
-- Statement: The system shall include documentation stating that users are responsible for having the rights necessary to upload, modify, and sync e-book files they manage with the system.
-- Rationale: The product manages user-provided copyrighted content, and documentation should not imply a right to redistribute files.
-- Acceptance Criteria:
-  - Project documentation includes a user-content responsibility notice.
-  - The notice is included in installation or first-use documentation.
-  - The notice does not block local personal use workflows.
-- Verification Method: Inspection
-- More Information: Legal review is TBD; this is not legal advice.
-
-#### REQ-COMP-003 — Privacy of reading data
-- ID: REQ-COMP-003
-- Status: planned
-- Date: 2026-05-26
-- Title: Privacy of reading data
-- Statement: The system shall treat reading status, ownership, reading history, and analytics as private user data protected by authentication in server deployments.
-- Rationale: Reading history can be personally sensitive, especially when remote access is enabled.
-- Acceptance Criteria:
-  - Unauthenticated users cannot retrieve reading history through protected APIs.
-  - Reading analytics are not publicly exposed unless an explicit sharing feature is later added.
-  - Backups and exports identify that reading data is included.
-- Verification Method: Test
-- More Information: Regulatory regime, if any, is TBD.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-COMP-001](./requirements/compliance/REQ-COMP-001.md) | External source attribution |
+| [REQ-COMP-002](./requirements/compliance/REQ-COMP-002.md) | User-content responsibility notice |
+| [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md) | Privacy of reading data |
 
 
 ### 3.5 Design and Implementation
