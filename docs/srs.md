@@ -298,34 +298,10 @@ This section defines performance, security, reliability, availability, and obser
 
 
 #### 3.3.4 Availability
-
-##### REQ-AVAIL-001 — Restart recovery
-- ID: REQ-AVAIL-001
-- Status: proposed
-- Date: 2026-05-26
-- Title: Restart recovery
-- Statement: The system shall recover its catalog, configuration, and job state sufficiently to resume normal operation after a controlled server restart.
-- Rationale: Self-hosted users need predictable behavior across restarts and upgrades.
-- Acceptance Criteria:
-  - After controlled restart, the server starts without manual database repair.
-  - Previously completed imports and catalog edits are visible.
-  - Incomplete jobs are marked in a documented state such as failed, canceled, or resumable.
-- Verification Method: Test
-- More Information: Availability percentage/SLA is TBD.
-
-##### REQ-AVAIL-002 — Backup and restore support
-- ID: REQ-AVAIL-002
-- Status: planned
-- Date: 2026-05-26
-- Title: Backup and restore support
-- Statement: The system shall provide documented backup and restore procedures for catalog data and managed assets.
-- Rationale: The library state includes database records and file assets; losing either can compromise the library.
-- Acceptance Criteria:
-  - Documentation identifies all data that must be backed up.
-  - A restore procedure can recreate a usable library from backup artifacts in a test environment.
-  - Backup/restore covers both database and managed asset directory.
-- Verification Method: Demonstration
-- More Information: Automated backup scheduling is TBD.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-AVAIL-001](./requirements/availability/REQ-AVAIL-001.md) | Restart recovery |
+| [REQ-AVAIL-002](./requirements/availability/REQ-AVAIL-002.md) | Backup and restore support |
 
 
 #### 3.3.5 Observability
