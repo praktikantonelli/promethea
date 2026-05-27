@@ -350,34 +350,10 @@ This section captures binding implementation constraints and delivery expectatio
 
 
 #### 3.5.4 Maintainability
-
-##### REQ-MAINT-001 — Modular backend organization
-- ID: REQ-MAINT-001
-- Status: proposed
-- Date: 2026-05-26
-- Title: Modular backend organization
-- Statement: The backend shall separate domain logic from transport, storage, metadata-provider, EPUB-processing, and job-execution concerns.
-- Rationale: Modularity supports reuse across server, desktop, and future mobile or sync contexts.
-- Acceptance Criteria:
-  - Core domain logic can be used without importing the HTTP routing layer.
-  - Storage and provider integrations are isolated behind interfaces or modules.
-  - Unit tests can exercise domain logic without starting the full server.
-- Verification Method: Inspection
-- More Information: Exact Rust crate layout is an architectural decision.
-
-##### REQ-MAINT-002 — Database migrations
-- ID: REQ-MAINT-002
-- Status: planned
-- Date: 2026-05-26
-- Title: Database migrations
-- Statement: The system shall manage persistent schema changes through versioned database migrations.
-- Rationale: Library data must survive upgrades, and schema changes must be traceable.
-- Acceptance Criteria:
-  - A fresh installation can apply all migrations from empty state.
-  - An existing test database can migrate to the current schema.
-  - Migration files are version-controlled.
-- Verification Method: Test
-- More Information: Database engine is TBD; migration tooling should support the chosen engine.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-MAINT-001](./requirements/maintainability/REQ-MAINT-001.md) | Modular backend organization |
+| [REQ-MAINT-002](./requirements/maintainability/REQ-MAINT-002.md) | Database migrations |
 
 
 #### 3.5.5 Reusability
