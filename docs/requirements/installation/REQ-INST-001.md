@@ -1,0 +1,13 @@
+# REQ-INST-001 — Self-hosted server installation
+- ID: REQ-INST-001
+- Status: planned
+- Date: 2026-05-26
+- Title: Self-hosted server installation
+- Statement: The system shall provide a self-hosted server installation path that serves the backend API and browser frontend.
+- Rationale: The product needs a headless server mode for browser access and remote updates.
+- Acceptance Criteria:
+  - A user can start the server using documented configuration.
+  - The server exposes the REST API and frontend from the configured host/port or reverse-proxy path.
+  - The installation documentation identifies data directory, configuration, and backup locations.
+- Verification Method: Demonstration
+- More Information: Container packaging is covered by REQ-INST-003.

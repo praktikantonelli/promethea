@@ -1,0 +1,13 @@
+# REQ-INST-003 — Containerized deployment package
+- ID: REQ-INST-003
+- Status: planned
+- Date: 2026-05-26
+- Title: Containerized deployment package
+- Statement: The system shall provide a containerized deployment package for the self-hosted server release.
+- Rationale: Container deployment simplifies running a headless server and matches the planned self-hosted release milestone.
+- Acceptance Criteria:
+  - A container image can start the server with documented environment variables and mounted data volume.
+  - An example compose or equivalent file is available.
+  - The container does not require embedding secrets into the image.
+- Verification Method: Demonstration
+- More Information: Exact container registry and image signing policy are TBD.

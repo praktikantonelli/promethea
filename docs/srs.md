@@ -325,48 +325,11 @@ This section defines compliance-oriented requirements derived from user-content 
 This section captures binding implementation constraints and delivery expectations supplied by the project description or architecture discussion.
 
 #### 3.5.1 Installation
-
-##### REQ-INST-001 — Self-hosted server installation
-- ID: REQ-INST-001
-- Status: planned
-- Date: 2026-05-26
-- Title: Self-hosted server installation
-- Statement: The system shall provide a self-hosted server installation path that serves the backend API and browser frontend.
-- Rationale: The product needs a headless server mode for browser access and remote updates.
-- Acceptance Criteria:
-  - A user can start the server using documented configuration.
-  - The server exposes the REST API and frontend from the configured host/port or reverse-proxy path.
-  - The installation documentation identifies data directory, configuration, and backup locations.
-- Verification Method: Demonstration
-- More Information: Container packaging is covered by REQ-INST-003.
-
-##### REQ-INST-002 — Configurable data directory
-- ID: REQ-INST-002
-- Status: planned
-- Date: 2026-05-26
-- Title: Configurable data directory
-- Statement: The system shall allow operators to configure the managed data directory used for database and asset storage.
-- Rationale: Self-hosted and desktop deployments need predictable data placement for backup and storage management.
-- Acceptance Criteria:
-  - The server starts with a configured data directory path.
-  - The system creates or validates required subdirectories at startup.
-  - Changing the data directory requires explicit configuration rather than hidden defaults only.
-- Verification Method: Test
-- More Information: Migration between data directories is TBD.
-
-##### REQ-INST-003 — Containerized deployment package
-- ID: REQ-INST-003
-- Status: planned
-- Date: 2026-05-26
-- Title: Containerized deployment package
-- Statement: The system shall provide a containerized deployment package for the self-hosted server release.
-- Rationale: Container deployment simplifies running a headless server and matches the planned self-hosted release milestone.
-- Acceptance Criteria:
-  - A container image can start the server with documented environment variables and mounted data volume.
-  - An example compose or equivalent file is available.
-  - The container does not require embedding secrets into the image.
-- Verification Method: Demonstration
-- More Information: Exact container registry and image signing policy are TBD.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-INST-001](./requirements/installation/REQ-INST-001.md) | Self-hosted server installation |
+| [REQ-INST-002](./requirements/installation/REQ-INST-002.md) | Configurable data directory |
+| [REQ-INST-003](./requirements/installation/REQ-INST-003.md) | Containerized deployment package |
 
 
 #### 3.5.2 Build and Delivery
