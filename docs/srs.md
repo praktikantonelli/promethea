@@ -271,48 +271,11 @@ This section defines externally observable product behavior grouped by library m
 This section defines performance, security, reliability, availability, and observability expectations. Requirements with status `draft` need owner confirmation before they can be treated as release gates.
 
 #### 3.3.1 Performance
-
-##### REQ-PERF-001 — Catalog browsing latency target
-- ID: REQ-PERF-001
-- Status: draft
-- Date: 2026-05-26
-- Title: Catalog browsing latency target
-- Statement: The system shall return paginated catalog-browsing API responses within an approved p95 latency target for an approved reference library size and reference server environment.
-- Rationale: Performance targets require concrete scale assumptions that have not yet been supplied; the requirement preserves the need for measurable acceptance criteria before performance work begins.
-- Acceptance Criteria:
-  - Before v0.6, the project owner approves a reference library size, reference hardware/container profile, and p95 latency target.
-  - A performance test exists for catalog browse/search endpoints using the approved reference library.
-  - The measured p95 latency meets the approved target.
-- Verification Method: Analysis
-- More Information: Clarification needed: expected library size, concurrent users, server hardware, and acceptable latency.
-
-##### REQ-PERF-002 — Non-blocking long-running operations
-- ID: REQ-PERF-002
-- Status: proposed
-- Date: 2026-05-26
-- Title: Non-blocking long-running operations
-- Statement: The system shall keep ordinary catalog browsing and reading-status update endpoints available while import, metadata fetch, image fetch, EPUB edit, or sync jobs are running.
-- Rationale: Long-running jobs must not make the application unusable for normal library operations.
-- Acceptance Criteria:
-  - A test can submit a long-running job and still successfully call catalog and reading-status endpoints.
-  - The long-running job status remains queryable while the job is running.
-  - Failures in one job do not prevent unrelated normal API requests from completing.
-- Verification Method: Test
-- More Information: Exact latency thresholds are covered by REQ-PERF-001.
-
-##### REQ-PERF-003 — Asset storage growth visibility
-- ID: REQ-PERF-003
-- Status: proposed
-- Date: 2026-05-26
-- Title: Asset storage growth visibility
-- Statement: The system shall expose total storage usage for the database and managed asset directory to an administrator.
-- Rationale: E-book, cover, author-image, original, and versioned files can grow over time; users need visibility to manage storage.
-- Acceptance Criteria:
-  - An administrator can view total managed storage usage.
-  - The storage usage view includes at least book files, covers, author images, originals, and previous versions when those categories exist.
-  - The values update after import or deletion operations within a documented refresh interval.
-- Verification Method: Demonstration
-- More Information: Quotas are TBD and not required by this requirement.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md) | Catalog browsing latency target |
+| [REQ-PERF-002](./requirements/performance/REQ-PERF-002.md) | Non-blocking long-running operations |
+| [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md) | Asset storage growth visibility |
 
 
 #### 3.3.2 Security

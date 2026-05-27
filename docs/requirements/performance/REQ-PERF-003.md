@@ -1,0 +1,13 @@
+# REQ-PERF-003 — Asset storage growth visibility
+- ID: REQ-PERF-003
+- Status: proposed
+- Date: 2026-05-26
+- Title: Asset storage growth visibility
+- Statement: The system shall expose total storage usage for the database and managed asset directory to an administrator.
+- Rationale: E-book, cover, author-image, original, and versioned files can grow over time; users need visibility to manage storage.
+- Acceptance Criteria:
+  - An administrator can view total managed storage usage.
+  - The storage usage view includes at least book files, covers, author images, originals, and previous versions when those categories exist.
+  - The values update after import or deletion operations within a documented refresh interval.
+- Verification Method: Demonstration
+- More Information: Quotas are TBD and not required by this requirement.
