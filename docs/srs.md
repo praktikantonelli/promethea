@@ -357,34 +357,10 @@ This section captures binding implementation constraints and delivery expectatio
 
 
 #### 3.5.5 Reusability
-
-##### REQ-REUSE-001 — Shared frontend reuse
-- ID: REQ-REUSE-001
-- Status: planned
-- Date: 2026-05-26
-- Title: Shared frontend reuse
-- Statement: The system shall maximize reuse of the React TypeScript frontend across browser, desktop, and mobile-oriented deployments.
-- Rationale: The draft explicitly requires reusing as much of the frontend as possible.
-- Acceptance Criteria:
-  - Common book, author, series, reading, import, and analytics views are implemented in shared frontend modules.
-  - Platform-specific shells do not duplicate core UI feature logic except where necessary.
-  - Any platform-specific UI forks are documented with rationale.
-- Verification Method: Inspection
-- More Information: This is a design and maintainability requirement, not a promise of identical UI on every platform.
-
-##### REQ-REUSE-002 — Reusable Rust core
-- ID: REQ-REUSE-002
-- Status: proposed
-- Date: 2026-05-26
-- Title: Reusable Rust core
-- Statement: The system shall keep core library, reading, metadata, EPUB, and automation logic reusable outside the REST API server entry point.
-- Rationale: A reusable core reduces duplication when adding desktop or other clients.
-- Acceptance Criteria:
-  - Core functions are callable from tests or non-server binaries without starting HTTP routes.
-  - Server-specific concerns are not required by the core domain module.
-  - Desktop or job-runner code can reuse core operations where applicable.
-- Verification Method: Inspection
-- More Information: This requirement reflects the proposed architecture and can be refined after crate design.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-REUSE-001](./requirements/reusability/REQ-REUSE-001.md) | Shared frontend reuse |
+| [REQ-REUSE-002](./requirements/reusability/REQ-REUSE-002.md) | Reusable Rust core |
 
 
 #### 3.5.6 Portability
