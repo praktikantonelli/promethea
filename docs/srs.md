@@ -370,20 +370,9 @@ This section captures binding implementation constraints and delivery expectatio
 
 
 #### 3.5.7 Cost
-
-##### REQ-COST-001 — No mandatory paid third-party service for core use
-- ID: REQ-COST-001
-- Status: proposed
-- Date: 2026-05-26
-- Title: No mandatory paid third-party service for core use
-- Statement: The system shall not require a mandatory paid third-party service for core self-hosted library management, reading tracking, and browsing features.
-- Rationale: A personal self-hosted library should remain usable without recurring external service dependencies.
-- Acceptance Criteria:
-  - Core import, browse, edit-catalog, and reading-tracker features operate without paid external services.
-  - Optional metadata providers may require user-supplied credentials without blocking manual operation.
-  - Documentation identifies optional paid or rate-limited integrations if any are added.
-- Verification Method: Inspection
-- More Information: Hosting infrastructure cost is outside application control.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-COST-001](./requirements/cost/REQ-COST-001.md) | No mandatory paid third-party service for core use |
 
 
 #### 3.5.8 Deadline
