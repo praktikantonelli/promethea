@@ -199,11 +199,11 @@ This section defines user, hardware, and software-facing interfaces at a logical
 #### 3.1.3 Software Interfaces
 | ID | Title |
 |----|-------|
-| [REQ-INT-003](./requirements/interfaces/REQ-INT-003.md) | REST API interface
-| [REQ-INT-004](./requirements/interfaces/REQ-INT-004.md) | File import and download interface
-| [REQ-INT-005](./requirements/interfaces/REQ-INT-005.md) | External metadata provider interface
-| [REQ-INT-006](./requirements/interfaces/REQ-INT-006.md) | External image URL download interface
-| [REQ-INT-008](./requirements/interfaces/REQ-INT-008.md) | Client database isolation
+| [REQ-INT-003](./requirements/interfaces/REQ-INT-003.md) | REST API interface |
+| [REQ-INT-004](./requirements/interfaces/REQ-INT-004.md) | File import and download interface |
+| [REQ-INT-005](./requirements/interfaces/REQ-INT-005.md) | External metadata provider interface |
+| [REQ-INT-006](./requirements/interfaces/REQ-INT-006.md) | External image URL download interface |
+| [REQ-INT-008](./requirements/interfaces/REQ-INT-008.md) | Client database isolation |
 
 ### 3.2 Functional
 
