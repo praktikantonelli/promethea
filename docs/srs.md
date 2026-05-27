@@ -289,62 +289,12 @@ This section defines performance, security, reliability, availability, and obser
 
 
 #### 3.3.3 Reliability
-
-##### REQ-REL-001 — Transactional catalog mutations
-- ID: REQ-REL-001
-- Status: planned
-- Date: 2026-05-26
-- Title: Transactional catalog mutations
-- Statement: The system shall apply catalog mutations transactionally so that each mutation either completes fully or leaves persistent catalog state unchanged.
-- Rationale: Partial updates could corrupt relationships between books, authors, series, files, and reading records.
-- Acceptance Criteria:
-  - A failed book metadata update does not leave partially updated related records.
-  - A failed import does not create orphaned catalog records that point to missing assets.
-  - Integration tests cover at least one failure path for import or metadata update.
-- Verification Method: Test
-- More Information: File operations and database operations may require compensating actions; exact implementation is design-specific.
-
-##### REQ-REL-002 — Recover from failed EPUB modification
-- ID: REQ-REL-002
-- Status: planned
-- Date: 2026-05-26
-- Title: Recover from failed EPUB modification
-- Statement: The system shall preserve the previous usable EPUB version if metadata writing, cover replacement, or content editing fails.
-- Rationale: EPUB modification is a data-loss risk and must fail safely.
-- Acceptance Criteria:
-  - When an EPUB modification fails, the previous current version remains downloadable.
-  - The failed operation creates a failed job or operation record with an error message.
-  - No book record points to a missing current EPUB file after the failure.
-- Verification Method: Test
-- More Information: Related to REQ-FUNC-007.
-
-##### REQ-REL-003 — Handle metadata provider failure gracefully
-- ID: REQ-REL-003
-- Status: planned
-- Date: 2026-05-26
-- Title: Handle metadata provider failure gracefully
-- Statement: The system shall continue to support manual catalog operations when external metadata providers are unavailable or return errors.
-- Rationale: The application should not depend on third-party service availability for core library management.
-- Acceptance Criteria:
-  - A provider timeout or error does not crash the server.
-  - The user receives a visible provider-error message.
-  - Manual metadata editing remains available after provider failure.
-- Verification Method: Test
-- More Information: Provider timeout durations are TBD.
-
-##### REQ-REL-004 — Idempotent import by checksum
-- ID: REQ-REL-004
-- Status: proposed
-- Date: 2026-05-26
-- Title: Idempotent import by checksum
-- Statement: The system shall identify repeated import attempts of an identical EPUB file by checksum and avoid creating unintended duplicate file records without user confirmation.
-- Rationale: Retrying failed or uncertain imports should not accidentally duplicate the library.
-- Acceptance Criteria:
-  - An identical file checksum is detected during import.
-  - The import response indicates that an identical file already exists.
-  - The system does not create a new active duplicate record unless the user explicitly confirms keeping a duplicate.
-- Verification Method: Test
-- More Information: Related to REQ-FUNC-010.
+| ID   | Title |
+|--------------- | --------------- |
+| [REQ-REL-001](./requirements/reliability/REQ-REL-001.md)   | Transactional catalog mutations   |
+| [REQ-REL-002](./requirements/reliability/REQ-REL-002.md)   | Recover from failed EPUB mutation   |
+| [REQ-REL-003](./requirements/reliability/REQ-REL-003.md)   | Handle metadata provider failure gracefully   |
+| [REQ-REL-004](./requirements/reliability/REQ-REL-004.md)   |  Idempotent import by checksum  |
 
 
 #### 3.3.4 Availability

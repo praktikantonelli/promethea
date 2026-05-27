@@ -1,0 +1,13 @@
+# REQ-REL-001 — Transactional catalog mutations
+- ID: REQ-REL-001
+- Status: planned
+- Date: 2026-05-26
+- Title: Transactional catalog mutations
+- Statement: The system shall apply catalog mutations transactionally so that each mutation either completes fully or leaves persistent catalog state unchanged.
+- Rationale: Partial updates could corrupt relationships between books, authors, series, files, and reading records.
+- Acceptance Criteria:
+  - A failed book metadata update does not leave partially updated related records.
+  - A failed import does not create orphaned catalog records that point to missing assets.
+  - Integration tests cover at least one failure path for import or metadata update.
+- Verification Method: Test
+- More Information: File operations and database operations may require compensating actions; exact implementation is design-specific.

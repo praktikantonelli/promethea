@@ -1,0 +1,13 @@
+# REQ-REL-002 — Recover from failed EPUB modification
+- ID: REQ-REL-002
+- Status: planned
+- Date: 2026-05-26
+- Title: Recover from failed EPUB modification
+- Statement: The system shall preserve the previous usable EPUB version if metadata writing, cover replacement, or content editing fails.
+- Rationale: EPUB modification is a data-loss risk and must fail safely.
+- Acceptance Criteria:
+  - When an EPUB modification fails, the previous current version remains downloadable.
+  - The failed operation creates a failed job or operation record with an error message.
+  - No book record points to a missing current EPUB file after the failure.
+- Verification Method: Test
+- More Information: Related to REQ-FUNC-007.
