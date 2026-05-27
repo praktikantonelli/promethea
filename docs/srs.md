@@ -279,77 +279,13 @@ This section defines performance, security, reliability, availability, and obser
 
 
 #### 3.3.2 Security
-
-##### REQ-SEC-001 — Authenticate protected operations
-- ID: REQ-SEC-001
-- Status: planned
-- Date: 2026-05-26
-- Title: Authenticate protected operations
-- Statement: The system shall require authentication before allowing access to mutating operations or private library data over the server interface.
-- Rationale: Remote updates from the internet require protection of personal library and reading data.
-- Acceptance Criteria:
-  - Unauthenticated requests to protected endpoints receive an authentication error.
-  - Authenticated requests with valid credentials can access authorized protected endpoints.
-  - The login/session/token mechanism is documented before v0.6.
-- Verification Method: Test
-- More Information: Authentication mechanism and multi-user model are TBD.
-
-##### REQ-SEC-002 — Authorize user operations
-- ID: REQ-SEC-002
-- Status: draft
-- Date: 2026-05-26
-- Title: Authorize user operations
-- Statement: The system shall enforce authorization checks for administrative, catalog-editing, file-management, and reading-tracker operations.
-- Rationale: If the project supports more than one account, users should not gain unintended administrative access; even a single-user deployment benefits from explicit authorization boundaries.
-- Acceptance Criteria:
-  - Administrative settings are inaccessible to non-admin roles if non-admin roles exist.
-  - Protected mutating endpoints check authorization before applying changes.
-  - Authorization failures are logged without exposing secrets.
-- Verification Method: Test
-- More Information: Role model is TBD; may be simplified to owner/admin for initial release.
-
-##### REQ-SEC-003 — Validate external inputs
-- ID: REQ-SEC-003
-- Status: planned
-- Date: 2026-05-26
-- Title: Validate external inputs
-- Statement: The system shall validate and sanitize user-supplied input, uploaded files, provider responses, and external image URLs before processing or persisting them.
-- Rationale: The system accepts files and URLs and may be exposed remotely, making input validation essential to protect integrity and availability.
-- Acceptance Criteria:
-  - Unsupported file types are rejected for EPUB import.
-  - External image downloads enforce supported schemes and media types.
-  - Text inputs used in database queries or file paths cannot cause injection or path traversal in test cases.
-  - Provider response parsing handles missing or malformed fields.
-- Verification Method: Test
-- More Information: Maximum file sizes and URL restrictions are TBD.
-
-##### REQ-SEC-004 — Protect secrets and provider credentials
-- ID: REQ-SEC-004
-- Status: proposed
-- Date: 2026-05-26
-- Title: Protect secrets and provider credentials
-- Statement: The system shall store API keys, session secrets, and provider credentials outside source-controlled code and outside client-delivered frontend bundles.
-- Rationale: External metadata providers and authentication may require secrets that must not be exposed to clients or repositories.
-- Acceptance Criteria:
-  - No provider API key is embedded in the compiled frontend bundle.
-  - Runtime configuration supports providing secrets through environment variables, config files, or secret stores.
-  - Configuration examples use placeholders rather than real secrets.
-- Verification Method: Inspection
-- More Information: Exact secret-storage mechanism depends on deployment mode.
-
-##### REQ-SEC-005 — Support secure deployment over HTTPS
-- ID: REQ-SEC-005
-- Status: proposed
-- Date: 2026-05-26
-- Title: Support secure deployment over HTTPS
-- Statement: The system shall support deployment behind HTTPS for all remote browser and API traffic.
-- Rationale: Remote access over the internet should protect credentials and personal reading data in transit.
-- Acceptance Criteria:
-  - Deployment documentation includes an HTTPS-capable reverse-proxy or equivalent configuration pattern.
-  - The application does not require mixed-content HTTP calls from an HTTPS frontend.
-  - Cookie or token settings are compatible with HTTPS deployment.
-- Verification Method: Inspection
-- More Information: TLS termination may be handled by a reverse proxy rather than the application process.
+| ID | Title |
+|--------------- | --------------- |
+| [REQ-SEC-001](./requirements/security/REQ-SEC-001.md)   | Authenticate protected operations  |
+| [REQ-SEC-002](./requirements/security/REQ-SEC-002.md)   | Authorize user operations   |
+| [REQ-SEC-003](./requirements/security/REQ-SEC-003.md)   | Validate external inputs   |
+| [REQ-SEC-004](./requirements/security/REQ-SEC-004.md)   |  Protect secrets and provider credentials  |
+| [REQ-SEC-005](./requirements/security/REQ-SEC-005.md) | Support secure deployment over HTTPS |
 
 
 #### 3.3.3 Reliability
