@@ -305,34 +305,10 @@ This section defines performance, security, reliability, availability, and obser
 
 
 #### 3.3.5 Observability
-
-##### REQ-OBS-001 — Structured server logs
-- ID: REQ-OBS-001
-- Status: proposed
-- Date: 2026-05-26
-- Title: Structured server logs
-- Statement: The system shall produce structured server logs for API requests, job execution, import operations, metadata provider calls, and errors.
-- Rationale: Operators need to diagnose failures in a self-hosted server without inspecting source code.
-- Acceptance Criteria:
-  - Logs include timestamp, severity, component, and request or job correlation identifier when applicable.
-  - Sensitive values such as passwords, tokens, and provider API keys are not logged.
-  - Errors include enough context to identify the affected operation without exposing private secrets.
-- Verification Method: Inspection
-- More Information: Log format and retention are TBD.
-
-##### REQ-OBS-002 — User-visible operation history
-- ID: REQ-OBS-002
-- Status: proposed
-- Date: 2026-05-26
-- Title: User-visible operation history
-- Statement: The system shall provide user-visible history for imports, EPUB modifications, metadata fetches, image downloads, and sync jobs.
-- Rationale: Users need to understand what automated or background actions changed their library.
-- Acceptance Criteria:
-  - The UI can show recent operations with status and timestamp.
-  - Failed operations show an error summary.
-  - Completed operations identify the affected book, author, series, or asset when applicable.
-- Verification Method: Demonstration
-- More Information: History retention duration is TBD.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md) | Structured server logs |
+| [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md) | User-visible operation history |
 
 
 ### 3.4 Compliance
