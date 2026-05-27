@@ -342,48 +342,11 @@ This section captures binding implementation constraints and delivery expectatio
 
 
 #### 3.5.3 Distribution
-
-##### REQ-DIST-001 — Server-browser deployment topology
-- ID: REQ-DIST-001
-- Status: planned
-- Date: 2026-05-26
-- Title: Server-browser deployment topology
-- Statement: The system shall support a deployment topology in which a headless server exposes the application to users through a browser.
-- Rationale: The draft calls for server availability through a browser and calibre-web-style access.
-- Acceptance Criteria:
-  - The server can run without a local GUI.
-  - A browser can access the UI served by or connected to the server.
-  - Server data persists independently of browser sessions.
-- Verification Method: Demonstration
-- More Information: None.
-
-##### REQ-DIST-002 — Desktop application distribution
-- ID: REQ-DIST-002
-- Status: deferred
-- Date: 2026-05-26
-- Title: Desktop application distribution
-- Statement: The system should provide a desktop/laptop application distribution that reuses the shared frontend and supports local-library workflows.
-- Rationale: Desktop/laptop availability is a nice-to-have and aligns with replacing Calibre for local file management.
-- Acceptance Criteria:
-  - The desktop app reuses the shared React frontend.
-  - The desktop app can manage a local or configured library.
-  - Desktop-specific workflows such as drag-and-drop or folder import are considered for the desktop milestone.
-- Verification Method: Demonstration
-- More Information: Deferred until desktop app alpha; packaging technology is TBD.
-
-##### REQ-DIST-003 — Mobile availability
-- ID: REQ-DIST-003
-- Status: deferred
-- Date: 2026-05-26
-- Title: Mobile availability
-- Statement: The system should provide mobile availability through a responsive web UI, PWA, or native wrapper that reuses the shared frontend where practical.
-- Rationale: Mobile availability is a nice-to-have and supports remote status updates from anywhere.
-- Acceptance Criteria:
-  - A mobile-width browser can perform reading-status updates.
-  - The mobile experience reuses the shared frontend codebase where practical.
-  - Native mobile packaging is not required unless approved in a later milestone.
-- Verification Method: Demonstration
-- More Information: Deferred; initial implementation may satisfy this through responsive web only.
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-DIST-001](./requirements/distribution/REQ-DIST-001.md) | Server-browser deployment topology |
+| [REQ-DIST-002](./requirements/distribution/REQ-DIST-002.md) | Desktop application distribution |
+| [REQ-DIST-003](./requirements/distribution/REQ-DIST-003.md) | Mobile availability |
 
 
 #### 3.5.4 Maintainability
