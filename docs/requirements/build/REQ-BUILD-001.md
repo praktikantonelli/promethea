@@ -1,0 +1,13 @@
+# REQ-BUILD-001 — Rust backend
+- ID: REQ-BUILD-001
+- Status: planned
+- Date: 2026-05-26
+- Title: Rust backend
+- Statement: The backend server and core application logic shall be implemented in Rust.
+- Rationale: The draft explicitly requires a Rust backend.
+- Acceptance Criteria:
+  - Backend source code for server and core domain modules is Rust.
+  - Backend build steps compile through the Rust toolchain in CI.
+  - Non-Rust support scripts do not replace the Rust backend requirement.
+- Verification Method: Inspection
+- More Information: None.

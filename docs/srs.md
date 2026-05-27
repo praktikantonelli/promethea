@@ -333,63 +333,12 @@ This section captures binding implementation constraints and delivery expectatio
 
 
 #### 3.5.2 Build and Delivery
-
-##### REQ-BUILD-001 — Rust backend
-- ID: REQ-BUILD-001
-- Status: planned
-- Date: 2026-05-26
-- Title: Rust backend
-- Statement: The backend server and core application logic shall be implemented in Rust.
-- Rationale: The draft explicitly requires a Rust backend.
-- Acceptance Criteria:
-  - Backend source code for server and core domain modules is Rust.
-  - Backend build steps compile through the Rust toolchain in CI.
-  - Non-Rust support scripts do not replace the Rust backend requirement.
-- Verification Method: Inspection
-- More Information: None.
-
-##### REQ-BUILD-002 — REST server
-- ID: REQ-BUILD-002
-- Status: planned
-- Date: 2026-05-26
-- Title: REST server
-- Statement: The server REST API shall be implemented using a Rust library.
-- Rationale: The specific REST API library has not yet been selected.
-- Acceptance Criteria:
-  - The server routing layer uses a Rust crate for REST API.
-  - REST endpoints are exposed by the library's server application.
-  - The project documents any future change away from a 3rd party REST API library as a breaking design decision.
-- Verification Method: Inspection
-- More Information: This is a design constraint because the user specified the server direction.
-
-##### REQ-BUILD-003 — React TypeScript frontend
-- ID: REQ-BUILD-003
-- Status: planned
-- Date: 2026-05-26
-- Title: React TypeScript frontend
-- Statement: The frontend shall be implemented with React and TypeScript.
-- Rationale: The draft explicitly requires a React TypeScript frontend.
-- Acceptance Criteria:
-  - Frontend source files use TypeScript/TSX for application code.
-  - The frontend build type-checks successfully in CI.
-  - The browser UI is produced from the React application.
-- Verification Method: Inspection
-- More Information: None.
-
-##### REQ-BUILD-004 — Continuous integration checks
-- ID: REQ-BUILD-004
-- Status: proposed
-- Date: 2026-05-26
-- Title: Continuous integration checks
-- Statement: The project shall provide automated checks for backend build, frontend build, tests, formatting, and linting before release artifacts are produced.
-- Rationale: CI helps keep a multi-component Rust/React project maintainable and verifiable.
-- Acceptance Criteria:
-  - CI runs backend build/tests.
-  - CI runs frontend build/type checks.
-  - CI reports failures for formatting or linting checks selected by the project.
-  - Release artifacts are not promoted from failing CI runs.
-- Verification Method: Inspection
-- More Information: Specific CI provider is TBD.
+| ID   | Title |
+|--------------- | --------------- |
+| [REQ-BUILD-001](./requirements/build/REQ-BUILD-001.md)   | Rust backend   |
+| [REQ-BUILD-002](./requirements/build/REQ-BUILD-002.md)   | REST server   |
+| [REQ-BUILD-003](./requirements/build/REQ-BUILD-003.md)   | React TypeScript frontend   |
+| [REQ-BUILD-004](./requirements/build/REQ-BUILD-004.md)   | Continuous integration checks  |
 
 
 #### 3.5.3 Distribution
