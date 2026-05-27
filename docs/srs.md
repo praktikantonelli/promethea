@@ -76,6 +76,7 @@ Browser / Desktop / Mobile-oriented UI
 | Book | A catalog entity representing a readable work or title in the library. Final work/edition/file modeling details are TBD. |
 | Calibre | Existing e-book management application whose personal library-management workflows Promethea aims to replace. |
 | calibre-web | Existing web UI for Calibre libraries whose browsing workflows Promethea aims to replace. |
+| Goodreads | Existing web platform for keeping track of books as lists whose tracking workflows Promethea aims to replace. |
 | EPUB | Electronic Publication file format used as the initial supported e-book file format. |
 | Metadata Candidate | Metadata returned by an external source and presented for review or automation before being applied. |
 | POC | Proof of Concept. |
