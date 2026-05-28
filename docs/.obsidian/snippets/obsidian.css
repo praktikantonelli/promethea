@@ -1,57 +1,28 @@
-.markdown-source-view, .markdown-preview-view {
-max-width: 1400px;
-margin: auto;
-}
-body:not(.native-scrollbars) ::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
-}
-/* Naked Embeds */
-.markdown-embed-title { display:none; }
-.markdown-preview-view .markdown-embed { border:none; padding:0; margin:0; }
-.markdown-preview-view .markdown-embed-content { max-height: unset;}
-.markdown-preview-view .markdown-embed-content>:first-child { margin-top: 0; }
-.markdown-preview-view .markdown-embed-content>:last-child { margin-bottom: 0; }
-
-table{
-    width: auto;
-    display: table;
+/* Wider note body in Reading View, Live Preview, and Source Mode */
+.markdown-source-view,
+.markdown-preview-view {
+  --file-line-width: 1400px;
 }
 
-.grid span.image-embed[alt*="."],
-span[alt*="grid"]{
-    display: table-cell;
-    vertical-align: middle;
-    padding: 3px;
+/* Reading view / preview */
+.markdown-preview-view.is-readable-line-width .markdown-preview-sizer,
+.markdown-preview-view.readable-line-width .markdown-preview-sizer,
+.markdown-reading-view .markdown-preview-view > .markdown-preview-sizer {
+  max-width: var(--file-line-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
-img[alt*="grid"],
-.grid img[alt*="."]{
-    max-height: 30vh;
+/* Live Preview / Source Mode, CodeMirror 6 */
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-sizer,
+.markdown-source-view.mod-cm6.readable-line-width .cm-sizer,
+.markdown-source-view.mod-cm6 .cm-sizer {
+  max-width: var(--file-line-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
-/* Floating Images */
-img[alt*="left"] {
-    float:left;
-    clear:left;
-    margin-right: 1rem;
-    margin-bottom: 4px;
-    margin-top: 4px;
-}
-
-
-img[alt*="right"] {
-    float:right;
-    clear:right;
-    margin-left: 1rem;
-    margin-bottom: 4px;
-    margin-top: 4px;
-}
-
-img[alt*="center"],img[alt*="centre"] {
-    display:block;
-    margin-right: auto;
-    margin-left: auto;
-    margin-bottom: 4px;
-    margin-top: 4px;
+.markdown-source-view.mod-cm6 .cm-content,
+.markdown-source-view.mod-cm6 .cm-line {
+  max-width: var(--file-line-width) !important;
 }
