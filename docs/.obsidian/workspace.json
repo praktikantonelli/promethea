@@ -169,8 +169,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -184,5 +183,8 @@
     }
   },
   "active": "344c709515338b57",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "README.md.md",
+    "srs.md"
+  ]
 }
