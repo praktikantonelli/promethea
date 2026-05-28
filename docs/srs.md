@@ -31,9 +31,9 @@ Date Modified: 2026-05-26
 
 ## Revision History
 
-| Name | Date | Reason For Changes | Version |
-|------|------|--------------------|---------|
-| Luca Antonelli | 2026-05-26 | Initial SRS draft | 0.1 |
+| Name           | Date       | Reason For Changes | Version |
+| -------------- | ---------- | ------------------ | ------- |
+| Luca Antonelli | 2026-05-26 | Initial SRS draft  | 0.1     |
 
 ## 1. Introduction
 
