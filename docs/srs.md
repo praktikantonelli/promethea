@@ -6,7 +6,6 @@ Prepared by Luca Antonelli
 Date Modified: 2026-05-26
 
 ## Table of Contents
-<!-- TOC -->
 * [1. Introduction](#1-introduction)
     * [1.1 Document Purpose](#11-document-purpose)
     * [1.2 Product Scope](#12-product-scope)
@@ -29,7 +28,6 @@ Date Modified: 2026-05-26
     * [3.6 AI/ML](#36-aiml)
 * [4. Verification](#4-verification)
 * [5. Appendixes](#5-appendixes)
-<!-- TOC -->
 
 ## Revision History
 
