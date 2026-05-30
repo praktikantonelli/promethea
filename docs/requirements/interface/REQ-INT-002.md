@@ -7,7 +7,6 @@
 - Rationale: The project includes a nice-to-have goal of availability across desktop/laptop, server browser, and mobile contexts.
 - Acceptance Criteria:
   - Book, author, series, and reading-status views remain usable at 390 px, 768 px, and 1280 px viewport widths.
-  - Primary navigation, search, and edit actions are reachable without horizontal scrolling at the tested viewport widths.
   - Automated or manual UI checks cover at least one mobile-width and one desktop-width viewport.
 - Verification Method: Test
 - More Information: Native mobile applications are deferred; this requirement covers web responsiveness only.
