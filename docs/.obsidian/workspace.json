@@ -95,7 +95,7 @@
               "type": "backlink",
               "state": {
                 "file": "SRS.md",
-                "collapseAll": false,
+                "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
                 "showSearch": false,
@@ -156,16 +156,17 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "srs.md",
+                "file": "SRS.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of srs"
+              "title": "Outline of SRS"
             }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -184,9 +185,13 @@
   },
   "active": "344c709515338b57",
   "lastOpenFiles": [
-    "requirements/functional/REQ-FUNC-023.md",
+    "requirements/interface/REQ-INT-008.md",
     "SRS.md",
-    "requirements/interface/REQ-INT-006.md",
-    "README.md.md"
+    "requirements/proof-of-concept/REQ-POC-001.md",
+    "README.md.md",
+    "requirements/interface/REQ-INT-005.md",
+    "requirements/interface/REQ-INT-002.md",
+    "requirements/functional/REQ-FUNC-023.md",
+    "requirements/interface/REQ-INT-006.md"
   ]
 }

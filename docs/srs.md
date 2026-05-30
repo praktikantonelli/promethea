@@ -196,13 +196,13 @@ This section defines user, hardware, and software-facing interfaces at a logical
 |----|-------|
 | [REQ-INT-007](./requirements/interface/REQ-INT-007.md) | Mounted-folder e-reader sync interface |
 #### 3.1.3 Software Interfaces
-| ID | Title |
-|----|-------|
-| [REQ-INT-003](./requirements/interface/REQ-INT-003.md) | REST API interface |
-| [REQ-INT-004](./requirements/interface/REQ-INT-004.md) | File import and download interface |
-| [REQ-INT-005](./requirements/interface/REQ-INT-005.md) | External metadata provider interface |
+| ID                                                     | Title                                 |
+| ------------------------------------------------------ | ------------------------------------- |
+| [REQ-INT-003](./requirements/interface/REQ-INT-003.md) | REST API interface                    |
+| [REQ-INT-004](./requirements/interface/REQ-INT-004.md) | File import and download interface    |
+| [REQ-INT-005](./requirements/interface/REQ-INT-005.md) | External metadata provider interface  |
 | [REQ-INT-006](./requirements/interface/REQ-INT-006.md) | External image URL download interface |
-| [REQ-INT-008](./requirements/interface/REQ-INT-008.md) | Client database isolation |
+| [REQ-INT-008](./requirements/interface/REQ-INT-008.md) | Client database isolation             |
 
 ### 3.2 Functional
 
@@ -519,114 +519,112 @@ Verification artifacts should be created as the implementation matures. The path
 
 The following items are not supplied in the source material and should be answered before the affected requirements are treated as final release gates:
 
-1. What should appear as the official author and organization on the SRS cover page?
-2. Is Promethea the final project name?
-3. Is the target deployment single-user, household/multi-user, or future public multi-tenant?
-4. What authentication model is desired: single owner account, local users, OAuth/OIDC, reverse-proxy auth, or something else?
-5. What database should the initial stable release target, and should SQLite be a formal requirement or only an allowed implementation?
-6. What is the expected library size for performance tests: hundreds, thousands, tens of thousands, or more books?
-7. How many concurrent users or clients should the self-hosted server support?
-8. Which metadata providers should be supported first?
-9. Which image providers or URL restrictions should apply to cover and author-image downloads?
-10. Which EPUB content-editing workflows are required first: full editor, OPF metadata only, cover replacement, XHTML search-and-replace, or another subset?
-11. What exact reading statuses are required beyond unread/currently reading/read/abandoned?
-12. Should reading analytics count rereads separately from first reads?
-13. How should books with multiple authors be counted in analytics?
-14. What page-count and reading-speed calculation rules should be used?
-15. Which accessibility standard or target should the UI meet?
-16. Which operating systems are release targets for server and desktop builds?
-17. Should mobile be responsive web only, PWA, Tauri mobile, Capacitor, or another native wrapper?
-18. Which e-reader devices and sync protocols are in scope for the first device-sync milestone?
-19. What backup retention and restore expectations are required?
-20. What license should the project use, and what third-party dependency license policy should apply?
+1. Is the target deployment single-user, household/multi-user, or future public multi-tenant?
+2. What authentication model is desired: single owner account, local users, OAuth/OIDC, reverse-proxy auth, or something else?
+3. What database should the initial stable release target, and should SQLite be a formal requirement or only an allowed implementation?
+4. What is the expected library size for performance tests: hundreds, thousands, tens of thousands, or more books?
+5. How many concurrent users or clients should the self-hosted server support?
+6. Which metadata providers should be supported first?
+7. Which image providers or URL restrictions should apply to cover and author-image downloads?
+8. Which EPUB content-editing workflows are required first: full editor, OPF metadata only, cover replacement, XHTML search-and-replace, or another subset?
+9. What exact reading statuses are required beyond unread/currently reading/read/abandoned?
+10. Should reading analytics count rereads separately from first reads?
+11. How should books with multiple authors be counted in analytics?
+12. What page-count and reading-speed calculation rules should be used?
+13. Which accessibility standard or target should the UI meet?
+14. Which operating systems are release targets for server and desktop builds?
+15. Should mobile be responsive web only, PWA, Tauri mobile, Capacitor, or another native wrapper?
+16. Which e-reader devices and sync protocols are in scope for the first device-sync milestone?
+17. What backup retention and restore expectations are required?
+18. What license should the project use, and what third-party dependency license policy should apply?
 
 ### Appendix B: Requirement Index
 
-| Requirement ID | Title | Status | Section |
-|----------------|-------|--------|---------|
-| REQ-INT-001 | Browser-based library user interface | planned | 3.1 External Interfaces |
-| REQ-INT-002 | Responsive user interface | proposed | 3.1 External Interfaces |
-| REQ-INT-003 | REST API interface | planned | 3.1 External Interfaces |
-| REQ-INT-004 | File import and download interface | planned | 3.1 External Interfaces |
-| REQ-INT-005 | External metadata provider interface | planned | 3.1 External Interfaces |
-| REQ-INT-006 | External image URL download interface | planned | 3.1 External Interfaces |
-| REQ-INT-007 | Mounted-folder e-reader sync interface | deferred | 3.1 External Interfaces |
-| REQ-INT-008 | Client database isolation | proposed | 3.1 External Interfaces |
-| REQ-FUNC-001 | Import EPUB files | planned | 3.2 Functional Requirements |
-| REQ-FUNC-002 | Persist catalog records and assets | planned | 3.2 Functional Requirements |
-| REQ-FUNC-003 | Extract EPUB metadata | planned | 3.2 Functional Requirements |
-| REQ-FUNC-004 | Edit catalog metadata | planned | 3.2 Functional Requirements |
-| REQ-FUNC-005 | Write metadata to EPUB files | planned | 3.2 Functional Requirements |
-| REQ-FUNC-006 | Edit EPUB content | planned | 3.2 Functional Requirements |
-| REQ-FUNC-007 | Version EPUB modifications | planned | 3.2 Functional Requirements |
-| REQ-FUNC-008 | Fetch online metadata | planned | 3.2 Functional Requirements |
-| REQ-FUNC-009 | Review metadata candidates | planned | 3.2 Functional Requirements |
-| REQ-FUNC-010 | Detect duplicate imported books | proposed | 3.2 Functional Requirements |
-| REQ-FUNC-011 | Display book card view | planned | 3.2 Functional Requirements |
-| REQ-FUNC-012 | Display author detail view | planned | 3.2 Functional Requirements |
-| REQ-FUNC-013 | Manage author images | planned | 3.2 Functional Requirements |
-| REQ-FUNC-014 | Display series detail view | planned | 3.2 Functional Requirements |
-| REQ-FUNC-015 | Support related series | planned | 3.2 Functional Requirements |
-| REQ-FUNC-016 | Display author overview | planned | 3.2 Functional Requirements |
-| REQ-FUNC-017 | Display series overview | planned | 3.2 Functional Requirements |
-| REQ-FUNC-018 | Search and filter library | proposed | 3.2 Functional Requirements |
-| REQ-FUNC-019 | Track owned books | planned | 3.2 Functional Requirements |
-| REQ-FUNC-020 | Track reading status | planned | 3.2 Functional Requirements |
-| REQ-FUNC-021 | Track completed reads | planned | 3.2 Functional Requirements |
-| REQ-FUNC-022 | Track reading progress events | proposed | 3.2 Functional Requirements |
-| REQ-FUNC-023 | Analyze books read per period | planned | 3.2 Functional Requirements |
-| REQ-FUNC-024 | Analyze pages read per period | planned | 3.2 Functional Requirements |
-| REQ-FUNC-025 | Analyze books by author | planned | 3.2 Functional Requirements |
-| REQ-FUNC-026 | Analyze reading speed by author | planned | 3.2 Functional Requirements |
-| REQ-FUNC-027 | Support remote updates through server | planned | 3.2 Functional Requirements |
-| REQ-FUNC-028 | Define automation rules on book import | deferred | 3.2 Functional Requirements |
-| REQ-FUNC-029 | Automation action for metadata fetching | deferred | 3.2 Functional Requirements |
-| REQ-FUNC-030 | Automation action for EPUB search-and-replace | deferred | 3.2 Functional Requirements |
-| REQ-FUNC-031 | Run long operations as background jobs | planned | 3.2 Functional Requirements |
-| REQ-FUNC-032 | Display job status | planned | 3.2 Functional Requirements |
-| REQ-FUNC-033 | Synchronize books to e-reader targets | deferred | 3.2 Functional Requirements |
-| REQ-FUNC-034 | Support audiobook records | deferred | 3.2 Functional Requirements |
-| REQ-FUNC-035 | Track book medium | deferred | 3.2 Functional Requirements |
-| REQ-FUNC-036 | Sync progress between e-book and audiobook | deferred | 3.2 Functional Requirements |
-| REQ-PERF-001 | Catalog browsing latency target | draft | 3.3 Quality of Service Requirements |
-| REQ-PERF-002 | Non-blocking long-running operations | proposed | 3.3 Quality of Service Requirements |
-| REQ-PERF-003 | Asset storage growth visibility | proposed | 3.3 Quality of Service Requirements |
-| REQ-SEC-001 | Authenticate protected operations | planned | 3.3 Quality of Service Requirements |
-| REQ-SEC-002 | Authorize user operations | draft | 3.3 Quality of Service Requirements |
-| REQ-SEC-003 | Validate external inputs | planned | 3.3 Quality of Service Requirements |
-| REQ-SEC-004 | Protect secrets and provider credentials | proposed | 3.3 Quality of Service Requirements |
-| REQ-SEC-005 | Support secure deployment over HTTPS | proposed | 3.3 Quality of Service Requirements |
-| REQ-REL-001 | Transactional catalog mutations | planned | 3.3 Quality of Service Requirements |
-| REQ-REL-002 | Recover from failed EPUB modification | planned | 3.3 Quality of Service Requirements |
-| REQ-REL-003 | Handle metadata provider failure gracefully | planned | 3.3 Quality of Service Requirements |
-| REQ-REL-004 | Idempotent import by checksum | proposed | 3.3 Quality of Service Requirements |
-| REQ-AVAIL-001 | Restart recovery | proposed | 3.3 Quality of Service Requirements |
-| REQ-AVAIL-002 | Backup and restore support | planned | 3.3 Quality of Service Requirements |
-| REQ-OBS-001 | Structured server logs | proposed | 3.3 Quality of Service Requirements |
-| REQ-OBS-002 | User-visible operation history | proposed | 3.3 Quality of Service Requirements |
-| REQ-COMP-001 | External source attribution | proposed | 3.4 Compliance Requirements |
-| REQ-COMP-002 | User-content responsibility notice | proposed | 3.4 Compliance Requirements |
-| REQ-COMP-003 | Privacy of reading data | planned | 3.4 Compliance Requirements |
-| REQ-INST-001 | Self-hosted server installation | planned | 3.5 Design and Implementation Requirements |
-| REQ-INST-002 | Configurable data directory | planned | 3.5 Design and Implementation Requirements |
-| REQ-INST-003 | Containerized deployment package | planned | 3.5 Design and Implementation Requirements |
-| REQ-BUILD-001 | Rust backend | planned | 3.5 Design and Implementation Requirements |
-| REQ-BUILD-002 | REST server | planned | 3.5 Design and Implementation Requirements |
-| REQ-BUILD-003 | React TypeScript frontend | planned | 3.5 Design and Implementation Requirements |
-| REQ-BUILD-004 | Continuous integration checks | proposed | 3.5 Design and Implementation Requirements |
-| REQ-DIST-001 | Server-browser deployment topology | planned | 3.5 Design and Implementation Requirements |
-| REQ-DIST-002 | Desktop application distribution | deferred | 3.5 Design and Implementation Requirements |
-| REQ-DIST-003 | Mobile availability | deferred | 3.5 Design and Implementation Requirements |
-| REQ-MAINT-001 | Modular backend organization | proposed | 3.5 Design and Implementation Requirements |
-| REQ-MAINT-002 | Database migrations | planned | 3.5 Design and Implementation Requirements |
-| REQ-REUSE-001 | Shared frontend reuse | planned | 3.5 Design and Implementation Requirements |
-| REQ-REUSE-002 | Reusable Rust core | proposed | 3.5 Design and Implementation Requirements |
-| REQ-PORT-001 | Supported operating environments | draft | 3.5 Design and Implementation Requirements |
-| REQ-COST-001 | No mandatory paid third-party service for core use | proposed | 3.5 Design and Implementation Requirements |
-| REQ-DEAD-001 | Milestone release sequence | proposed | 3.5 Design and Implementation Requirements |
-| REQ-POC-001 | SQLite server data-store proof of concept | draft | 3.5 Design and Implementation Requirements |
-| REQ-CM-001 | Versioned change management | proposed | 3.5 Design and Implementation Requirements |
-| REQ-ML-001 | No autonomous AI/ML catalog mutation without approval | proposed | 3.6 AI/ML Requirements |
+| Requirement ID | Title                                                 | Status   | Section                                    |
+| -------------- | ----------------------------------------------------- | -------- | ------------------------------------------ |
+| REQ-INT-001    | Browser-based library user interface                  | planned  | 3.1 External Interfaces                    |
+| REQ-INT-002    | Responsive user interface                             | proposed | 3.1 External Interfaces                    |
+| REQ-INT-003    | REST API interface                                    | planned  | 3.1 External Interfaces                    |
+| REQ-INT-004    | File import and download interface                    | planned  | 3.1 External Interfaces                    |
+| REQ-INT-005    | External metadata provider interface                  | planned  | 3.1 External Interfaces                    |
+| REQ-INT-006    | External image URL download interface                 | planned  | 3.1 External Interfaces                    |
+| REQ-INT-007    | Mounted-folder e-reader sync interface                | deferred | 3.1 External Interfaces                    |
+| REQ-INT-008    | Client database isolation                             | proposed | 3.1 External Interfaces                    |
+| REQ-FUNC-001   | Import EPUB files                                     | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-002   | Persist catalog records and assets                    | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-003   | Extract EPUB metadata                                 | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-004   | Edit catalog metadata                                 | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-005   | Write metadata to EPUB files                          | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-006   | Edit EPUB content                                     | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-007   | Version EPUB modifications                            | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-008   | Fetch online metadata                                 | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-009   | Review metadata candidates                            | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-010   | Detect duplicate imported books                       | proposed | 3.2 Functional Requirements                |
+| REQ-FUNC-011   | Display book card view                                | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-012   | Display author detail view                            | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-013   | Manage author images                                  | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-014   | Display series detail view                            | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-015   | Support related series                                | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-016   | Display author overview                               | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-017   | Display series overview                               | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-018   | Search and filter library                             | proposed | 3.2 Functional Requirements                |
+| REQ-FUNC-019   | Track owned books                                     | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-020   | Track reading status                                  | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-021   | Track completed reads                                 | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-022   | Track reading progress events                         | proposed | 3.2 Functional Requirements                |
+| REQ-FUNC-023   | Analyze books read per period                         | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-024   | Analyze pages read per period                         | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-025   | Analyze books by author                               | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-026   | Analyze reading speed by author                       | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-027   | Support remote updates through server                 | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-028   | Define automation rules on book import                | deferred | 3.2 Functional Requirements                |
+| REQ-FUNC-029   | Automation action for metadata fetching               | deferred | 3.2 Functional Requirements                |
+| REQ-FUNC-030   | Automation action for EPUB search-and-replace         | deferred | 3.2 Functional Requirements                |
+| REQ-FUNC-031   | Run long operations as background jobs                | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-032   | Display job status                                    | planned  | 3.2 Functional Requirements                |
+| REQ-FUNC-033   | Synchronize books to e-reader targets                 | deferred | 3.2 Functional Requirements                |
+| REQ-FUNC-034   | Support audiobook records                             | deferred | 3.2 Functional Requirements                |
+| REQ-FUNC-035   | Track book medium                                     | deferred | 3.2 Functional Requirements                |
+| REQ-FUNC-036   | Sync progress between e-book and audiobook            | deferred | 3.2 Functional Requirements                |
+| REQ-PERF-001   | Catalog browsing latency target                       | draft    | 3.3 Quality of Service Requirements        |
+| REQ-PERF-002   | Non-blocking long-running operations                  | proposed | 3.3 Quality of Service Requirements        |
+| REQ-PERF-003   | Asset storage growth visibility                       | proposed | 3.3 Quality of Service Requirements        |
+| REQ-SEC-001    | Authenticate protected operations                     | planned  | 3.3 Quality of Service Requirements        |
+| REQ-SEC-002    | Authorize user operations                             | draft    | 3.3 Quality of Service Requirements        |
+| REQ-SEC-003    | Validate external inputs                              | planned  | 3.3 Quality of Service Requirements        |
+| REQ-SEC-004    | Protect secrets and provider credentials              | proposed | 3.3 Quality of Service Requirements        |
+| REQ-SEC-005    | Support secure deployment over HTTPS                  | proposed | 3.3 Quality of Service Requirements        |
+| REQ-REL-001    | Transactional catalog mutations                       | planned  | 3.3 Quality of Service Requirements        |
+| REQ-REL-002    | Recover from failed EPUB modification                 | planned  | 3.3 Quality of Service Requirements        |
+| REQ-REL-003    | Handle metadata provider failure gracefully           | planned  | 3.3 Quality of Service Requirements        |
+| REQ-REL-004    | Idempotent import by checksum                         | proposed | 3.3 Quality of Service Requirements        |
+| REQ-AVAIL-001  | Restart recovery                                      | proposed | 3.3 Quality of Service Requirements        |
+| REQ-AVAIL-002  | Backup and restore support                            | planned  | 3.3 Quality of Service Requirements        |
+| REQ-OBS-001    | Structured server logs                                | proposed | 3.3 Quality of Service Requirements        |
+| REQ-OBS-002    | User-visible operation history                        | proposed | 3.3 Quality of Service Requirements        |
+| REQ-COMP-001   | External source attribution                           | proposed | 3.4 Compliance Requirements                |
+| REQ-COMP-002   | User-content responsibility notice                    | proposed | 3.4 Compliance Requirements                |
+| REQ-COMP-003   | Privacy of reading data                               | planned  | 3.4 Compliance Requirements                |
+| REQ-INST-001   | Self-hosted server installation                       | planned  | 3.5 Design and Implementation Requirements |
+| REQ-INST-002   | Configurable data directory                           | planned  | 3.5 Design and Implementation Requirements |
+| REQ-INST-003   | Containerized deployment package                      | planned  | 3.5 Design and Implementation Requirements |
+| REQ-BUILD-001  | Rust backend                                          | planned  | 3.5 Design and Implementation Requirements |
+| REQ-BUILD-002  | REST server                                           | planned  | 3.5 Design and Implementation Requirements |
+| REQ-BUILD-003  | React TypeScript frontend                             | planned  | 3.5 Design and Implementation Requirements |
+| REQ-BUILD-004  | Continuous integration checks                         | proposed | 3.5 Design and Implementation Requirements |
+| REQ-DIST-001   | Server-browser deployment topology                    | planned  | 3.5 Design and Implementation Requirements |
+| REQ-DIST-002   | Desktop application distribution                      | deferred | 3.5 Design and Implementation Requirements |
+| REQ-DIST-003   | Mobile availability                                   | deferred | 3.5 Design and Implementation Requirements |
+| REQ-MAINT-001  | Modular backend organization                          | proposed | 3.5 Design and Implementation Requirements |
+| REQ-MAINT-002  | Database migrations                                   | planned  | 3.5 Design and Implementation Requirements |
+| REQ-REUSE-001  | Shared frontend reuse                                 | planned  | 3.5 Design and Implementation Requirements |
+| REQ-REUSE-002  | Reusable Rust core                                    | proposed | 3.5 Design and Implementation Requirements |
+| REQ-PORT-001   | Supported operating environments                      | draft    | 3.5 Design and Implementation Requirements |
+| REQ-COST-001   | No mandatory paid third-party service for core use    | proposed | 3.5 Design and Implementation Requirements |
+| REQ-DEAD-001   | Milestone release sequence                            | proposed | 3.5 Design and Implementation Requirements |
+| REQ-POC-001    | SQLite server data-store proof of concept             | draft    | 3.5 Design and Implementation Requirements |
+| REQ-CM-001     | Versioned change management                           | proposed | 3.5 Design and Implementation Requirements |
+| REQ-ML-001     | No autonomous AI/ML catalog mutation without approval | proposed | 3.6 AI/ML Requirements                     |
 
 ### Appendix C: Initial Domain Concepts
 
