@@ -10,5 +10,5 @@
   - Provider responses are normalized into a common candidate format.
   - Provider errors are surfaced without crashing the import or edit workflow.
 - Verification Method: Test
-- More Information: Specific provider names, API keys, and rate limits are TBD.
+- More Information: Potential providers are Google Books and Open Library. Rate limits, API credentials and exact attributes are TBD.
 
