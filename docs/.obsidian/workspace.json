@@ -101,7 +101,7 @@
                 "showSearch": false,
                 "searchQuery": "",
                 "backlinkCollapsed": false,
-                "unlinkedCollapsed": true
+                "unlinkedCollapsed": false
               },
               "icon": "links-coming-in",
               "title": "Backlinks for SRS"
@@ -182,10 +182,11 @@
       "bases:Create new base": false
     }
   },
-  "active": "5a57f5b7134d5432",
+  "active": "344c709515338b57",
   "lastOpenFiles": [
+    "requirements/functional/REQ-FUNC-023.md",
     "SRS.md",
-    "SRS.md",
+    "requirements/interface/REQ-INT-006.md",
     "README.md.md"
   ]
 }

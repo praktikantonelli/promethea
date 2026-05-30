@@ -209,18 +209,18 @@ This section defines user, hardware, and software-facing interfaces at a logical
 This section defines externally observable product behavior grouped by library management, browsing, reading tracking, automation, and future media support.
 
 #### 3.2.1 Library Management and EPUB Processing
-| ID | Title |
-|----|-------|
-| [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md) | Import EPUB files |
+| ID                                                        | Title                              |
+| --------------------------------------------------------- | ---------------------------------- |
+| [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md) | Import EPUB files                  |
 | [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md) | Persist catalog records and assets |
-| [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md) | Extract EPUB metadata |
-| [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md) | Edit catalog metadata |
-| [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md) | Write metadata to EPUB files |
-| [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md) | Edit EPUB content |
-| [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md) | Version EPUB modification |
-| [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md) | Fetch online metadata |
-| [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) | Review metadata candidates |
-| [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md) | Detect duplicate imported books |
+| [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md) | Extract EPUB metadata              |
+| [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md) | Edit catalog metadata              |
+| [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md) | Write metadata to EPUB files       |
+| [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md) | Edit EPUB content                  |
+| [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md) | Version EPUB modification          |
+| [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md) | Fetch online metadata              |
+| [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) | Review metadata candidates         |
+| [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md) | Detect duplicate imported books    |
 
 
 #### 3.2.2 Browsing, Authors, and Series
@@ -304,16 +304,17 @@ This section defines performance, security, reliability, availability, and obser
 
 
 #### 3.3.5 Observability
-| ID | Title |
-| -------------- | --------------- |
-| [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md) | Structured server logs |
+| ID                                                         | Title                          |
+| ---------------------------------------------------------- | ------------------------------ |
+| [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md) | Structured server logs         |
 | [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md) | User-visible operation history |
 
 
 ### 3.4 Compliance
 This section defines compliance-oriented requirements derived from user-content handling, external metadata/image sources, and privacy of reading data.
-| ID | Title |
-| -------------- | --------------- |
+
+| ID  | Title |
+| --- | ----- |
 | [REQ-COMP-001](./requirements/compliance/REQ-COMP-001.md) | External source attribution |
 | [REQ-COMP-002](./requirements/compliance/REQ-COMP-002.md) | User-content responsibility notice |
 | [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md) | Privacy of reading data |
