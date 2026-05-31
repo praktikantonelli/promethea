@@ -10,4 +10,4 @@
   - The failed operation creates a failed job or operation record with an error message.
   - No book record points to a missing current EPUB file after the failure.
 - Verification Method: Test
-- More Information: Related to REQ-FUNC-007.
+- More Information: Related to [REQ-FUNC-007](./../functional/REQ-FUNC-007.md).
