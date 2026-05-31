@@ -10,4 +10,4 @@
   - The application does not require mixed-content HTTP calls from an HTTPS frontend.
   - Cookie or token settings are compatible with HTTPS deployment.
 - Verification Method: Inspection
-- More Information: TLS termination may be handled by a reverse proxy rather than the application process.
+- More Information: TLS termination may be handled by a reverse proxy rather than the application process. This requirement may be too strict because the project is supposed to be self-hosted and only exposed locally; whether the user exposes it to the web is their choice. 
