@@ -10,4 +10,4 @@
   - The server exposes the REST API and frontend from the configured host/port or reverse-proxy path.
   - The installation documentation identifies data directory, configuration, and backup locations.
 - Verification Method: Demonstration
-- More Information: Container packaging is covered by REQ-INST-003.
+- More Information: Container packaging is covered by [REQ-INST-003](./REQ-INST-003.md).
