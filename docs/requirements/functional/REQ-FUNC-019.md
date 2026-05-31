@@ -3,7 +3,7 @@
 - Status: planned
 - Date: 2026-05-26
 - Title: Track owned books
-- Statement: The system shall track whether a book or edition is owned by the user.
+- Statement: The system shall allow tracking books that are owned, and separately books that are not yet owned but wanted.
 - Rationale: The Goodreads-replacement goal includes tracking owned books.
 - Acceptance Criteria:
   - A user can mark a book or edition as owned or not owned.
