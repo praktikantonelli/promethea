@@ -209,21 +209,21 @@ This section defines user, hardware, and software-facing interfaces at a logical
 This section defines externally observable product behavior grouped by library management, browsing, reading tracking, automation, and future media support.
 
 #### 3.2.1 Library Management and EPUB Processing
-| ID                                                        | Title                              |
-| --------------------------------------------------------- | ---------------------------------- |
-| [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md) | Import EPUB files                  |
-| [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md) | Persist catalog records and assets |
-| [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md) | Extract EPUB metadata              |
-| [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md) | Edit catalog metadata              |
-| [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md) | Write metadata to EPUB files       |
-| [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md) | Edit EPUB content                  |
-| [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md) | Version EPUB modification          |
-| [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md) | Fetch online metadata              |
-| [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) | Review metadata candidates         |
-| [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md) | Detect duplicate imported books    |
-| [[REQ-FUNC-037]]                                          | Update EPUB cover image            |
-|                                                           |                                    |
-|                                                           |                                    |
+| ID                                                        | Title                               |
+| --------------------------------------------------------- | ----------------------------------- |
+| [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md) | Import EPUB files                   |
+| [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md) | Persist catalog records and assets  |
+| [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md) | Extract EPUB metadata               |
+| [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md) | Edit catalog metadata               |
+| [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md) | Write metadata to EPUB files        |
+| [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md) | Edit EPUB content                   |
+| [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md) | Version EPUB modification           |
+| [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md) | Fetch online metadata               |
+| [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) | Review metadata candidates          |
+| [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md) | Detect duplicate imported books     |
+| [[REQ-FUNC-037]]                                          | Update EPUB cover image             |
+| [[REQ-FUNC-038]]                                          | Automatic EPUB cover image fetching |
+|                                                           |                                     |
 
 
 #### 3.2.2 Browsing, Authors, and Series
