@@ -10,4 +10,4 @@
   - The import response indicates that an identical file already exists.
   - The system does not create a new active duplicate record unless the user explicitly confirms keeping a duplicate.
 - Verification Method: Test
-- More Information: Related to REQ-FUNC-010.
+- More Information: Related to [REQ-FUNC-010](./../functional/REQ-FUNC-010.md).
