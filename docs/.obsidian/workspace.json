@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "SRS.md",
+                "file": "requirements/compliance/REQ-COMP-002.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SRS"
+              "title": "REQ-COMP-002"
             }
           }
         ]
@@ -53,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "srs",
+                "query": "Open Library",
                 "matchingCase": true,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -156,17 +156,17 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "SRS.md",
+                "file": "requirements/compliance/REQ-COMP-002.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of SRS"
+              "title": "Outline of REQ-COMP-002"
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
@@ -185,13 +185,41 @@
   },
   "active": "344c709515338b57",
   "lastOpenFiles": [
-    "requirements/interface/REQ-INT-008.md",
+    "requirements/security/REQ-SEC-001.md~",
+    "requirements/security/REQ-SEC-002.md~",
+    "requirements/security/REQ-SEC-003.md~",
+    "requirements/security/REQ-SEC-004.md~",
+    "requirements/security/REQ-SEC-005.md~",
+    "requirements/reusability/REQ-REUSE-002.md~",
+    "requirements/reusability/REQ-REUSE-001.md~",
+    "requirements/reliability/REQ-REL-001.md~",
+    "requirements/reliability/REQ-REL-002.md~",
+    "requirements/reliability/REQ-REL-003.md~",
+    "requirements/reliability/REQ-REL-004.md~",
+    "requirements/compliance/REQ-COMP-001.md",
+    "requirements/compliance/REQ-COMP-003.md",
+    "requirements/compliance/REQ-COMP-002.md",
+    "requirements/cost/REQ-COST-001.md",
+    "requirements/change-management/REQ-CM-001.md",
+    "requirements/build/REQ-BUILD-004.md",
+    "requirements/build/REQ-BUILD-003.md",
+    "requirements/build/REQ-BUILD-002.md",
+    "requirements/build/REQ-BUILD-001.md",
+    "requirements/functional/REQ-FUNC-040.md",
+    "requirements/availability/REQ-AVAIL-001.md",
+    "requirements/availability/REQ-AVAIL-002.md",
+    "requirements/req-template.md",
     "SRS.md",
     "requirements/proof-of-concept/REQ-POC-001.md",
-    "README.md.md",
-    "requirements/interface/REQ-INT-005.md",
-    "requirements/interface/REQ-INT-002.md",
-    "requirements/functional/REQ-FUNC-023.md",
-    "requirements/interface/REQ-INT-006.md"
+    "requirements/portability/REQ-PORT-001.md",
+    "requirements/installation/REQ-INST-001.md",
+    "requirements/reliability/REQ-REL-004.md",
+    "requirements/functional/REQ-FUNC-010.md",
+    "requirements/reliability/REQ-REL-002.md",
+    "requirements/functional/REQ-FUNC-007.md",
+    "requirements/security/REQ-SEC-005.md",
+    "requirements/security/REQ-SEC-002.md",
+    "requirements/security/REQ-SEC-001.md",
+    "requirements/performance/REQ-PERF-003.md"
   ]
 }

@@ -1,13 +1,22 @@
+---
+status: proposed
+date: 2026-05-26
+---
 # REQ-OBS-001 — Structured server logs
-- ID: REQ-OBS-001
-- Status: proposed
-- Date: 2026-05-26
-- Title: Structured server logs
-- Statement: The system shall produce structured server logs for API requests, job execution, import operations, metadata provider calls, and errors.
-- Rationale: Operators need to diagnose failures in a self-hosted server without inspecting source code.
-- Acceptance Criteria:
-  - Logs include timestamp, severity, component, and request or job correlation identifier when applicable.
-  - Sensitive values such as passwords, tokens, and provider API keys are not logged.
-  - Errors include enough context to identify the affected operation without exposing private secrets.
-- Verification Method: Inspection
-- More Information: Log format and retention are TBD.
+
+## Statement 
+The system shall produce structured server logs for API requests, job execution, import operations, metadata provider calls, and errors.
+
+## Rationale 
+Operators need to diagnose failures in a self-hosted server without inspecting source code.
+
+## Acceptance Criteria
+- Logs include timestamp, severity, component, and request or job correlation identifier when applicable.
+- Sensitive values such as passwords, tokens, and provider API keys are not logged.
+- Errors include enough context to identify the affected operation without exposing private secrets.
+
+## Verification Method 
+Inspection
+
+## More Information 
+Log format and retention are TBD.

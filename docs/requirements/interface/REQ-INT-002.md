@@ -1,12 +1,21 @@
+---
+status: proposed
+date: 2026-05-26
+---
 # REQ-INT-002 — Responsive user interface
-- ID: REQ-INT-002
-- Status: proposed
-- Date: 2026-05-26
-- Title: Responsive user interface
-- Statement: The system shall provide responsive layouts for desktop/laptop screens and mobile-width screens.
-- Rationale: The project includes a nice-to-have goal of availability across desktop/laptop, server browser, and mobile contexts.
-- Acceptance Criteria:
-  - Book, author, series, and reading-status views remain usable at 390 px, 768 px, and 1280 px viewport widths.
-  - Automated or manual UI checks cover at least one mobile-width and one desktop-width viewport.
-- Verification Method: Test
-- More Information: Native mobile applications are deferred; this requirement covers web responsiveness only.
+
+## Statement 
+The system shall provide responsive layouts for desktop/laptop screens and mobile-width screens.
+
+## Rationale 
+The project includes a nice-to-have goal of availability across desktop/laptop, server browser, and mobile contexts.
+
+## Acceptance Criteria
+- Book, author, series, and reading-status views remain usable at 390 px, 768 px, and 1280 px viewport widths.
+- Automated or manual UI checks cover at least one mobile-width and one desktop-width viewport.
+
+## Verification Method 
+Test
+
+## More Information 
+Native mobile applications are deferred; this requirement covers web responsiveness only.

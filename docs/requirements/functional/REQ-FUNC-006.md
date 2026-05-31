@@ -1,13 +1,22 @@
+---
+status: planned
+date: 2026-05-26
+---
 # REQ-FUNC-006 — Edit EPUB content
-- ID: REQ-FUNC-006
-- Status: planned
-- Date: 2026-05-26
-- Title: Edit EPUB content
-- Statement: The system shall support authenticated editing of EPUB textual content for selected books.
-- Rationale: The draft explicitly requires editing e-book content, including later automation such as search-and-replace.
-- Acceptance Criteria:
-  - A user can open an EPUB content-edit workflow for an imported EPUB.
-  - The system can save a textual content change to a new EPUB file version.
-  - The user receives validation feedback if the edited EPUB cannot be saved in a usable package structure.
-- Verification Method: Demonstration
-- More Information: The granularity and UX of content editing are TBD; initial scope may be search-and-replace and limited XHTML editing.
+
+## STatement
+The system shall support authenticated editing of EPUB textual content for selected books.
+
+## Rationale
+The draft explicitly requires editing e-book content, including later automation such as search-and-replace.
+
+## Acceptance Criteria
+- A user can open an EPUB content-edit workflow for an imported EPUB.
+- The system can save a textual content change to a new EPUB file version.
+- The user receives validation feedback if the edited EPUB cannot be saved in a usable package structure.
+
+## Verification Method
+Demonstration
+
+## More Information
+The granularity and UX of content editing are TBD; initial scope may be search-and-replace and limited XHTML editing.

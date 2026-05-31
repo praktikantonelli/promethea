@@ -1,13 +1,22 @@
+---
+status: planned
+date: 2026-05-26
+---
 # REQ-MAINT-002 — Database migrations
-- ID: REQ-MAINT-002
-- Status: planned
-- Date: 2026-05-26
-- Title: Database migrations
-- Statement: The system shall manage persistent schema changes through versioned database migrations.
-- Rationale: Library data must survive upgrades, and schema changes must be traceable.
-- Acceptance Criteria:
-  - A fresh installation can apply all migrations from empty state.
-  - An existing test database can migrate to the current schema.
-  - Migration files are version-controlled.
-- Verification Method: Test
-- More Information: Database engine is TBD; migration tooling should support the chosen engine.
+
+## Statement 
+The system shall manage persistent schema changes through versioned database migrations.
+
+## Rationale 
+Library data must survive upgrades, and schema changes must be traceable.
+
+## Acceptance Criteria
+- A fresh installation can apply all migrations from empty state.
+- An existing test database can migrate to the current schema.
+- Migration files are version-controlled.
+
+## Verification Method 
+Test
+
+## More Information 
+Database engine is TBD; migration tooling should support the chosen engine.

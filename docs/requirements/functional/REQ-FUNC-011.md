@@ -1,14 +1,23 @@
+---
+status: planned
+date: 2026-05-26
+---
 # REQ-FUNC-011 — Display book card view
-- ID: REQ-FUNC-011
-- Status: planned
-- Date: 2026-05-26
-- Title: Display book card view
-- Statement: The system shall display a card-based overview of books with cover images when available.
-- Rationale: This is a stated calibre-web replacement requirement.
-- Acceptance Criteria:
-  - The book overview renders each visible book as a card.
-  - Each card displays title and cover image, or a generated placeholder when no cover is available.
-  - Selecting a card opens the book detail view.
-- Verification Method: Demonstration
-- More Information: Sorting and filtering controls are covered by REQ-FUNC-018.
+
+## Statement
+The system shall display a card-based overview of books with cover images when available.
+
+## Rationale
+This is a stated calibre-web replacement requirement.
+
+## Acceptance Criteria
+- The book overview renders each visible book as a card.
+- Each card displays title and cover image, or a generated placeholder when no cover is available.
+- Selecting a card opens the book detail view.
+
+## Verification Method
+Demonstration
+
+## More Information
+Sorting and filtering controls are covered by REQ-FUNC-018.
 

@@ -1,13 +1,22 @@
+---
+status: planned
+date: 2026-05-26
+---
 # REQ-FUNC-027 — Support remote updates through server
-- ID: REQ-FUNC-027
-- Status: planned
-- Date: 2026-05-26
-- Title: Support remote updates through server
-- Statement: The system shall allow authenticated users to update library metadata and reading data through the server from devices with internet connectivity.
-- Rationale: The draft requires updates from anywhere with internet connection.
-- Acceptance Criteria:
-  - A supported remote browser or client can authenticate to the server.
-  - The user can perform at least reading-status updates remotely.
-  - The server applies remote changes transactionally and returns success or failure.
-- Verification Method: Demonstration
-- More Information: Network exposure method, domain, VPN, or reverse proxy setup is deployment-specific and TBD.
+
+## Statement 
+The system shall allow authenticated users to update library metadata and reading data through the server from devices with internet connectivity.
+
+## Rationale 
+The draft requires updates from anywhere with internet connection.
+
+## Acceptance Criteria
+- A supported remote browser or client can authenticate to the server.
+- The user can perform at least reading-status updates remotely.
+- The server applies remote changes transactionally and returns success or failure.
+
+## Verification Method 
+Demonstration
+
+## More Information 
+Network exposure method, domain, VPN, or reverse proxy setup is deployment-specific and TBD.

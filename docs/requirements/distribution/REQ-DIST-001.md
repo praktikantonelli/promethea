@@ -1,13 +1,22 @@
+---
+status: planned
+date: 2026-05-26
+---
 # REQ-DIST-001 — Server-browser deployment topology
-- ID: REQ-DIST-001
-- Status: planned
-- Date: 2026-05-26
-- Title: Server-browser deployment topology
-- Statement: The system shall support a deployment topology in which a headless server exposes the application to users through a browser.
-- Rationale: The draft calls for server availability through a browser and calibre-web-style access.
-- Acceptance Criteria:
-  - The server can run without a local GUI.
-  - A browser can access the UI served by or connected to the server.
-  - Server data persists independently of browser sessions.
-- Verification Method: Demonstration
-- More Information: None.
+
+## Statement
+The system shall support a deployment topology in which a headless server exposes the application to users through a browser.
+
+## Rationale
+The draft calls for server availability through a browser and calibre-web-style access.
+
+## Acceptance Criteria
+- The server can run without a local GUI.
+- A browser can access the UI served by or connected to the server.
+- Server data persists independently of browser sessions.
+
+## Verification Method
+Demonstration
+
+## More Information
+None.

@@ -1,13 +1,22 @@
+---
+status: deferred
+date: 2026-05-26
+---
 # REQ-FUNC-035 — Track book medium
-- ID: REQ-FUNC-035
-- Status: deferred
-- Date: 2026-05-26
-- Title: Track book medium
-- Statement: The system shall, in a future release, track book medium values including e-book, print, and audiobook.
-- Rationale: The draft lists book-medium tracking as a potential future feature.
-- Acceptance Criteria:
-  - A book or edition can be associated with a medium value.
-  - Ownership and reading views can distinguish records by medium.
-  - Unknown or unspecified medium can be represented without data loss.
-- Verification Method: Inspection
-- More Information: Future feature; early data model should avoid blocking this extension.
+
+## Statement
+The system shall, in a future release, track book medium values including e-book, print, and audiobook.
+
+## Rationale
+The draft lists book-medium tracking as a potential future feature.
+
+## Acceptance Criteria
+- A book or edition can be associated with a medium value.
+- Ownership and reading views can distinguish records by medium.
+- Unknown or unspecified medium can be represented without data loss.
+
+## Verification Method
+Inspection
+
+## More Information
+Future feature; early data model should avoid blocking this extension.

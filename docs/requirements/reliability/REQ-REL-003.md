@@ -1,13 +1,22 @@
+---
+status: planned
+date: 2026-05-26
+---
 # REQ-REL-003 — Handle metadata provider failure gracefully
-- ID: REQ-REL-003
-- Status: planned
-- Date: 2026-05-26
-- Title: Handle metadata provider failure gracefully
-- Statement: The system shall continue to support manual catalog operations when external metadata providers are unavailable or return errors.
-- Rationale: The application should not depend on third-party service availability for core library management.
-- Acceptance Criteria:
-  - A provider timeout or error does not crash the server.
-  - The user receives a visible provider-error message.
-  - Manual metadata editing remains available after provider failure.
-- Verification Method: Test
-- More Information: Provider timeout durations are TBD.
+
+## Statement 
+The system shall continue to support manual catalog operations when external metadata providers are unavailable or return errors.
+
+## Rationale 
+The application should not depend on third-party service availability for core library management.
+
+## Acceptance Criteria
+- A provider timeout or error does not crash the server.
+- The user receives a visible provider-error message.
+- Manual metadata editing remains available after provider failure.
+
+## Verification Method 
+Test
+
+## More Information 
+Provider timeout durations are TBD.

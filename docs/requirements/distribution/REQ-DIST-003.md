@@ -1,13 +1,22 @@
+---
+status: deferred
+date: 2026-05-26
+---
 # REQ-DIST-003 — Mobile availability
-- ID: REQ-DIST-003
-- Status: deferred
-- Date: 2026-05-26
-- Title: Mobile availability
-- Statement: The system should provide mobile availability through a responsive web UI, PWA, or native wrapper that reuses the shared frontend where practical.
-- Rationale: Mobile availability is a nice-to-have and supports remote status updates from anywhere.
-- Acceptance Criteria:
-  - A mobile-width browser can perform reading-status updates.
-  - The mobile experience reuses the shared frontend codebase where practical.
-  - Native mobile packaging is not required unless approved in a later milestone.
-- Verification Method: Demonstration
-- More Information: Deferred; initial implementation may satisfy this through responsive web only.
+
+## Statement
+The system should provide mobile availability through a responsive web UI, PWA, or native wrapper that reuses the shared frontend where practical.
+
+## Rationale
+Mobile availability is a nice-to-have and supports remote status updates from anywhere.
+
+## Acceptance Criteria
+- A mobile-width browser can perform reading-status updates.
+- The mobile experience reuses the shared frontend codebase where practical.
+- Native mobile packaging is not required unless approved in a later milestone.
+
+## Verification Method
+Demonstration
+
+## More Information
+Deferred; initial implementation may satisfy this through responsive web only.
