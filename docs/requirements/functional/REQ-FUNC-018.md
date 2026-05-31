@@ -9,6 +9,7 @@
   - Search by title returns books with matching title fields.
   - Search by author returns books linked to matching authors.
   - Search by series returns books linked to matching series.
+  - The user can combine multiple search/filter terms (e.g., supply an author *and* a title).
   - No-result states are shown clearly.
 - Verification Method: Test
-- More Information: Advanced search over EPUB full text is out of initial scope unless explicitly added.
+- More Information: Advanced search over EPUB full text is out of initial scope unless explicitly added. 
