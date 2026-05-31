@@ -10,5 +10,5 @@
   - Books on the author detail page link to their book detail pages.
   - The page displays the author image when an image asset exists.
 - Verification Method: Demonstration
-- More Information: Author roles such as translator/editor are TBD but should be represented in the data model.
+- More Information: Author roles such as translator/editor are not relevant and will not be supported.
 
