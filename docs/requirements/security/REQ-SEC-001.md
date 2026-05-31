@@ -10,4 +10,4 @@
   - Authenticated requests with valid credentials can access authorized protected endpoints.
   - The login/session/token mechanism is documented before v0.6.
 - Verification Method: Test
-- More Information: Authentication mechanism and multi-user model are TBD.
+- More Information: Authentication mechanism is TBD.
