@@ -10,4 +10,4 @@
   - The current status is visible on the book detail page and in reading views.
   - Changing a status records the change time or creates a reading event.
 - Verification Method: Test
-- More Information: Additional statuses such as want-to-read or paused are TBD.
+- More Information: Additional statuses such as paused are TBD.
