@@ -7,7 +7,7 @@
 - Rationale: E-book, cover, author-image, original, and versioned files can grow over time; users need visibility to manage storage.
 - Acceptance Criteria:
   - An administrator can view total managed storage usage.
-  - The storage usage view includes at least book files, covers, author images, originals, and previous versions when those categories exist.
+  - The storage usage view includes at least book files, covers, author images.
   - The values update after import or deletion operations within a documented refresh interval.
 - Verification Method: Demonstration
 - More Information: Quotas are TBD and not required by this requirement.
