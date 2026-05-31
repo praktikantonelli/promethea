@@ -221,6 +221,9 @@ This section defines externally observable product behavior grouped by library m
 | [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md) | Fetch online metadata              |
 | [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) | Review metadata candidates         |
 | [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md) | Detect duplicate imported books    |
+| [[REQ-FUNC-037]]                                          | Update EPUB cover image            |
+|                                                           |                                    |
+|                                                           |                                    |
 
 
 #### 3.2.2 Browsing, Authors, and Series
