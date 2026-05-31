@@ -227,16 +227,17 @@ This section defines externally observable product behavior grouped by library m
 
 
 #### 3.2.2 Browsing, Authors, and Series
-| ID | Title |
-|----|-------|
-| [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md) | Display book card view |
+| ID                                                        | Title                      |
+| --------------------------------------------------------- | -------------------------- |
+| [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md) | Display book card view     |
 | [REQ-FUNC-012](./requirements/functional/REQ-FUNC-012.md) | Display author detail view |
-| [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md) | Manage author images |
+| [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md) | Manage author images       |
 | [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md) | Display series detail view |
-| [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md) | Support related series |
-| [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md) | Display author overview |
-| [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md) | Display series overview |
-| [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md) | Search and filter library |
+| [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md) | Support related series     |
+| [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md) | Display author overview    |
+| [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md) | Display series overview    |
+| [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md) | Search and filter library  |
+| [REQ-FUNC-040](./requirements/functional/REQ-FUNC-040.md) | Display book table view    |
 
 #### 3.2.3 Reading Tracking and Analytics
 | ID | Title |
