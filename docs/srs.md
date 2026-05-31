@@ -223,7 +223,7 @@ This section defines externally observable product behavior grouped by library m
 | [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md) | Detect duplicate imported books     |
 | [[REQ-FUNC-037]]                                          | Update EPUB cover image             |
 | [[REQ-FUNC-038]]                                          | Automatic EPUB cover image fetching |
-|                                                           |                                     |
+| [[REQ-FUNC-039]]                                          | Manual EPUB cover image fetching    |
 
 
 #### 3.2.2 Browsing, Authors, and Series
