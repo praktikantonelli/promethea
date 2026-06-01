@@ -7,7 +7,7 @@ date: 2026-05-26
 ## Statement
 The backend server and core application logic shall be implemented in Rust.
 
-# Rationale
+## Rationale
 The draft explicitly requires a Rust backend.
 
 ## Acceptance Criteria
