@@ -221,9 +221,9 @@ This section defines externally observable product behavior grouped by library m
 | [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md) | Fetch online metadata               |
 | [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) | Review metadata candidates          |
 | [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md) | Detect duplicate imported books     |
-| [[REQ-FUNC-037]]                                          | Update EPUB cover image             |
-| [[REQ-FUNC-038]]                                          | Automatic EPUB cover image fetching |
-| [[REQ-FUNC-039]]                                          | Manual EPUB cover image fetching    |
+| [REQ-FUNC-037](./requirements/functional/REQ-FUNC-037.md)                                          | Update EPUB cover image             |
+| [REQ-FUNC-038](./requirements/functional/REQ-FUNC-038.md)                                          | Automatic EPUB cover image fetching |
+| [REQ-FUNC-039](./requirements/functional/REQ-FUNC-039.md)                                          | Manual EPUB cover image fetching    |
 
 
 #### 3.2.2 Browsing, Authors, and Series

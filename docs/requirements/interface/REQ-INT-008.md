@@ -19,4 +19,4 @@ The server should remain the authoritative consistency boundary for all clients,
 Inspection
 
 ## More Information 
-The current potential candidate for a database is SQLite, as tracked in [[REQ-POC-001]]. If that POC fails, other options shall be explored.
+The current potential candidate for a database is SQLite, as tracked in [REQ-POC-001](./../proof-of-concept/REQ-POC-001.md). If that POC fails, other options shall be explored.

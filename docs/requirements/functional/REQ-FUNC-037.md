@@ -20,4 +20,4 @@ Test
 Testable with E2E test.
 
 ## More Information
-Related requirement: [[REQ-FUNC-038]]
+Related requirement: [REQ-FUNC-038](./REQ-FUNC-038.md).

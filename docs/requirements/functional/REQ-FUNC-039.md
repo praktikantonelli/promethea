@@ -20,4 +20,4 @@ Test
 Testable with E2E test.
 
 ## More Information
-Related to [[REQ-INT-006]]. 
+Related to [REQ-INT-006](./../interface/REQ-INT-006.md). 

@@ -20,4 +20,4 @@ Test
 Testable with E2E test.
 
 ## More Information
-Potential providers for alternative images are the same as for other metadata, listed in [[REQ-INT-005]].
+Potential providers for alternative images are the same as for other metadata, listed in [REQ-INT-005](./../interface/REQ-INT-005.md).
