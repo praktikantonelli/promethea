@@ -146,33 +146,33 @@ Accessibility needs are not yet specified. At minimum, UI requirements should be
 
 ### 2.5 Assumptions and Dependencies
 
-| ID | Assumption or Dependency | Impact if False | Mitigation / Follow-up |
-|----|--------------------------|-----------------|------------------------|
-| A-001 | Initial deployment is personal/self-hosted or small-household, not public multi-tenant SaaS. | Security, scalability, and admin requirements would need expansion. | Confirm target deployment model. |
-| A-002 | EPUB is the first required e-book format. | If PDF/MOBI/AZW are required early, import, metadata, and editing requirements expand. | Confirm file-format roadmap. |
-| A-003 | Users have rights to upload, modify, and sync their own e-book files. | Legal/compliance documentation may need stricter controls. | Add user-content responsibility notice. |
-| A-004 | External metadata/image providers may be unavailable or rate-limited. | Core workflows must continue manually without providers. | Keep manual editing mandatory; provider integrations optional. |
-| A-005 | Mobile support can initially be responsive web/PWA rather than native app. | Native packaging scope would increase. | Confirm mobile strategy before v0.7/v0.8. |
-| A-006 | Browser reading is not required for Tolino-cloud replacement scope. | Adding browser reading would create a major reader UI/rendering feature set. | Keep browser reading out of initial scope unless approved. |
-| A-007 | A single authoritative server database may be sufficient if clients communicate through REST. | If multi-instance or high-write deployment is required, database architecture may need Postgres or similar. | Run SQLite POC and confirm expected scale. |
-| A-008 | Exact metadata providers are not yet chosen. | Provider-specific fields, credentials, rate limits, and attribution cannot be fully specified. | Select providers and add provider interface specs. |
-| A-009 | Exact e-reader sync target/protocol is not yet chosen. | Device sync requirements remain deferred and high-level. | Validate target devices and protocols before v0.8. |
-| A-010 | No core AI/ML model is required initially. | If AI/ML matching or recommendations are added, Section 3.6 must be expanded. | Require ML change review before adding models. |
+| ID    | Assumption or Dependency                                                                      | Impact if False                                                                                             | Mitigation / Follow-up                                         |
+| ----- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| A-001 | Initial deployment is personal/self-hosted or small-household, not public multi-tenant SaaS.  | Security, scalability, and admin requirements would need expansion.                                         | Confirm target deployment model.                               |
+| A-002 | EPUB is the first required e-book format.                                                     | If PDF/MOBI/AZW are required early, import, metadata, and editing requirements expand.                      | Confirm file-format roadmap.                                   |
+| A-003 | Users have rights to upload, modify, and sync their own e-book files.                         | Legal/compliance documentation may need stricter controls.                                                  | Add user-content responsibility notice.                        |
+| A-004 | External metadata/image providers may be unavailable or rate-limited.                         | Core workflows must continue manually without providers.                                                    | Keep manual editing mandatory; provider integrations optional. |
+| A-005 | Mobile support can initially be responsive web/PWA rather than native app.                    | Native packaging scope would increase.                                                                      | Confirm mobile strategy before v0.7/v0.8.                      |
+| A-006 | Browser reading is not required for Tolino-cloud replacement scope.                           | Adding browser reading would create a major reader UI/rendering feature set.                                | Keep browser reading out of initial scope unless approved.     |
+| A-007 | A single authoritative server database may be sufficient if clients communicate through REST. | If multi-instance or high-write deployment is required, database architecture may need Postgres or similar. | Run SQLite POC and confirm expected scale.                     |
+| A-008 | Exact metadata providers are not yet chosen.                                                  | Provider-specific fields, credentials, rate limits, and attribution cannot be fully specified.              | Select providers and add provider interface specs.             |
+| A-009 | Exact e-reader sync target/protocol is not yet chosen.                                        | Device sync requirements remain deferred and high-level.                                                    | Validate target devices and protocols before v0.8.             |
+| A-010 | No core AI/ML model is required initially.                                                    | If AI/ML matching or recommendations are added, Section 3.6 must be expanded.                               | Require ML change review before adding models.                 |
 
 ### 2.6 Apportioning of Requirements
 
-| Milestone | Scope Summary | Primary Requirement IDs | Status |
-|-----------|---------------|-------------------------|--------|
-| v0.1 Foundation & Data Model | Backend/frontend skeleton, REST API baseline, database/storage setup, migration approach, core model | REQ-INT-003, REQ-INT-008, REQ-FUNC-002, REQ-BUILD-001, REQ-BUILD-002, REQ-BUILD-003, REQ-MAINT-001, REQ-MAINT-002, REQ-POC-001 | planned/draft |
-| v0.2 Web Library Alpha | EPUB import, catalog, book/author/series browsing, card views, basic search | REQ-FUNC-001 through REQ-FUNC-018, REQ-INT-001, REQ-INT-004 | planned/proposed |
-| v0.3 Reading Tracker Alpha | Owned books, reading status, completed reads, progress/events, analytics foundation | REQ-FUNC-019 through REQ-FUNC-027, REQ-COMP-003 | planned/proposed |
-| v0.4 EPUB Management Beta | EPUB metadata writing, content editing, file versioning, safe modification, related series | REQ-FUNC-005 through REQ-FUNC-007, REQ-FUNC-014, REQ-FUNC-015, REQ-REL-002 | planned |
-| v0.5 Metadata, Import & Automation | Metadata provider abstraction, candidate review, author images, duplicate detection, automation, jobs | REQ-INT-005, REQ-INT-006, REQ-FUNC-008 through REQ-FUNC-010, REQ-FUNC-028 through REQ-FUNC-032 | planned/deferred |
-| v0.6 Self-Hosted Server Release | Authentication, HTTPS deployment support, container install, backup/restore, observability | REQ-SEC-001 through REQ-SEC-005, REQ-INST-001 through REQ-INST-003, REQ-AVAIL-001, REQ-AVAIL-002, REQ-OBS-001, REQ-OBS-002 | planned/proposed |
-| v0.7 Desktop App Alpha | Desktop/laptop distribution, shared UI reuse, local workflows | REQ-DIST-002, REQ-REUSE-001, REQ-REUSE-002, REQ-PORT-001 | deferred/proposed |
-| v0.8 E-reader / Device Sync | Folder/mounted device sync target and sync job history | REQ-INT-007, REQ-FUNC-033 | deferred |
-| v1.0 Stable Personal Library Release | Stabilization across library, reading, server, backup, security, docs | All non-deferred planned/proposed requirements accepted for v1.0 | planned |
-| v1.1+ Audiobooks & Multi-Medium Support | Audiobook support, medium tracking, e-book/audiobook progress sync | REQ-FUNC-034, REQ-FUNC-035, REQ-FUNC-036 | deferred |
+| Milestone                               | Scope Summary                                                                                         | Primary Requirement IDs                                                                                                                                                   | Status            |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| v0.1 Foundation & Data Model            | Backend/frontend skeleton, REST API baseline, database/storage setup, migration approach, core model  | [REQ-INT-003](./requirements/interface/REQ-INT-003.md), [REQ-INT-008](./requirements/interface/REQ-INT-008.md), [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md), [REQ-BUILD-001](./requirements/build/REQ-BUILD-001.md), [REQ-BUILD-002](./requirements/build/REQ-BUILD-002.md), [REQ-BUILD-003](./requirements/build/REQ-BUILD-003.md), [REQ-MAINT-001](./requirements/maintainability/REQ-MAINT-001.md), [REQ-MAINT-002](./requirements/maintainability/REQ-MAINT-002.md), [REQ-POC-001](./requirements/proof-of-concept/REQ-POC-001.md) | planned/draft     |
+| v0.2 Web Library Alpha                  | EPUB import, catalog, book/author/series browsing, card views, basic search                           | [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md), [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md), [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md), [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md), [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md), [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md), [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md), [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md), [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md), [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md), [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md), [REQ-FUNC-012](./requirements/functional/REQ-FUNC-012.md), [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md), [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md), [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md), [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md), [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md), [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md),  [REQ-INT-001](./requirements/interface/REQ-INT-001.md), [REQ-INT-004](./requirements/interface/REQ-INT-004.md)                                                                                                               | planned/proposed  |
+| v0.3 Reading Tracker Alpha              | Owned books, reading status, completed reads, progress/events, analytics foundation                   | [REQ-FUNC-019](./requirements/functional/REQ-FUNC-019.md), [REQ-FUNC-020](./requirements/functional/REQ-FUNC-020.md), [REQ-FUNC-021](./requirements/functional/REQ-FUNC-021.md), [REQ-FUNC-022](./requirements/functional/REQ-FUNC-022.md), [REQ-FUNC-023](./requirements/functional/REQ-FUNC-023.md), [REQ-FUNC-024](./requirements/functional/REQ-FUNC-024.md), [REQ-FUNC-025](./requirements/functional/REQ-FUNC-025.md), [REQ-FUNC-026](./requirements/functional/REQ-FUNC-026.md), [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md), [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md)                                                                                                                           | planned/proposed  |
+| v0.4 EPUB Management Beta               | EPUB metadata writing, content editing, file versioning, safe modification, related series            | [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md), [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md), [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md), [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md), [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md), [REQ-REL-002](./requirements/reliability/REQ-REL-002.md)                                                                                                | planned           |
+| v0.5 Metadata, Import & Automation      | Metadata provider abstraction, candidate review, author images, duplicate detection, automation, jobs | [REQ-INT-005](./requirements/interface/REQ-INT-005.md), [REQ-INT-006](./requirements/interface/REQ-INT-006.md),  [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md), [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md),  [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md), [REQ-FUNC-029](./requirements/functional/REQ-FUNC-029.md), [REQ-FUNC-030](./requirements/functional/REQ-FUNC-030.md), [REQ-FUNC-031](./requirements/functional/REQ-FUNC-031.md), [REQ-FUNC-032](./requirements/functional/REQ-FUNC-032.md)  | planned/deferred  |
+| v0.6 Self-Hosted Server Release         | Authentication, HTTPS deployment support, container install, backup/restore, observability            | [REQ-SEC-001](./requirements/security/REQ-SEC-001.md), [REQ-SEC-002](./requirements/security/REQ-SEC-002.md), [REQ-SEC-003](./requirements/security/REQ-SEC-003.md), [REQ-SEC-004](./requirements/security/REQ-SEC-004.md), [REQ-SEC-005](./requirements/security/REQ-SEC-005.md), [REQ-INST-001](./requirements/installation/REQ-INST-001.md), [REQ-INST-002](./requirements/installation/REQ-INST-002.md), [REQ-INST-003](./requirements/installation/REQ-INST-003.md), [REQ-AVAIL-001](./requirements/availability/REQ-AVAIL-001.md), [REQ-AVAIL-002](./requirements/availability/REQ-AVAIL-002.md), [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md), [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md)                                                | planned/proposed  |
+| v0.7 Desktop App Alpha                  | Desktop/laptop distribution, shared UI reuse, local workflows                                         | [REQ-DIST-002](./requirements/distribution/REQ-DIST-002.md), [REQ-REUSE-001](./requirements/reusability/REQ-REUSE-001.md), [REQ-REUSE-002](./requirements/reusability/REQ-REUSE-002.md), [REQ-PORT-001](./requirements/portability/REQ-PORT-001.md)                                                                                                                  | deferred/proposed |
+| v0.8 E-reader / Device Sync             | Folder/mounted device sync target and sync job history                                                | [REQ-INT-007](./requirements/interface/REQ-INT-007.md), [REQ-FUNC-033](./requirements/functional/REQ-FUNC-033.md)                                                                                                                                                 | deferred          |
+| v1.0 Stable Personal Library Release    | Stabilization across library, reading, server, backup, security, docs                                 | All non-deferred planned/proposed requirements accepted for v1.0                                                                                                          | planned           |
+| v1.1+ Audiobooks & Multi-Medium Support | Audiobook support, medium tracking, e-book/audiobook progress sync                                    | [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md), [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md), [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md)                                                                                                                                  | deferred          |
 
 ## 3. Requirements
 
@@ -433,89 +433,89 @@ Verification artifacts should be created as the implementation matures. The path
 
 | Requirement ID | Verification Method | Test/Artifact Link | Status   | Evidence |
 | -------------- | ------------------- | ------------------ | -------- | -------- |
-| REQ-INT-001    | Demonstration       | TBD                | planned  | TBD      |
-| REQ-INT-002    | Test                | TBD                | proposed | TBD      |
-| REQ-INT-003    | Inspection          | TBD                | planned  | TBD      |
-| REQ-INT-004    | Test                | TBD                | planned  | TBD      |
-| REQ-INT-005    | Test                | TBD                | planned  | TBD      |
-| REQ-INT-006    | Test                | TBD                | planned  | TBD      |
-| REQ-INT-007    | Demonstration       | TBD                | deferred | TBD      |
-| REQ-INT-008    | Inspection          | TBD                | proposed | TBD      |
-| REQ-FUNC-001   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-002   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-003   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-004   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-005   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-006   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-FUNC-007   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-008   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-009   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-FUNC-010   | Test                | TBD                | proposed | TBD      |
-| REQ-FUNC-011   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-FUNC-012   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-FUNC-013   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-014   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-FUNC-015   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-016   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-FUNC-017   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-FUNC-018   | Test                | TBD                | proposed | TBD      |
-| REQ-FUNC-019   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-020   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-021   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-022   | Test                | TBD                | proposed | TBD      |
-| REQ-FUNC-023   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-024   | Analysis            | TBD                | planned  | TBD      |
-| REQ-FUNC-025   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-026   | Analysis            | TBD                | planned  | TBD      |
-| REQ-FUNC-027   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-FUNC-028   | Test                | TBD                | deferred | TBD      |
-| REQ-FUNC-029   | Test                | TBD                | deferred | TBD      |
-| REQ-FUNC-030   | Test                | TBD                | deferred | TBD      |
-| REQ-FUNC-031   | Test                | TBD                | planned  | TBD      |
-| REQ-FUNC-032   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-FUNC-033   | Demonstration       | TBD                | deferred | TBD      |
-| REQ-FUNC-034   | Inspection          | TBD                | deferred | TBD      |
-| REQ-FUNC-035   | Inspection          | TBD                | deferred | TBD      |
-| REQ-FUNC-036   | Analysis            | TBD                | deferred | TBD      |
-| REQ-PERF-001   | Analysis            | TBD                | draft    | TBD      |
-| REQ-PERF-002   | Test                | TBD                | proposed | TBD      |
-| REQ-PERF-003   | Demonstration       | TBD                | proposed | TBD      |
-| REQ-SEC-001    | Test                | TBD                | planned  | TBD      |
-| REQ-SEC-002    | Test                | TBD                | draft    | TBD      |
-| REQ-SEC-003    | Test                | TBD                | planned  | TBD      |
-| REQ-SEC-004    | Inspection          | TBD                | proposed | TBD      |
-| REQ-SEC-005    | Inspection          | TBD                | proposed | TBD      |
-| REQ-REL-001    | Test                | TBD                | planned  | TBD      |
-| REQ-REL-002    | Test                | TBD                | planned  | TBD      |
-| REQ-REL-003    | Test                | TBD                | planned  | TBD      |
-| REQ-REL-004    | Test                | TBD                | proposed | TBD      |
-| REQ-AVAIL-001  | Test                | TBD                | proposed | TBD      |
-| REQ-AVAIL-002  | Demonstration       | TBD                | planned  | TBD      |
-| REQ-OBS-001    | Inspection          | TBD                | proposed | TBD      |
-| REQ-OBS-002    | Demonstration       | TBD                | proposed | TBD      |
-| REQ-COMP-001   | Test                | TBD                | proposed | TBD      |
-| REQ-COMP-002   | Inspection          | TBD                | proposed | TBD      |
-| REQ-COMP-003   | Test                | TBD                | planned  | TBD      |
-| REQ-INST-001   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-INST-002   | Test                | TBD                | planned  | TBD      |
-| REQ-INST-003   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-BUILD-001  | Inspection          | TBD                | planned  | TBD      |
-| REQ-BUILD-002  | Inspection          | TBD                | planned  | TBD      |
-| REQ-BUILD-003  | Inspection          | TBD                | planned  | TBD      |
-| REQ-BUILD-004  | Inspection          | TBD                | proposed | TBD      |
-| REQ-DIST-001   | Demonstration       | TBD                | planned  | TBD      |
-| REQ-DIST-002   | Demonstration       | TBD                | deferred | TBD      |
-| REQ-DIST-003   | Demonstration       | TBD                | deferred | TBD      |
-| REQ-MAINT-001  | Inspection          | TBD                | proposed | TBD      |
-| REQ-MAINT-002  | Test                | TBD                | planned  | TBD      |
-| REQ-REUSE-001  | Inspection          | TBD                | planned  | TBD      |
-| REQ-REUSE-002  | Inspection          | TBD                | proposed | TBD      |
-| REQ-PORT-001   | Inspection          | TBD                | draft    | TBD      |
-| REQ-COST-001   | Inspection          | TBD                | proposed | TBD      |
-| REQ-DEAD-001   | Inspection          | TBD                | proposed | TBD      |
-| REQ-POC-001    | Analysis            | TBD                | draft    | TBD      |
-| REQ-CM-001     | Inspection          | TBD                | proposed | TBD      |
-| REQ-ML-001     | Inspection          | TBD                | proposed | TBD      |
+| [REQ-INT-001](./requirements/interface/REQ-INT-001.md)    | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-INT-002](./requirements/interface/REQ-INT-002.md)    | Test                | TBD                | proposed | TBD      |
+| [REQ-INT-003](./requirements/interface/REQ-INT-003.md)    | Inspection          | TBD                | planned  | TBD      |
+| [REQ-INT-004](./requirements/interface/REQ-INT-004.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-INT-005](./requirements/interface/REQ-INT-005.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-INT-006](./requirements/interface/REQ-INT-006.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-INT-007](./requirements/interface/REQ-INT-007.md)    | Demonstration       | TBD                | deferred | TBD      |
+| [REQ-INT-008](./requirements/interface/REQ-INT-008.md)    | Inspection          | TBD                | proposed | TBD      |
+| [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-012](./requirements/functional/REQ-FUNC-012.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-FUNC-019](./requirements/functional/REQ-FUNC-019.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-020](./requirements/functional/REQ-FUNC-020.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-021](./requirements/functional/REQ-FUNC-021.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-022](./requirements/functional/REQ-FUNC-022.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-FUNC-023](./requirements/functional/REQ-FUNC-023.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-024](./requirements/functional/REQ-FUNC-024.md)   | Analysis            | TBD                | planned  | TBD      |
+| [REQ-FUNC-025](./requirements/functional/REQ-FUNC-025.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-026](./requirements/functional/REQ-FUNC-026.md)   | Analysis            | TBD                | planned  | TBD      |
+| [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md)   | Test                | TBD                | deferred | TBD      |
+| [REQ-FUNC-029](./requirements/functional/REQ-FUNC-029.md)   | Test                | TBD                | deferred | TBD      |
+| [REQ-FUNC-030](./requirements/functional/REQ-FUNC-030.md)   | Test                | TBD                | deferred | TBD      |
+| [REQ-FUNC-031](./requirements/functional/REQ-FUNC-031.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-032](./requirements/functional/REQ-FUNC-032.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-033](./requirements/functional/REQ-FUNC-033.md)   | Demonstration       | TBD                | deferred | TBD      |
+| [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md)   | Inspection          | TBD                | deferred | TBD      |
+| [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md)   | Inspection          | TBD                | deferred | TBD      |
+| [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md)   | Analysis            | TBD                | deferred | TBD      |
+| [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md)   | Analysis            | TBD                | draft    | TBD      |
+| [REQ-PERF-002](./requirements/performance/REQ-PERF-002.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md)   | Demonstration       | TBD                | proposed | TBD      |
+| [REQ-SEC-001](./requirements/security/REQ-SEC-001.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-SEC-002](./requirements/security/REQ-SEC-002.md)    | Test                | TBD                | draft    | TBD      |
+| [REQ-SEC-003](./requirements/security/REQ-SEC-003.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-SEC-004](./requirements/security/REQ-SEC-004.md)    | Inspection          | TBD                | proposed | TBD      |
+| [REQ-SEC-005](./requirements/security/REQ-SEC-005.md)    | Inspection          | TBD                | proposed | TBD      |
+| [REQ-REL-001](./requirements/reliability/REQ-REL-001.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-REL-002](./requirements/reliability/REQ-REL-002.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-REL-003](./requirements/reliability/REQ-REL-003.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-REL-004](./requirements/reliability/REQ-REL-004.md)    | Test                | TBD                | proposed | TBD      |
+| [REQ-AVAIL-001](./requirements/availability/REQ-AVAIL-001.md)  | Test                | TBD                | proposed | TBD      |
+| [REQ-AVAIL-002](./requirements/availability/REQ-AVAIL-002.md)  | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md)    | Inspection          | TBD                | proposed | TBD      |
+| [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md)    | Demonstration       | TBD                | proposed | TBD      |
+| [REQ-COMP-001](./requirements/compliance/REQ-COMP-001.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-COMP-002](./requirements/compliance/REQ-COMP-002.md)   | Inspection          | TBD                | proposed | TBD      |
+| [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-INST-001](./requirements/installation/REQ-INST-001.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-INST-002](./requirements/installation/REQ-INST-002.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-INST-003](./requirements/installation/REQ-INST-003.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-BUILD-001](./requirements/build/REQ-BUILD-001.md)  | Inspection          | TBD                | planned  | TBD      |
+| [REQ-BUILD-002](./requirements/build/REQ-BUILD-002.md)  | Inspection          | TBD                | planned  | TBD      |
+| [REQ-BUILD-003](./requirements/build/REQ-BUILD-003.md)  | Inspection          | TBD                | planned  | TBD      |
+| [REQ-BUILD-004](./requirements/build/REQ-BUILD-004.md)  | Inspection          | TBD                | proposed | TBD      |
+| [REQ-DIST-001](./requirements/distribution/REQ-DIST-001.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-DIST-002](./requirements/distribution/REQ-DIST-002.md)   | Demonstration       | TBD                | deferred | TBD      |
+| [REQ-DIST-003](./requirements/distribution/REQ-DIST-003.md)   | Demonstration       | TBD                | deferred | TBD      |
+| [REQ-MAINT-001](./requirements/maintainability/REQ-MAINT-001.md)  | Inspection          | TBD                | proposed | TBD      |
+| [REQ-MAINT-002](./requirements/maintainability/REQ-MAINT-002.md)  | Test                | TBD                | planned  | TBD      |
+| [REQ-REUSE-001](./requirements/reusability/REQ-REUSE-001.md)  | Inspection          | TBD                | planned  | TBD      |
+| [REQ-REUSE-002](./requirements/reusability/REQ-REUSE-002.md)  | Inspection          | TBD                | proposed | TBD      |
+| [REQ-PORT-001](./requirements/portability/REQ-PORT-001.md)   | Inspection          | TBD                | draft    | TBD      |
+| [REQ-COST-001](./requirements/cost/REQ-COST-001.md)   | Inspection          | TBD                | proposed | TBD      |
+| [REQ-DEAD-001](./requirements/deadline/REQ-DEAD-001.md)   | Inspection          | TBD                | proposed | TBD      |
+| [REQ-POC-001](./requirements/proof-of-concept/REQ-POC-001.md)    | Analysis            | TBD                | draft    | TBD      |
+| [REQ-CM-001](./requirements/change-management/REQ-CM-001.md)     | Inspection          | TBD                | proposed | TBD      |
+| [REQ-ML-001](./requirements/machine-learning/REQ-ML-001.md)     | Inspection          | TBD                | proposed | TBD      |
 
 ## 5. Appendixes
 
