@@ -88,7 +88,7 @@ Browser / Desktop / Mobile-oriented UI
 
 | Reference                                | Owner/Author                   | Version/Date | Type                                        | Location                                                               |
 | ---------------------------------------- | ------------------------------ | ------------ | ------------------------------------------- | ---------------------------------------------------------------------- |
-| Project requirements draft (`SRS.md`)    | Luca Antonelli                 | 2026-05-26   | Normative for product intent                | [`/docs/SRS.md`](SRS.md)                                             |
+| Project requirements draft (`SRS.md`)    | Luca Antonelli                 | 2026-05-26   | Normative for product intent                | [`/docs/SRS.md`](./srs.md)                                             |
 | Requirement template (`req-template.md`) | Luca Antonelli/template source | 2026-05-26   | Normative for individual requirement format | [`/docs/requirements/req-template.md`](./requirements/req-template.md) |
 
 ### 1.5 Document Overview
