@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall maximize reuse of the React TypeScript frontend across browser, desktop, and mobile-oriented deployments.
 
 ## Rationale 
-The draft explicitly requires reusing as much of the frontend as possible.
+Reusing the frontend reduces the amount of work required. It also guarantees that workflows stay identical regardless of platform. 
 
 ## Acceptance Criteria
 - Common book, author, series, reading, import, and analytics views are implemented in shared frontend modules.
