@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall provide analytics grouping read books by author.
 
 ## Rationale 
-The draft explicitly lists books read grouped by author.
+The user may want to analyze their reading habits based on authors to figure out which author's works motivate for more reading.
 
 ## Acceptance Criteria
 - The analytics view displays counts of read books grouped by author.
