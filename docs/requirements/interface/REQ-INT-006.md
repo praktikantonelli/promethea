@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall allow an authenticated user to paste an image URL for an author image and have the system download and store the image as an author asset.
 
 ## Rationale 
-The draft explicitly asks for author images that can be fetched automatically or by pasted URL.
+Including author images makes distinguishing different authors simpler. Downloading images from URLs reduces the friction needed for a user to add an author's image.
 
 ## Acceptance Criteria
 - The UI accepts an image URL on the author edit/detail view.
