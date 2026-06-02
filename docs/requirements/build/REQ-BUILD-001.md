@@ -8,7 +8,7 @@ date: 2026-05-26
 The backend server and core application logic shall be implemented in Rust.
 
 ## Rationale
-The draft explicitly requires a Rust backend.
+Rust is a systems programming language with high performance and a good number of online resources for backend implementation.
 
 ## Acceptance Criteria
 - Backend source code for server and core domain modules is Rust.
