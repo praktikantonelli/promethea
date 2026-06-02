@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall provide analytics for number of pages read per selected period when page-count or progress data is available.
 
 ## Rationale 
-The draft explicitly lists pages read per period as an analytics example.
+A user may want to keep track of their reading habits over time. 
 
 ## Acceptance Criteria
 - The system computes page totals from page counts and/or reading progress events according to documented rules.
