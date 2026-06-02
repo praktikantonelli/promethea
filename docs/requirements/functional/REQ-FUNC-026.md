@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall provide analytics for reading speed grouped by author when sufficient progress and completion data exists.
 
 ## Rationale 
-The draft explicitly lists reading speed grouped by author.
+Reading speed may be a quantity of interest for the user.
 
 ## Acceptance Criteria
 - The analytics view displays reading-speed values grouped by author for books with sufficient data.
