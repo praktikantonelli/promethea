@@ -590,6 +590,10 @@ The following items are not supplied in the source material and should be answer
 | [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md)   | Support audiobook records                             | deferred | 3.2 Functional Requirements                |
 | [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md)   | Track book medium                                     | deferred | 3.2 Functional Requirements                |
 | [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md)   | Sync progress between e-book and audiobook            | deferred | 3.2 Functional Requirements                |
+| [REQ-FUNC-037](./requirements/functional/REQ-FUNC-037.md) | Update EPUB cover image | draft | 3.2 Functional Requirements |
+| [REQ-FUNC-038](./requirements/functional/REQ-FUNC-038.md) | Automated EPUB cover image fetching | draft | 3.2 Functional Requirements |
+| [REQ-FUNC-039](./requirements/functional/REQ-FUNC-039.md) | Manual EPUB cover image fetching | draft | 3.2 Functional Requirements |
+| [REQ-FUNC-040](./requirements/functional/REQ-FUNC-040.md) | Display book table view | draft | 3.2 Functional Requirements |
 | [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md)   | Catalog browsing latency target                       | draft    | 3.3 Quality of Service Requirements        |
 | [REQ-PERF-002](./requirements/performance/REQ-PERF-002.md)   | Non-blocking long-running operations                  | proposed | 3.3 Quality of Service Requirements        |
 | [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md)   | Asset storage growth visibility                       | proposed | 3.3 Quality of Service Requirements        |
