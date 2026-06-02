@@ -8,7 +8,7 @@ The template is taken from [here](https://github.com/jam01/SRS-Template).
 
 
 ### Software Design Description (SDD)
-The design can be found in the [main SDD file](./sdd-template.md), along with the [individual views](./design/).
+The design can be found in the [main SDD file](./sdd.md), along with the [individual views](./design/).
 The template is taken from [here](https://github.com/jam01/SDD-Template).
 
 ### Architectural Decision Record (ADR)

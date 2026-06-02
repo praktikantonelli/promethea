@@ -1,10 +1,9 @@
 # Software Design Description
-## For {{project name}}
+## For Promethea
 
 Version 0.1  
-Prepared by {{author}}  
-{{organization}}  
-{{date_modified}}
+Prepared by Luca Antonelli
+2026-06-02
 
 ## Table of Contents
 <!-- TOC -->
@@ -26,7 +25,7 @@ Prepared by {{author}}
 
 | Name | Date | Reason For Changes | Version |
 |------|------|--------------------|---------|
-|      |      |                    |         |
+|Luca Antonelli      | 2026-06-02     | initial version                   |   0.1      |
 |      |      |                    |         |
 
 ## 1. Introduction
