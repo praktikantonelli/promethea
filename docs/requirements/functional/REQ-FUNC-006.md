@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall support authenticated editing of EPUB textual content for selected books.
 
 ## Rationale
-The draft explicitly requires editing e-book content, including later automation such as search-and-replace.
+Even revised e-books sometimes contain typos, bad formatting or unwanted adverts. Owning an e-book shall enable a user to modify its content as they please.
 
 ## Acceptance Criteria
 - A user can open an EPUB content-edit workflow for an imported EPUB.
