@@ -8,7 +8,7 @@ date: 2026-05-26
 The frontend shall be implemented with React and TypeScript.
 
 ## Rationale
-The draft explicitly requires a React TypeScript frontend.
+Typescript and React are both well-established for frontend development. This makes them mature, providing a good number of component libraries, online resources and stable APIs.
 
 ## Acceptance Criteria
 - Frontend source files use TypeScript/TSX for application code.
