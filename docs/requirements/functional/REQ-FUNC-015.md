@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall support relationships between series, including overarching series and contained series.
 
 ## Rationale
-The draft requires series views to include related series such as overarching or contained series.
+Related series help the user see whether there are still more books in a given overarching series or universe to read.
 
 ## Acceptance Criteria
 - A link between series gets created automatically whenever a book's metadata lists more than one series.
