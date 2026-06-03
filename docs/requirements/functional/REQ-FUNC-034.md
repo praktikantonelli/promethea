@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall, in a future release, support catalog records and file assets for audiobooks in addition to e-books.
 
 ## Rationale
-The draft lists an Audiobookshelf replacement as a very optional future feature.
+A user may consume a work in a hybrid fashion, sometimes by reading and other times by listening. Unifying the two types into one place makes both experiences simpler.
 
 ## Acceptance Criteria
 - Acceptance Criteria:
