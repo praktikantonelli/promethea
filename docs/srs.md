@@ -418,7 +418,7 @@ No AI/ML-specific ethics requirements are applicable until an AI/ML component is
 
 #### 3.6.5 Human-in-the-Loop
 
-Human review is required for metadata candidate application unless a user-enabled automation rule permits a narrower automatic action. See REQ-FUNC-009 and REQ-FUNC-028. 
+Human review is required for metadata candidate application unless a user-enabled automation rule permits a narrower automatic action. See [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) and [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md). 
 
 #### 3.6.6 Model Lifecycle and Operations
 

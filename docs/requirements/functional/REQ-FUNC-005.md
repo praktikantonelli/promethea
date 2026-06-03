@@ -19,4 +19,4 @@ A Calibre replacement needs to modify the actual e-book file, not only the appli
 Test
 
 ## More Information
-Safe file versioning requirements apply; see REQ-FUNC-007 and REQ-REL-002.
+Safe file versioning requirements apply; see [REQ-FUNC-007](./REQ-FUNC-007.md) and [REQ-REL-002](./../reliability/REQ-REL-002.md).

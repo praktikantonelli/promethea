@@ -19,5 +19,5 @@ This is a stated calibre-web replacement requirement.
 Demonstration
 
 ## More Information
-Sorting and filtering controls are covered by REQ-FUNC-018.
+Sorting and filtering controls are covered by [REQ-FUNC-018](./../functional/REQ-FUNC-018.md).
 

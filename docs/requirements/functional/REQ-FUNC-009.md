@@ -19,4 +19,4 @@ Provider metadata may be incorrect, so a human review point prevents accidental 
 Demonstration
 
 ## More Information
-Automation exceptions are governed by REQ-FUNC-028.
+Automation exceptions are governed by [REQ-FUNC-028](./REQ-FUNC-028.md).
