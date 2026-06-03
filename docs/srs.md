@@ -418,7 +418,7 @@ No AI/ML-specific ethics requirements are applicable until an AI/ML component is
 
 #### 3.6.5 Human-in-the-Loop
 
-Human review is required for metadata candidate application unless a user-enabled automation rule permits a narrower automatic action. See REQ-FUNC-009, REQ-FUNC-028, and REQ-ML-001.
+Human review is required for metadata candidate application unless a user-enabled automation rule permits a narrower automatic action. See REQ-FUNC-009 and REQ-FUNC-028. 
 
 #### 3.6.6 Model Lifecycle and Operations
 
@@ -512,7 +512,6 @@ Verification artifacts should be created as the implementation matures. The path
 | [REQ-DEAD-001](./requirements/deadline/REQ-DEAD-001.md)   | Inspection          | TBD                | proposed | TBD      |
 | [REQ-POC-001](./requirements/proof-of-concept/REQ-POC-001.md)    | Analysis            | TBD                | draft    | TBD      |
 | [REQ-CM-001](./requirements/change-management/REQ-CM-001.md)     | Inspection          | TBD                | proposed | TBD      |
-| [REQ-ML-001](./requirements/machine-learning/REQ-ML-001.md)     | Inspection          | TBD                | proposed | TBD      |
 
 ## 5. Appendixes
 
@@ -629,7 +628,6 @@ The following items are not supplied in the source material and should be answer
 | [REQ-DEAD-001](./requirements/deadline/REQ-DEAD-001.md)   | Milestone release sequence                            | proposed | 3.5 Design and Implementation Requirements |
 | [REQ-POC-001](./requirements/proof-of-concept/REQ-POC-001.md)    | SQLite server data-store proof of concept             | draft    | 3.5 Design and Implementation Requirements |
 | [REQ-CM-001](./requirements/change-management/REQ-CM-001.md)     | Versioned change management                           | proposed | 3.5 Design and Implementation Requirements |
-| [REQ-ML-001](./requirements/machine-learning/REQ-ML-001.md)     | No autonomous AI/ML catalog mutation without approval | proposed | 3.6 AI/ML Requirements                     |
 
 ### Appendix C: Initial Domain Concepts
 
