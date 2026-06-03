@@ -5,7 +5,7 @@ date: 2026-05-26
 # REQ-PORT-001 — Supported operating environments
 
 ## Statement 
-The system shall document supported server, desktop, and mobile operating environments for each release.
+The system shall document supported server, desktop, and mobile operating environments for each release. Supported operating systems are Windows 11, NixOS 26.05 and Android 16.
 
 ## Rationale 
 Platform breadth is a stated nice-to-have, but exact support must be explicit to avoid false compatibility claims.
@@ -19,4 +19,4 @@ Platform breadth is a stated nice-to-have, but exact support must be explicit to
 Inspection
 
 ## More Information 
-Exact OS matrix is TBD.
+None
