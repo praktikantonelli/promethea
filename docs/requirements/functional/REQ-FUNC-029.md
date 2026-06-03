@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall support an automation action that fetches metadata for newly imported books.
 
 ## Rationale 
-The draft gives fetching metadata as an example automatic action.
+Looking up and then inserting metadata for each book is a tedious task that needs to happen for each book.
 
 ## Acceptance Criteria
 - An enabled rule can start a metadata-fetch job after import.
