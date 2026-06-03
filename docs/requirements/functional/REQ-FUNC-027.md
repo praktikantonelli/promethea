@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall allow authenticated users to update library metadata and reading data through the server from devices with internet connectivity.
 
 ## Rationale 
-The draft requires updates from anywhere with internet connection.
+Updates to the library should be as comfortable and accessible as possible.
 
 ## Acceptance Criteria
 - A supported remote browser or client can authenticate to the server.
