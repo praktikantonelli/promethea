@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall provide a card-based overview of all authors whose books are in the library.
 
 ## Rationale
-The draft requires an overview of authors with card view.
+Displaying all books by an author is a standard view for such an application. 
 
 ## Acceptance Criteria
 - The author overview includes every author linked to at least one cataloged book.
