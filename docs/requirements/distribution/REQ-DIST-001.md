@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall support a deployment topology in which a headless server exposes the application to users through a browser.
 
 ## Rationale
-The draft calls for server availability through a browser and calibre-web-style access.
+Headless servers are the common way of self-hosting a service. This allows a user to make an application available on all platforms via internet.
 
 ## Acceptance Criteria
 - The server can run without a local GUI.
