@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall support an automation action that performs configured search-and-replace operations in EPUB text.
 
 ## Rationale 
-The draft gives search-and-replace in EPUB text as an example automatic action.
+Certain sources of e-books contain unwanted ads. These should be automatically removable.
 
 ## Acceptance Criteria
 - A user can configure a search pattern and replacement value within an automation rule.
