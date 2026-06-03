@@ -410,10 +410,7 @@ No AI/ML model is specified for the initial release.
 No AI/ML training, validation, or inference dataset is specified for the initial release.
 
 #### 3.6.3 Guardrails
-| ID | Title |
-| -------------- | --------------- |
-| [REQ-ML-001](./requirements/machine-learning/REQ-ML-001.md) | No autonomous AI/ML catalog mutation without approval |
-
+No guardrails are needed because there are no AI/ML features planned.
 
 #### 3.6.4 Ethics
 
