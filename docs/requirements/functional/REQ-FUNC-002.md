@@ -19,4 +19,4 @@ The product is a long-lived personal library system and must not lose catalog st
 Test
 
 ## More Information
-Exact database engine is TBD; initial design assumption is one authoritative server-side database plus asset directory.
+Exact database engine depends on [REQ-POC-001](./../proof-of-concept/REQ-POC-001.md); initial design assumption is one authoritative server-side database plus asset directory.
