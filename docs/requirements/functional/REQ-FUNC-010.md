@@ -13,11 +13,10 @@ Duplicate detection prevents library clutter and accidental redundant storage.
 ## Acceptance Criteria
 - An import with an identical checksum to an existing file is flagged as an exact duplicate.
 - An import with matching ISBN or matching normalized title-author values is flagged as a possible duplicate.
-- The user can choose whether to skip, merge, or keep a flagged possible duplicate.
+- The user can choose whether they want to keep potential duplicates, or either of the two conflicting books.
 
 ## Verification Method
 Test
 
 ## More Information
-Merge semantics are TBD and should be refined before implementation.
-
+None
