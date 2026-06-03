@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall, in a future release, support progress synchronization between an e-book and audiobook representation of the same work.
 
 ## Rationale
-The draft lists progress sync between audiobook and e-book as a potential future feature.
+For a user consuming a work simultaneously by reading and listening, automatically syncing the progress between audiobook and e-book is a quality-of-life upgrade.
 
 ## Acceptance Criteria
 - The system can associate e-book and audiobook editions with the same work.
