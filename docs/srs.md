@@ -157,7 +157,7 @@ Accessibility needs are not yet specified. At minimum, UI requirements should be
 | A-007 | A single authoritative server database may be sufficient if clients communicate through REST. | If multi-instance or high-write deployment is required, database architecture may need Postgres or similar. | Run SQLite POC and confirm expected scale.                     |
 | A-008 | Exact metadata providers are not yet chosen.                                                  | Provider-specific fields, credentials, rate limits, and attribution cannot be fully specified.              | Select providers and add provider interface specs.             |
 | A-009 | Exact e-reader sync target/protocol is not yet chosen.                                        | Device sync requirements remain deferred and high-level.                                                    | Validate target devices and protocols before v0.8.             |
-| A-010 | No core AI/ML model is required initially.                                                    | If AI/ML matching or recommendations are added, Section 3.6 must be expanded.                               | Require ML change review before adding models.                 |
+| A-010 | No core AI/ML model is required.                                                    | If AI/ML matching or recommendations are added, Section 3.6 must be expanded.                               | Require ML change review before adding models.                 |
 
 ### 2.6 Apportioning of Requirements
 
