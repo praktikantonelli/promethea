@@ -19,4 +19,4 @@ Library data must survive upgrades, and schema changes must be traceable.
 Test
 
 ## More Information 
-Database engine is TBD; migration tooling should support the chosen engine.
+Database engine depends on outcome of [REQ-POC-001](./../proof-of-concept/REQ-POC-001.md); migration tooling should support the chosen engine.
