@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall allow users to define automatic actions triggered when a book is added.
 
 ## Rationale 
-The draft lists automatic actions when a book is added as a nice-to-have.
+Adding a book should require as little human input as possible. Repeated actions that can be automated should be deferrable to the system.
 
 ## Acceptance Criteria
 - A user can create, enable, disable, and delete an import-triggered automation rule.
