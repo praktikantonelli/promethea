@@ -19,4 +19,4 @@ Even revised e-books sometimes contain typos, bad formatting or unwanted adverts
 Demonstration
 
 ## More Information
-The granularity and UX of content editing are TBD; initial scope may be search-and-replace and limited XHTML editing.
+Current assumption is that the web interface should use an existing JS/TS editor, whereas a future desktop application would leverage a locally installed text editor such as VS Code or NeoVim.
