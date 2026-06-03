@@ -10,7 +10,7 @@ The system shall support synchronizing selected EPUB files to configured e-reade
 
 
 ## Rationale 
-The project has a nice-to-have goal of replacing parts of Tolino cloud with automatic PC-to-e-reader syncing.
+The project has a nice-to-have goal of replacing parts of an e-reader cloud with automatic PC-to-e-reader syncing.
 
 ## Acceptance Criteria
 - A user can select books and a configured target for sync.

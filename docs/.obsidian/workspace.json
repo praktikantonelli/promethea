@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "7c8d4f1a43b53511",
+        "id": "3a99f61db2376089",
         "type": "tabs",
         "children": [
           {
-            "id": "344c709515338b57",
+            "id": "bb9d26b9e434f3f3",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "requirements/compliance/REQ-COMP-002.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "REQ-COMP-002"
+              "title": "New tab"
             }
           }
         ]
@@ -183,8 +179,11 @@
       "bases:Create new base": false
     }
   },
-  "active": "344c709515338b57",
+  "active": "bb9d26b9e434f3f3",
   "lastOpenFiles": [
+    "srs.md",
+    "srs.md~",
+    "requirements/compliance/REQ-COMP-002.md",
     "requirements/security/REQ-SEC-001.md~",
     "requirements/security/REQ-SEC-002.md~",
     "requirements/security/REQ-SEC-003.md~",
@@ -194,11 +193,8 @@
     "requirements/reusability/REQ-REUSE-001.md~",
     "requirements/reliability/REQ-REL-001.md~",
     "requirements/reliability/REQ-REL-002.md~",
-    "requirements/reliability/REQ-REL-003.md~",
-    "requirements/reliability/REQ-REL-004.md~",
     "requirements/compliance/REQ-COMP-001.md",
     "requirements/compliance/REQ-COMP-003.md",
-    "requirements/compliance/REQ-COMP-002.md",
     "requirements/cost/REQ-COST-001.md",
     "requirements/change-management/REQ-CM-001.md",
     "requirements/build/REQ-BUILD-004.md",
