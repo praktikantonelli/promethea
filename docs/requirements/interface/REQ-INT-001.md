@@ -19,4 +19,4 @@ The product is intended to replace calibre-web and support access from devices w
 Demonstration
 
 ## More Information 
-Supported browser list is TBD; initial assumption is current evergreen desktop and mobile browsers.
+Supported browsers are Firefox and Chrome. 
