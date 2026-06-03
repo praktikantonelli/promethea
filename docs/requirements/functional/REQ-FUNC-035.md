@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall, in a future release, track book medium values including e-book, print, and audiobook.
 
 ## Rationale
-The draft lists book-medium tracking as a potential future feature.
+A user may want to own physical copies of certain books, or may already own physical copies.
 
 ## Acceptance Criteria
 - A book or edition can be associated with a medium value.
