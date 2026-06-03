@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall provide a card-based overview of all series whose books are in the library.
 
 ## Rationale
-The draft requires an overview of series with card view.
+An overview of all series is a basic quality of life feature and helps finding books by series instead of title.
 
 ## Acceptance Criteria
 - The series overview includes every series linked to at least one cataloged book.
