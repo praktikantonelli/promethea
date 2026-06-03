@@ -19,4 +19,4 @@ Updates to the library should be as comfortable and accessible as possible.
 Demonstration
 
 ## More Information 
-Network exposure method, domain, VPN, or reverse proxy setup is deployment-specific and TBD.
+The system will run locally on a device and be accessible only locally. Whether this is `localhost` or the local area network is TBD.
