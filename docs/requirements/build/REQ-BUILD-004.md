@@ -20,4 +20,4 @@ CI helps keep a multi-component Rust/React project maintainable and verifiable.
 Inspection
 
 ## More Information
-Specific CI provider is TBD.
+The project is hosted on GitHub, so GitHub Actions will be the choice of CI infrastructure.
