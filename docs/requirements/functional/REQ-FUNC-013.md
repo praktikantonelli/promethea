@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall support displaying, automatically fetching, and manually setting author images.
 
 ## Rationale
-The draft requires author images and allows fetching either automatically or by pasted URL.
+Having images for an author is a basic quality of life feature to enrich the UI and make navigation faster.
 
 ## Acceptance Criteria
 - An author without an image can be assigned an image through a supported fetch or upload/download flow.
