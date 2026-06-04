@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall provide responsive layouts for desktop/laptop screens and mobile-width screens.
 
 ## Rationale 
-The project includes a nice-to-have goal of availability across desktop/laptop, server browser, and mobile contexts.
+The system should be usable on as many devices as possible, so different resolutions and screen sizes need to be supported.
 
 ## Acceptance Criteria
 - Book, author, series, and reading-status views remain usable at 390 px, 768 px, and 1280 px viewport widths.
