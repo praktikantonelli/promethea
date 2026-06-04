@@ -4,7 +4,6 @@ date: 2026-05-26
 ---
 # REQ-FUNC-033 — Synchronize books to e-reader targets
 
-
 ## Statement 
 The system shall support synchronizing selected EPUB files to configured e-reader or folder targets.
 
