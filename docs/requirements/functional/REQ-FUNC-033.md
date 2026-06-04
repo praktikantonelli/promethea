@@ -7,7 +7,6 @@ date: 2026-05-26
 ## Statement 
 The system shall support synchronizing selected EPUB files to configured e-reader or folder targets.
 
-
 ## Rationale 
 The project has a nice-to-have goal of replacing parts of an e-reader cloud with automatic PC-to-e-reader syncing.
 
