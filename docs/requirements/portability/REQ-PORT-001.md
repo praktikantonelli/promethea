@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall document supported server, desktop, and mobile operating environments for each release. Supported operating systems are Windows 11, NixOS 26.05 and Android 16.
 
 ## Rationale 
-Platform breadth is a stated nice-to-have, but exact support must be explicit to avoid false compatibility claims.
+The system should be available on as many platforms as possible. Apple's ecosystem is excluded due to a lack of need.
 
 ## Acceptance Criteria
 - Release notes list supported server OS/container environments.
