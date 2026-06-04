@@ -18,6 +18,5 @@ Users need feedback for imports, metadata fetching, image fetching, EPUB editing
 ## Verification Method
 Demonstration
 
-
 ## More Information 
 Retention policy for job history is TBD.
