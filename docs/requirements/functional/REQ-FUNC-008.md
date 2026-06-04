@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall allow an authenticated user to fetch online metadata candidates for a book.
 
 ## Rationale
-Online metadata lookup is a stated Calibre-replacement must-have.
+E-book files do not contain all metadata. Manually searching and inserting metadata for every book is tedious for the user.
 
 ## Acceptance Criteria
 - A user can trigger metadata lookup from an import review or book detail/edit view.
