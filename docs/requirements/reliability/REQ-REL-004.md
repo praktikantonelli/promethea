@@ -3,6 +3,7 @@ status: proposed
 date: 2026-05-26
 ---
 # REQ-REL-004 — Idempotent import by checksum
+
 ## Statement 
 The system shall identify repeated import attempts of an identical EPUB file by checksum and avoid creating unintended duplicate file records without user confirmation.
 
