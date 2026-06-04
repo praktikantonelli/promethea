@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall display all books belonging to a selected series.
 
 ## Rationale
-Series browsing is a stated calibre-web replacement requirement.
+Browsing by series helps finding the next book to read.
 
 ## Acceptance Criteria
 - A series detail page lists all books assigned to the series.
@@ -19,4 +19,4 @@ Series browsing is a stated calibre-web replacement requirement.
 Demonstration
 
 ## More Information
-Numbering/position model must support decimals or labels; exact allowed values are TBD.
+Numbering/position model must support decimals.
