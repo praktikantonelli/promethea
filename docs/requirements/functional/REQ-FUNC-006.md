@@ -4,7 +4,7 @@ date: 2026-05-26
 ---
 # REQ-FUNC-006 — Edit EPUB content
 
-## STatement
+## Statement
 The system shall support authenticated editing of EPUB textual content for selected books.
 
 ## Rationale
