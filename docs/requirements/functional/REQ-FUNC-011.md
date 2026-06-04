@@ -8,7 +8,7 @@ date: 2026-05-26
 The system shall display a card-based overview of books with cover images when available.
 
 ## Rationale
-This is a stated calibre-web replacement requirement.
+Card views are an established layout for image-based navigation.
 
 ## Acceptance Criteria
 - The book overview renders each visible book as a card.
