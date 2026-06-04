@@ -135,12 +135,12 @@ The following constraints shape the requirements in Section 3:
 
 ### 2.4 User Characteristics
 
-| User Class | Characteristics | Primary Goals | Access Level |
-|------------|-----------------|---------------|--------------|
-| Library Owner / Administrator | Technical enough to install or configure a self-hosted application; may also be the main reader. | Import books, maintain metadata, configure providers, back up data, manage sync/settings. | Full administrative access. |
-| Reader / Authenticated User | Uses the library through browser or future client; may be less technical. | Browse books, update reading status, view reading analytics, download/sync books. | Access to own or permitted library data; exact role model TBD. |
-| Maintainer / Developer | Contributes to implementation, testing, release, and operations. | Understand requirements, implement features, verify changes, maintain migrations. | Repository and development environment access. |
-| Future Device-Sync User | Uses desktop/server workflows to copy books to e-readers or sync targets. | Send selected books to e-reader or folder target and inspect sync history. | Authenticated user or administrator; exact permission model TBD. |
+| User Class                    | Characteristics                                                                                  | Primary Goals                                                                             | Access Level                                                     |
+| ----------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Library Owner / Administrator | Technical enough to install or configure a self-hosted application; may also be the main reader. | Import books, maintain metadata, configure providers, back up data, manage sync/settings. | Full administrative access.                                      |
+| Reader / Authenticated User   | Uses the library through browser or future client; may be less technical.                        | Browse books, update reading status, view reading analytics, download/sync books.         | Access to own or permitted library data; exact role model TBD.   |
+| Maintainer / Developer        | Contributes to implementation, testing, release, and operations.                                 | Understand requirements, implement features, verify changes, maintain migrations.         | Repository and development environment access.                   |
+| Future Device-Sync User       | Uses desktop/server workflows to copy books to e-readers or sync targets.                        | Send selected books to e-reader or folder target and inspect sync history.                | Authenticated user or administrator; exact permission model TBD. |
 
 Accessibility needs are not yet specified. At minimum, UI requirements should be refined to include keyboard accessibility, readable error states, and an agreed accessibility target before a stable release.
 
