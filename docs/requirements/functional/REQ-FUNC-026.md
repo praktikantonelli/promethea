@@ -1,0 +1,22 @@
+---
+status: planned
+date: 2026-05-26
+---
+# REQ-FUNC-026 — Analyze reading speed by author
+
+## Statement 
+The system shall provide analytics for reading speed grouped by author when sufficient progress and completion data exists.
+
+## Rationale 
+Reading speed may be a quantity of interest for the user.
+
+## Acceptance Criteria
+- The analytics view displays reading-speed values grouped by author for books with sufficient data.
+- The system indicates when speed cannot be calculated due to missing start, progress, finish, or page data.
+- The calculation formula is documented and consistently applied.
+
+## Verification Method 
+Analysis
+
+## More Information 
+Reading speed unit is TBD, e.g. pages/day or books/month.

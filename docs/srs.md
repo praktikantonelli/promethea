@@ -2,11 +2,10 @@
 ## For Promethea
 
 Version 0.1  
-Prepared by Luca Antonelli  
-2026-05-21
+Prepared by Luca Antonelli 
+Date Modified: 2026-05-26
 
 ## Table of Contents
-<!-- TOC -->
 * [1. Introduction](#1-introduction)
     * [1.1 Document Purpose](#11-document-purpose)
     * [1.2 Product Scope](#12-product-scope)
@@ -29,347 +28,629 @@ Prepared by Luca Antonelli
     * [3.6 AI/ML](#36-aiml)
 * [4. Verification](#4-verification)
 * [5. Appendixes](#5-appendixes)
-<!-- TOC -->
 
 ## Revision History
 
-| Name | Date | Reason For Changes | Version |
-|--------------------|---------------|--------------------------|---------|
-| Luca Antonelli     | 2026-05-21    | Initial template filling | 0.1     |
+| Name           | Date       | Reason For Changes | Version |
+| -------------- | ---------- | ------------------ | ------- |
+| Luca Antonelli | 2026-05-26 | Initial SRS draft  | 0.1     |
 
 ## 1. Introduction
-What follows is a non-binding attempt at planning a software product mainly as a way of having a clear overview and structure for a larger software project called Promethea, a library manager for e-books with some extra quality-of-life features. 
+
+This Software Requirements Specification (SRS) defines the initial requirements for Promethea, a personal e-book library and reading-tracking system. The document states what the system must, should, or may do; it avoids detailed implementation design except where technology constraints have already been provided. Section 2 gives product context and assumptions, Section 3 contains verifiable requirements using the supplied requirement template, Section 4 maps requirements to verification methods, and Section 5 records open questions and supporting material.
 
 ### 1.1 Document Purpose
-The purpose of this document is to define a detailed description of Promethea. It will explain the purpose and features of the system, its interfaces, and how it must operate. This document is intended as a versioned overview for the system, aimed at interested people and the developers.
+
+The purpose of this SRS is to translate the project description into a structured, testable requirements baseline for product planning, engineering, QA, security, operations, and future maintainers. Product and engineering can use it to scope releases and design the system; QA can use it to derive test cases; security and operations can use it to identify deployment, authentication, backup, and observability expectations. This SRS defines required system behavior and constraints, not a final internal architecture.
 
 ### 1.2 Product Scope
-This program will be a way of organizing a library of e-books for a regular user. It will be designed in a way to make working with e-books as frictionless as possible, aiming to automate as many repetitive tasks as possible. The goal is that an end user can manually do basic management on their library with as little manual input as possible. 
+
+Promethea version 0.1 is a proposed personal/self-hostable library management system intended to replace major personal workflows from Calibre, Goodreads, and calibre-web. Its primary capabilities include importing and managing EPUB files, editing metadata and selected EPUB content, fetching metadata online, browsing books/authors/series, tracking ownership and reading status, and producing reading analytics. Nice-to-have and future capabilities include desktop/laptop distribution, mobile availability, e-reader synchronization, audiobook support, book-medium tracking, and cross-medium progress synchronization.
+
+This SRS covers the requirements for the Promethea product family and apportions them across proposed milestones. It does not define visual design mockups, provider-specific contracts, legal advice for copyrighted material, exact hosting topology, or final database technology until those decisions are confirmed.
+
+```text
+Supported user-facing shape:
+
+Browser / Desktop / Mobile-oriented UI
+                |
+                v
+        Promethea REST API Server
+                |
+        +-------+--------+
+        |                |
+   Catalog database   Managed assets
+                    EPUBs, covers,
+                    author images,
+                    backups/versions
+```
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
 
-| Term | Definition                                                                                                                   |
-|------|------------------------------------------------------------------------------------------------------------------------------|
-| API  | Application Programming Interface - A set of definitions and protocols for building and integrating application software     |
-| SRS  | Software Requirements Specification - A document that describes the intended purpose, requirements, and nature of a software |
-| UI   | User Interface - The visual part of computer application through which a user interacts with a software                      |
-| EPUB | E-book format, most widely used|
-| Metadata | Data about a book; includes title, authors, series, publication date, ...|
-| Calibre | E-book management software written by Kovid Goyal |
-| Calibre-web | Web-based e-book library with support for Calibre libraries |
-| Service | Long-running process on a server, generally handling continuous tasks and processes |
+| Term | Definition |
+|------|------------|
+| API | Application Programming Interface; a defined way for software components to communicate. |
+| Asset | A managed binary file such as an EPUB, cover image, author image, original import, or previous EPUB version. |
+| Book | A catalog entity representing a readable work or title in the library. Final work/edition/file modeling details are TBD. |
+| Calibre | Existing e-book management application whose personal library-management workflows Promethea aims to replace. |
+| calibre-web | Existing web UI for Calibre libraries whose browsing workflows Promethea aims to replace. |
+| Goodreads | Existing web platform for keeping track of books as lists whose tracking workflows Promethea aims to replace. |
+| EPUB | Electronic Publication file format used as the initial supported e-book file format. |
+| Metadata Candidate | Metadata returned by an external source and presented for review or automation before being applied. |
+| POC | Proof of Concept. |
+| REST | Representational State Transfer; the API style selected for client-server communication. |
+| SRS | Software Requirements Specification. |
+| Series | A named collection, sequence, universe, or related group of books. |
+| UI | User Interface. |
+| Work / Edition / File | Possible domain split where a work is the intellectual content, an edition is a specific publication, and a file is a stored digital artifact. Exact model is TBD. |
 
 ### 1.4 References
-IEEE. _IEEE Std 830-1998 IEEE Recommended Practice for Software Requirements Specifications._ 
-IEEE Computer Society, 1998
+
+| Reference                                | Owner/Author                   | Version/Date | Type                                        | Location                                                               |
+| ---------------------------------------- | ------------------------------ | ------------ | ------------------------------------------- | ---------------------------------------------------------------------- |
+| Project requirements draft (`srs.md`)    | Luca Antonelli                 | 2026-05-26   | Normative for product intent                | [`/docs/srs.md`](./srs.md)                                             |
+| Requirement template (`req-template.md`) | Luca Antonelli/template source | 2026-05-26   | Normative for individual requirement format | [`/docs/requirements/req-template.md`](./requirements/req-template.md) |
 
 ### 1.5 Document Overview
-The next chapter provides a rough overview of the software in order to provide context for the more in-depth requirements introduced in chapter 3. The latter is mainly aimed at developers, as it describes the project in a more technically detailed way. Chapter 4 provides details on how each requirement's fulfillment is to be verified. Finally, chapter 5 contains an appendix with any additional information required to understand this document. 
+
+Section 2 describes Promethea in context, including user classes, assumptions, dependencies, constraints, and milestone apportioning. Section 3 defines all requirements using unique IDs, status, rationale, acceptance criteria, verification method, and supporting notes. Section 4 provides a verification matrix so tests and other evidence can be traced back to requirements. Section 5 captures open questions and a requirement index for future refinement.
 
 ## 2. Product Overview
 
 ### 2.1 Product Perspective
-There exist multiple great pieces of software that are great at managing e-book libraries and collections, most prominent among which is Calibre. Calibre has been a de-facto standard for many people over the years, but where it is extremely powerful in some regards, its feature set is also limited in others. The lacking features are mainly in the metadata restrictions it imposes (among which, a book may only belong to one series), and that its use case is strictly meant as a desktop app; it has no web-based view for servers, no full function in order to transfer books to an e-reader device, and its UI is slightly unaccustomed. 
 
-A notable piece of software for at least part of this lack of features is Calibre-web, which provides a web-based service that can interact with a Calibre library and allow a user to interact with their library via web. However, said project also comes with limits, including limited interaction with the files themselves, changes to the library needing a manual update trigger, and a completely different UI from Calibre, making the two very different to use. 
+Promethea is a new product intended to consolidate personal e-book management, web library browsing, and reading-status tracking into one self-hostable product. It is positioned as a replacement for selected personal workflows from Calibre, Goodreads, and calibre-web, with future possible expansion into typical cloud e-reader sync and Audiobookshelf-like audiobook management.
 
-Finally, a lacking feature in both is the possibility to also track reading progress over time. Both programs allow a user to track which books have or have not been read yet, but this does not help with analytics. For this, many people fall back to Goodreads, which at least lets you keep track of which books are to be read, already read, currently being read, DNFed, or even on custom bookshelves. 
-
-While all three of the aforementioned projects are great in their own way, the fact that _three individual tools are needed to accomplish those tasks_ seems to suggest room for a unifying solution. Enter Promethea. 
+The expected architecture is a Rust backend exposing a REST API, a React TypeScript frontend reused across as many deployment contexts as practical, and persistent storage for catalog data plus managed file assets. The server is expected to be authoritative for remote clients; browser, desktop, and mobile-oriented clients should not directly modify the server database. Ownership, service-level agreements, and support model are TBD; the current assumption is a personal or small-household single-user self-hosted product rather than a public multi-tenant SaaS.
 
 ### 2.2 Product Functions
-Promethea will allow a user to 
-- manage a library of e-books, including adding, editing and deleting them
-- manage metadata associated with each e-book
-- retrieve metadata automatically and manually
-- track their lists of books to be read, currently reading, already read and aborted reads
-- track their reading statistics
 
+Promethea enables users to:
+
+- Import EPUB files and manage them as a personal library.
+- View books in card-based catalog views with cover images.
+- View authors, author images, and all books associated with an author.
+- View series, all books in a series, and related/contained/overarching series.
+- Edit catalog metadata and write supported metadata back into EPUB files.
+- Edit selected EPUB content, with safe file versioning.
+- Fetch metadata, covers, and author images from online sources or pasted image URLs.
+- Track owned books, reading status, completed reads, progress events, and reading history.
+- Produce analytics for books/pages read by period, books grouped by author, and reading speed grouped by author.
+- Define future automation rules for book-import events, metadata fetching, and EPUB search-and-replace.
+- Support future desktop, mobile-oriented, e-reader sync, audiobook, and cross-medium progress workflows.
 
 ### 2.3 Product Constraints
-The system must be written in Rust. It must provide basic encryption/security for anything that travels through the network. 
+
+The following constraints shape the requirements in Section 3:
+
+- The backend must be implemented in Rust.
+- The server API must be REST-based.
+- The frontend must be implemented with React and TypeScript.
+- The frontend should be reused across browser, desktop, and mobile-oriented contexts as much as practical.
+- EPUB is the initial required e-book file format.
+- Clients should communicate changes through the server API or approved local embedded-backend interface, not by directly editing the server database file.
+- The system should not require a paid third-party service for core self-hosted use.
+- Provider-specific metadata and image fetching depends on external services that may be unavailable, rate-limited, or subject to terms of service.
+- Exact authentication model, database engine, target scale, supported operating systems, accessibility standard, and e-reader protocol support remain open decisions.
 
 ### 2.4 User Characteristics
-There is only one type of user, which has access to the full features of the program. 
+
+| User Class                    | Characteristics                                                                                  | Primary Goals                                                                             | Access Level                                                     |
+| ----------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Library Owner / Administrator | Technical enough to install or configure a self-hosted application; may also be the main reader. | Import books, maintain metadata, configure providers, back up data, manage sync/settings. | Full administrative access.                                      |
+| Reader / Authenticated User   | Uses the library through browser or future client; may be less technical.                        | Browse books, update reading status, view reading analytics, download/sync books.         | Access to own or permitted library data; exact role model TBD.   |
+| Maintainer / Developer        | Contributes to implementation, testing, release, and operations.                                 | Understand requirements, implement features, verify changes, maintain migrations.         | Repository and development environment access.                   |
+| Future Device-Sync User       | Uses desktop/server workflows to copy books to e-readers or sync targets.                        | Send selected books to e-reader or folder target and inspect sync history.                | Authenticated user or administrator; exact permission model TBD. |
+
+Accessibility needs are not yet specified. At minimum, UI requirements should be refined to include keyboard accessibility, readable error states, and an agreed accessibility target before a stable release.
 
 ### 2.5 Assumptions and Dependencies
-There are no external dependencies aside from typical 3rd-party libraries for either frontend or backend.
+
+| ID    | Assumption or Dependency                                                                      | Impact if False                                                                                             | Mitigation / Follow-up                                         |
+| ----- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| A-001 | Initial deployment is personal/self-hosted or small-household, not public multi-tenant SaaS.  | Security, scalability, and admin requirements would need expansion.                                         | Confirm target deployment model.                               |
+| A-002 | EPUB is the first required e-book format.                                                     | If PDF/MOBI/AZW are required early, import, metadata, and editing requirements expand.                      | Confirm file-format roadmap.                                   |
+| A-003 | Users have rights to upload, modify, and sync their own e-book files.                         | Legal/compliance documentation may need stricter controls.                                                  | Add user-content responsibility notice.                        |
+| A-004 | External metadata/image providers may be unavailable or rate-limited.                         | Core workflows must continue manually without providers.                                                    | Keep manual editing mandatory; provider integrations optional. |
+| A-005 | Mobile support can initially be responsive web/PWA rather than native app.                    | Native packaging scope would increase.                                                                      | Confirm mobile strategy before v0.7/v0.8.                      |
+| A-006 | Browser reading is not required for e-reader cloud replacement scope.                           | Adding browser reading would create a major reader UI/rendering feature set.                                | Keep browser reading out of initial scope unless approved.     |
+| A-007 | A single authoritative server database may be sufficient if clients communicate through REST. | If multi-instance or high-write deployment is required, database architecture may need Postgres or similar. | Run SQLite POC and confirm expected scale.                     |
+| A-008 | Exact metadata providers are not yet chosen.                                                  | Provider-specific fields, credentials, rate limits, and attribution cannot be fully specified.              | Select providers and add provider interface specs.             |
+| A-009 | Exact e-reader sync target/protocol is not yet chosen.                                        | Device sync requirements remain deferred and high-level.                                                    | Validate target devices and protocols before v0.8.             |
+| A-010 | No core AI/ML model is required.                                                    | If AI/ML matching or recommendations are added, Section 3.6 must be expanded.                               | Require ML change review before adding models.                 |
 
 ### 2.6 Apportioning of Requirements
-💬 _Allocation of requirements across components or increments._
 
-➥ Map major requirements to subsystems, services, or releases/iterations. Use a cross-reference table to show allocation and to clearly identify deferred requirements.
-
-💡 Tips:
-- Note unknown allocations explicitly and track as follow-ups.
+| Milestone                               | Scope Summary                                                                                         | Primary Requirement IDs                                                                                                                                                   | Status            |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| v0.1 Foundation & Data Model            | Backend/frontend skeleton, REST API baseline, database/storage setup, migration approach, core model  | [REQ-INT-003](./requirements/interface/REQ-INT-003.md), [REQ-INT-008](./requirements/interface/REQ-INT-008.md), [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md), [REQ-BUILD-001](./requirements/build/REQ-BUILD-001.md), [REQ-BUILD-002](./requirements/build/REQ-BUILD-002.md), [REQ-BUILD-003](./requirements/build/REQ-BUILD-003.md), [REQ-MAINT-001](./requirements/maintainability/REQ-MAINT-001.md), [REQ-MAINT-002](./requirements/maintainability/REQ-MAINT-002.md), [REQ-POC-001](./requirements/proof-of-concept/REQ-POC-001.md) | planned/draft     |
+| v0.2 Web Library Alpha                  | EPUB import, catalog, book/author/series browsing, card views, basic search                           | [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md), [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md), [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md), [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md), [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md), [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md), [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md), [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md), [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md), [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md), [REQ-FUNC-012](./requirements/functional/REQ-FUNC-012.md), [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md), [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md), [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md), [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md), [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md), [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md),  [REQ-INT-001](./requirements/interface/REQ-INT-001.md), [REQ-INT-004](./requirements/interface/REQ-INT-004.md)                                                                                                               | planned/proposed  |
+| v0.3 Reading Tracker Alpha              | Owned books, reading status, completed reads, progress/events, analytics foundation                   | [REQ-FUNC-019](./requirements/functional/REQ-FUNC-019.md), [REQ-FUNC-020](./requirements/functional/REQ-FUNC-020.md), [REQ-FUNC-021](./requirements/functional/REQ-FUNC-021.md), [REQ-FUNC-022](./requirements/functional/REQ-FUNC-022.md), [REQ-FUNC-023](./requirements/functional/REQ-FUNC-023.md), [REQ-FUNC-024](./requirements/functional/REQ-FUNC-024.md), [REQ-FUNC-025](./requirements/functional/REQ-FUNC-025.md), [REQ-FUNC-026](./requirements/functional/REQ-FUNC-026.md), [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md), [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md)                                                                                                                           | planned/proposed  |
+| v0.4 EPUB Management Beta               | EPUB metadata writing, content editing, file versioning, safe modification, related series            | [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md), [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md), [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md), [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md), [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md), [REQ-REL-002](./requirements/reliability/REQ-REL-002.md)                                                                                                | planned           |
+| v0.5 Metadata, Import & Automation      | Metadata provider abstraction, candidate review, author images, duplicate detection, automation, jobs | [REQ-INT-005](./requirements/interface/REQ-INT-005.md), [REQ-INT-006](./requirements/interface/REQ-INT-006.md),  [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md), [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md),  [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md), [REQ-FUNC-029](./requirements/functional/REQ-FUNC-029.md), [REQ-FUNC-030](./requirements/functional/REQ-FUNC-030.md), [REQ-FUNC-031](./requirements/functional/REQ-FUNC-031.md), [REQ-FUNC-032](./requirements/functional/REQ-FUNC-032.md)  | planned/deferred  |
+| v0.6 Self-Hosted Server Release         | Authentication, HTTPS deployment support, container install, backup/restore, observability            | [REQ-SEC-001](./requirements/security/REQ-SEC-001.md), [REQ-SEC-002](./requirements/security/REQ-SEC-002.md), [REQ-SEC-003](./requirements/security/REQ-SEC-003.md), [REQ-SEC-004](./requirements/security/REQ-SEC-004.md), [REQ-SEC-005](./requirements/security/REQ-SEC-005.md), [REQ-INST-001](./requirements/installation/REQ-INST-001.md), [REQ-INST-002](./requirements/installation/REQ-INST-002.md), [REQ-INST-003](./requirements/installation/REQ-INST-003.md), [REQ-AVAIL-001](./requirements/availability/REQ-AVAIL-001.md), [REQ-AVAIL-002](./requirements/availability/REQ-AVAIL-002.md), [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md), [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md)                                                | planned/proposed  |
+| v0.7 Desktop App Alpha                  | Desktop/laptop distribution, shared UI reuse, local workflows                                         | [REQ-DIST-002](./requirements/distribution/REQ-DIST-002.md), [REQ-REUSE-001](./requirements/reusability/REQ-REUSE-001.md), [REQ-REUSE-002](./requirements/reusability/REQ-REUSE-002.md), [REQ-PORT-001](./requirements/portability/REQ-PORT-001.md)                                                                                                                  | deferred/proposed |
+| v0.8 E-reader / Device Sync             | Folder/mounted device sync target and sync job history                                                | [REQ-INT-007](./requirements/interface/REQ-INT-007.md), [REQ-FUNC-033](./requirements/functional/REQ-FUNC-033.md)                                                                                                                                                 | deferred          |
+| v1.0 Stable Personal Library Release    | Stabilization across library, reading, server, backup, security, docs                                 | All non-deferred planned/proposed requirements accepted for v1.0                                                                                                          | planned           |
+| v1.1+ Audiobooks & Multi-Medium Support | Audiobook support, medium tracking, e-book/audiobook progress sync                                    | [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md), [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md), [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md)                                                                                                                                  | deferred          |
 
 ## 3. Requirements
-💬 _This section specifies **verifiable** requirements of the software product to enable design and testing._
 
-➥ State requirements to a level of detail sufficient for design and verification. Use unique identifiers, consistent keywords (shall/should/may), and clear conditions. Describe inputs, processing in response, and outputs where applicable. Reference the relevant 2.3 Product Constraints that the requirement addresses.
-
-📃 Template (applies to **all** requirements):
-```markdown
-- ID: REQ-FUNC-001
-- Title: Short title, representative of the requirement...
-- Statement: The system shall...
-- Rationale: ...
-- Acceptance Criteria: ...
-- Verification Method: Test | Analysis | Inspection | Demonstration | Other
-- More Information: Additional context. Links to related artifacts.
-```
-
-Requirement ID schema and traceability:
-- ID format: REQ-[AREA]-[NNN]-[VER] (optional -[VER] if versioned), where AREA ∈ {FUNC, INT, PERF, SEC, REL, AVAIL, OBS, COMP, INST, BUILD, DIST, MAINT, REUSE, PORT, COST, DEAD, POC, CM, ML}.
-- Uniqueness: IDs must be unique and immutable; changes increment -[VER] and are recorded in Revision History.
-- Traceability: Each test artifact may reference the requirement ID.
-
-💡 Tips:
-- Make each requirement testable and unambiguous, using standard metrics and avoiding vague terms (e.g., “user-friendly,” “fast”).
+Requirement entries in this section use the supplied requirement template fields: ID, status, date, title, statement, rationale, acceptance criteria, verification method, and more information. Status values use the supplied status vocabulary: `draft`, `proposed`, `deferred`, `planned`, `in-progress`, `blocked`, `passed`, `failed`, or `waived`.
 
 ### 3.1 External Interfaces
-💬 _Specifies all external inputs and outputs, covering both required and provided interfaces._
 
-➥ Provide interface definitions sufficient for implementation and test.
-
-💡 Tips:
-- Use interface control documents or schemas where appropriate and reference them here.
+This section defines user, hardware, and software-facing interfaces at a logical level.
 
 #### 3.1.1 User Interfaces
-💬 _Describes how users interact with the system at a logical level._
 
-➥ Define UI elements, flows, and standards to be followed (style guides, accessibility guidelines). Include layout constraints, common controls (e.g., help, search), keyboard shortcuts, error/empty-state behavior, and localization. Keep visual designs in a separate UI specification and reference them.
+| ID | Title | 
+|----|-------|
+| [REQ-INT-001](./requirements/interface/REQ-INT-001.md) | Browser-based library user interface |
+| [REQ-INT-002](./requirements/interface/REQ-INT-002.md) | Responsive user interface |
 
-💡 Tips:
-- Reference accessibility standards (e.g., WCAG) and platform-specific guidelines.
-- Consider organizing into subcategories for clarity: Usability/Accessibility (inputs/outputs and dialogs to fit user abstractions, abilities, and expectations), and Convenience.
 
 #### 3.1.2 Hardware Interfaces
-💬 _Details interactions with physical devices and platforms._
 
-➥ Specify (un)supported device types, data/control signals, electrical or mechanical characteristics if relevant, and communication protocols. Include timing, throughput, and reliability expectations.
-
-💡 Tips:
-- Reference applicable hardware specs and certification requirements.
-
+| ID | Title |
+|----|-------|
+| [REQ-INT-007](./requirements/interface/REQ-INT-007.md) | Mounted-folder e-reader sync interface |
 #### 3.1.3 Software Interfaces
-💬 _Defines integrations with other software components and services._
-
-➥ List connected systems (name and version), required or provided services/APIs, data items/messages exchanged, communication styles/protocols, and limit/error/timeout semantics. Identify shared data and ownership.
-
-💡 Tips:
-- Capture versioning and backward compatibility policies.
-- Define authentication/authorization expectations for each integration.
+| ID                                                     | Title                                 |
+| ------------------------------------------------------ | ------------------------------------- |
+| [REQ-INT-003](./requirements/interface/REQ-INT-003.md) | REST API interface                    |
+| [REQ-INT-004](./requirements/interface/REQ-INT-004.md) | File import and download interface    |
+| [REQ-INT-005](./requirements/interface/REQ-INT-005.md) | External metadata provider interface  |
+| [REQ-INT-006](./requirements/interface/REQ-INT-006.md) | External image URL download interface |
+| [REQ-INT-008](./requirements/interface/REQ-INT-008.md) | Client database isolation             |
 
 ### 3.2 Functional
-💬 _Specifies the externally observable behaviors and functions the software shall provide._
 
-➥ Organize functional requirements by feature, use case, or service. For each, describe triggers/inputs, processing/logic (at a black-box level), outputs, and error conditions. For AI behaviors, define determinism bounds (e.g., temperature), refusal criteria, safety rules, and human review points.
+This section defines externally observable product behavior grouped by library management, browsing, reading tracking, automation, and future media support.
 
-💡 Tips:
-- Include edge cases and negative scenarios for completeness.
-- For AI features, include fallback behaviors and thresholds for abstention.
+#### 3.2.1 Library Management and EPUB Processing
+| ID                                                        | Title                               |
+| --------------------------------------------------------- | ----------------------------------- |
+| [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md) | Import EPUB files                   |
+| [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md) | Persist catalog records and assets  |
+| [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md) | Extract EPUB metadata               |
+| [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md) | Edit catalog metadata               |
+| [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md) | Write metadata to EPUB files        |
+| [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md) | Edit EPUB content                   |
+| [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md) | Version EPUB modification           |
+| [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md) | Fetch online metadata               |
+| [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) | Review metadata candidates          |
+| [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md) | Detect duplicate imported books     |
+| [REQ-FUNC-037](./requirements/functional/REQ-FUNC-037.md)                                          | Update EPUB cover image             |
+| [REQ-FUNC-038](./requirements/functional/REQ-FUNC-038.md)                                          | Automatic EPUB cover image fetching |
+| [REQ-FUNC-039](./requirements/functional/REQ-FUNC-039.md)                                          | Manual EPUB cover image fetching    |
+
+
+#### 3.2.2 Browsing, Authors, and Series
+| ID                                                        | Title                      |
+| --------------------------------------------------------- | -------------------------- |
+| [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md) | Display book card view     |
+| [REQ-FUNC-012](./requirements/functional/REQ-FUNC-012.md) | Display author detail view |
+| [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md) | Manage author images       |
+| [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md) | Display series detail view |
+| [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md) | Support related series     |
+| [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md) | Display author overview    |
+| [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md) | Display series overview    |
+| [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md) | Search and filter library  |
+| [REQ-FUNC-040](./requirements/functional/REQ-FUNC-040.md) | Display book table view    |
+
+#### 3.2.3 Reading Tracking and Analytics
+| ID | Title |
+|----|-------|
+| [REQ-FUNC-019](./requirements/functional/REQ-FUNC-019.md) | Track owned books |
+| [REQ-FUNC-020](./requirements/functional/REQ-FUNC-020.md) | Track reading status |
+| [REQ-FUNC-021](./requirements/functional/REQ-FUNC-021.md) | Track completed reads |
+| [REQ-FUNC-022](./requirements/functional/REQ-FUNC-022.md) | Track reading progress events |
+| [REQ-FUNC-023](./requirements/functional/REQ-FUNC-023.md) | Analyze books read per period |
+| [REQ-FUNC-024](./requirements/functional/REQ-FUNC-024.md) | Analyze pages read per period |
+| [REQ-FUNC-025](./requirements/functional/REQ-FUNC-025.md) | Analyze books by author |
+| [REQ-FUNC-026](./requirements/functional/REQ-FUNC-026.md) | Analyze reading speed by author |
+| [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md) | Support remote updates through server |
+
+#### 3.2.4 Automation and Job Processing
+| ID | Title |
+|----|-------|
+| [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md) | Define automation rules on book import |
+| [REQ-FUNC-029](./requirements/functional/REQ-FUNC-029.md) | Automation action for metadata fetching |
+| [REQ-FUNC-030](./requirements/functional/REQ-FUNC-030.md) | Automation action for EPUB search-and-replace |
+| [REQ-FUNC-031](./requirements/functional/REQ-FUNC-031.md) | Run long operations as background jobs |
+| [REQ-FUNC-032](./requirements/functional/REQ-FUNC-032.md) | Display job status |
+
+#### 3.2.5 Deferred Device and Media Features
+| ID | Title |
+|----|-------|
+| [REQ-FUNC-033](./requirements/functional/REQ-FUNC-033.md) | Synchronize books to e-reader targets |
+| [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md) | Support audiobook records |
+| [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md) | Track book medium |
+| [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md) | Sync progress between e-book and audiobook |
 
 ### 3.3 Quality of Service
-💬 _Quality attributes that constrain or qualify functional behavior._
 
-➥ Use specific metrics, ranges, and conditions.
-
-💡 Tips:
-- When a quality applies only to a subset of functions, reference the related requirement IDs.
-- Provide rationale when targets cut across functions to aid trade-off decisions.
+This section defines performance, security, reliability, availability, and observability expectations. Requirements with status `draft` need owner confirmation before they can be treated as release gates.
 
 #### 3.3.1 Performance
-💬 _Response time, throughput, and resource usage expectations._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md) | Catalog browsing latency target |
+| [REQ-PERF-002](./requirements/performance/REQ-PERF-002.md) | Non-blocking long-running operations |
+| [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md) | Asset storage growth visibility |
 
-➥ Specify timing relationships, peak/steady-state loads, and performance targets under expected conditions. Include measurement methods, environments, and acceptance thresholds. Note any real-time constraints.
-
-💡 Tips:
-- Include scalability targets and capacity planning assumptions.
-- Consider organizing into subcategories for clarity: Time (latency, throughput, etc.) and Space (memory, storage, bandwidth, etc.).
 
 #### 3.3.2 Security
-💬 _Defines the protection of data, identities, and operations._
+| ID | Title |
+|--------------- | --------------- |
+| [REQ-SEC-001](./requirements/security/REQ-SEC-001.md)   | Authenticate protected operations  |
+| [REQ-SEC-002](./requirements/security/REQ-SEC-002.md)   | Authorize user operations   |
+| [REQ-SEC-003](./requirements/security/REQ-SEC-003.md)   | Validate external inputs   |
+| [REQ-SEC-004](./requirements/security/REQ-SEC-004.md)   |  Protect secrets and provider credentials  |
+| [REQ-SEC-005](./requirements/security/REQ-SEC-005.md) | Support secure deployment over HTTPS |
 
-➥ Define authentication, authorization, data protection (in transit/at rest), auditing, and privacy requirements. Address abuse/misuse and external attacks (e.g., injection, data exfiltration, or service compromise), and include secure defaults and incident response requirements.
-
-💡 Tips:
-- Distinguish mandatory controls vs. recommended practices.
-- Consider organizing into subcategories for clarity: Safety (harmful external outcomes), Confidentiality (disclose data to unauthorized parties), Privacy (private data disclosed without consent), Integrity (data modified without authorization), and Availability (authorized data or resources made available when requested).
-
-📝 Note:
-Place generic security controls here (3.3.2), and cross-reference from supported controls as necessary:
-- Use 3.1 External Interfaces for interface-level validation and secure protocols.
-- Use 3.4 Compliance for regulatory/contractual obligations and audit evidence.
-- Use 3.6 AI/ML for model-specific runtime protections and data governance.
 
 #### 3.3.3 Reliability
-💬 _Ability to consistently perform as specified._
+| ID   | Title |
+|--------------- | --------------- |
+| [REQ-REL-001](./requirements/reliability/REQ-REL-001.md)   | Transactional catalog mutations   |
+| [REQ-REL-002](./requirements/reliability/REQ-REL-002.md)   | Recover from failed EPUB mutation   |
+| [REQ-REL-003](./requirements/reliability/REQ-REL-003.md)   | Handle metadata provider failure gracefully   |
+| [REQ-REL-004](./requirements/reliability/REQ-REL-004.md)   |  Idempotent import by checksum  |
 
-➥ Specify reliability metrics and techniques (e.g., MTBF, error budgets, retry/backoff, idempotency, redundancy). Define conditions under which reliability is assessed and any failover behaviors. Define graceful degradation (e.g., fallback components, cached results, AI/ML deterministic heuristics), timeout/abstain policies, and rollback to previous versions.
 
 #### 3.3.4 Availability
-💬 _System uptime and readiness to deliver service._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-AVAIL-001](./requirements/availability/REQ-AVAIL-001.md) | Restart recovery |
+| [REQ-AVAIL-002](./requirements/availability/REQ-AVAIL-002.md) | Backup and restore support |
 
-➥ Define availability targets, maintenance windows, and mechanisms like checkpointing, recovery, and restart. Include geographical/zone redundancy if applicable.
-
-💡 Tips:
-- Express availability in terms meaningful to users (e.g., downtime per month) and tie to SLAs/SLOs.
-- Capture scale-out/in behavior affecting availability (e.g., max failover time, quorum constraints).
 
 #### 3.3.5 Observability
-💬 _Ability to understand system state and behavior in production through telemetry._
+| ID                                                         | Title                          |
+| ---------------------------------------------------------- | ------------------------------ |
+| [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md) | Structured server logs         |
+| [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md) | User-visible operation history |
 
-➥ Define requirements for logs, metrics, traces, and profiling: events/fields, cardinality limits, sampling, retention, and privacy/PII handling in telemetry. Specify standard labels (e.g., service, version, tenant), correlation/trace IDs propagation, and redaction policies. State SLO-aligned alert rules, dashboards, and ownership.
-
-💡 Tips:
-- Avoid maintenance-process details (keep runbooks and on-call policies in 3.5.4 Maintainability).
 
 ### 3.4 Compliance
-💬 _Requirements derived to satisfy external standards, regulations, or contracts._
+This section defines compliance-oriented requirements derived from user-content handling, external metadata/image sources, and privacy of reading data.
 
-➥ Specify mandated formats, naming conventions, accounting procedures, provider/user rights and agreements, licensing agreements, audit tracing, records retention, and reporting. For each compliance item, reference 2.3 Product Constraints if applicable, or cite the authoritative source directly.
+| ID  | Title |
+| --- | ----- |
+| [REQ-COMP-001](./requirements/compliance/REQ-COMP-001.md) | External source attribution |
+| [REQ-COMP-002](./requirements/compliance/REQ-COMP-002.md) | User-content responsibility notice |
+| [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md) | Privacy of reading data |
+
 
 ### 3.5 Design and Implementation
-💬 _Constraints or mandates affecting how the solution is designed, deployed, and maintained._
+
+This section captures binding implementation constraints and delivery expectations supplied by the project description or architecture discussion.
 
 #### 3.5.1 Installation
-💬 _Ensures the software runs smoothly in its target environments._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-INST-001](./requirements/installation/REQ-INST-001.md) | Self-hosted server installation |
+| [REQ-INST-002](./requirements/installation/REQ-INST-002.md) | Configurable data directory |
+| [REQ-INST-003](./requirements/installation/REQ-INST-003.md) | Containerized deployment package |
 
-➥ Define (un)supported platforms/environments, prerequisites, installation methods, environment configuration (e.g., env vars, secrets), and rollback/uninstall procedures.
-
-💡 Tips:
-- Detail automation expectations (e.g., IaC, installer scripts, container images).
-- Keep scaling mechanics (topology, multi-region) in 3.5.3 Distribution; keep scaling targets in 3.3 QoS.
 
 #### 3.5.2 Build and Delivery
-💬 _Defines the controls for building, packaging, and delivering software artifacts to ensure integrity, traceability, and reproducibility._
+| ID   | Title |
+|--------------- | --------------- |
+| [REQ-BUILD-001](./requirements/build/REQ-BUILD-001.md)   | Rust backend   |
+| [REQ-BUILD-002](./requirements/build/REQ-BUILD-002.md)   | REST server   |
+| [REQ-BUILD-003](./requirements/build/REQ-BUILD-003.md)   | React TypeScript frontend   |
+| [REQ-BUILD-004](./requirements/build/REQ-BUILD-004.md)   | Continuous integration checks  |
 
-➥ Define how source code is transformed into deployable artifacts and moved through environments. Describe expectations for build reproducibility, dependency management, licensing, configuration management, artifact verification, and release promotion.
-
-💡 Tips:
-- Cross-reference 3.5.1 Installation and 3.5.10 Change Management for environment setup, versioning, and release traceability.
-- Avoid operational topology details (those belong in 3.5.3 Distribution).
 
 #### 3.5.3 Distribution
-💬 _Addresses geographically or organizationally distributed deployments, data, and devices._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-DIST-001](./requirements/distribution/REQ-DIST-001.md) | Server-browser deployment topology |
+| [REQ-DIST-002](./requirements/distribution/REQ-DIST-002.md) | Desktop application distribution |
+| [REQ-DIST-003](./requirements/distribution/REQ-DIST-003.md) | Mobile availability |
 
-➥ Specify deployment topologies, component and data distribution/replication approaches and scale-out runbooks, and constraints imposed by organizational or network structure.
 
 #### 3.5.4 Maintainability
-💬 _Attributes that make the software easier to modify, fix, and evolve._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-MAINT-001](./requirements/maintainability/REQ-MAINT-001.md) | Modular backend organization |
+| [REQ-MAINT-002](./requirements/maintainability/REQ-MAINT-002.md) | Database migrations |
 
-➥ Define expectations for modularity, code complexity, interfaces, coding standards, developer oriented observability, documentation, software delivery performance, and technical debt management.
 
 #### 3.5.5 Reusability
-💬 _Encourages leveraging components across products or contexts when appropriate._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-REUSE-001](./requirements/reusability/REQ-REUSE-001.md) | Shared frontend reuse |
+| [REQ-REUSE-002](./requirements/reusability/REQ-REUSE-002.md) | Reusable Rust core |
 
-➥ Identify components intended for reuse and any constraints on their dependencies or technology choices. Specify modularization, API stability, packaging, and documentation to enable reuse.
 
 #### 3.5.6 Portability
-💬 _Ability to run on multiple platforms or environments with minimal changes._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-PORT-001](./requirements/portability/REQ-PORT-001.md) | Supported operating environments |
 
-➥ Specify (un)supported operating systems, hardware architectures, cloud providers, or container runtimes. Define abstraction layers, configuration policies, and externalization of environment-specific settings.
 
 #### 3.5.7 Cost
-💬 _Financial considerations or cost targets._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-COST-001](./requirements/cost/REQ-COST-001.md) | No mandatory paid third-party service for core use |
 
-➥ State budgetary limits, cost-per-transaction targets, licensing constraints, or cloud spend envelopes that influence design decisions.
-
-💡 Tips:
-- Keep costs high-level unless contractually defined.
-- Link to a cost model or TCO assumptions where available.
-- Note variable vs. fixed cost expectations impacting scaling strategies.
 
 #### 3.5.8 Deadline
-💬 _Schedule expectations that affect scope and prioritization._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-DEAD-001](./requirements/deadline/REQ-DEAD-001.md) | Milestone release sequence |
 
-➥ Specify key milestones, delivery dates, or phases/increments. Indicate dependencies between milestones and required readiness criteria.
-
-💡 Tips:
-- Use deadlines to guide apportioning of requirements (Section 2.6).
 
 #### 3.5.9 Proof of Concept
-💬 _Validates feasibility and de-risks critical assumptions before full-scale delivery._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-POC-001](./requirements/proof-of-concept/REQ-POC-001.md) | SQLite server data-store |
 
-➥ Define the objectives, scope, success criteria, and timebox for any POCs. Describe what will be validated (technical, usability, performance) and how results will influence requirements or design.
-
-💡 Tips:
-- Keep POCs narrowly focused and measurable. Focus on validation goals, not implementation details.
 
 #### 3.5.10 Change Management
-💬 _Controls how changes are introduced and communicated._
+| ID | Title |
+| -------------- | --------------- |
+| [REQ-CM-001](./requirements/change-management/REQ-CM-001.md) | Versioned change management |
 
-➥ Define change categories (breaking, additive, bugfix), approval workflow, and required artifacts (changelogs, evaluation summaries, migration guides, release notes). Specify backward/forward compatibility guarantees, client communication plans, deprecation timelines, and rollout/rollback procedures.
 
 ### 3.6 AI/ML
-💬 _This section defines requirements unique to systems incorporating machine learning or data-driven components at their core. These requirements complement functional, quality, and design aspects in preceding sections but address ML-specific lifecycle, data, and ethical considerations._
+
+The current product description does not require a core AI/ML model. If future metadata matching, recommendation, or classification capabilities use AI/ML, additional model specification, data management, ethics, and lifecycle requirements must be added before release.
 
 #### 3.6.1 Model Specification
-💬 _Defines what each model is intended to do and the measurable criteria for acceptable performance._
 
-➥ Describe model(s) purpose, scope, expected behavior, key inputs and outputs, and measurable performance objectives. Note any validation datasets, benchmarks, or versioning practices used to ensure reproducibility.
-
-💡 Tips:
-- Distinguish baseline targets from aspirational improvements and define acceptable tolerance for drift.
+No AI/ML model is specified for the initial release.
 
 #### 3.6.2 Data Management
-💬 _Ensures integrity, traceability, and ethical lifecycle of data used in model training, validation, and operation._
 
-➥ Specify dataset origin, ownership, consent conditions; labeling processes and quality controls; data lineage, versioning, and reproducibility (training → validation → inference); storage, access controls, and anonymization/pseudonymization standards; handling of missing, synthetic, or augmented data.
+No AI/ML training, validation, or inference dataset is specified for the initial release.
 
 #### 3.6.3 Guardrails
-💬 _Ensure that the AI system operates safely, predictably, and within approved boundaries._
-
-➥ Specify how the system validates inputs, filters or constrains outputs, and limits available actions to prevent harm, misuse, or unintended consequences. Include mechanisms to detect and respond to malicious inputs or unsafe operational conditions.
-
-💡 Tips:
-- Treat “guardrails” across input, output, and action layers.
-- Define escalation, logging, and rollback procedures when safety constraints are triggered.
-- Cross-reference 3.3.2 Security for system-level protections and 3.6.4 Ethics for normative expectations.
+No guardrails are needed because there are no AI/ML features planned.
 
 #### 3.6.4 Ethics
-💬 _Addresses fairness, transparency, and accountability in model behavior and outcomes._
 
-➥ Define how ethical considerations will be identified, measured, and managed throughout development and operation. Include fairness objectives, explainability expectations, and documentation or review requirements.
-
-💡 Tips:
-- Use fairness metrics appropriate to context (e.g., demographic parity, equal opportunity).
-- Consider organizing into subcategories for clarity: Fairness (societal bias in outcomes), Interpretability (can inspect the model and understand outputs), and Explainability (can explain an output for a given input).
-- Coordinate with 3.6.3 Guardrails for enforcement mechanisms and 3.6.5 Human-in-the-Loop for human oversight.
+No AI/ML-specific ethics requirements are applicable until an AI/ML component is proposed. General privacy and authorization requirements still apply.
 
 #### 3.6.5 Human-in-the-Loop
-💬 _Specifies the role of human oversight in decisions influenced or made by machine learning models._
 
-➥ Describe where and how human review, approval, or intervention is required. Clarify review latency or throughput expectations, escalation paths, feedback mechanisms, traceability, and auditability of human actions.
-
-💡 Tips:
-- Link to applicable roles defined in 2.4 User Characteristics.
+Human review is required for metadata candidate application unless a user-enabled automation rule permits a narrower automatic action. See [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md) and [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md). 
 
 #### 3.6.6 Model Lifecycle and Operations
-💬 _Defines requirements for deploying, monitoring, retraining, and retiring models in production._
 
-➥ Outline how models transition from development to production, how their performance and data quality are monitored, and how retraining or rollback is triggered and managed. Include expectations for versioning and archival.
+No AI/ML model lifecycle or operations requirements are applicable until an AI/ML component is proposed.
 
 ## 4. Verification
-💬 _Describes how each requirement will be verified to provide objective evidence of compliance._
 
-➥ Outline verification methods (test, canary metrics, analysis, inspection, demonstration) and test evidence preferably in a matrix paralleling Section 3. Consider adding environment details, tools, and test data requirements.
+Verification artifacts should be created as the implementation matures. The paths below are proposed traceability placeholders, not existing evidence unless later populated.
 
-| Requirement ID | Verification Method | Test/Artifact Link | Status | Evidence           |
-|----------------|---------------------|--------------------|--------|--------------------|
-| REQ-FUNC-001   | test                | tests/UC01.md      | Passed | reports/tuc01.html |
-| REQ-SEC-003    | analysis            | threat-model.md    | WIP    |                    |
-
-💡 Tips:
-- Include both positive and negative tests and include non-functional verification (performance, security, reliability).
-- Verification artifacts may be versioned and linked to CI/CD.
-- For AI, reference Model Cards and track eval datasets’ versions and ensure reproducibility of results.
+| Requirement ID | Verification Method | Test/Artifact Link | Status   | Evidence |
+| -------------- | ------------------- | ------------------ | -------- | -------- |
+| [REQ-INT-001](./requirements/interface/REQ-INT-001.md)    | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-INT-002](./requirements/interface/REQ-INT-002.md)    | Test                | TBD                | proposed | TBD      |
+| [REQ-INT-003](./requirements/interface/REQ-INT-003.md)    | Inspection          | TBD                | planned  | TBD      |
+| [REQ-INT-004](./requirements/interface/REQ-INT-004.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-INT-005](./requirements/interface/REQ-INT-005.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-INT-006](./requirements/interface/REQ-INT-006.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-INT-007](./requirements/interface/REQ-INT-007.md)    | Demonstration       | TBD                | deferred | TBD      |
+| [REQ-INT-008](./requirements/interface/REQ-INT-008.md)    | Inspection          | TBD                | proposed | TBD      |
+| [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-012](./requirements/functional/REQ-FUNC-012.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-FUNC-019](./requirements/functional/REQ-FUNC-019.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-020](./requirements/functional/REQ-FUNC-020.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-021](./requirements/functional/REQ-FUNC-021.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-022](./requirements/functional/REQ-FUNC-022.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-FUNC-023](./requirements/functional/REQ-FUNC-023.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-024](./requirements/functional/REQ-FUNC-024.md)   | Analysis            | TBD                | planned  | TBD      |
+| [REQ-FUNC-025](./requirements/functional/REQ-FUNC-025.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-026](./requirements/functional/REQ-FUNC-026.md)   | Analysis            | TBD                | planned  | TBD      |
+| [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md)   | Test                | TBD                | deferred | TBD      |
+| [REQ-FUNC-029](./requirements/functional/REQ-FUNC-029.md)   | Test                | TBD                | deferred | TBD      |
+| [REQ-FUNC-030](./requirements/functional/REQ-FUNC-030.md)   | Test                | TBD                | deferred | TBD      |
+| [REQ-FUNC-031](./requirements/functional/REQ-FUNC-031.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-FUNC-032](./requirements/functional/REQ-FUNC-032.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-FUNC-033](./requirements/functional/REQ-FUNC-033.md)   | Demonstration       | TBD                | deferred | TBD      |
+| [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md)   | Inspection          | TBD                | deferred | TBD      |
+| [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md)   | Inspection          | TBD                | deferred | TBD      |
+| [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md)   | Analysis            | TBD                | deferred | TBD      |
+| [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md)   | Analysis            | TBD                | draft    | TBD      |
+| [REQ-PERF-002](./requirements/performance/REQ-PERF-002.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md)   | Demonstration       | TBD                | proposed | TBD      |
+| [REQ-SEC-001](./requirements/security/REQ-SEC-001.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-SEC-002](./requirements/security/REQ-SEC-002.md)    | Test                | TBD                | draft    | TBD      |
+| [REQ-SEC-003](./requirements/security/REQ-SEC-003.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-SEC-004](./requirements/security/REQ-SEC-004.md)    | Inspection          | TBD                | proposed | TBD      |
+| [REQ-SEC-005](./requirements/security/REQ-SEC-005.md)    | Inspection          | TBD                | proposed | TBD      |
+| [REQ-REL-001](./requirements/reliability/REQ-REL-001.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-REL-002](./requirements/reliability/REQ-REL-002.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-REL-003](./requirements/reliability/REQ-REL-003.md)    | Test                | TBD                | planned  | TBD      |
+| [REQ-REL-004](./requirements/reliability/REQ-REL-004.md)    | Test                | TBD                | proposed | TBD      |
+| [REQ-AVAIL-001](./requirements/availability/REQ-AVAIL-001.md)  | Test                | TBD                | proposed | TBD      |
+| [REQ-AVAIL-002](./requirements/availability/REQ-AVAIL-002.md)  | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md)    | Inspection          | TBD                | proposed | TBD      |
+| [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md)    | Demonstration       | TBD                | proposed | TBD      |
+| [REQ-COMP-001](./requirements/compliance/REQ-COMP-001.md)   | Test                | TBD                | proposed | TBD      |
+| [REQ-COMP-002](./requirements/compliance/REQ-COMP-002.md)   | Inspection          | TBD                | proposed | TBD      |
+| [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-INST-001](./requirements/installation/REQ-INST-001.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-INST-002](./requirements/installation/REQ-INST-002.md)   | Test                | TBD                | planned  | TBD      |
+| [REQ-INST-003](./requirements/installation/REQ-INST-003.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-BUILD-001](./requirements/build/REQ-BUILD-001.md)  | Inspection          | TBD                | planned  | TBD      |
+| [REQ-BUILD-002](./requirements/build/REQ-BUILD-002.md)  | Inspection          | TBD                | planned  | TBD      |
+| [REQ-BUILD-003](./requirements/build/REQ-BUILD-003.md)  | Inspection          | TBD                | planned  | TBD      |
+| [REQ-BUILD-004](./requirements/build/REQ-BUILD-004.md)  | Inspection          | TBD                | proposed | TBD      |
+| [REQ-DIST-001](./requirements/distribution/REQ-DIST-001.md)   | Demonstration       | TBD                | planned  | TBD      |
+| [REQ-DIST-002](./requirements/distribution/REQ-DIST-002.md)   | Demonstration       | TBD                | deferred | TBD      |
+| [REQ-DIST-003](./requirements/distribution/REQ-DIST-003.md)   | Demonstration       | TBD                | deferred | TBD      |
+| [REQ-MAINT-001](./requirements/maintainability/REQ-MAINT-001.md)  | Inspection          | TBD                | proposed | TBD      |
+| [REQ-MAINT-002](./requirements/maintainability/REQ-MAINT-002.md)  | Test                | TBD                | planned  | TBD      |
+| [REQ-REUSE-001](./requirements/reusability/REQ-REUSE-001.md)  | Inspection          | TBD                | planned  | TBD      |
+| [REQ-REUSE-002](./requirements/reusability/REQ-REUSE-002.md)  | Inspection          | TBD                | proposed | TBD      |
+| [REQ-PORT-001](./requirements/portability/REQ-PORT-001.md)   | Inspection          | TBD                | draft    | TBD      |
+| [REQ-COST-001](./requirements/cost/REQ-COST-001.md)   | Inspection          | TBD                | proposed | TBD      |
+| [REQ-DEAD-001](./requirements/deadline/REQ-DEAD-001.md)   | Inspection          | TBD                | proposed | TBD      |
+| [REQ-POC-001](./requirements/proof-of-concept/REQ-POC-001.md)    | Analysis            | TBD                | draft    | TBD      |
+| [REQ-CM-001](./requirements/change-management/REQ-CM-001.md)     | Inspection          | TBD                | proposed | TBD      |
 
 ## 5. Appendixes
-💬 _Optional supporting material that aids understanding without being normative._
 
-➥ Include glossaries, data dictionaries, models/diagrams, sample datasets, or change-impact analyses that support the main sections. Reference rather than duplicate content when possible.
+### Appendix A: Open Questions and Clarifications Needed
 
-💡 Tips:
-- Keep appendixes organized and referenced from the main text.
+The following items are not supplied in the source material and should be answered before the affected requirements are treated as final release gates:
+
+1. Is the target deployment single-user, household/multi-user, or future public multi-tenant?
+2. What authentication model is desired: single owner account, local users, OAuth/OIDC, reverse-proxy auth, or something else?
+3. What database should the initial stable release target, and should SQLite be a formal requirement or only an allowed implementation?
+4. What is the expected library size for performance tests: hundreds, thousands, tens of thousands, or more books?
+5. How many concurrent users or clients should the self-hosted server support?
+6. Which metadata providers should be supported first?
+7. Which image providers or URL restrictions should apply to cover and author-image downloads?
+8. Which EPUB content-editing workflows are required first: full editor, OPF metadata only, cover replacement, XHTML search-and-replace, or another subset?
+9. What exact reading statuses are required beyond unread/currently reading/read/abandoned?
+10. Should reading analytics count rereads separately from first reads?
+11. How should books with multiple authors be counted in analytics?
+12. What page-count and reading-speed calculation rules should be used?
+13. Which accessibility standard or target should the UI meet?
+14. Which operating systems are release targets for server and desktop builds?
+15. Should mobile be responsive web only, PWA, Tauri mobile, Capacitor, or another native wrapper?
+16. Which e-reader devices and sync protocols are in scope for the first device-sync milestone?
+17. What backup retention and restore expectations are required?
+18. What license should the project use, and what third-party dependency license policy should apply?
+
+### Appendix B: Requirement Index
+
+| Requirement ID | Title                                                 | Status   | Section                                    |
+| -------------- | ----------------------------------------------------- | -------- | ------------------------------------------ |
+| [REQ-INT-001](./requirements/interface/REQ-INT-001.md)    | Browser-based library user interface                  | planned  | 3.1 External Interfaces                    |
+| [REQ-INT-002](./requirements/interface/REQ-INT-002.md)    | Responsive user interface                             | proposed | 3.1 External Interfaces                    |
+| [REQ-INT-003](./requirements/interface/REQ-INT-003.md)    | REST API interface                                    | planned  | 3.1 External Interfaces                    |
+| [REQ-INT-004](./requirements/interface/REQ-INT-004.md)    | File import and download interface                    | planned  | 3.1 External Interfaces                    |
+| [REQ-INT-005](./requirements/interface/REQ-INT-005.md)    | External metadata provider interface                  | planned  | 3.1 External Interfaces                    |
+| [REQ-INT-006](./requirements/interface/REQ-INT-006.md)    | External image URL download interface                 | planned  | 3.1 External Interfaces                    |
+| [REQ-INT-007](./requirements/interface/REQ-INT-007.md)    | Mounted-folder e-reader sync interface                | deferred | 3.1 External Interfaces                    |
+| [REQ-INT-008](./requirements/interface/REQ-INT-008.md)    | Client database isolation                             | proposed | 3.1 External Interfaces                    |
+| [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md)   | Import EPUB files                                     | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md)   | Persist catalog records and assets                    | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md)   | Extract EPUB metadata                                 | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md)   | Edit catalog metadata                                 | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md)   | Write metadata to EPUB files                          | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md)   | Edit EPUB content                                     | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md)   | Version EPUB modifications                            | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md)   | Fetch online metadata                                 | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md)   | Review metadata candidates                            | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md)   | Detect duplicate imported books                       | proposed | 3.2 Functional Requirements                |
+| [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md)   | Display book card view                                | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-012](./requirements/functional/REQ-FUNC-012.md)   | Display author detail view                            | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md)   | Manage author images                                  | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md)   | Display series detail view                            | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md)   | Support related series                                | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md)   | Display author overview                               | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md)   | Display series overview                               | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md)   | Search and filter library                             | proposed | 3.2 Functional Requirements                |
+| [REQ-FUNC-019](./requirements/functional/REQ-FUNC-019.md)   | Track owned books                                     | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-020](./requirements/functional/REQ-FUNC-020.md)   | Track reading status                                  | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-021](./requirements/functional/REQ-FUNC-021.md)   | Track completed reads                                 | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-022](./requirements/functional/REQ-FUNC-022.md)   | Track reading progress events                         | proposed | 3.2 Functional Requirements                |
+| [REQ-FUNC-023](./requirements/functional/REQ-FUNC-023.md)   | Analyze books read per period                         | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-024](./requirements/functional/REQ-FUNC-024.md)   | Analyze pages read per period                         | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-025](./requirements/functional/REQ-FUNC-025.md)   | Analyze books by author                               | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-026](./requirements/functional/REQ-FUNC-026.md)   | Analyze reading speed by author                       | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md)   | Support remote updates through server                 | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md)   | Define automation rules on book import                | deferred | 3.2 Functional Requirements                |
+| [REQ-FUNC-029](./requirements/functional/REQ-FUNC-029.md)   | Automation action for metadata fetching               | deferred | 3.2 Functional Requirements                |
+| [REQ-FUNC-030](./requirements/functional/REQ-FUNC-030.md)   | Automation action for EPUB search-and-replace         | deferred | 3.2 Functional Requirements                |
+| [REQ-FUNC-031](./requirements/functional/REQ-FUNC-031.md)   | Run long operations as background jobs                | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-032](./requirements/functional/REQ-FUNC-032.md)   | Display job status                                    | planned  | 3.2 Functional Requirements                |
+| [REQ-FUNC-033](./requirements/functional/REQ-FUNC-033.md)   | Synchronize books to e-reader targets                 | deferred | 3.2 Functional Requirements                |
+| [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md)   | Support audiobook records                             | deferred | 3.2 Functional Requirements                |
+| [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md)   | Track book medium                                     | deferred | 3.2 Functional Requirements                |
+| [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md)   | Sync progress between e-book and audiobook            | deferred | 3.2 Functional Requirements                |
+| [REQ-FUNC-037](./requirements/functional/REQ-FUNC-037.md) | Update EPUB cover image | draft | 3.2 Functional Requirements |
+| [REQ-FUNC-038](./requirements/functional/REQ-FUNC-038.md) | Automated EPUB cover image fetching | draft | 3.2 Functional Requirements |
+| [REQ-FUNC-039](./requirements/functional/REQ-FUNC-039.md) | Manual EPUB cover image fetching | draft | 3.2 Functional Requirements |
+| [REQ-FUNC-040](./requirements/functional/REQ-FUNC-040.md) | Display book table view | draft | 3.2 Functional Requirements |
+| [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md)   | Catalog browsing latency target                       | draft    | 3.3 Quality of Service Requirements        |
+| [REQ-PERF-002](./requirements/performance/REQ-PERF-002.md)   | Non-blocking long-running operations                  | proposed | 3.3 Quality of Service Requirements        |
+| [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md)   | Asset storage growth visibility                       | proposed | 3.3 Quality of Service Requirements        |
+| [REQ-SEC-001](./requirements/security/REQ-SEC-001.md)    | Authenticate protected operations                     | planned  | 3.3 Quality of Service Requirements        |
+| [REQ-SEC-002](./requirements/security/REQ-SEC-002.md)    | Authorize user operations                             | draft    | 3.3 Quality of Service Requirements        |
+| [REQ-SEC-003](./requirements/security/REQ-SEC-003.md)    | Validate external inputs                              | planned  | 3.3 Quality of Service Requirements        |
+| [REQ-SEC-004](./requirements/security/REQ-SEC-004.md)    | Protect secrets and provider credentials              | proposed | 3.3 Quality of Service Requirements        |
+| [REQ-SEC-005](./requirements/security/REQ-SEC-005.md)    | Support secure deployment over HTTPS                  | proposed | 3.3 Quality of Service Requirements        |
+| [REQ-REL-001](./requirements/reliability/REQ-REL-001.md)    | Transactional catalog mutations                       | planned  | 3.3 Quality of Service Requirements        |
+| [REQ-REL-002](./requirements/reliability/REQ-REL-002.md)    | Recover from failed EPUB modification                 | planned  | 3.3 Quality of Service Requirements        |
+| [REQ-REL-003](./requirements/reliability/REQ-REL-003.md)    | Handle metadata provider failure gracefully           | planned  | 3.3 Quality of Service Requirements        |
+| [REQ-REL-004](./requirements/reliability/REQ-REL-004.md)    | Idempotent import by checksum                         | proposed | 3.3 Quality of Service Requirements        |
+| [REQ-AVAIL-001](./requirements/availability/REQ-AVAIL-001.md)  | Restart recovery                                      | proposed | 3.3 Quality of Service Requirements        |
+| [REQ-AVAIL-002](./requirements/availability/REQ-AVAIL-002.md)  | Backup and restore support                            | planned  | 3.3 Quality of Service Requirements        |
+| [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md)    | Structured server logs                                | proposed | 3.3 Quality of Service Requirements        |
+| [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md)    | User-visible operation history                        | proposed | 3.3 Quality of Service Requirements        |
+| [REQ-COMP-001](./requirements/compliance/REQ-COMP-001.md)   | External source attribution                           | proposed | 3.4 Compliance Requirements                |
+| [REQ-COMP-002](./requirements/compliance/REQ-COMP-002.md)   | User-content responsibility notice                    | proposed | 3.4 Compliance Requirements                |
+| [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md)   | Privacy of reading data                               | planned  | 3.4 Compliance Requirements                |
+| [REQ-INST-001](./requirements/installation/REQ-INST-001.md)   | Self-hosted server installation                       | planned  | 3.5 Design and Implementation Requirements |
+| [REQ-INST-002](./requirements/installation/REQ-INST-002.md)   | Configurable data directory                           | planned  | 3.5 Design and Implementation Requirements |
+| [REQ-INST-003](./requirements/installation/REQ-INST-003.md)   | Containerized deployment package                      | planned  | 3.5 Design and Implementation Requirements |
+| [REQ-BUILD-001](./requirements/build/REQ-BUILD-001.md)  | Rust backend                                          | planned  | 3.5 Design and Implementation Requirements |
+| [REQ-BUILD-002](./requirements/build/REQ-BUILD-002.md)  | REST server                                           | planned  | 3.5 Design and Implementation Requirements |
+| [REQ-BUILD-003](./requirements/build/REQ-BUILD-003.md)  | React TypeScript frontend                             | planned  | 3.5 Design and Implementation Requirements |
+| [REQ-BUILD-004](./requirements/build/REQ-BUILD-004.md)  | Continuous integration checks                         | proposed | 3.5 Design and Implementation Requirements |
+| [REQ-DIST-001](./requirements/distribution/REQ-DIST-001.md)   | Server-browser deployment topology                    | planned  | 3.5 Design and Implementation Requirements |
+| [REQ-DIST-002](./requirements/distribution/REQ-DIST-002.md)   | Desktop application distribution                      | deferred | 3.5 Design and Implementation Requirements |
+| [REQ-DIST-003](./requirements/distribution/REQ-DIST-003.md)   | Mobile availability                                   | deferred | 3.5 Design and Implementation Requirements |
+| [REQ-MAINT-001](./requirements/maintainability/REQ-MAINT-001.md)  | Modular backend organization                          | proposed | 3.5 Design and Implementation Requirements |
+| [REQ-MAINT-002](./requirements/maintainability/REQ-MAINT-002.md)  | Database migrations                                   | planned  | 3.5 Design and Implementation Requirements |
+| [REQ-REUSE-001](./requirements/reusability/REQ-REUSE-001.md)  | Shared frontend reuse                                 | planned  | 3.5 Design and Implementation Requirements |
+| [REQ-REUSE-002](./requirements/reusability/REQ-REUSE-002.md)  | Reusable Rust core                                    | proposed | 3.5 Design and Implementation Requirements |
+| [REQ-PORT-001](./requirements/portability/REQ-PORT-001.md)   | Supported operating environments                      | draft    | 3.5 Design and Implementation Requirements |
+| [REQ-COST-001](./requirements/cost/REQ-COST-001.md)   | No mandatory paid third-party service for core use    | proposed | 3.5 Design and Implementation Requirements |
+| [REQ-DEAD-001](./requirements/deadline/REQ-DEAD-001.md)   | Milestone release sequence                            | proposed | 3.5 Design and Implementation Requirements |
+| [REQ-POC-001](./requirements/proof-of-concept/REQ-POC-001.md)    | SQLite server data-store proof of concept             | draft    | 3.5 Design and Implementation Requirements |
+| [REQ-CM-001](./requirements/change-management/REQ-CM-001.md)     | Versioned change management                           | proposed | 3.5 Design and Implementation Requirements |
+
+### Appendix C: Initial Domain Concepts
+
+The following conceptual entities are implied by the requirements and should be refined during domain-model design:
+
+| Concept | Description |
+|---------|-------------|
+| Work | Abstract intellectual work, useful for grouping e-book, print, and audiobook editions in future releases. |
+| Edition | Specific publication or medium-specific expression of a work. |
+| Book File | Stored digital file, initially EPUB. |
+| Asset | Cover image, author image, imported original, generated thumbnail, or previous EPUB version. |
+| Author | Person or entity associated with books, potentially with role metadata. |
+| Series | Named sequence, universe, group, or related collection of books. |
+| Reading Event | Event such as started, progress update, completed, abandoned, or status change. |
+| Automation Rule | Trigger/condition/action definition executed by the job system. |
+| Sync Target | Folder, mounted device, WebDAV endpoint, or other future destination for copied/synced books. |
+
+### Appendix D: Out of Scope for Initial Stable Release Unless Reprioritized
+
+- Browser-based reading/rendering of EPUB content.
+- Public SaaS multi-tenancy.
+- Native mobile applications beyond responsive or wrapped shared frontend.
+- Full Audiobookshelf replacement functionality.
+- Cross-medium e-book/audiobook progress synchronization.
+- AI/ML-based recommendations or autonomous metadata decisions.
+- DRM removal, circumvention, or unauthorized redistribution workflows.

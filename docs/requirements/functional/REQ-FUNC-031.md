@@ -1,0 +1,22 @@
+---
+status: planned
+date: 2026-05-26
+---
+# REQ-FUNC-031 — Run long operations as background jobs
+
+## Statement
+The system shall execute long-running operations such as import, metadata lookup, image download, EPUB modification, and device sync as trackable background jobs.
+
+## Rationale 
+Long operations should not block normal API responsiveness or leave users uncertain about progress.
+
+## Acceptance Criteria
+- Submitting a long operation returns a job identifier.
+- The job has a status of queued, running, succeeded, failed, or canceled.
+- Job failure includes a user-visible error message.
+
+## Verification Method 
+Test
+
+## More Information 
+Job cancellation behavior is TBD.

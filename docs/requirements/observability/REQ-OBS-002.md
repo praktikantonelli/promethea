@@ -1,0 +1,22 @@
+---
+status: proposed
+date: 2026-05-26
+---
+# REQ-OBS-002 — User-visible operation history
+
+## Statement 
+The system shall provide user-visible history for imports, EPUB modifications, metadata fetches, image downloads, and sync jobs.
+
+## Rationale 
+Users need to understand what automated or background actions changed their library.
+
+## Acceptance Criteria
+- The UI can show recent operations with status and timestamp.
+- Failed operations show an error summary.
+- Completed operations identify the affected book, author, series, or asset when applicable.
+
+## Verification Method 
+Demonstration
+
+## More Information 
+History retention duration is TBD.

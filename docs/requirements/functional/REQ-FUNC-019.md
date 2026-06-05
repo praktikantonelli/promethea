@@ -1,0 +1,22 @@
+---
+status: planned
+date: 2026-05-26
+---
+# REQ-FUNC-019 — Track owned books
+
+## Statement
+The system shall allow tracking books that are owned, and separately books that are not yet owned but wanted.
+
+## Rationale
+The Goodreads-replacement goal includes tracking owned books.
+
+## Acceptance Criteria
+- A user can mark a book or edition as owned or not owned.
+- Ownership status is persisted and visible on the book detail page.
+- Owned books can be filtered or listed separately.
+
+## Verification Method
+Test
+
+## More Information
+Ownership granularity across work/edition/file is a domain-model decision to finalize.

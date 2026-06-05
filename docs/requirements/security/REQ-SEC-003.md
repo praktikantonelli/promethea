@@ -1,0 +1,23 @@
+---
+status: planned
+date: 2026-05-26
+---
+# REQ-SEC-003 — Validate external inputs
+
+## Statement 
+The system shall validate and sanitize user-supplied input, uploaded files, provider responses, and external image URLs before processing or persisting them.
+
+## Rationale 
+The system accepts files and URLs and may be exposed remotely, making input validation essential to protect integrity and availability.
+
+## Acceptance Criteria
+- Unsupported file types are rejected for EPUB import.
+- External image downloads enforce supported schemes and media types.
+- Text inputs used in database queries or file paths cannot cause injection or path traversal in test cases.
+- Provider response parsing handles missing or malformed fields.
+
+## Verification Method 
+Test
+
+## More Information 
+Maximum file sizes and URL restrictions are TBD.

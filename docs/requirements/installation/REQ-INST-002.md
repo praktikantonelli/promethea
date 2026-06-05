@@ -1,0 +1,22 @@
+---
+status: planned
+date: 2026-05-26
+---
+# REQ-INST-002 — Configurable data directory
+
+## Statement 
+The system shall allow operators to configure the managed data directory used for database and asset storage.
+
+## Rationale 
+Self-hosted and desktop deployments need predictable data placement for backup and storage management.
+
+## Acceptance Criteria
+- The server starts with a configured data directory path.
+- The system creates or validates required subdirectories at startup.
+- Changing the data directory requires explicit configuration rather than hidden defaults only.
+
+## Verification Method 
+Test
+
+## More Information 
+Migration between data directories is TBD.

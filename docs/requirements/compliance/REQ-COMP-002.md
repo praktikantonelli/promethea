@@ -1,0 +1,22 @@
+---
+status: proposed
+date: 2026-05-26
+---
+# REQ-COMP-002 — User-content responsibility notice
+
+## Statement
+The system shall include documentation stating that users are responsible for having the rights necessary to upload, modify, and sync e-book files they manage with the system.
+
+## Rationale
+The product manages user-provided copyrighted content, and documentation should not imply a right to redistribute files.
+
+## Acceptance Criteria
+- Project documentation includes a user-content responsibility notice.
+- The notice is included in installation or first-use documentation.
+- The notice does not block local personal use workflows.
+
+## Verification Method
+Inspection
+
+## More Information
+Legal review is TBD; this is not legal advice.

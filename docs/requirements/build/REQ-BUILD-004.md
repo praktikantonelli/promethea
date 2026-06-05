@@ -1,0 +1,23 @@
+---
+status: proposed
+date: 2026-05-26
+---
+# REQ-BUILD-004 — Continuous integration checks
+
+## Statement
+The project shall provide automated checks for backend build, frontend build, tests, formatting, and linting before release artifacts are produced.
+
+## Rationale
+CI helps keep a multi-component Rust/React project maintainable and verifiable.
+
+## Acceptance Criteria
+- CI runs backend build/tests.
+- CI runs frontend build/type checks.
+- CI reports failures for formatting or linting checks selected by the project.
+- Release artifacts are not promoted from failing CI runs.
+
+## Verification Method
+Inspection
+
+## More Information
+The project is hosted on GitHub, so GitHub Actions will be the choice of CI infrastructure.

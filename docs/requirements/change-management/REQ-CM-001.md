@@ -1,0 +1,22 @@
+---
+status: proposed
+date: 2026-05-26
+---
+# REQ-CM-001 — Versioned change management
+
+## Statement
+The project shall document breaking, additive, and bugfix changes in release notes and migration notes for released versions.
+
+## Rationale
+Users managing a long-lived library need to understand upgrade effects and data migrations.
+
+## Acceptance Criteria
+- Each release includes release notes.
+- Breaking changes identify user-visible impact and migration steps.
+- Database or asset-format migrations are documented with rollback or backup guidance where applicable.
+
+## Verification Method
+Inspection
+
+## More Information
+Formal approval workflow is TBD.
