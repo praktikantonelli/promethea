@@ -11,7 +11,6 @@ The system shall, in a future release, support catalog records and file assets f
 A user may consume a work in a hybrid fashion, sometimes by reading and other times by listening. Unifying the two types into one place makes both experiences simpler.
 
 ## Acceptance Criteria
-- Acceptance Criteria:
 - The data model can represent an audiobook edition or asset.
 - The UI can display an audiobook associated with a work.
 - The system can distinguish audiobook-specific metadata such as narrator and duration when implemented.
