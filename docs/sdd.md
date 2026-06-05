@@ -57,7 +57,7 @@ Prepared by Luca Antonelli
 | Term | Definition                                                                                                               |
 |------|--------------------------------------------------------------------------------------------------------------------------|
 | API  | Application Programming Interface - A set of definitions and protocols for building and integrating application software |
-| SDD  | Software Design Document - A document that describes the intended purpose, requirements, and nature of a software        |
+| SDD  | Software Design Description - A document that describes the intended purpose, requirements, and nature of a software        |
 
 ### 1.4 References
 💬 _Lists external sources that are normative or informative for this SDD._
