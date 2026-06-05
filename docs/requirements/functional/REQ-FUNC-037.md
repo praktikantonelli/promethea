@@ -16,8 +16,7 @@ The cover image may have less-than-desired quality, or it may not match the edit
 - If the choice is invalid (format, unavailable resource), the system informs the user.
 
 ## Verification Method
-Test
-Testable with E2E test.
+Test (E2E)
 
 ## More Information
 Related requirement: [REQ-FUNC-038](./REQ-FUNC-038.md).
