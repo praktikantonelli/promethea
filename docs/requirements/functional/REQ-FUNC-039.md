@@ -16,8 +16,7 @@ When the user wants a very specific cover image, the system should allow the use
 - The system persists the new choice and reports whether the operation was successful or not.
 
 ## Verification Method
-Test 
-Testable with E2E test.
+Test (E2E)
 
 ## More Information
 Related to [REQ-INT-006](./../interface/REQ-INT-006.md). 

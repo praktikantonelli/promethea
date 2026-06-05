@@ -16,8 +16,7 @@ When an EPUB file contains an undesirable cover image, the user should be able t
 - The user selects one and it is persisted in the EPUB file.
 
 ## Verification Method
-Test 
-Testable with E2E test.
+Test (E2E)
 
 ## More Information
 Potential providers for alternative images are the same as for other metadata, listed in [REQ-INT-005](./../interface/REQ-INT-005.md).
