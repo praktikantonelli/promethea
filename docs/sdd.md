@@ -30,7 +30,7 @@ Prepared by Luca Antonelli
 ## 1. Introduction
 
 ### 1.1 Document Purpose
-This software design description (SDD) is intended to track and define the design behind Promethea. Together with the software requirements specification ([SRS](./srs.md)) and the architectural design decisions ([ARDs](./decisions/)), it defines the scope and structure behind Promethea. 
+This software design description (SDD) is intended to track and define the design behind Promethea. Together with the software requirements specification ([SRS](./srs.md)) and the architectural design decisions ([ARDs](./decisions/)), it defines the scope and structure behind Promethea. The different views are found under [`/design/*`](./design/).
 
 ### 1.2 Subject Scope
 This document contains a complete description of the design of Promethea. The basic architecture is an HTTP server with a SQL database and a local asset store that is communicating with the web via REST API, including a browser interface as well as desktop and eventually mobile clients. The frontend will be written in Typescript with React, the backend will be written in Rust. 
