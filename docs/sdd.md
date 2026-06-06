@@ -28,15 +28,9 @@ Prepared by Luca Antonelli
 |Luca Antonelli      | 2026-06-02     | initial version                   |   0.1      |
 
 ## 1. Introduction
-💬 _Provides an overview of the document and orients the reader to the system being designed._
 
 ### 1.1 Document Purpose
-💬 _Clarifies why this SDD exists, what it describes, and who should use it._
-
-➥ State the purpose of this SDD in 2–4 sentences. Identify its intended audiences (e.g., developers, architects, maintainers, operators) and how they use it across the lifecycle.
-
-💡 Tips: 
-- Mention related documents (vision/scope, BRD, SRS, roadmap, contracts) if relevant.
+This software design description (SDD) is intended to track and define the design behind Promethea. Together with the software requirements specification ([SRS](./srs.md)) and the architectural design decisions ([ARDs](./decisions/)), it defines the scope and structure behind Promethea. 
 
 ### 1.2 Subject Scope
 💬 _Defines the scope, purpose, and boundaries of the design._
