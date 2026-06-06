@@ -36,15 +36,17 @@ This software design description (SDD) is intended to track and define the desig
 This document contains a complete description of the design of Promethea. The basic architecture is an HTTP server with a SQL database and a local asset store that is communicating with the web via REST API, including a browser interface as well as desktop and eventually mobile clients. The frontend will be written in Typescript with React, the backend will be written in Rust. 
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
-➥ Help readers understand specialized terms and notation by providing a glossary of domain terms, acronyms, and abbreviations used in the SDD.
 
-💡 Tips:
-- Keep entries alphabetized and consistent across the document set.
 
 | Term | Definition                                                                                                               |
 |------|--------------------------------------------------------------------------------------------------------------------------|
 | API  | Application Programming Interface - A set of definitions and protocols for building and integrating application software |
+| backend | The hidden, logical part of a software that handles user requests |
+| e-book | A book in electronic format, made to be read on an e-reader or otherwise compatible reader |
+| EPUB | Common type of e-book file |
+| frontend | The interface a user sees when communicating with a software |
 | SDD  | Software Design Description - A document that describes the intended purpose, requirements, and nature of a software        |
+| SRS  | Software Requirements Specification - A document that defines the features of a software, grouped into categories |
 
 ### 1.4 References
 💬 _Lists external sources that are normative or informative for this SDD._
