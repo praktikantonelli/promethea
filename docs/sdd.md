@@ -49,12 +49,8 @@ This document contains a complete description of the design of Promethea. The ba
 | SRS  | Software Requirements Specification - A document that defines the features of a software, grouped into categories |
 
 ### 1.4 References
-💬 _Lists external sources that are normative or informative for this SDD._
 
-➥ Cite standards, contracts, policies, interface specs, UX style guides, use-case docs, architectural decisions, or a vision/scope document. For each reference, include title, author/owner, version, date, and location/URL. Indicate whether each reference is normative (binding) or informative (guidance).
-
-💡 Tips:
-- Prefer stable links or repository paths over volatile URLs.
+- [Master hexagonal architecture in Rust](https://www.howtocodeit.com/guides/master-hexagonal-architecture-in-rust)
 
 ### 1.5 Document Overview
 💬 _Brief guide to the structure of the SDD so readers can quickly find what they need._
