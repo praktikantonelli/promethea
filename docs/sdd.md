@@ -26,7 +26,6 @@ Prepared by Luca Antonelli
 | Name | Date | Reason For Changes | Version |
 |------|------|--------------------|---------|
 |Luca Antonelli      | 2026-06-02     | initial version                   |   0.1      |
-|      |      |                    |         |
 
 ## 1. Introduction
 💬 _Provides an overview of the document and orients the reader to the system being designed._
