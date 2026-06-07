@@ -48,6 +48,7 @@ The design is intentionally focused on the server-browser and shared-frontend pr
 | API  | Application Programming Interface - A set of definitions and protocols for building and integrating application software |
 | Asset | A managed media file such as an EPUB e-book file, a cover or author image |
 | Backend | The hidden, logical part of a software that handles user requests |
+| Catalog | The user-accessible representation of the book database, including books, authors, series, reading status, metadata and assets |
 | E-book | A book in electronic format, made to be read on an e-reader or otherwise compatible reader |
 | EPUB | Common type of e-book file |
 | Frontend | The interface a user sees when communicating with a software |
