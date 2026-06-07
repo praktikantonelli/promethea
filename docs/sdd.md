@@ -68,12 +68,8 @@ The design is intentionally focused on the server-browser and shared-frontend pr
 
 
 ### 1.5 Document Overview
-💬 _Brief guide to the structure of the SDD so readers can quickly find what they need._
 
-➥ Summarize what each major section covers (Design, Decisions, Appendixes), note any document conventions, and mention how updates and revision history are managed.
-
-💡 Tips:
-- Keep to 3–5 sentences focusing on navigation and conventions.
+Section 2 identifies stakeholder concerns and the viewpoints selected to address them. Section 3 contains concrete design views for Promethea, each following the view-template pattern of viewpoint, representation, and supporting information. Section 4 records significant design decisions and links them to the affected views and SRS requirements. Section 5 captures appendixes, traceability, and open issues that should be refined as the design matures.
 
 ## 2. Design Overview
 💬 _Describes the nature and approach of the system architecture and design._
