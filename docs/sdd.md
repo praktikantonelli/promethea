@@ -208,6 +208,9 @@ This document contains a complete description of the design of Promethea. The ba
 - Cross-reference with Concurrency (timing) and Deployment (placement) views for a full runtime picture..
 
 ## 3. Design Views
+
+All views are defined in separate files under [`/design`](./design/), following the [view template](./design/view-template.md).
+
 💬 _Documents the main architectural and design elements that define the system._
 
 ➥ Define design views to a level of detail sufficient to implement the system (prescriptive architecture) or to understand how to operate or maintain the existing product (descriptive architecture). Use unique identifiers, keep elements concise and modular, and include diagrams or links where applicable. Reference relevant design decisions from Section 4 that this view represents. Include applicable SRS requirement IDs that this element implements when available.
@@ -227,6 +230,9 @@ This document contains a complete description of the design of Promethea. The ba
 - Reference relevant design decisions from Section 4 that influenced or resulted from this design element.
 
 ## 4. Decisions
+
+All decisions are defined in separate architectural decision record files under [`/decisions`](./decisions/), following the [ADR Template](./decisions/adr-template.md).
+
 💬 Captures significant architectural or design decisions and their rationale.
 
 ➥ Document significant architectural decisions that have substantial long-term impact on the system's structure,
