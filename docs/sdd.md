@@ -27,7 +27,8 @@ Prepared by Luca Antonelli
 |------|------|--------------------|---------|
 |Luca Antonelli      | 2026-06-02     | initial version                   |   0.1      |
 
-## 1. Introduction
+## 1. Introduction 
+This Software Design Description (SDD) describes the initial proposed architecture and design for Promethea. It translates the requirements baseline in the SRS into design views, major design elements, and architecture decision records. The SDD is prescriptive where requirements already impose implementation constraints and intentionally marked as draft/TBD where the SRS leaves open questions.
 
 ### 1.1 Document Purpose
 This software design description (SDD) is intended to track and define the design behind Promethea. Together with the software requirements specification ([SRS](./srs.md)) and the architectural design decisions ([ARDs](./decisions/)), it defines the scope and structure behind Promethea. The different views are found under [`/design/*`](./design/).
