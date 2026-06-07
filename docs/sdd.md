@@ -74,9 +74,16 @@ Section 2 identifies stakeholder concerns and the viewpoints selected to address
 Promethea is designed as a self-hostable server application with a reusable frontend and a modular backend. The central design strategy is to keep domain logic independent from transport, storage, provider, EPUB-processing, and job execution concerns so that the system can evolve towards desktop, mobile and sync scenarios without duplicating the core logic.
 
 ### 2.1 Stakeholder Concerns
-💬 _Defines key stakeholders and their design-related interests._
 
-➥ Identify stakeholder types (e.g., users, developers, operators), their main concerns (e.g., availability, maintainability, risk mitigation) and the viewpoints or design elements of this document that address them.
+| Stakeholder | Main design concerns | Addressed by viewpoints / views |
+|-------------|----------------------|----------------------------------|
+| Library Owner / Administrator | Self-hosted installation, data ownership, backups, provider configuration, user/content responsibility, safe EPUB modification | Context, Deployment, Security, Persistence and Asset Storage, EPUB Modification and Versioning |
+| Reader / Authenticated User | Browsing usability, book/author/series navigation, reading-status updates, analytics, remote access, privacy of reading data | Frontend Application, Logical Domain Model, Reading Tracking and Analytics, Security, REST and External Interface |
+| Maintainer / Developer | Modular implementation, testability, Rust/React constraints, database migrations, reusable core, clear dependencies, future extensibility | Composition, Backend Module and Dependency, Logical Domain Model, Interface, Decisions |
+| Operator / Self-Hoster | Container deployment, configurable data directory, restart recovery, observability, backup/restore, resource growth visibility | Deployment and Operations, Persistence and Asset Storage, Security, Job Processing and Automation |
+| Security Reviewer | Authentication, authorization, external input validation, image URL download risk, secrets, HTTPS deployment, reading-data privacy | Security, REST and External Interface, Persistence and Asset Storage, Deployment and Operations |
+| QA / Verifier | Traceability from requirements to design elements, testable runtime flows, failure behavior, deterministic import/editing semantics | Runtime views, Interface View, Traceability Appendix, Decisions |
+| Future Extension Developer | Desktop/mobile reuse, e-reader sync, audiobook model, cross-medium progress, provider abstraction | Deferred Extension View, Backend Module and Dependency View, Logical Domain Model, Decisions |
 
 ### 2.2 Selected Viewpoints
 💬 _Defines the perspectives used to represent and reason about the system’s design._
