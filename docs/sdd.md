@@ -68,11 +68,10 @@ The design is intentionally focused on the server-browser and shared-frontend pr
 
 
 ### 1.5 Document Overview
-
 Section 2 identifies stakeholder concerns and the viewpoints selected to address them. Section 3 contains concrete design views for Promethea, each following the view-template pattern of viewpoint, representation, and supporting information. Section 4 records significant design decisions and links them to the affected views and SRS requirements. Section 5 captures appendixes, traceability, and open issues that should be refined as the design matures.
 
 ## 2. Design Overview
-💬 _Describes the nature and approach of the system architecture and design._
+Promethea is designed as a self-hostable server application with a reusable frontend and a modular backend. The central design strategy is to keep domain logic independent from transport, storage, provider, EPUB-processing, and job execution concerns so that the system can evolve towards desktop, mobile and sync scenarios without duplicating the core logic.
 
 ### 2.1 Stakeholder Concerns
 💬 _Defines key stakeholders and their design-related interests._
