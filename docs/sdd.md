@@ -86,9 +86,25 @@ Promethea is designed as a self-hostable server application with a reusable fron
 | Future Extension Developer | Desktop/mobile reuse, e-reader sync, audiobook model, cross-medium progress, provider abstraction | Deferred Extension View, Backend Module and Dependency View, Logical Domain Model, Decisions |
 
 ### 2.2 Selected Viewpoints
-💬 _Defines the perspectives used to represent and reason about the system’s design._
+This SDD uses a tailored subset of the default viewpoints from the SDD template. The selected viewpoints are included because they address specific concerns in the design of the system. The remaining viewpoints are either omitted or merged into a broader view. 
 
-➥ Identify and describe the viewpoints that were selected to address the stakeholders' concerns identified in Section 2.1. Each viewpoint addresses specific stakeholder concerns and utilizes visualization languages (e.g., UML, C4, sequence diagrams). Note which concerns each viewpoint addresses.
+| Viewpoint | Used? | Purpose in this SDD | Concrete views |
+|-----------|-------|---------------------|----------------|
+| Context | Yes | Establish system boundary, users, external systems, and deferred external environments. | 3.1, 3.14 |
+| Composition | Yes | Decompose the system into frontend, backend, persistence, asset, provider, and job elements. | 3.2, 3.3, 3.4 |
+| Logical | Yes | Describe stable domain concepts such as work, edition, book file, author, series, reading event, and automation rule. | 3.5, 3.10 |
+| Physical | Partial | Only the self-hosted/container deployment has physical relevance at this stage. Physical hardware topology is otherwise deployment-specific. | 3.13 |
+| Structure | Yes | Show internal organization of frontend/backend and major connectors. | 3.2, 3.3, 3.4 |
+| Dependency | Yes | Make direction of dependencies explicit, especially around reusable core and adapters. | 3.3 |
+| Information | Yes | Define persistent catalog data, asset metadata, versioning, reading events, and operation history. | 3.6, 3.10 |
+| Interface | Yes | Describe REST API, file import/download, metadata/image providers, and future device-sync interface. | 3.7 |
+| Interaction | Yes | Describe import, metadata enrichment, EPUB modification, reading update, and background-job flows. | 3.8, 3.9, 3.10, 3.11 |
+| Algorithm | Partial | Used only where operation logic is architecturally significant, such as import checksums and EPUB mutation/versioning. | 3.8, 3.9 |
+| State Dynamics | Partial | Used for reading status, job status, and EPUB modification states. | 3.9, 3.10, 3.11 |
+| Concurrency | Partial | Used for background jobs, provider calls, and long-running operations. | 3.11 |
+| Patterns | Yes | Records architectural style: modular backend, ports/adapters, server-authoritative API, provider abstraction, versioned asset handling. | 3.3, 3.6, 3.11, Section 4 |
+| Deployment | Yes | Map software units to self-hosted/server-browser/container deployment. | 3.13 |
+| Resources | Yes | Address file assets, database, job workers, storage growth, logs, backup/restore, and external provider limits. | 3.6, 3.11, 3.13 |
 
 #### 2.2.1 Context
 💬 _Defines the system as a black box, identifying its boundaries and its environment._
