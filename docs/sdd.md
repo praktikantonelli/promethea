@@ -61,7 +61,11 @@ The design is intentionally focused on the server-browser and shared-frontend pr
 
 ### 1.4 References
 
-- [Master hexagonal architecture in Rust](https://www.howtocodeit.com/guides/master-hexagonal-architecture-in-rust)
+| Reference | Owner/Author | Version/Date | Type | Location |
+| --------------- | --------------- | --------------- | --------------- | ---- |
+| Hexagonal Architecture in Rust| howtocodeit | 1.1.7 | Blog post | https://www.howtocodeit.com/guides/master-hexagonal-architecture-in-rust |
+| SRS | Luca Antonelli | 0.1 / 2026-06-07 | Document | [`srs.md`](./srs.md) |
+
 
 ### 1.5 Document Overview
 💬 _Brief guide to the structure of the SDD so readers can quickly find what they need._
