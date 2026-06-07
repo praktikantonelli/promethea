@@ -31,12 +31,13 @@ Prepared by Luca Antonelli
 This Software Design Description (SDD) describes the initial proposed architecture and design for Promethea. It translates the requirements baseline in the SRS into design views, major design elements, and architecture decision records. The SDD is prescriptive where requirements already impose implementation constraints and intentionally marked as draft/TBD where the SRS leaves open questions.
 
 ### 1.1 Document Purpose
+The purpose of this SDD is to give developers, maintainers, operators, security reviewers, and future contributors a shared design baseline for Promethea. It describes the system structure, major runtime flows, data ownership, deployment shape, and significant architecture decisions needed to implement and evolve the product. The SDD complements the SRS: the SRS defines what Promethea must do, while this SDD describes how the system is designed to satisfy those requirements.
+
+### 1.2 Subject Scope
 This SDD covers the Promethea v0.1 design baseline for a personal/self-hostable e-book library management and reading-tracking system. The design includes a Rust backend, REST API, React TypeScript frontend, catalog database, managed file assets, EPUB import/editing/versioning, metadata/image provider integration, reading tracking, analytics, background jobs, security controls, and self-hosted deployment support.
 
 The design is intentionally focused on the server-browser and shared-frontend product shape. Native desktop packaging, native mobile applications, e-reader synchronization, audiobook support, multi-medium progress synchronization, public SaaS multi-tenancy, browser-based EPUB reading, and AI/ML-based recommendations are outside the initial design scope unless reprioritized through change management.
 
-### 1.2 Subject Scope
-This document contains a complete description of the design of Promethea. The basic architecture is an HTTP server with a SQL database and a local asset store that is communicating with the web via REST API, including a browser interface as well as desktop and eventually mobile clients. The frontend will be written in Typescript with React, the backend will be written in Rust. 
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
 
