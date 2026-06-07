@@ -56,6 +56,8 @@ The design is intentionally focused on the server-browser and shared-frontend pr
 | Metadata Candidate | A selection of proposed metadata for a book; generally automatically fetched from an API |
 | SDD  | Software Design Description - A document that describes the intended purpose, requirements, and nature of a software        |
 | SRS  | Software Requirements Specification - A document that defines the features of a software, grouped into categories |
+| View | A concrete design description from a specific viewpoint, such as context, composition, logical, interface, runtime, deployment or security |
+| Viewpoint | A selected perspective that defines the concerns, notation, and expected content for one or more views |
 
 ### 1.4 References
 
