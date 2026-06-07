@@ -52,6 +52,8 @@ The design is intentionally focused on the server-browser and shared-frontend pr
 | E-book | A book in electronic format, made to be read on an e-reader or otherwise compatible reader |
 | EPUB | Common type of e-book file |
 | Frontend | The interface a user sees when communicating with a software |
+| Metadata | Data pertaining a book, includes title, author(s), number of pages, date of publication, series |
+| Metadata Candidate | A selection of proposed metadata for a book; generally automatically fetched from an API |
 | SDD  | Software Design Description - A document that describes the intended purpose, requirements, and nature of a software        |
 | SRS  | Software Requirements Specification - A document that defines the features of a software, grouped into categories |
 
