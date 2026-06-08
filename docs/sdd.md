@@ -111,6 +111,7 @@ This SDD uses a tailored subset of the default viewpoints from the SDD template.
 | Title | ID |
 | -------------- | --------------- |
 | System Context View | [VIEW-001-system-context](./design/VIEW-001-system-context.md) |
+| Top-Level Composition View | [VIEW-002-top-level-composition](./design/VIEW-002-top-level-composition.md) |
 
 
 ## 4. Decisions
