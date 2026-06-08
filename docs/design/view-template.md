@@ -1,5 +1,4 @@
 ---
-# These are optional metadata elements. Feel free to remove any of them.
 date: {YYYY-MM-DD when the view was last updated}
 ---
 
