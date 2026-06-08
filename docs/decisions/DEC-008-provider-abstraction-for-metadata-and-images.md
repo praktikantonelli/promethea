@@ -1,0 +1,70 @@
+---
+id: DEC-008-provider-abstraction-for-metadata-and-images
+status: "proposed"
+date: 2026-06-08
+---
+
+# Use provider abstractions for metadata and external image fetching
+
+## Context and Problem Statement
+
+Promethea must fetch online metadata, cover images, and author images, while the SRS states that exact providers are not yet selected and that external services may be unavailable, rate-limited, or subject to terms of service. The system must also support manual metadata editing and human review of metadata candidates.
+
+## Decision Drivers
+
+* [REQ-INT-005](./../requirements/interface/REQ-INT-005.md) requires an external metadata provider interface.
+* [REQ-INT-006](./../requirements/interface/REQ-INT-006.md) requires external image URL download behavior.
+* [REQ-FUNC-008](./../requirements/functional/REQ-FUNC-008.md) requires fetching online metadata.
+* [REQ-FUNC-009](./../requirements/functional/REQ-FUNC-009.md) requires reviewing metadata candidates.
+* [REQ-REL-003](./../requirements/reliability/REQ-REL-003.md) requires graceful handling of metadata provider failure.
+* [REQ-COMP-001](./../requirements/compliance/REQ-COMP-001.md) requires external source attribution.
+
+## Considered Options
+
+* Provider abstraction with normalized candidates and recoverable provider errors
+* Hard-code one provider directly into domain logic
+* No provider integration; manual metadata only
+
+## Decision Outcome
+
+Chosen option: "Provider abstraction with normalized candidates and recoverable provider errors", because it isolates provider-specific behavior, supports human review, preserves manual workflows, and allows provider choices to evolve.
+
+### Consequences
+
+* Good, because provider-specific credentials, rate limits, schemas, attribution, and failures stay behind adapter boundaries.
+* Good, because candidate review can use a normalized model regardless of provider.
+* Good, because manual workflows remain available when providers fail.
+* Bad, because normalized candidate models may lose provider-specific richness unless extension fields are designed.
+* Bad, because each provider still needs compliance, attribution, and error-handling work.
+
+### Confirmation
+
+Confirm by inspecting provider integration code. Domain/catalog modules should consume normalized metadata/image candidates rather than provider-specific response structures. Tests should simulate provider failure and verify that manual editing remains available and that failures are user-visible but non-catastrophic.
+
+## Pros and Cons of the Options
+
+### Provider abstraction with normalized candidates and recoverable provider errors
+
+* Good, because it satisfies external provider interface requirements.
+* Good, because it supports provider replacement or multiple providers.
+* Good, because it enables consistent candidate review workflows.
+* Neutral, because exact providers remain open.
+* Bad, because adapter and normalization layers add implementation work.
+
+### Hard-code one provider directly into domain logic
+
+* Good, because one integration could be implemented quickly.
+* Bad, because provider assumptions would leak into catalog/domain behavior.
+* Bad, because provider replacement would be expensive.
+* Bad, because rate-limit, attribution, and failure behavior would be harder to standardize.
+
+### No provider integration; manual metadata only
+
+* Good, because it avoids dependency on external services.
+* Good, because it reduces compliance and rate-limit complexity.
+* Bad, because it fails to satisfy online metadata and image-fetching requirements.
+* Bad, because it would make library maintenance more manual than intended.
+
+## More Information
+
+Affects [VIEW-001](./../design/VIEW-001-system-context.md), [VIEW-003](./../design/VIEW-003-backend-module-dependency.md), [VIEW-007](./../design/VIEW-007-rest-external-interface.md), [VIEW-008](./../design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-011](./../design/VIEW-011-job-processing-automation.md), and [VIEW-012](./../design/VIEW-012-security.md). Implements [REQ-INT-005](./../requirements/interface/REQ-INT-005.md), [REQ-INT-006](./../requirements/interface/REQ-INT-006.md), [REQ-FUNC-008](./../requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./../requirements/functional/REQ-FUNC-009.md), [REQ-REL-003](./../requirements/reliability/REQ-REL-003.md), and [REQ-COMP-001](./../requirements/compliance/REQ-COMP-001.md).
