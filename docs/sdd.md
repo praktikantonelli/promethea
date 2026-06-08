@@ -108,25 +108,10 @@ This SDD uses a tailored subset of the default viewpoints from the SDD template.
 
 ## 3. Design Views
 
-All views are defined in separate files under [`/design`](./design/), following the [view template](./design/view-template.md).
+| Title | ID |
+| -------------- | --------------- |
+| System Context View | [VIEW-001-system-context](./design/VIEW-001-system-context.md) |
 
-💬 _Documents the main architectural and design elements that define the system._
-
-➥ Define design views to a level of detail sufficient to implement the system (prescriptive architecture) or to understand how to operate or maintain the existing product (descriptive architecture). Use unique identifiers, keep elements concise and modular, and include diagrams or links where applicable. Reference relevant design decisions from Section 4 that this view represents. Include applicable SRS requirement IDs that this element implements when available.
-
-📃 Template:
-```markdown
-- ID: [NNN]-{title}
-- Title: Short, descriptive name of the view.
-- Viewpoint: The viewpoint of which this view is an instance.
-- Representation: The design view representation per the viewpoint and language selected, e.g., natural language description or a diagram or a combination thereof.
-- More Information: Additional context. Links to related artifacts.
-```
-
-💡 Tips:
-- This section should contain enough information to implement the system (prescriptive architecture) or to understand how to operate or maintain the existing product (descriptive architecture).
-- If available, include references to the SRS requirement IDs that the design view implements. This demonstrates how requirements are addressed by the design.
-- Reference relevant design decisions from Section 4 that influenced or resulted from this design element.
 
 ## 4. Decisions
 
