@@ -1,0 +1,69 @@
+---
+id: DEC-009-database-engine-poc-deferred-final-choice
+status: "proposed"
+date: 2026-06-08
+---
+
+# Use SQLite for proof of concept while deferring the final database-engine decision
+
+## Context and Problem Statement
+
+The SRS includes a SQLite server data-store proof of concept but also lists the final database engine and target scale/concurrency as open questions. Promethea is currently assumed to be personal/self-hosted or small-household, but future requirements may call for stronger multi-user or server-database characteristics.
+
+## Decision Drivers
+
+* [REQ-POC-001](./../requirements/proof-of-concept/REQ-POC-001.md) requires a SQLite server data-store proof of concept.
+* [REQ-MAINT-002](./../requirements/maintainability/REQ-MAINT-002.md) requires database migrations.
+* A-001 assumes personal/self-hosted or small-household use unless changed.
+* A-007 states that a single authoritative server database may be sufficient but must be confirmed.
+* Open SRS questions ask which database the stable release should target and what scale/concurrency to support.
+
+## Considered Options
+
+* SQLite for POC, final engine deferred until scale/concurrency validation
+* Commit to SQLite for the stable release now
+* Commit to PostgreSQL or another server database now
+
+## Decision Outcome
+
+Chosen option: "SQLite for POC, final engine deferred until scale/concurrency validation", because it enables fast early development and validates the simplest self-hosted path without overcommitting before target scale and concurrency are known.
+
+### Consequences
+
+* Good, because the POC can proceed with low operational overhead.
+* Good, because the design keeps the persistence boundary abstract enough to revisit the engine.
+* Good, because the decision aligns with the SRS open-question status.
+* Bad, because some persistence design may need revision if the final engine changes.
+* Bad, because performance and concurrency assumptions remain unresolved until validation is complete.
+
+### Confirmation
+
+Confirm by implementing the POC through repository/storage abstractions rather than client-visible database access. Migration tests should run against the POC engine. Before v1.0, run a database decision review using measured library size, concurrency, backup/restore, and operational findings.
+
+## Pros and Cons of the Options
+
+### SQLite for POC, final engine deferred until scale/concurrency validation
+
+* Good, because it satisfies the POC requirement without blocking development.
+* Good, because it is well suited to simple self-hosted deployments if validation succeeds.
+* Good, because it acknowledges unresolved scale and concurrency requirements.
+* Neutral, because migration tooling must be chosen carefully to avoid lock-in.
+* Bad, because a later database change could require additional migration work.
+
+### Commit to SQLite for the stable release now
+
+* Good, because it would simplify the deployment model.
+* Good, because it may be enough for personal libraries.
+* Bad, because target scale, concurrent clients, and multi-user expectations are not confirmed.
+* Bad, because it prematurely closes an explicit open question.
+
+### Commit to PostgreSQL or another server database now
+
+* Good, because it could handle stronger multi-user/concurrency expectations.
+* Good, because it is familiar for server-style deployments.
+* Bad, because it adds operational burden for personal/self-hosted users.
+* Bad, because the SRS currently only requires a SQLite POC, not a server database commitment.
+
+## More Information
+
+Affects [VIEW-005](./../design/VIEW-005-logical-domain-model.md), [VIEW-006](./../design/VIEW-006-persistence-asset-storage.md), and [VIEW-013](./../design/VIEW-013-deployment-operations.md). Implements [REQ-POC-001](./../requirements/proof-of-concept/REQ-POC-001.md) and [REQ-MAINT-002](./../requirements/maintainability/REQ-MAINT-002.md). Must be revisited before the stable v1.0 release decision.
