@@ -144,10 +144,73 @@ All decisions are defined in separate architectural decision record files under 
 | Defer native desktop/mobile, e-reader sync, audiobook, and cross-medium progress implementation | [DEC-010-defer-native-and-multi-medium-extension](./decisions/DEC-010-defer-native-and-multi-medium-extensions.md) |
 
 ## 5. Appendixes
-💬 _Optional supporting material that aids understanding without being normative._
 
-➥ Include glossaries, data dictionaries, models/diagrams, sample datasets, or change-impact analyses that support the main sections. Reference rather than duplicate content when possible.
+### Appendix A: Requirement-to-View Traceability
 
-💡 Tips:
-- Keep appendixes organized and referenced from the main text.
+| Requirement group | Primary views |
+|-------------------|---------------|
+| External Interfaces: [REQ-INT-001](./requirements/interface/REQ-INT-001.md) through [REQ-INT-008](./requirements/interface/REQ-INT-008.md) | [VIEW-001](./design/VIEW-001-system-context.md), [VIEW-004](./design/VIEW-004-frontend-application.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-012](./design/VIEW-012-security.md), [VIEW-014](./design/VIEW-014-deferred-extension.md) |
+| Library Management and EPUB Processing: [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md) through [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md), [REQ-FUNC-037](./requirements/functional/REQ-FUNC-037.md) through [REQ-FUNC-039](./requirements/functional/REQ-FUNC-039.md) | [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-005](./design/VIEW-005-logical-domain-model.md), [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-009](./design/VIEW-009-epub-modification-versioning.md) |
+| Browsing, Authors, and Series: [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md) through [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md), [REQ-FUNC-040](./requirements/functional/REQ-FUNC-040.md) | [VIEW-004](./design/VIEW-004-frontend-application.md), [VIEW-005](./design/VIEW-005-logical-domain-model.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md) |
+| Reading Tracking and Analytics: [REQ-FUNC-019](./requirements/functional/REQ-FUNC-019.md) through [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md) | [VIEW-005](./design/VIEW-005-logical-domain-model.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-010](./design/VIEW-010-reading-tracking-analytics.md), [VIEW-012](./design/VIEW-012-security.md) |
+| Automation and Job Processing: [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md) through [REQ-FUNC-032](./requirements/functional/REQ-FUNC-032.md) | [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-011](./design/VIEW-011-job-processing-automation.md) |
+| Deferred Device and Media Features: [REQ-FUNC-033](./requirements/functional/REQ-FUNC-033.md) through [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md), [REQ-INT-007](./requirements/interface/REQ-INT-007.md) | [VIEW-014](./design/VIEW-014-deferred-extension.md) |
+| Performance: [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md) through [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md) | [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-011](./design/VIEW-011-job-processing-automation.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
+| Security: [REQ-SEC-001](./requirements/security/REQ-SEC-001.md) through [REQ-SEC-005](./requirements/security/REQ-SEC-005.md) | [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-012](./design/VIEW-012-security.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
+| Reliability: [REQ-REL-001](./requirements/reliability/REQ-REL-001.md) through [REQ-REL-004](./requirements/reliability/REQ-REL-004.md) | [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-009](./design/VIEW-009-epub-modification-versioning.md), [VIEW-011](./design/VIEW-011-job-processing-automation.md) |
+| Availability and Observability: [REQ-AVAIL-001](./requirements/availability/REQ-AVAIL-001.md) through [REQ-AVAIL-002](./requirements/availability/REQ-AVAIL-002.md), [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md) through [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md) | [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-011](./design/VIEW-011-job-processing-automation.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
+| Compliance: [REQ-COMP-001](./requirements/compliance/REQ-COMP-001.md) through [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md) | [VIEW-001](./design/VIEW-001-system-context.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-010](./design/VIEW-010-reading-tracking-analytics.md), [VIEW-012](./design/VIEW-012-security.md) |
+| Installation, Build, Distribution, Maintainability, Reusability, Portability, Cost, Deadline, POC, Change Management | [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-004](./design/VIEW-004-frontend-application.md), [VIEW-013](./design/VIEW-013-deployment-operations.md), [VIEW-014](./design/VIEW-014-deferred-extension.md), Section 4 decisions |
 
+### Appendix B: Decision-to-View Traceability
+
+| Decision | Affected views |
+|----------|----------------|
+| [DEC-001](./decisions/DEC-001-rust-rest-backend.md) Use a Rust backend exposing a REST API | [VIEW-001](./design/VIEW-001-system-context.md), [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
+| [DEC-002](./decisions/DEC-002-shared-react-typescript-frontend.md) Use a shared React TypeScript frontend | [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-004](./design/VIEW-004-frontend-application.md), [VIEW-014](./design/VIEW-014-deferred-extension.md) |
+| [DEC-003](./decisions/DEC-003-server-authoritative-consistency-boundary.md) Keep the server as the authoritative consistency boundary | [VIEW-001](./design/VIEW-001-system-context.md), [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-004](./design/VIEW-004-frontend-application.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-012](./design/VIEW-012-security.md) |
+| [DEC-004](./decisions/DEC-004-modular-backend-reusable-core.md) Structure the backend as a modular reusable core with adapters | [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-014](./design/VIEW-014-deferred-extension.md) |
+| [DEC-005](./decisions/DEC-005-separate-catalog-database-and-managed-assets.md) Store structured catalog data separately from managed binary assets | [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-005](./design/VIEW-005-logical-domain-model.md), [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-009](./design/VIEW-009-epub-modification-versioning.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
+| [DEC-006](./decisions/DEC-006-background-jobs-for-long-operations.md) Execute long-running operations as background jobs | [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-011](./design/VIEW-011-job-processing-automation.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
+| [DEC-007](./decisions/DEC-007-version-epub-before-mutation.md) Preserve previous EPUB versions before file mutation | [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-009](./design/VIEW-009-epub-modification-versioning.md) |
+| [DEC-008](./decisions/DEC-008-provider-abstraction-for-metadata-and-images.md) Use provider abstractions for metadata and external image fetching | [VIEW-001](./design/VIEW-001-system-context.md), [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-011](./design/VIEW-011-job-processing-automation.md), [VIEW-012](./design/VIEW-012-security.md) |
+| [DEC-009](./decisions/DEC-009-database-engine-poc-deferred-final-choice.md) Treat SQLite as a POC candidate and defer final database-engine decision | [VIEW-005](./design/VIEW-005-logical-domain-model.md), [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
+| [DEC-010](./decisions/DEC-010-defer-native-and-multi-medium-extensions.md) Defer native and multi-medium extensions | [VIEW-004](./design/VIEW-004-frontend-application.md), [VIEW-005](./design/VIEW-005-logical-domain-model.md), [VIEW-010](./design/VIEW-010-reading-tracking-analytics.md), [VIEW-014](./design/VIEW-014-deferred-extension.md) |
+
+### Appendix C: Open Issues Carried From the SRS
+
+The following items require resolution before the design can be treated as a stable implementation baseline:
+
+1. Target deployment model: single-user, household/multi-user, or future public multi-tenant.
+2. Authentication model: owner account, local users, OAuth/OIDC, reverse-proxy auth, or another model.
+3. Stable database engine and migration tooling.
+4. Expected library size and performance-test target.
+5. Expected concurrent user/client count.
+6. Metadata providers and provider-specific contract requirements.
+7. External image URL security rules, media types, maximum sizes, and redirect policy.
+8. First supported EPUB editing workflows.
+9. Exact reading statuses and allowed transitions.
+10. Reread handling in analytics.
+11. Multi-author attribution policy.
+12. Page-count and reading-speed calculation rules.
+13. UI accessibility target and supported browser matrix.
+14. Supported server and future desktop operating environments.
+15. Mobile strategy: responsive web, PWA, Tauri mobile, Capacitor, or native wrapper.
+16. E-reader devices and sync protocols.
+17. Backup retention and restore expectations.
+18. License and third-party dependency policy.
+
+### Appendix D: Suggested Next ADRs to Finalize
+
+The following ADRs should be split into individual files and reviewed before implementation hardens:
+
+1. Rust crate layout and module boundaries.
+2. Database engine selection and migration tool.
+3. Work/Edition/File model granularity.
+4. Authentication/session strategy.
+5. Image URL download security controls.
+6. Job queue implementation strategy.
+7. EPUB modification/versioning transaction strategy.
+8. Backup/restore format and consistency model.
+9. OpenAPI generation and API error schema.
+10. Frontend routing/state-management approach.
