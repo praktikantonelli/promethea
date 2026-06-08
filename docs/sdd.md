@@ -112,6 +112,18 @@ This SDD uses a tailored subset of the default viewpoints from the SDD template.
 | -------------- | --------------- |
 | System Context View | [VIEW-001-system-context](./design/VIEW-001-system-context.md) |
 | Top-Level Composition View | [VIEW-002-top-level-composition](./design/VIEW-002-top-level-composition.md) |
+| Backend Module and Dependency View | [VIEW-003-backend-module-dependency](./design/VIEW-003-backend-module-dependency.md) |
+| Frontend Application View | [VIEW-004-frontend-application](./design/VIEW-004-frontend-application.md) |
+| Logical Domain Model View | [VIEW-005-logical-domain-model](./design/VIEW-005-logical-domain-model.md) |
+| Persistence and Asset Storage View | [VIEW-006-persistence-asset-storage](./design/VIEW-006-persistence-asset-storage.md) |
+| REST and External Interface View | [VIEW-007-rest-external-interface](./design/VIEW-007-rest-external-interface.md) |
+| EPUB Import and Metadata Runtime View | [VIEW-008-epub-import-metadata](./design/VIEW-008-epub-import-metadata-runtime.md) |
+| EPUB Modification and Versioning View | [VIEW-009-epub-modification-versioning](./design/VIEW-009-epub-modification-versioning.md) |
+| Reading Tracking and Analytics View | [VIEW-010-reading-tracking-analytics](./design/VIEW-010-reading-tracking-analytics.md) |
+| Job Processing and Automation View | [VIEW-011-job-processing-automation](./design/VIEW-011-job-processing-automation.md) |
+| Security View | [VIEW-012-security](./design/VIEW-012-security.md) |
+| Deployment and Operations View | [VIEW-013-deployment-operation](./design/VIEW-013-deployment-operations.md) |
+| Deferred Extension View | [VIEW-014-deferred-extension](./design/VIEW-014-deferred-extension.md) |
 
 
 ## 4. Decisions
