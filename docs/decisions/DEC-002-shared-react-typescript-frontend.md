@@ -1,0 +1,69 @@
+---
+id: DEC-002-shared-react-typescript-frontend
+status: "accepted"
+date: 2026-06-08
+---
+
+# Use a shared React TypeScript frontend for browser and future client shells
+
+## Context and Problem Statement
+
+Promethea must provide a browser-based library UI and should reuse the frontend across desktop, mobile-oriented, and other future packaging contexts where practical. The SRS constrains the frontend implementation to React and TypeScript.
+
+## Decision Drivers
+
+* [REQ-BUILD-003](./../requirements/build/REQ-BUILD-003.md) requires a React TypeScript frontend.
+* [REQ-INT-001](./../requirements/interface/REQ-INT-001.md) requires a browser-based library user interface.
+* [REQ-INT-002](./../requirements/interface/REQ-INT-002.md) proposes responsive UI behavior.
+* [REQ-REUSE-001](./../requirements/reusability/REQ-REUSE-001.md) requires shared frontend reuse across deployment contexts.
+* [REQ-DIST-002](./../requirements/distribution/REQ-DIST-002.md) and [REQ-DIST-003](./../requirements/distribution/REQ-DIST-003.md) defer desktop and mobile distribution but require the design not to block them.
+
+## Considered Options
+
+* Shared React TypeScript frontend
+* Separate frontend per platform
+* Server-rendered UI with minimal client-side application logic
+
+## Decision Outcome
+
+Chosen option: "Shared React TypeScript frontend", because it satisfies the explicit SRS technology constraint and preserves reuse across browser, desktop-shell, and mobile-oriented contexts.
+
+### Consequences
+
+* Good, because one frontend codebase can support the browser UI and future packaging targets.
+* Good, because TypeScript improves client-side maintainability and API contract usage.
+* Good, because responsive design can cover initial mobile availability without committing to a native app.
+* Bad, because platform-specific UX capabilities may be limited by the shared UI approach.
+* Bad, because shared frontend architecture requires discipline around routing, API clients, state management, and platform abstraction.
+
+### Confirmation
+
+Confirm by inspecting the frontend repository, build configuration, and packaging boundaries. The primary UI must be implemented in React TypeScript. Platform-specific shells must not fork core views unless a later ADR explicitly accepts that cost.
+
+## Pros and Cons of the Options
+
+### Shared React TypeScript frontend
+
+* Good, because it directly satisfies [REQ-BUILD-003](./../requirements/build/REQ-BUILD-003.md) and [REQ-REUSE-001](./../requirements/reusability/REQ-REUSE-001.md).
+* Good, because it supports browser-first development and responsive layouts.
+* Good, because it can later be wrapped or reused for desktop/mobile-oriented contexts.
+* Neutral, because distribution tooling remains a separate decision.
+* Bad, because common UI abstractions may not perfectly fit all target platforms.
+
+### Separate frontend per platform
+
+* Good, because each platform could receive a tailored UX.
+* Bad, because it duplicates implementation and testing effort.
+* Bad, because it conflicts with the SRS reuse goal.
+* Bad, because it would slow early product delivery.
+
+### Server-rendered UI with minimal client-side application logic
+
+* Good, because it could simplify some deployment and SEO concerns.
+* Neutral, because it may be sufficient for simple administration screens.
+* Bad, because it conflicts with the React TypeScript frontend constraint.
+* Bad, because it is less aligned with future shared client-shell reuse.
+
+## More Information
+
+Affects [VIEW-002](./../design/VIEW-002-top-level-composition.md), [VIEW-004](./../design/VIEW-004-frontend-application.md), and [VIEW-014](./../design/VIEW-014-deferred-extension.md). Implements [REQ-BUILD-003](./../requirements/build/REQ-BUILD-003.md), [REQ-INT-001](./../requirements/interface/REQ-INT-001.md), [REQ-INT-002](./../requirements/interface/REQ-INT-002.md), and [REQ-REUSE-001](./../requirements/reusability/REQ-REUSE-001.md).
