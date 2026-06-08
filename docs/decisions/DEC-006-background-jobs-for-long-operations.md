@@ -1,0 +1,69 @@
+---
+id: DEC-006-background-jobs-for-long-operations
+status: "proposed"
+date: 2026-06-08
+---
+
+# Run long-running operations as background jobs with persisted status
+
+## Context and Problem Statement
+
+Promethea operations such as EPUB import, metadata fetching, image fetching, EPUB modification, automation, backup/restore, and future e-reader sync may exceed normal interactive request latency. The SRS requires non-blocking long-running operations and user-visible job status.
+
+## Decision Drivers
+
+* [REQ-FUNC-031](./../requirements/functional/REQ-FUNC-031.md) requires long operations to run as background jobs.
+* [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md) requires displaying job status.
+* [REQ-PERF-002](./../requirements/performance/REQ-PERF-002.md) requires non-blocking long-running operations.
+* [REQ-OBS-002](./../requirements/observability/REQ-OBS-002.md) requires user-visible operation history.
+* The self-hosted deployment should remain simple and should not require a mandatory external queue service initially.
+
+## Considered Options
+
+* Internal background job model with persisted job status
+* Synchronous request/response for all operations
+* Mandatory external queue system from the initial release
+
+## Decision Outcome
+
+Chosen option: "Internal background job model with persisted job status", because it satisfies non-blocking and observable operation requirements while preserving a simple self-hosted deployment profile.
+
+### Consequences
+
+* Good, because long-running work does not block frontend/API interactions.
+* Good, because users can inspect job progress, results, and failures.
+* Good, because the same model can support future automation and sync workflows.
+* Bad, because job persistence, retry semantics, cancellation, and failure states must be designed.
+* Bad, because a later scale-up may require replacing or augmenting the internal job runner with a queue/broker.
+
+### Confirmation
+
+Confirm with tests that import, metadata fetching, EPUB modification, and other long operations create job records and return quickly from the initiating request. UI demonstrations should show job status, completion, and failure details. Restart tests should verify that job records survive server restart even if job execution policy remains limited in early milestones.
+
+## Pros and Cons of the Options
+
+### Internal background job model with persisted job status
+
+* Good, because it satisfies [REQ-FUNC-031](./../requirements/functional/REQ-FUNC-031.md) and [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md).
+* Good, because it avoids mandatory external infrastructure for core use.
+* Good, because it supports user-visible operation history.
+* Neutral, because implementation can begin with a simple in-process worker.
+* Bad, because robust retry and recovery behavior still need careful design.
+
+### Synchronous request/response for all operations
+
+* Good, because it is simpler for trivial operations.
+* Bad, because imports and provider calls can block user interactions.
+* Bad, because it conflicts with non-blocking operation requirements.
+* Bad, because failures and progress are less visible to the user.
+
+### Mandatory external queue system from the initial release
+
+* Good, because it can support robust distributed workers and retries.
+* Neutral, because it may become appropriate for larger deployments.
+* Bad, because it increases installation complexity for personal/self-hosted users.
+* Bad, because it conflicts with the goal of keeping core use free of mandatory external services.
+
+## More Information
+
+Affects [VIEW-003](./../design/VIEW-003-backend-module-dependency.md), [VIEW-008](./../design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-011](./../design/VIEW-011-job-processing-automation.md), and [VIEW-013](./../design/VIEW-013-deployment-operations.md). Implements [REQ-FUNC-031](./../requirements/functional/REQ-FUNC-031.md), [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md), [REQ-PERF-002](./../requirements/performance/REQ-PERF-002.md), and [REQ-OBS-002](./../requirements/observability/REQ-OBS-002.md).
