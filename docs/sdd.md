@@ -130,23 +130,18 @@ This SDD uses a tailored subset of the default viewpoints from the SDD template.
 
 All decisions are defined in separate architectural decision record files under [`/decisions`](./decisions/), following the [ADR Template](./decisions/adr-template.md).
 
-💬 Captures significant architectural or design decisions and their rationale.
-
-➥ Document significant architectural decisions that have substantial long-term impact on the system's structure,
-behavior, or quality attributes.
-
-```markdown
-- ID: [NNN]-{title}
-- Title: short title, representative of solved problem and found solution.
-- Context: Describe the context and problem statement.
-- Options: Enumerate considered alternatives.
-- Outcome: Chosen option: "{title of option 1}", because {justification}.
-- More Information: Additional context. Links to related artifacts.
-```
-
-💡 Tips:
-- Keep one decision per record.
-- Consider adopting MADR (Markdown Architecture Decision Record) pattern directly to document decisions. 
+| Title | ID |
+|-------|----|
+| Use a Rust Backend exposing a REST API | [DEC-001-rust-rest-backend](./decisions/adr-template.md) |
+| Use a shared React Typescript frontend | [DEC-002-shared-react-typescript-frontend](./decisions/DEC-002-shared-react-typescript-frontend.md) |
+| Keep the server as the authoritative consistency boundary | [DEC-003-server-authoritative-consistency-boundary](./decisions/DEC-003-server-authoritative-consistency-boundary.md) |
+| Structure the backend as a modular reusable core with adapters | [DEC-004-modular-backend-reusable-core](./decisions/DEC-004-modular-backend-reusable-core.md) |
+| Store structured catalog data separately from managed binary assets | [DEC-005-separate-catalog-database-and-managed-assets](./decisions/DEC-005-separate-catalog-database-and-managed-assets.md) |
+| Execute long-running operations as background jobs | [DEC-006-background-jobs-for-long-operations](./decisions/DEC-006-background-jobs-for-long-operations.md) |
+| Preserve previous EPUB versions before file mutation | [DEC-007-version-epub-before-mutation](./decisions/DEC-007-version-epub-before-mutation.md) |
+| Use provider abstraction for metadata and external image fetching | [DEC-008-provider-abstraction-for-metadata-and-images](./decisions/DEC-008-provider-abstraction-for-metadata-and-images.md) |
+| Treat SQLite as a POC candiate and defer the final database-engine decision | [DEC-009-database-engine-poc-deferred-final-choice](./decisions/DEC-009-database-engine-poc-deferred-final-choice.md) |
+| Defer native desktop/mobile, e-reader sync, audiobook, and cross-medium progress implementation | [DEC-010-defer-native-and-multi-medium-extension](./decisions/DEC-010-defer-native-and-multi-medium-extensions.md) |
 
 ## 5. Appendixes
 💬 _Optional supporting material that aids understanding without being normative._
