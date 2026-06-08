@@ -90,21 +90,21 @@ This SDD uses a tailored subset of the default viewpoints from the SDD template.
 
 | Viewpoint | Used? | Purpose in this SDD | Concrete views |
 |-----------|-------|---------------------|----------------|
-| Context | Yes | Establish system boundary, users, external systems, and deferred external environments. | 3.1, 3.14 |
-| Composition | Yes | Decompose the system into frontend, backend, persistence, asset, provider, and job elements. | 3.2, 3.3, 3.4 |
-| Logical | Yes | Describe stable domain concepts such as work, edition, book file, author, series, reading event, and automation rule. | 3.5, 3.10 |
-| Physical | Partial | Only the self-hosted/container deployment has physical relevance at this stage. Physical hardware topology is otherwise deployment-specific. | 3.13 |
-| Structure | Yes | Show internal organization of frontend/backend and major connectors. | 3.2, 3.3, 3.4 |
-| Dependency | Yes | Make direction of dependencies explicit, especially around reusable core and adapters. | 3.3 |
-| Information | Yes | Define persistent catalog data, asset metadata, versioning, reading events, and operation history. | 3.6, 3.10 |
-| Interface | Yes | Describe REST API, file import/download, metadata/image providers, and future device-sync interface. | 3.7 |
-| Interaction | Yes | Describe import, metadata enrichment, EPUB modification, reading update, and background-job flows. | 3.8, 3.9, 3.10, 3.11 |
-| Algorithm | Partial | Used only where operation logic is architecturally significant, such as import checksums and EPUB mutation/versioning. | 3.8, 3.9 |
-| State Dynamics | Partial | Used for reading status, job status, and EPUB modification states. | 3.9, 3.10, 3.11 |
-| Concurrency | Partial | Used for background jobs, provider calls, and long-running operations. | 3.11 |
-| Patterns | Yes | Records architectural style: modular backend, ports/adapters, server-authoritative API, provider abstraction, versioned asset handling. | 3.3, 3.6, 3.11, Section 4 |
-| Deployment | Yes | Map software units to self-hosted/server-browser/container deployment. | 3.13 |
-| Resources | Yes | Address file assets, database, job workers, storage growth, logs, backup/restore, and external provider limits. | 3.6, 3.11, 3.13 |
+| Context | Yes | Establish system boundary, users, external systems, and deferred external environments. | [VIEW-001](./design/VIEW-001.md), [VIEW-014](./design/VIEW-014.md) |
+| Composition | Yes | Decompose the system into frontend, backend, persistence, asset, provider, and job elements. | [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-004](./design/VIEW-004.md) |
+| Logical | Yes | Describe stable domain concepts such as work, edition, book file, author, series, reading event, and automation rule. | [VIEW-005](./design/VIEW-005.md), [VIEW-010](./design/VIEW-010.md) |
+| Physical | Partial | Only the self-hosted/container deployment has physical relevance at this stage. Physical hardware topology is otherwise deployment-specific. | [VIEW-013](./design/VIEW-013.md) |
+| Structure | Yes | Show internal organization of frontend/backend and major connectors. | [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-004](./design/VIEW-004.md) |
+| Dependency | Yes | Make direction of dependencies explicit, especially around reusable core and adapters. | [VIEW-003](./design/VIEW-003.md) |
+| Information | Yes | Define persistent catalog data, asset metadata, versioning, reading events, and operation history. | [VIEW-006](./design/VIEW-006.md), [VIEW-010](./design/VIEW-010.md) |
+| Interface | Yes | Describe REST API, file import/download, metadata/image providers, and future device-sync interface. | [VIEW-007](./design/VIEW-007.md) |
+| Interaction | Yes | Describe import, metadata enrichment, EPUB modification, reading update, and background-job flows. | [VIEW-008](./design/VIEW-008.md), [VIEW-009](./design/VIEW-009.md), [VIEW-010](./design/VIEW-010.md), [VIEW-011](./design/VIEW-011.md) |
+| Algorithm | Partial | Used only where operation logic is architecturally significant, such as import checksums and EPUB mutation/versioning. | [VIEW-008](./design/VIEW-008.md), [VIEW-009](./design/VIEW-009.md) |
+| State Dynamics | Partial | Used for reading status, job status, and EPUB modification states. | [VIEW-009](./design/VIEW-009.md), [VIEW-010](./design/VIEW-010.md), [VIEW-011](./design/VIEW-011.md) |
+| Concurrency | Partial | Used for background jobs, provider calls, and long-running operations. | [VIEW-011](./design/VIEW-011.md) |
+| Patterns | Yes | Records architectural style: modular backend, ports/adapters, server-authoritative API, provider abstraction, versioned asset handling. | [VIEW-003](./design/VIEW-003.md), [VIEW-006](./design/VIEW-006.md), [VIEW-011](./design/VIEW-011.md), Section 4 |
+| Deployment | Yes | Map software units to self-hosted/server-browser/container deployment. | [VIEW-013](./design/VIEW-013.md) |
+| Resources | Yes | Address file assets, database, job workers, storage growth, logs, backup/restore, and external provider limits. | [VIEW-006](./design/VIEW-006.md), [VIEW-011](./design/VIEW-011.md), [VIEW-013](./design/VIEW-013.md) |
 
 ## 3. Design Views
 
