@@ -1,5 +1,6 @@
 ---
 date: {YYYY-MM-DD when the view was last updated}
+id: {same as file name}
 ---
 
 # <!-- short title, representative of the view -->
