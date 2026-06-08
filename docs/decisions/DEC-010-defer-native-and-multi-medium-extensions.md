@@ -1,0 +1,69 @@
+---
+id: DEC-010-defer-native-and-multi-medium-extensions
+status: "accepted"
+date: 2026-06-08
+---
+
+# Defer native platform and multi-medium features while preserving extension seams
+
+## Context and Problem Statement
+
+The SRS identifies desktop distribution, mobile availability, e-reader sync, audiobook records, book-medium tracking, and cross-medium progress synchronization as deferred or future milestones. Implementing these capabilities immediately would increase product scope before the core library, EPUB management, reading tracking, self-hosted deployment, backup, and security baseline is stable.
+
+## Decision Drivers
+
+* [REQ-DEAD-001](./../requirements/deadline/REQ-DEAD-001.md) defines a milestone release sequence.
+* [REQ-DIST-002](./../requirements/distribution/REQ-DIST-002.md) and [REQ-DIST-003](./../requirements/distribution/REQ-DIST-003.md) are deferred platform distribution requirements.
+* [REQ-INT-007](./../requirements/interface/REQ-INT-007.md) and [REQ-FUNC-033](./../requirements/functional/REQ-FUNC-033.md) defer e-reader/mounted-folder sync.
+* [REQ-FUNC-034](./../requirements/functional/REQ-FUNC-034.md), [REQ-FUNC-035](./../requirements/functional/REQ-FUNC-035.md), and [REQ-FUNC-036](./../requirements/functional/REQ-FUNC-036.md) defer audiobook and cross-medium workflows.
+* [REQ-REUSE-001](./../requirements/reusability/REQ-REUSE-001.md) and [REQ-REUSE-002](./../requirements/reusability/REQ-REUSE-002.md) still require reuse seams that reduce future redesign.
+
+## Considered Options
+
+* Defer implementation but preserve extension seams
+* Implement all future platform and media features in the initial release
+* Ignore future requirements and optimize only for the first server/browser release
+
+## Decision Outcome
+
+Chosen option: "Defer implementation but preserve extension seams", because it keeps the initial architecture feasible while reducing the risk that deferred platform, sync, and multi-medium features require a major redesign.
+
+### Consequences
+
+* Good, because near-term effort remains focused on the core personal library and self-hosted server baseline.
+* Good, because extension seams can keep domain, frontend, sync, and media concepts from becoming dead ends.
+* Good, because future platform/media work can be guided by explicit later ADRs.
+* Bad, because some future requirements remain underspecified and may still cause redesign.
+* Bad, because too many speculative extension seams could overcomplicate the initial design if not constrained.
+
+### Confirmation
+
+Confirm by reviewing that deferred features are not implemented in the initial release scope except for explicit extension seams such as domain terminology, reusable frontend/core boundaries, and API isolation. Later platform, sync, and audiobook work must create new ADRs before implementation.
+
+## Pros and Cons of the Options
+
+### Defer implementation but preserve extension seams
+
+* Good, because it respects the SRS milestone apportioning.
+* Good, because it keeps the initial scope feasible.
+* Good, because it reduces future redesign risk for known deferred areas.
+* Neutral, because exact future technologies remain open.
+* Bad, because some placeholder concepts may remain abstract until validated.
+
+### Implement all future platform and media features in the initial release
+
+* Good, because it could validate the full product vision early.
+* Bad, because it would greatly expand implementation, testing, and design scope.
+* Bad, because many dependencies and target protocols are explicitly TBD.
+* Bad, because it would delay the core stable personal library release.
+
+### Ignore future requirements and optimize only for the first server/browser release
+
+* Good, because it minimizes immediate architecture effort.
+* Bad, because it risks blocking desktop, mobile, sync, audiobook, and cross-medium workflows later.
+* Bad, because it conflicts with SRS reuse and deferred-roadmap expectations.
+* Bad, because it may force disruptive redesign after users depend on the core model.
+
+## More Information
+
+Affects [VIEW-004](./../design/VIEW-004-frontend-application.md), [VIEW-005](./../design/VIEW-005-logical-domain-model.md), [VIEW-010](./../design/VIEW-010-reading-tracking-analytics.md), and [VIEW-014](./../design/VIEW-014-deferred-extension.md). Constrains [REQ-DIST-002](./../requirements/distribution/REQ-DIST-002.md), [REQ-DIST-003](./../requirements/distribution/REQ-DIST-003.md), [REQ-INT-007](./../requirements/interface/REQ-INT-007.md), [REQ-FUNC-033](./../requirements/functional/REQ-FUNC-033.md), [REQ-FUNC-034](./../requirements/functional/REQ-FUNC-034.md), [REQ-FUNC-035](./../requirements/functional/REQ-FUNC-035.md), [REQ-FUNC-036](./../requirements/functional/REQ-FUNC-036.md), [REQ-REUSE-001](./../requirements/reusability/REQ-REUSE-001.md), and [REQ-REUSE-002](./../requirements/reusability/REQ-REUSE-002.md).
