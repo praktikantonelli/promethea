@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-003-backend-module-dependency
+id: VIEW-003
 ---
 
 # Backend Module and Dependency View

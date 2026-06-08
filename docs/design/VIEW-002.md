@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-002-top-level-composition
+id: VIEW-002
 ---
 
 # Top-Level Composition View

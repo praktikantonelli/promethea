@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-007-rest-external-interface
+id: VIEW-007
 ---
 
 # REST and External Interface View

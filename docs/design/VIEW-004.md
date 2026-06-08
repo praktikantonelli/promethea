@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-004-frontend-application
+id: VIEW-004
 ---
 
 # Frontend Application View

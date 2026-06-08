@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-009-epub-modification-version
+id: VIEW-009
 ---
 
 # EPUB Modification and Versioning View

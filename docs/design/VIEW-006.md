@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-006-persistence-asset-storage
+id: VIEW-006
 ---
 
 # Persistence and Asset Storage View

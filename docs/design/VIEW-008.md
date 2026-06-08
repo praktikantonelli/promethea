@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-008-epub-import-metadata-runtime
+id: VIEW-008
 ---
 
 # EPUB Import and Metadata Runtime View

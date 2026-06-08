@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-011-job-processing-automation
+id: VIEW-011
 ---
 
 # Job Processing and Automation View

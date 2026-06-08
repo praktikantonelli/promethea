@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-014-deferred-extension
+id: VIEW-014
 ---
 
 # Deferred Extension View

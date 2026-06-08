@@ -110,20 +110,20 @@ This SDD uses a tailored subset of the default viewpoints from the SDD template.
 
 | Title | ID |
 | -------------- | --------------- |
-| System Context View | [VIEW-001-system-context](./design/VIEW-001-system-context.md) |
-| Top-Level Composition View | [VIEW-002-top-level-composition](./design/VIEW-002-top-level-composition.md) |
-| Backend Module and Dependency View | [VIEW-003-backend-module-dependency](./design/VIEW-003-backend-module-dependency.md) |
-| Frontend Application View | [VIEW-004-frontend-application](./design/VIEW-004-frontend-application.md) |
-| Logical Domain Model View | [VIEW-005-logical-domain-model](./design/VIEW-005-logical-domain-model.md) |
-| Persistence and Asset Storage View | [VIEW-006-persistence-asset-storage](./design/VIEW-006-persistence-asset-storage.md) |
-| REST and External Interface View | [VIEW-007-rest-external-interface](./design/VIEW-007-rest-external-interface.md) |
-| EPUB Import and Metadata Runtime View | [VIEW-008-epub-import-metadata](./design/VIEW-008-epub-import-metadata-runtime.md) |
-| EPUB Modification and Versioning View | [VIEW-009-epub-modification-versioning](./design/VIEW-009-epub-modification-versioning.md) |
-| Reading Tracking and Analytics View | [VIEW-010-reading-tracking-analytics](./design/VIEW-010-reading-tracking-analytics.md) |
-| Job Processing and Automation View | [VIEW-011-job-processing-automation](./design/VIEW-011-job-processing-automation.md) |
-| Security View | [VIEW-012-security](./design/VIEW-012-security.md) |
-| Deployment and Operations View | [VIEW-013-deployment-operation](./design/VIEW-013-deployment-operations.md) |
-| Deferred Extension View | [VIEW-014-deferred-extension](./design/VIEW-014-deferred-extension.md) |
+| System Context View | [VIEW-001](./design/VIEW-001.md) |
+| Top-Level Composition View | [VIEW-002](./design/VIEW-002.md) |
+| Backend Module and Dependency View | [VIEW-003](./design/VIEW-003.md) |
+| Frontend Application View | [VIEW-004](./design/VIEW-004.md) |
+| Logical Domain Model View | [VIEW-005](./design/VIEW-005.md) |
+| Persistence and Asset Storage View | [VIEW-006](./design/VIEW-006.md) |
+| REST and External Interface View | [VIEW-007](./design/VIEW-007.md) |
+| EPUB Import and Metadata Runtime View | [VIEW-008](./design/VIEW-008.md) |
+| EPUB Modification and Versioning View | [VIEW-009](./design/VIEW-009.md) |
+| Reading Tracking and Analytics View | [VIEW-010](./design/VIEW-010.md) |
+| Job Processing and Automation View | [VIEW-011](./design/VIEW-011.md) |
+| Security View | [VIEW-012](./design/VIEW-012.md) |
+| Deployment and Operations View | [VIEW-013](./design/VIEW-013.md) |
+| Deferred Extension View | [VIEW-014](./design/VIEW-014.md) |
 
 
 ## 4. Decisions
@@ -132,16 +132,16 @@ All decisions are defined in separate architectural decision record files under 
 
 | Title | ID |
 |-------|----|
-| Use a Rust Backend exposing a REST API | [DEC-001-rust-rest-backend](./decisions/adr-template.md) |
-| Use a shared React Typescript frontend | [DEC-002-shared-react-typescript-frontend](./decisions/DEC-002-shared-react-typescript-frontend.md) |
-| Keep the server as the authoritative consistency boundary | [DEC-003-server-authoritative-consistency-boundary](./decisions/DEC-003-server-authoritative-consistency-boundary.md) |
-| Structure the backend as a modular reusable core with adapters | [DEC-004-modular-backend-reusable-core](./decisions/DEC-004-modular-backend-reusable-core.md) |
-| Store structured catalog data separately from managed binary assets | [DEC-005-separate-catalog-database-and-managed-assets](./decisions/DEC-005-separate-catalog-database-and-managed-assets.md) |
-| Execute long-running operations as background jobs | [DEC-006-background-jobs-for-long-operations](./decisions/DEC-006-background-jobs-for-long-operations.md) |
-| Preserve previous EPUB versions before file mutation | [DEC-007-version-epub-before-mutation](./decisions/DEC-007-version-epub-before-mutation.md) |
-| Use provider abstraction for metadata and external image fetching | [DEC-008-provider-abstraction-for-metadata-and-images](./decisions/DEC-008-provider-abstraction-for-metadata-and-images.md) |
-| Treat SQLite as a POC candiate and defer the final database-engine decision | [DEC-009-database-engine-poc-deferred-final-choice](./decisions/DEC-009-database-engine-poc-deferred-final-choice.md) |
-| Defer native desktop/mobile, e-reader sync, audiobook, and cross-medium progress implementation | [DEC-010-defer-native-and-multi-medium-extension](./decisions/DEC-010-defer-native-and-multi-medium-extensions.md) |
+| Use a Rust Backend exposing a REST API | [DEC-001](./decisions/DEC-001.md) |
+| Use a shared React Typescript frontend | [DEC-002](./decisions/DEC-002.md) |
+| Keep the server as the authoritative consistency boundary | [DEC-003](./decisions/DEC-003.md) |
+| Structure the backend as a modular reusable core with adapters | [DEC-004](./decisions/DEC-004.md) |
+| Store structured catalog data separately from managed binary assets | [DEC-005](./decisions/DEC-005.md) |
+| Execute long-running operations as background jobs | [DEC-006](./decisions/DEC-006.md) |
+| Preserve previous EPUB versions before file mutation | [DEC-007](./decisions/DEC-007.md) |
+| Use provider abstraction for metadata and external image fetching | [DEC-008](./decisions/DEC-008.md) |
+| Treat SQLite as a POC candiate and defer the final database-engine decision | [DEC-009](./decisions/DEC-009.md) |
+| Defer native desktop/mobile, e-reader sync, audiobook, and cross-medium progress implementation | [DEC-010](./decisions/DEC-010.md) |
 
 ## 5. Appendixes
 
@@ -166,16 +166,16 @@ All decisions are defined in separate architectural decision record files under 
 
 | Decision | Affected views |
 |----------|----------------|
-| [DEC-001](./decisions/DEC-001-rust-rest-backend.md) Use a Rust backend exposing a REST API | [VIEW-001](./design/VIEW-001-system-context.md), [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
-| [DEC-002](./decisions/DEC-002-shared-react-typescript-frontend.md) Use a shared React TypeScript frontend | [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-004](./design/VIEW-004-frontend-application.md), [VIEW-014](./design/VIEW-014-deferred-extension.md) |
-| [DEC-003](./decisions/DEC-003-server-authoritative-consistency-boundary.md) Keep the server as the authoritative consistency boundary | [VIEW-001](./design/VIEW-001-system-context.md), [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-004](./design/VIEW-004-frontend-application.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-012](./design/VIEW-012-security.md) |
-| [DEC-004](./decisions/DEC-004-modular-backend-reusable-core.md) Structure the backend as a modular reusable core with adapters | [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-014](./design/VIEW-014-deferred-extension.md) |
-| [DEC-005](./decisions/DEC-005-separate-catalog-database-and-managed-assets.md) Store structured catalog data separately from managed binary assets | [VIEW-002](./design/VIEW-002-top-level-composition.md), [VIEW-005](./design/VIEW-005-logical-domain-model.md), [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-009](./design/VIEW-009-epub-modification-versioning.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
-| [DEC-006](./decisions/DEC-006-background-jobs-for-long-operations.md) Execute long-running operations as background jobs | [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-011](./design/VIEW-011-job-processing-automation.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
-| [DEC-007](./decisions/DEC-007-version-epub-before-mutation.md) Preserve previous EPUB versions before file mutation | [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-009](./design/VIEW-009-epub-modification-versioning.md) |
-| [DEC-008](./decisions/DEC-008-provider-abstraction-for-metadata-and-images.md) Use provider abstractions for metadata and external image fetching | [VIEW-001](./design/VIEW-001-system-context.md), [VIEW-003](./design/VIEW-003-backend-module-dependency.md), [VIEW-007](./design/VIEW-007-rest-external-interface.md), [VIEW-008](./design/VIEW-008-epub-import-metadata-runtime.md), [VIEW-011](./design/VIEW-011-job-processing-automation.md), [VIEW-012](./design/VIEW-012-security.md) |
-| [DEC-009](./decisions/DEC-009-database-engine-poc-deferred-final-choice.md) Treat SQLite as a POC candidate and defer final database-engine decision | [VIEW-005](./design/VIEW-005-logical-domain-model.md), [VIEW-006](./design/VIEW-006-persistence-asset-storage.md), [VIEW-013](./design/VIEW-013-deployment-operations.md) |
-| [DEC-010](./decisions/DEC-010-defer-native-and-multi-medium-extensions.md) Defer native and multi-medium extensions | [VIEW-004](./design/VIEW-004-frontend-application.md), [VIEW-005](./design/VIEW-005-logical-domain-model.md), [VIEW-010](./design/VIEW-010-reading-tracking-analytics.md), [VIEW-014](./design/VIEW-014-deferred-extension.md) |
+| [DEC-001](./decisions/DEC-001.md) Use a Rust backend exposing a REST API | [VIEW-001](./design/VIEW-001.md), [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-007](./design/VIEW-007.md), [VIEW-013](./design/VIEW-013.md) |
+| [DEC-002](./decisions/DEC-002.md) Use a shared React TypeScript frontend | [VIEW-002](./design/VIEW-002.md), [VIEW-004](./design/VIEW-004.md), [VIEW-014](./design/VIEW-014.md) |
+| [DEC-003](./decisions/DEC-003.md) Keep the server as the authoritative consistency boundary | [VIEW-001](./design/VIEW-001.md), [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-004](./design/VIEW-004.md), [VIEW-007](./design/VIEW-007.md), [VIEW-012](./design/VIEW-012.md) |
+| [DEC-004](./decisions/DEC-004.md) Structure the backend as a modular reusable core with adapters | [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-014](./design/VIEW-014.md) |
+| [DEC-005](./decisions/DEC-005.md) Store structured catalog data separately from managed binary assets | [VIEW-002](./design/VIEW-002.md), [VIEW-005](./design/VIEW-005.md), [VIEW-006](./design/VIEW-006.md), [VIEW-008](./design/VIEW-008.md), [VIEW-009](./design/VIEW-009.md), [VIEW-013](./design/VIEW-013.md) |
+| [DEC-006](./decisions/DEC-006.md) Execute long-running operations as background jobs | [VIEW-003](./design/VIEW-003.md), [VIEW-008](./design/VIEW-008.md), [VIEW-011](./design/VIEW-011.md), [VIEW-013](./design/VIEW-013.md) |
+| [DEC-007](./decisions/DEC-007.md) Preserve previous EPUB versions before file mutation | [VIEW-006](./design/VIEW-006.md), [VIEW-009](./design/VIEW-009.md) |
+| [DEC-008](./decisions/DEC-008.md) Use provider abstractions for metadata and external image fetching | [VIEW-001](./design/VIEW-001.md), [VIEW-003](./design/VIEW-003.md), [VIEW-007](./design/VIEW-007.md), [VIEW-008](./design/VIEW-008.md), [VIEW-011](./design/VIEW-011.md), [VIEW-012](./design/VIEW-012.md) |
+| [DEC-009](./decisions/DEC-009.md) Treat SQLite as a POC candidate and defer final database-engine decision | [VIEW-005](./design/VIEW-005.md), [VIEW-006](./design/VIEW-006.md), [VIEW-013](./design/VIEW-013.md) |
+| [DEC-010](./decisions/DEC-010.md) Defer native and multi-medium extensions | [VIEW-004](./design/VIEW-004.md), [VIEW-005](./design/VIEW-005.md), [VIEW-010](./design/VIEW-010.md), [VIEW-014](./design/VIEW-014.md) |
 
 ### Appendix C: Open Issues Carried From the SRS
 

@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-013-deployment-operations
+id: VIEW-013
 ---
 
 # Deployment and Operations View

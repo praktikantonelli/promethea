@@ -1,6 +1,6 @@
 --
 date: 2026-06-08
-id: VIEW-001-system-context
+id: VIEW-001
 ---
 
 # System Context View

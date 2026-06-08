@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-005-logical-domain-model
+id: VIEW-005
 ---
 
 # Logical Domain Model View

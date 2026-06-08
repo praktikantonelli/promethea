@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-012-security
+id: VIEW-012
 ---
 
 # Security View

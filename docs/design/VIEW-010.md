@@ -1,6 +1,6 @@
 ---
 date: 2026-06-08
-id: VIEW-010-reading-tracking-analytics
+id: VIEW-010
 ---
 
 # Reading Tracking and Analytics View
