@@ -51,5 +51,5 @@ The frontend does not directly access the catalog database or asset store. All s
 #### More Information
 
 Implements: REQ-INT-001, REQ-INT-003, REQ-INT-008, REQ-FUNC-001 through REQ-FUNC-032, REQ-BUILD-001 through REQ-BUILD-003, REQ-MAINT-001, REQ-REUSE-001, REQ-REUSE-002.  
-Related decisions: DEC-001, DEC-002, DEC-003, DEC-004, DEC-005.  
+Related decisions: 
 This view is intentionally higher-level than the backend module view. It should be updated if desktop, mobile, e-reader sync, or audiobook support becomes part of the active release scope.
