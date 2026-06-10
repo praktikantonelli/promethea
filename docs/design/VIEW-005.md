@@ -100,5 +100,5 @@ The model separates catalog identity from file assets. This supports future audi
 #### More Information
 
 Implements: [REQ-FUNC-002](./../requirements/functional/REQ-FUNC-002.md), [REQ-FUNC-003](./../requirements/functional/REQ-FUNC-003.md), [REQ-FUNC-004](./../requirements/functional/REQ-FUNC-004.md), [REQ-FUNC-010](./../requirements/functional/REQ-FUNC-010.md), [REQ-FUNC-014](./../requirements/functional/REQ-FUNC-014.md), [REQ-FUNC-015](./../requirements/functional/REQ-FUNC-015.md), [REQ-FUNC-019](./../requirements/functional/REQ-FUNC-019.md) through [REQ-FUNC-026](./../requirements/functional/REQ-FUNC-026.md), [REQ-FUNC-034](./../requirements/functional/REQ-FUNC-034.md) through [REQ-FUNC-036](./../requirements/functional/REQ-FUNC-036.md), [REQ-COMP-003](./../requirements/compliance/REQ-COMP-003.md).  
-Related decisions: 
+Related decisions: [DEC-005](./../decisions/DEC-005.md), [DEC-009](./../decisions/DEC-009.md), [DEC-010](./../decisions/DEC-010.md)
 Open issues: final work/edition/file granularity, multi-author attribution rules, page-count rules, reading-speed formula, exact reading statuses, and future medium model.
