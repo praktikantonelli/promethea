@@ -56,5 +56,5 @@ Security design principles:
 #### More Information
 
 Implements: [REQ-SEC-001](./../requirements/security/REQ-SEC-001.md), [REQ-SEC-002](./../requirements/security/REQ-SEC-002.md), [REQ-SEC-003](./../requirements/security/REQ-SEC-003.md), [REQ-SEC-004](./../requirements/security/REQ-SEC-004.md), [REQ-SEC-005](./../requirements/security/REQ-SEC-005.md), [REQ-COMP-003](./../requirements/compliance/REQ-COMP-003.md), [REQ-INT-008](./../requirements/interface/REQ-INT-008.md), [REQ-COMP-001](./../requirements/compliance/REQ-COMP-001.md), [REQ-COMP-002](./../requirements/compliance/REQ-COMP-002.md).  
-Related decisions:
+Related decisions: [DEC-003](./../decisions/DEC-003.md), [DEC-008](./../decisions/DEC-008.md)
 Open issues: authentication model, role model, reverse-proxy assumptions, HTTPS termination, provider credential storage, image URL SSRF protections, audit requirements, and privacy policy wording.
