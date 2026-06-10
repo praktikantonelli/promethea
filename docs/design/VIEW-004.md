@@ -49,5 +49,5 @@ The initial UI must support browser-based library access. Responsive layouts sho
 #### More Information
 
 Implements: [REQ-INT-001](./../requirements/interface/REQ-INT-001.md), [REQ-INT-002](./../requirements/interface/REQ-INT-002.md), [REQ-BUILD-003](./../requirements/build/REQ-BUILD-003.md), [REQ-REUSE-001](./../requirements/reusability/REQ-REUSE-001.md), [REQ-DIST-001](./../requirements/distribution/REQ-DIST-001.md), [REQ-DIST-002](./../requirements/distribution/REQ-DIST-002.md), [REQ-DIST-003](./../requirements/distribution/REQ-DIST-003.md), [REQ-FUNC-011](./../requirements/functional/REQ-FUNC-011.md) through [REQ-FUNC-018](./../requirements/functional/REQ-FUNC-018.md), [REQ-FUNC-020](./../requirements/functional/REQ-FUNC-020.md), [REQ-FUNC-023](./../requirements/functional/REQ-FUNC-023.md) through [REQ-FUNC-026](./../requirements/functional/REQ-FUNC-026.md), [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md).  
-Related decisions: 
+Related decisions: [DEC-002](./../decisions/DEC-002.md), [DEC-003](./../decisions/DEC-003.md), [DEC-010](./../decisions/DEC-010.md)
 Open issues: UI design system, accessibility target, supported browser matrix, and mobile strategy.
