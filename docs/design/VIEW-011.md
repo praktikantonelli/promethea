@@ -61,6 +61,6 @@ Concurrency rules:
 #### More Information
 
 Implements: [REQ-FUNC-028](./../requirements/functional/REQ-FUNC-028.md), [REQ-FUNC-029](./../requirements/functional/REQ-FUNC-029.md), [REQ-FUNC-030](./../requirements/functional/REQ-FUNC-030.md), [REQ-FUNC-031](./../requirements/functional/REQ-FUNC-031.md), [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md), [REQ-PERF-002](./../requirements/performance/REQ-PERF-002.md), [REQ-REL-003](./../requirements/reliability/REQ-REL-003.md), [REQ-OBS-001](./../requirements/observability/REQ-OBS-001.md), [REQ-OBS-002](./../requirements/observability/REQ-OBS-002.md), [REQ-AVAIL-001](./../requirements/availability/REQ-AVAIL-001.md).  
-Related decisions: 
+Related decisions: [DEC-006](./../decisions/DEC-006.md), [DEC-008](./../decisions/DEC-008.md)
 Open issues: in-process vs external queue, cancellation model, retry policy, concurrency limits, and persistence of in-flight job state.
 
