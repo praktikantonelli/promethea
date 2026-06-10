@@ -51,5 +51,5 @@ The frontend does not directly access the catalog database or asset store. All s
 #### More Information
 
 Implements: [REQ-INT-001](./../requirements/interface/REQ-INT-001.md), [REQ-INT-003](./../requirements/interface/REQ-INT-003.md), [REQ-INT-008](./../requirements/interface/REQ-INT-008.md), [REQ-FUNC-001](./../requirements/functional/REQ-FUNC-001.md) through [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md), [REQ-BUILD-001](./../requirements/build/REQ-BUILD-001.md) through [REQ-BUILD-003](./../requirements/build/REQ-BUILD-003.md), [REQ-MAINT-001](./../requirements/maintainability/REQ-MAINT-001.md), [REQ-REUSE-001](./../requirements/reusability/REQ-REUSE-001.md), [REQ-REUSE-002](./../requirements/reusability/REQ-REUSE-002.md).  
-Related decisions: 
-This view is intentionally higher-level than the backend module view. It should be updated if desktop, mobile, e-reader sync, or audiobook support becomes part of the active release scope.
+Related decisions: [DEC-001](./../decisions/DEC-001.md), [DEC-002](./../decisions/DEC-002.md), [DEC-003](./../decisions/DEC-003.md), [DEC-004](./../decisions/DEC-004.md), [DEC-005](./../decisions/DEC-005.md)
+This view is intentionally higher-level than the backend module view. It will be updated if desktop, mobile, e-reader sync, or audiobook support becomes part of the active release scope.
