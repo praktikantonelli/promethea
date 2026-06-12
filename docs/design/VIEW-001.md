@@ -31,6 +31,9 @@ Promethea is responsible for library catalog management, EPUB import, metadata e
 Promethea is not responsible for public SaaS multi-tenancy, DRM removal, legal validation of user-owned content, full EPUB reading, AI/ML recommendations, or provider-specific metadata contracts beyond the generic provider abstraction. It is _initially_ not responsible for native mobile apps and audiobook playback.
 
 ## More Information
-Implements or frames: [REQ-INT-001](./../requirements/interface/REQ-INT-001.md), [REQ-INT-003](./../requirements/interface/REQ-INT-003.md), [REQ-INT-004](./../requirements/interface/REQ-INT-004.md), [REQ-INT-005](./../requirements/interface/REQ-INT-005.md), [REQ-INT-006](./../requirements/interface/REQ-INT-006.md), [REQ-INT-008](./../requirements/interface/REQ-INT-008.md), [REQ-DIST-001](./../requirements/distribution/REQ-DIST-001.md), [REQ-COST-001](./../requirements/cost/REQ-COST-001.md), [REQ-COMP-002](./../requirements/compliance/REQ-COMP-002.md)
-Related decisions: [DEC-001](./../decisions/DEC-001.md), [DEC-002](./../decisions/DEC-002.md), [DEC-003](./../decisions/DEC-003.md), [DEC-008](./../decisions/DEC-008.md), [DEC-010](./../decisions/DEC-010.md)
-Open issues: target deployment model, authentication model, metadata providers, image URL restrictions, and supported operating environments remain TBD.
+| Relation | Requirement / Decision |
+| -------------- | --------------- |
+| Implements or frames| [REQ-INT-001](./../requirements/interface/REQ-INT-001.md), [REQ-INT-003](./../requirements/interface/REQ-INT-003.md), [REQ-INT-004](./../requirements/interface/REQ-INT-004.md), [REQ-INT-005](./../requirements/interface/REQ-INT-005.md), [REQ-INT-006](./../requirements/interface/REQ-INT-006.md), [REQ-INT-008](./../requirements/interface/REQ-INT-008.md), [REQ-DIST-001](./../requirements/distribution/REQ-DIST-001.md), [REQ-COST-001](./../requirements/cost/REQ-COST-001.md), [REQ-COMP-002](./../requirements/compliance/REQ-COMP-002.md)|
+| Related decisions| [DEC-001](./../decisions/DEC-001.md), [DEC-002](./../decisions/DEC-002.md), [DEC-003](./../decisions/DEC-003.md), [DEC-008](./../decisions/DEC-008.md), [DEC-010](./../decisions/DEC-010.md)
+| Open issues| target deployment model, authentication model, metadata providers, image URL restrictions, and supported operating environments remain TBD.|
+

@@ -59,6 +59,9 @@ The backend exposes application operations rather than raw database operations. 
 
 #### More Information
 
-Implements: [REQ-BUILD-001](./../requirements/build/REQ-BUILD-001.md), [REQ-BUILD-002](./../requirements/build/REQ-BUILD-002.md), [REQ-MAINT-001](./../requirements/maintainability/REQ-MAINT-001.md), [REQ-MAINT-002](./../requirements/maintainability/REQ-MAINT-002.md), [REQ-REUSE-002](./../requirements/reusability/REQ-REUSE-002.md), [REQ-INT-003](./../requirements/interface/REQ-INT-003.md), [REQ-INT-008](./../requirements/interface/REQ-INT-008.md), [REQ-REL-001](./../requirements/reliability/REQ-REL-001.md), [REQ-REL-002](./../requirements/reliability/REQ-REL-002.md), [REQ-OBS-001](./../requirements/observability/REQ-OBS-001.md).  
-Related decisions: [DEC-001](./../decisions/DEC-001.md), [DEC-003](./../decisions/DEC-003.md), [DEC-004](./../decisions/DEC-004.md), [DEC-005](./../decisions/DEC-005.md), [DEC-006](./../decisions/DEC-006.md), [DEC-007](./../decisions/DEC-007.md)
-Open issues: final Rust crate split, trait boundaries, database library, migration tool, and test strategy.
+| Relation | Requirement / Decision |
+| -------------- | --------------- |
+| Implements | [REQ-BUILD-001](./../requirements/build/REQ-BUILD-001.md), [REQ-BUILD-002](./../requirements/build/REQ-BUILD-002.md), [REQ-MAINT-001](./../requirements/maintainability/REQ-MAINT-001.md), [REQ-MAINT-002](./../requirements/maintainability/REQ-MAINT-002.md), [REQ-REUSE-002](./../requirements/reusability/REQ-REUSE-002.md), [REQ-INT-003](./../requirements/interface/REQ-INT-003.md), [REQ-INT-008](./../requirements/interface/REQ-INT-008.md), [REQ-REL-001](./../requirements/reliability/REQ-REL-001.md), [REQ-REL-002](./../requirements/reliability/REQ-REL-002.md), [REQ-OBS-001](./../requirements/observability/REQ-OBS-001.md)  |
+| Related decisions | [DEC-001](./../decisions/DEC-001.md), [DEC-003](./../decisions/DEC-003.md), [DEC-004](./../decisions/DEC-004.md), [DEC-005](./../decisions/DEC-005.md), [DEC-006](./../decisions/DEC-006.md), [DEC-007](./../decisions/DEC-007.md)|
+| Open issues | final Rust crate split, trait boundaries, database library, migration tool, and test strategy.|
+
