@@ -4,7 +4,7 @@ status: "{draft | proposed | deferred | planned | in-progress | blocked | passed
 date: {YYYY-MM-DD when the requirement was last updated}
 ---
 
-# <!-- short title, representative of the requirement -->
+# REQ-___-___ — 
 
 ## Statement
 ➥ Write a single, testable requirement statement that specifies observable behavior or conditions. Use clear and active language focused on "what" the system must do, not "how" it will be implemented.
