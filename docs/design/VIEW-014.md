@@ -43,6 +43,9 @@ The design principle is to treat these as extension vectors, not current impleme
 
 #### More Information
 
-Implements or preserves future compatibility for: [REQ-DIST-002](./../requirements/distribution/REQ-DIST-002.md), [REQ-DIST-003](./../requirements/distribution/REQ-DIST-003.md), [REQ-INT-007](./../requirements/interface/REQ-INT-007.md), [REQ-FUNC-033](./../requirements/functional/REQ-FUNC-033.md), [REQ-FUNC-034](./../requirements/functional/REQ-FUNC-034.md), [REQ-FUNC-035](./../requirements/functional/REQ-FUNC-035.md), [REQ-FUNC-036](./../requirements/functional/REQ-FUNC-036.md), [REQ-REUSE-001](./../requirements/reusability/REQ-REUSE-001.md), [REQ-REUSE-002](./../requirements/reusability/REQ-REUSE-002.md), [REQ-PORT-001](./../requirements/portability/REQ-PORT-001.md).  
-Related decisions: [DEC-002](./../decisions/DEC-002.md), [DEC-004](./../decisions/DEC-004.md), [DEC-010](./../decisions/DEC-010.md)
-Open issues: desktop packaging technology, native mobile strategy, sync target/protocol, audiobook model, and cross-medium progress semantics.
+| Relation | Requirement / Decision|
+| -------------- | --------------- |
+| Implements | [REQ-DIST-002](./../requirements/distribution/REQ-DIST-002.md), [REQ-DIST-003](./../requirements/distribution/REQ-DIST-003.md), [REQ-INT-007](./../requirements/interface/REQ-INT-007.md), [REQ-FUNC-033](./../requirements/functional/REQ-FUNC-033.md), [REQ-FUNC-034](./../requirements/functional/REQ-FUNC-034.md), [REQ-FUNC-035](./../requirements/functional/REQ-FUNC-035.md), [REQ-FUNC-036](./../requirements/functional/REQ-FUNC-036.md), [REQ-REUSE-001](./../requirements/reusability/REQ-REUSE-001.md), [REQ-REUSE-002](./../requirements/reusability/REQ-REUSE-002.md), [REQ-PORT-001](./../requirements/portability/REQ-PORT-001.md)  |
+| Related decisions | [DEC-002](./../decisions/DEC-002.md), [DEC-004](./../decisions/DEC-004.md), [DEC-010](./../decisions/DEC-010.md)|
+| Open issues | desktop packaging technology, native mobile strategy, sync target/protocol, audiobook model, and cross-medium progress semantics.|
+

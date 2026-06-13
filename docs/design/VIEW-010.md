@@ -68,6 +68,9 @@ The UI must clearly indicate when analytics cannot be computed because required 
 
 #### More Information
 
-Implements: [REQ-FUNC-019](./../requirements/functional/REQ-FUNC-019.md) through [REQ-FUNC-027](./../requirements/functional/REQ-FUNC-027.md), [REQ-COMP-003](./../requirements/compliance/REQ-COMP-003.md), [REQ-SEC-002](./../requirements/security/REQ-SEC-002.md), [REQ-REL-001](./../requirements/reliability/REQ-REL-001.md).  
-Related decisions: [DEC-005](./../decisions/DEC-005.md), [DEC-010](./../decisions/DEC-010.md)
-Open issues: exact status vocabulary, reread handling, page-count rules, reading-speed formula, work-vs-edition granularity, and multi-author attribution policy.
+| Rellation | Requirement / Decision|
+| -------------- | --------------- |
+| Implements | [REQ-FUNC-019](./../requirements/functional/REQ-FUNC-019.md), [REQ-FUNC-020](./../requirements/functional/REQ-FUNC-020.md), [REQ-FUNC-021](./../requirements/functional/REQ-FUNC-021.md), [REQ-FUNC-022](./../requirements/functional/REQ-FUNC-022.md), [REQ-FUNC-023](./../requirements/functional/REQ-FUNC-023.md), [REQ-FUNC-024](./../requirements/functional/REQ-FUNC-024.md), [REQ-FUNC-025](./../requirements/functional/REQ-FUNC-025.md), [REQ-FUNC-026](./../requirements/functional/REQ-FUNC-026.md), [REQ-FUNC-027](./../requirements/functional/REQ-FUNC-027.md), [REQ-COMP-003](./../requirements/compliance/REQ-COMP-003.md), [REQ-SEC-002](./../requirements/security/REQ-SEC-002.md), [REQ-REL-001](./../requirements/reliability/REQ-REL-001.md)|
+| Related decisions |[DEC-005](./../decisions/DEC-005.md), [DEC-010](./../decisions/DEC-010.md) |
+| Open issues | exact status vocabulary, reread handling, page-count rules, reading-speed formula, work-vs-edition granularity, and multi-author attribution policy.|
+

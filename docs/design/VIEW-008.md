@@ -80,6 +80,9 @@ Any long-running state -> CancelRequested, if cancellation is implemented
 
 #### More Information
 
-Implements: [REQ-FUNC-001](./../requirements/functional/REQ-FUNC-001.md), [REQ-FUNC-002](./../requirements/functional/REQ-FUNC-002.md), [REQ-FUNC-003](./../requirements/functional/REQ-FUNC-003.md), [REQ-FUNC-008](./../requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./../requirements/functional/REQ-FUNC-009.md), [REQ-FUNC-010](./../requirements/functional/REQ-FUNC-010.md), [REQ-FUNC-031](./../requirements/functional/REQ-FUNC-031.md), [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md), [REQ-PERF-002](./../requirements/performance/REQ-PERF-002.md), [REQ-REL-003](./../requirements/reliability/REQ-REL-003.md), [REQ-REL-004](./../requirements/reliability/REQ-REL-004.md), [REQ-OBS-002](./../requirements/observability/REQ-OBS-002.md).  
-Related decisions: [DEC-005](./../decisions/DEC-005.md), [DEC-006](./../decisions/DEC-006.md), [DEC-008](./../decisions/DEC-008.md), [DEC-009](./../decisions/DEC-009.md)
-Open issues: synchronous vs asynchronous threshold, duplicate handling policy, job cancellation policy, provider retry/backoff rules, and metadata candidate confidence model.
+| Relation | Requirement / Decisions |
+| -------------- | --------------- |
+| Implements | [REQ-FUNC-001](./../requirements/functional/REQ-FUNC-001.md), [REQ-FUNC-002](./../requirements/functional/REQ-FUNC-002.md), [REQ-FUNC-003](./../requirements/functional/REQ-FUNC-003.md), [REQ-FUNC-008](./../requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./../requirements/functional/REQ-FUNC-009.md), [REQ-FUNC-010](./../requirements/functional/REQ-FUNC-010.md), [REQ-FUNC-031](./../requirements/functional/REQ-FUNC-031.md), [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md), [REQ-PERF-002](./../requirements/performance/REQ-PERF-002.md), [REQ-REL-003](./../requirements/reliability/REQ-REL-003.md), [REQ-REL-004](./../requirements/reliability/REQ-REL-004.md), [REQ-OBS-002](./../requirements/observability/REQ-OBS-002.md)  |
+| Related decision | [DEC-005](./../decisions/DEC-005.md), [DEC-006](./../decisions/DEC-006.md), [DEC-008](./../decisions/DEC-008.md), [DEC-009](./../decisions/DEC-009.md)|
+| Open issues | synchronous vs asynchronous threshold, duplicate handling policy, job cancellation policy, provider retry/backoff rules, and metadata candidate confidence model.|
+

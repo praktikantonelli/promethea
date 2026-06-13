@@ -58,6 +58,9 @@ The design must distinguish catalog-only metadata edits from EPUB-file mutations
 
 #### More Information
 
-Implements: [REQ-FUNC-004](./../requirements/functional/REQ-FUNC-004.md), [REQ-FUNC-005](./../requirements/functional/REQ-FUNC-005.md), [REQ-FUNC-006](./../requirements/functional/REQ-FUNC-006.md), [REQ-FUNC-007](./../requirements/functional/REQ-FUNC-007.md), [REQ-FUNC-037](./../requirements/functional/REQ-FUNC-037.md), [REQ-FUNC-038](./../requirements/functional/REQ-FUNC-038.md), [REQ-FUNC-039](./../requirements/functional/REQ-FUNC-039.md), [REQ-REL-001](./../requirements/reliability/REQ-REL-001.md), [REQ-REL-002](./../requirements/reliability/REQ-REL-002.md), [REQ-OBS-002](./../requirements/observability/REQ-OBS-002.md).  
-Related decisions: [DEC-005](./../decisions/DEC-005.md), [DEC-007](./../decisions/DEC-007.md)
-Open issues: exact first EPUB editing workflows, EPUB validation library, atomic file replacement technique, rollback/repair strategy, cover image constraints, and user access to previous versions.
+| Relation | Requirement / Decision|
+| -------------- | --------------- |
+| Implements | [REQ-FUNC-004](./../requirements/functional/REQ-FUNC-004.md), [REQ-FUNC-005](./../requirements/functional/REQ-FUNC-005.md), [REQ-FUNC-006](./../requirements/functional/REQ-FUNC-006.md), [REQ-FUNC-007](./../requirements/functional/REQ-FUNC-007.md), [REQ-FUNC-037](./../requirements/functional/REQ-FUNC-037.md), [REQ-FUNC-038](./../requirements/functional/REQ-FUNC-038.md), [REQ-FUNC-039](./../requirements/functional/REQ-FUNC-039.md), [REQ-REL-001](./../requirements/reliability/REQ-REL-001.md), [REQ-REL-002](./../requirements/reliability/REQ-REL-002.md), [REQ-OBS-002](./../requirements/observability/REQ-OBS-002.md)|
+| Related decisions | [DEC-005](./../decisions/DEC-005.md), [DEC-007](./../decisions/DEC-007.md)|
+| Open issues | exact first EPUB editing workflows, EPUB validation library, atomic file replacement technique, rollback/repair strategy, cover image constraints, and user access to previous versions.|
+

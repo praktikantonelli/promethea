@@ -67,6 +67,9 @@ External interfaces include metadata providers, external image URLs, file import
 
 #### More Information
 
-Implements: [REQ-INT-003](./../requirements/interface/REQ-INT-003.md), [REQ-INT-004](./../requirements/interface/REQ-INT-004.md), [REQ-INT-005](./../requirements/interface/REQ-INT-005.md), [REQ-INT-006](./../requirements/interface/REQ-INT-006.md), [REQ-INT-007](./../requirements/interface/REQ-INT-007.md), [REQ-INT-008](./../requirements/interface/REQ-INT-008.md), [REQ-FUNC-008](./../requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./../requirements/functional/REQ-FUNC-009.md), [REQ-FUNC-013](./../requirements/functional/REQ-FUNC-013.md), [REQ-FUNC-027](./../requirements/functional/REQ-FUNC-027.md), [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md), [REQ-SEC-001](./../requirements/security/REQ-SEC-001.md) through [REQ-SEC-005](./../requirements/security/REQ-SEC-005.md).  
-Related decisions: [DEC-001](./../decisions/DEC-001.md), [DEC-003](./../decisions/DEC-003.md), [DEC-008](./../decisions/DEC-008.md)
-Open issues: final API resource names, authentication/session mechanism, OpenAPI generation approach, error schema, pagination/filtering convention, and provider contracts.
+| Relation | Requirement / Decision |
+| -------------- | --------------- |
+| Implements | [REQ-INT-003](./../requirements/interface/REQ-INT-003.md), [REQ-INT-004](./../requirements/interface/REQ-INT-004.md), [REQ-INT-005](./../requirements/interface/REQ-INT-005.md), [REQ-INT-006](./../requirements/interface/REQ-INT-006.md), [REQ-INT-007](./../requirements/interface/REQ-INT-007.md), [REQ-INT-008](./../requirements/interface/REQ-INT-008.md), [REQ-FUNC-008](./../requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./../requirements/functional/REQ-FUNC-009.md), [REQ-FUNC-013](./../requirements/functional/REQ-FUNC-013.md), [REQ-FUNC-027](./../requirements/functional/REQ-FUNC-027.md), [REQ-FUNC-032](./../requirements/functional/REQ-FUNC-032.md), [REQ-SEC-001](./../requirements/security/REQ-SEC-001.md), [REQ-SEC-002](./../requirements/security/REQ-SEC-002.md), [REQ-SEC-003](./../requirements/security/REQ-SEC-003.md), [REQ-SEC-004](./../requirements/security/REQ-SEC-004.md), [REQ-SEC-005](./../requirements/security/REQ-SEC-005.md)|
+| Related decisions | [DEC-001](./../decisions/DEC-001.md), [DEC-003](./../decisions/DEC-003.md), [DEC-008](./../decisions/DEC-008.md)|
+| Open issues | final API resource names, authentication/session mechanism, OpenAPI generation approach, error schema, pagination/filtering convention, and provider contracts.|
+

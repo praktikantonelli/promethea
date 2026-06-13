@@ -13,3 +13,9 @@ id: {same as file name}
 
 ## More Information
 ➥ Provide supporting context, links, and references that help stakeholders understand the design view. Reference relevant design decisions from Section 4 that influenced or resulted from this design element. If available, include references to the SRS requirement IDs that the design view implements.
+| Relation | Requirement / Decision |
+| -------------- | --------------- |
+| Implements |  |
+| Related decisions |  |
+| Open issues |  |
+
