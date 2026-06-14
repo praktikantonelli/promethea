@@ -224,6 +224,9 @@ This section defines externally observable product behavior grouped by library m
 | [REQ-FUNC-037](./requirements/functional/REQ-FUNC-037.md)                                          | Update EPUB cover image             |
 | [REQ-FUNC-038](./requirements/functional/REQ-FUNC-038.md)                                          | Automatic EPUB cover image fetching |
 | [REQ-FUNC-039](./requirements/functional/REQ-FUNC-039.md)                                          | Manual EPUB cover image fetching    |
+| [REQ-FUNC-042](./requirements/functional/REQ-FUNC-042.md)| Automatic import folder |
+| [REQ-FUNC-043](./requirements/functional/REQ-FUNC-043.md) | Cherry-picking metadata |
+| [REQ-FUNC-044](./requirements/functional/REQ-FUNC-044.md)| Fetch metadata from multiple sources |
 
 
 #### 3.2.2 Browsing, Authors, and Series
@@ -251,6 +254,7 @@ This section defines externally observable product behavior grouped by library m
 | [REQ-FUNC-025](./requirements/functional/REQ-FUNC-025.md) | Analyze books by author |
 | [REQ-FUNC-026](./requirements/functional/REQ-FUNC-026.md) | Analyze reading speed by author |
 | [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md) | Support remote updates through server |
+| [REQ-FUNC-041](./requirements/functional/REQ-FUNC-041.md) | Allow rereading books |
 
 #### 3.2.4 Automation and Job Processing
 | ID | Title |
@@ -474,6 +478,14 @@ Verification artifacts should be created as the implementation matures. The path
 | [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md)   | Inspection          | TBD                | deferred | TBD      |
 | [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md)   | Inspection          | TBD                | deferred | TBD      |
 | [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md)   | Analysis            | TBD                | deferred | TBD      |
+| [REQ-FUNC-037](./requirements/functional/REQ-FUNC-037.md)   | Test | TBD                | draft | TBD      |
+| [REQ-FUNC-038](./requirements/functional/REQ-FUNC-038.md)   | Test | TBD                | draft | TBD      |
+| [REQ-FUNC-039](./requirements/functional/REQ-FUNC-039.md)   | Test | TBD                | draft | TBD      |
+| [REQ-FUNC-040](./requirements/functional/REQ-FUNC-040.md)   | Demonstration | TBD                | draft | TBD      |
+| [REQ-FUNC-041](./requirements/functional/REQ-FUNC-041.md)   | Test | TBD                | draft | TBD      |
+| [REQ-FUNC-042](./requirements/functional/REQ-FUNC-042.md)   | Demonstration | TBD                | deferred | TBD      |
+| [REQ-FUNC-043](./requirements/functional/REQ-FUNC-043.md)   | Demonstration | TBD                | draft | TBD      |
+| [REQ-FUNC-044](./requirements/functional/REQ-FUNC-044.md)   | Demonstration | TBD                | draft | TBD      |
 | [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md)   | Analysis            | TBD                | draft    | TBD      |
 | [REQ-PERF-002](./requirements/performance/REQ-PERF-002.md)   | Test                | TBD                | proposed | TBD      |
 | [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md)   | Demonstration       | TBD                | proposed | TBD      |
@@ -590,6 +602,10 @@ The following items are not supplied in the source material and should be answer
 | [REQ-FUNC-038](./requirements/functional/REQ-FUNC-038.md) | Automated EPUB cover image fetching | draft | 3.2 Functional Requirements |
 | [REQ-FUNC-039](./requirements/functional/REQ-FUNC-039.md) | Manual EPUB cover image fetching | draft | 3.2 Functional Requirements |
 | [REQ-FUNC-040](./requirements/functional/REQ-FUNC-040.md) | Display book table view | draft | 3.2 Functional Requirements |
+| [REQ-FUNC-041](./requirements/functional/REQ-FUNC-041.md) | Allow rereading books | draft | 3.2 Functional Requirements |
+| [REQ-FUNC-042](./requirements/functional/REQ-FUNC-042.md) | Automatic import folder | deferred | 3.2 Functional Requirements |
+| [REQ-FUNC-043](./requirements/functional/REQ-FUNC-043.md) | Cherry-picking metadata | draft | 3.2 Functional Requirements |
+| [REQ-FUNC-044](./requirements/functional/REQ-FUNC-044.md) | Fetch metadata from multiple sources | draft | 3.2 Functional Requirements |
 | [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md)   | Catalog browsing latency target                       | draft    | 3.3 Quality of Service Requirements        |
 | [REQ-PERF-002](./requirements/performance/REQ-PERF-002.md)   | Non-blocking long-running operations                  | proposed | 3.3 Quality of Service Requirements        |
 | [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md)   | Asset storage growth visibility                       | proposed | 3.3 Quality of Service Requirements        |
