@@ -64,7 +64,6 @@ ReadingState
 ├── user_id
 ├── work_id or edition_id
 ├── status: unread, currently_reading, read, abandoned
-├── owned flag
 └── current progress fields
 
 ReadingEvent
