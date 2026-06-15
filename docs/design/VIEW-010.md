@@ -44,7 +44,7 @@ Unread -> CurrentlyReading -> Read
 Unread -> Abandoned
 CurrentlyReading -> Abandoned
 Abandoned -> CurrentlyReading
-Read -> CurrentlyReading, for reread if supported
+Read -> CurrentlyReading, for reread
 ```
 
 Analytics use cases:
