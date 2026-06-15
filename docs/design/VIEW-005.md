@@ -32,8 +32,7 @@ BookFile
 ├── edition_id
 ├── file_format, initially EPUB
 ├── checksum
-├── current_asset_id
-├── original_asset_id
+├── asset_id
 └── has many FileVersions
 
 Asset
