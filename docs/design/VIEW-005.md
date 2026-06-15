@@ -38,7 +38,7 @@ BookFile
 
 Asset
 ├── id
-├── asset_type: epub, cover, author_image, backup, previous_version
+├── asset_type: epub, cover, author_image
 ├── storage_key/path
 ├── checksum
 ├── size_bytes
