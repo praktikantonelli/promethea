@@ -43,7 +43,6 @@ Managed Asset Store
 │   └── {book_file_id}/{version_id}.epub
 ├── covers/
 ├── author-images/
-├── thumbnails/
 └── backups/
 ```
 
