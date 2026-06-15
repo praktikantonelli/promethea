@@ -17,8 +17,7 @@ Reading tracking is modeled through current reading state plus append-only readi
 ReadingState
 ├── user_id
 ├── work_id or edition_id
-├── owned: boolean
-├── status: unread | currently_reading | read | abandoned | TBD
+├── status: unread | currently_reading | read | abandoned 
 ├── current_progress_value optional
 ├── current_progress_unit optional
 ├── started_at optional
