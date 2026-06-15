@@ -35,12 +35,7 @@ Catalog Database
 └── users / auth entities, model TBD
 
 Managed Asset Store
-├── originals/
-│   └── {book_file_id}/{checksum}.epub
-├── current/
-│   └── {book_file_id}/current.epub
-├── versions/
-│   └── {book_file_id}/{version_id}.epub
+├── books/
 ├── covers/
 ├── author-images/
 └── backups/
