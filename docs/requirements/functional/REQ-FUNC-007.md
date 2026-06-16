@@ -12,9 +12,10 @@ EPUB editing can damage files; preserving prior versions mitigates data-loss ris
 
 ## Acceptance Criteria
 - Before a write operation changes an EPUB, the previous version remains recoverable.
+- Only when the write operation was successful and finished will the original EPUB be overridden.
 
 ## Verification Method
 Test
 
 ## More Information
-Retention limits are TBD; backup policy should define whether old versions are pruned.
+None
