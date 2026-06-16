@@ -12,7 +12,7 @@ Even revised e-books sometimes contain typos, bad formatting or unwanted adverts
 
 ## Acceptance Criteria
 - A user can open an EPUB content-edit workflow for an imported EPUB.
-- The system can save a textual content change to a new EPUB file version.
+- The system stores the edited version and overrides the previous one only when saving was successful.
 - The user receives validation feedback if the edited EPUB cannot be saved in a usable package structure.
 
 ## Verification Method
