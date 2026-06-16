@@ -12,7 +12,6 @@ EPUB editing can damage files; preserving prior versions mitigates data-loss ris
 
 ## Acceptance Criteria
 - Before a write operation changes an EPUB, the previous version remains recoverable.
-- The system records version creation time, operation type, and checksum.
 - A user or administrator can identify the current version and at least one previous version.
 
 ## Verification Method
