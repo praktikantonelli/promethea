@@ -140,7 +140,7 @@ All decisions are defined in separate architectural decision record files under 
 | Execute long-running operations as background jobs | [DEC-006](./decisions/DEC-006.md) |
 | Preserve previous EPUB versions before file mutation | [DEC-007](./decisions/DEC-007.md) |
 | Use provider abstraction for metadata and external image fetching | [DEC-008](./decisions/DEC-008.md) |
-| Treat SQLite as a POC candiate and defer the final database-engine decision | [DEC-009](./decisions/DEC-009.md) |
+| Treat SQLite as a POC candidate and defer the final database-engine decision | [DEC-009](./decisions/DEC-009.md) |
 | Defer native desktop/mobile, e-reader sync, audiobook, and cross-medium progress implementation | [DEC-010](./decisions/DEC-010.md) |
 
 ## 5. Appendixes
