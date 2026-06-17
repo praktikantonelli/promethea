@@ -15,7 +15,7 @@ flowchart TD
     A[Library Owner / Administrator]
     B[Promethea System \n Rust REST API Backend \n Catalog Database \n Managed Asset Store \n Background Jobs]
     C[External metadata sources]
-    D[Externam image URLs]
+    D[External image URLs]
     E[Browser / future clients]
     F[Self-hosted environment \n container / server / volume]
 
