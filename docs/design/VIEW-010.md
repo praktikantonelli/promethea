@@ -40,11 +40,11 @@ ReadingEvent
 Status transition baseline:
 
 ```text
-Unread -> CurrentlyReading -> Read
-Unread -> Abandoned
-CurrentlyReading -> Abandoned
-Abandoned -> CurrentlyReading
-Read -> CurrentlyReading, for reread
+unread -> currently_reading -> read
+unread -> abandoned
+currently_reading -> abandoned
+abandoned -> currently_reading
+read -> currently_reading, for reread
 ```
 
 Analytics use cases:
