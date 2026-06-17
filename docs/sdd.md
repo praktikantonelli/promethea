@@ -133,7 +133,7 @@ All decisions are defined in separate architectural decision record files under 
 | Title | ID |
 |-------|----|
 | Use a Rust Backend exposing a REST API | [DEC-001](./decisions/DEC-001.md) |
-| Use a shared React Typescript frontend | [DEC-002](./decisions/DEC-002.md) |
+| Use a shared React TypeScript frontend | [DEC-002](./decisions/DEC-002.md) |
 | Keep the server as the authoritative consistency boundary | [DEC-003](./decisions/DEC-003.md) |
 | Structure the backend as a modular reusable core with adapters | [DEC-004](./decisions/DEC-004.md) |
 | Store structured catalog data separately from managed binary assets | [DEC-005](./decisions/DEC-005.md) |
