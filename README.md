@@ -18,7 +18,7 @@ git config --global user.signingkey ~/.ssh/id_ed25519.pub
 git config --global commit.gpgSign true
 
 # create a file, add your email address and the content of your public ssh key
-touch ~/.ssh/alliwedSignersFile
+touch ~/.ssh/allowedSignersFile
 
 cat email@example.com namespaces="git" <your-public-ssh-key> > ~/.ssh/allowedSignersFile
 
