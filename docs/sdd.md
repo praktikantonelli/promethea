@@ -44,7 +44,7 @@ The design is intentionally focused on the server-browser and shared-frontend pr
 
 | Term | Definition                                                                                                               |
 |------|--------------------------------------------------------------------------------------------------------------------------|
-| ADR  | Architecture Decision Record; a record of a segnificant design decision, including implications, considered alternatives and drawbacks |
+| ADR  | Architecture Decision Record; a record of a significant design decision, including implications, considered alternatives and drawbacks |
 | API  | Application Programming Interface - A set of definitions and protocols for building and integrating application software |
 | Asset | A managed media file such as an EPUB e-book file, a cover or author image |
 | Backend | The hidden, logical part of a software that handles user requests |
