@@ -142,6 +142,7 @@ All decisions are defined in separate architectural decision record files under 
 | Use provider abstraction for metadata and external image fetching | [DEC-008](./decisions/DEC-008.md) |
 | Treat SQLite as a POC candidate and defer the final database-engine decision | [DEC-009](./decisions/DEC-009.md) |
 | Defer native desktop/mobile, e-reader sync, audiobook, and cross-medium progress implementation | [DEC-010](./decisions/DEC-010.md) |
+| Use hexagonal architecture in Rust backend | [DEC-011](./decisions/DEC-011.md) |
 
 ## 5. Appendixes
 
