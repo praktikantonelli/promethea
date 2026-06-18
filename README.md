@@ -20,7 +20,7 @@ git config --global commit.gpgSign true
 # create a file, add your email address and the content of your public ssh key
 touch ~/.ssh/allowedSignersFile
 
-cat email@example.com namespaces="git" <your-public-ssh-key> > ~/.ssh/allowedSignersFile
+echo "email@example.com namespaces=\"git\"" <your-public-ssh-key> > ~/.ssh/allowedSignersFile
 
 # tell git to use the file
 git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowedSignersFile
