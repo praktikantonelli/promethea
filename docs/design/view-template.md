@@ -1,6 +1,6 @@
 ---
-# These are optional metadata elements. Feel free to remove any of them.
 date: {YYYY-MM-DD when the view was last updated}
+id: {same as file name}
 ---
 
 # <!-- short title, representative of the view -->
@@ -13,3 +13,9 @@ date: {YYYY-MM-DD when the view was last updated}
 
 ## More Information
 ➥ Provide supporting context, links, and references that help stakeholders understand the design view. Reference relevant design decisions from Section 4 that influenced or resulted from this design element. If available, include references to the SRS requirement IDs that the design view implements.
+| Relation | Requirement / Decision |
+| -------------- | --------------- |
+| Implements |  |
+| Related decisions |  |
+| Open issues |  |
+

@@ -13,10 +13,10 @@ A Calibre replacement needs to modify the actual e-book file, not only the appli
 ## Acceptance Criteria
 - A user can request that catalog metadata be written to an EPUB file.
 - After the operation, re-importing or re-reading the EPUB shows the updated metadata for supported fields.
-- The operation reports unsupported fields rather than silently pretending to write them.
+- The operation only handles standard metadata fields found in EPUB files.
 
 ## Verification Method
 Test
 
 ## More Information
-Safe file versioning requirements apply; see [REQ-FUNC-007](./REQ-FUNC-007.md) and [REQ-REL-002](./../reliability/REQ-REL-002.md).
+Safe file versioning requirements apply; see [REQ-FUNC-007](./REQ-FUNC-007.md) and [REQ-REL-002](./../reliability/REQ-REL-002.md). Exact fields to be written into EPUB are to be clarified later.

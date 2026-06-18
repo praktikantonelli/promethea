@@ -26,245 +26,192 @@ Prepared by Luca Antonelli
 | Name | Date | Reason For Changes | Version |
 |------|------|--------------------|---------|
 |Luca Antonelli      | 2026-06-02     | initial version                   |   0.1      |
-|      |      |                    |         |
 
-## 1. Introduction
-💬 _Provides an overview of the document and orients the reader to the system being designed._
+## 1. Introduction 
+This Software Design Description (SDD) describes the initial proposed architecture and design for Promethea. It translates the requirements baseline in the SRS into design views, major design elements, and architecture decision records. The SDD is prescriptive where requirements already impose implementation constraints and intentionally marked as draft/TBD where the SRS leaves open questions.
 
 ### 1.1 Document Purpose
-💬 _Clarifies why this SDD exists, what it describes, and who should use it._
-
-➥ State the purpose of this SDD in 2–4 sentences. Identify its intended audiences (e.g., developers, architects, maintainers, operators) and how they use it across the lifecycle.
-
-💡 Tips: 
-- Mention related documents (vision/scope, BRD, SRS, roadmap, contracts) if relevant.
+The purpose of this SDD is to give developers, maintainers, operators, security reviewers, and future contributors a shared design baseline for Promethea. It describes the system structure, major runtime flows, data ownership, deployment shape, and significant architecture decisions needed to implement and evolve the product. The SDD complements the SRS: the SRS defines what Promethea must do, while this SDD describes how the system is designed to satisfy those requirements.
 
 ### 1.2 Subject Scope
-💬 _Defines the scope, purpose, and boundaries of the design._
+This SDD covers the Promethea v0.1 design baseline for a personal/self-hostable e-book library management and reading-tracking system. The design includes a Rust backend, REST API, React TypeScript frontend, catalog database, managed file assets, EPUB import/editing/versioning, metadata/image provider integration, reading tracking, analytics, background jobs, security controls, and self-hosted deployment support.
 
-➥ Identify the system being designed by name and version/release. In 3–5 sentences, describe its primary purpose, key capabilities, and intended outcomes. Clearly list inclusions and exclusions when this SDD covers part of a larger system.
+The design is intentionally focused on the server-browser and shared-frontend product shape. Native desktop packaging, native mobile applications, e-reader synchronization, audiobook support, multi-medium progress synchronization, public SaaS multi-tenancy, browser-based EPUB reading, and AI/ML-based recommendations are outside the initial design scope unless reprioritized through change management.
 
-💡 Tips:
-- Connect capabilities to business objectives and reference a separate vision/scope document if relevant.
-- Include a simple diagram if it clarifies boundaries within a larger system.
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
-➥ Help readers understand specialized terms and notation by providing a glossary of domain terms, acronyms, and abbreviations used in the SDD.
 
-💡 Tips:
-- Keep entries alphabetized and consistent across the document set.
 
 | Term | Definition                                                                                                               |
 |------|--------------------------------------------------------------------------------------------------------------------------|
+| ADR  | Architecture Decision Record; a record of a significant design decision, including implications, considered alternatives and drawbacks |
 | API  | Application Programming Interface - A set of definitions and protocols for building and integrating application software |
+| Asset | A managed media file such as an EPUB e-book file, a cover or author image |
+| Backend | The hidden, logical part of a software that handles user requests |
+| Catalog | The user-accessible representation of the book database, including books, authors, series, reading status, metadata and assets |
+| E-book | A book in electronic format, made to be read on an e-reader or otherwise compatible reader |
+| EPUB | Common type of e-book file |
+| Frontend | The interface a user sees when communicating with a software |
+| Metadata | Data pertaining a book, includes title, author(s), number of pages, date of publication, series |
+| Metadata Candidate | A selection of proposed metadata for a book; generally automatically fetched from an API |
 | SDD  | Software Design Description - A document that describes the intended purpose, requirements, and nature of a software        |
+| SRS  | Software Requirements Specification - A document that defines the features of a software, grouped into categories |
+| View | A concrete design description from a specific viewpoint, such as context, composition, logical, interface, runtime, deployment or security |
+| Viewpoint | A selected perspective that defines the concerns, notation, and expected content for one or more views |
 
 ### 1.4 References
-💬 _Lists external sources that are normative or informative for this SDD._
 
-➥ Cite standards, contracts, policies, interface specs, UX style guides, use-case docs, architectural decisions, or a vision/scope document. For each reference, include title, author/owner, version, date, and location/URL. Indicate whether each reference is normative (binding) or informative (guidance).
+| Reference | Owner/Author | Version/Date | Type | Location |
+| --------------- | --------------- | --------------- | --------------- | ---- |
+| Hexagonal Architecture in Rust| howtocodeit | 1.1.7 | Blog post | https://www.howtocodeit.com/guides/master-hexagonal-architecture-in-rust |
+| SRS | Luca Antonelli | 0.1 / 2026-06-07 | Document | [`srs.md`](./srs.md) |
 
-💡 Tips:
-- Prefer stable links or repository paths over volatile URLs.
 
 ### 1.5 Document Overview
-💬 _Brief guide to the structure of the SDD so readers can quickly find what they need._
-
-➥ Summarize what each major section covers (Design, Decisions, Appendixes), note any document conventions, and mention how updates and revision history are managed.
-
-💡 Tips:
-- Keep to 3–5 sentences focusing on navigation and conventions.
+Section 2 identifies stakeholder concerns and the viewpoints selected to address them. Section 3 contains concrete design views for Promethea, each following the view-template pattern of viewpoint, representation, and supporting information. Section 4 records significant design decisions and links them to the affected views and SRS requirements. Section 5 captures appendixes, traceability, and open issues that should be refined as the design matures.
 
 ## 2. Design Overview
-💬 _Describes the nature and approach of the system architecture and design._
+Promethea is designed as a self-hostable server application with a reusable frontend and a modular backend. The central design strategy is to keep domain logic independent from transport, storage, provider, EPUB-processing, and job execution concerns so that the system can evolve towards desktop, mobile and sync scenarios without duplicating the core logic.
 
 ### 2.1 Stakeholder Concerns
-💬 _Defines key stakeholders and their design-related interests._
 
-➥ Identify stakeholder types (e.g., users, developers, operators), their main concerns (e.g., availability, maintainability, risk mitigation) and the viewpoints or design elements of this document that address them.
+| Stakeholder | Main design concerns | Addressed by viewpoints / views |
+|-------------|----------------------|----------------------------------|
+| Library Owner / Administrator | Self-hosted installation, data ownership, backups, provider configuration, user/content responsibility, safe EPUB modification | Context, Deployment, Security, Persistence and Asset Storage, EPUB Modification and Versioning |
+| Reader / Authenticated User | Browsing usability, book/author/series navigation, reading-status updates, analytics, remote access, privacy of reading data | Frontend Application, Logical Domain Model, Reading Tracking and Analytics, Security, REST and External Interface |
+| Maintainer / Developer | Modular implementation, testability, Rust/React constraints, database migrations, reusable core, clear dependencies, future extensibility | Composition, Backend Module and Dependency, Logical Domain Model, Interface, Decisions |
+| Operator / Self-Hoster | Container deployment, configurable data directory, restart recovery, observability, backup/restore, resource growth visibility | Deployment and Operations, Persistence and Asset Storage, Security, Job Processing and Automation |
+| Security Reviewer | Authentication, authorization, external input validation, image URL download risk, secrets, HTTPS deployment, reading-data privacy | Security, REST and External Interface, Persistence and Asset Storage, Deployment and Operations |
+| QA / Verifier | Traceability from requirements to design elements, testable runtime flows, failure behavior, deterministic import/editing semantics | Runtime views, Interface View, Traceability Appendix, Decisions |
+| Future Extension Developer | Desktop/mobile reuse, e-reader sync, audiobook model, cross-medium progress, provider abstraction | Deferred Extension View, Backend Module and Dependency View, Logical Domain Model, Decisions |
 
 ### 2.2 Selected Viewpoints
-💬 _Defines the perspectives used to represent and reason about the system’s design._
+This SDD uses a tailored subset of the default viewpoints from the SDD template. The selected viewpoints are included because they address specific concerns in the design of the system. The remaining viewpoints are either omitted or merged into a broader view. 
 
-➥ Identify and describe the viewpoints that were selected to address the stakeholders' concerns identified in Section 2.1. Each viewpoint addresses specific stakeholder concerns and utilizes visualization languages (e.g., UML, C4, sequence diagrams). Note which concerns each viewpoint addresses.
-
-#### 2.2.1 Context
-💬 _Defines the system as a black box, identifying its boundaries and its environment._
-
-**Addresses:** System boundaries, environment actors (users, external systems) and offered services (use cases).  
-**Typical Languages:** UML Use Case Diagram, C4 Context Diagram.
-
-#### 2.2.2 Composition
-💬 _Describes how the system is recursively assembled from major constituent parts (subsystems, components, or modules), and how those are organized and relate to one another_
-
-**Addresses:** Identify the major design elements; allocation of responsibilities, and localization of functionality; modularity (reuse, buy-vs-build) and integration.  
-**Typical Languages:** UML Component Diagram, Hierarchical Decomposition Diagram, UML Package (functional), Deployment (runtime) Diagram.
-
-💡 Tips:
-- Focus on how components fit together and where external, reused, or third-party components integrate.
-- Consider organizing into subcategories for clarity: Functional (logical) decomposition and Runtime (physical) decomposition.
-
-#### 2.2.3 Logical
-💬 _Captures the static design structure of the system in terms of types and their implementation (class, interface) and their relationships._
-
-**Addresses:** Development and reuse of appropriate abstractions and their implementations; encapsulation and dependencies among entities.  
-**Typical Languages:** UML Class Diagram, UML Object Diagram.
-
-💡 Tips: 
-- Focus on the static and stable abstractions that collaborate to fulfill system goals. 
-- Complements Composition (assembly) by clarifying the abstractions that underlie it.
-
-#### 2.2.4 Physical
-💬 _Depicts the tangible system infrastructure._
-
-**Addresses:** Hardware configuration, physical topology, and physical constraints.  
-**Typical Languages:** Hardware Block Diagram, Network Topology Diagram, Rack Layout, Cloud Infrastructure Diagram.
-
-💡 Tips:
-- Complements Deployment by showing the platform topology on which software is mapped.
-
-#### 2.2.5 Structure
-💬 _Documents internal organization of components and their parts, ports, and connectors_.
-
-**Addresses:** Internal composition of complex entities; reusability of fine-grained components.  
-**Typical Languages:** UML composite structure diagram, UML class diagram, UML package diagram, C4 Container diagram.
-
-💡 Tips: 
-- Complements Composition by focusing on interfaces and connectors.
-
-#### 2.2.6 Dependency
-💬 _Shows how design elements interconnect and access each other, illustrating import, service, or build-time relationships._
-
-**Addresses:** Integration needs and prioritization; coupling and dependencies; root cause and change impact analysis.  
-**Typical Languages:** UML Package Diagram, Dependency Graph, UML Component Diagram
-
-💡 Tips: 
-- Draw dependencies directionally (“uses”, “requires”, “provides”).
-
-#### 2.2.7 Information
-💬 _Models the persistent data structure, its relationships, and the mechanisms for access and management._
-
-**Addresses:** Data structure and semantics; persistence; metadata; data integrity; data management and access schemes.  
-**Typical Languages:** Entity-Relationship Diagram, UML Class Diagram, Logical Data Model.
-
-💡 Tips: 
-- Use consistent naming with the Logical viewpoint to maintain type alignment.
-
-#### 2.2.8 Interface
-💬 _Specifies the externally visible interfaces among components, subsystems, or with external systems._
-
-**Addresses:** Interoperability through contract definition; encapsulation, and integration risks.  
-**Typical Languages:** API specifications, IDLs, function/method signature, UML Component Diagram
-
-#### 2.2.9 Interaction
-💬 _Illustrates how entities collaborate at runtime via messages: who talks to whom, in what order, and under which conditions._
-
-**Addresses:** Allocation of responsibilities; message sequencing, timing, and synchronization; error propagation; distributed components state transition logic and concurrency.  
-**Typical Languages:** UML Sequence Diagram, UML Collaboration Diagram, BPMN Process Flows.
-
-💡 Tips:
-- Provide representative “happy-path” and “failure-path” scenarios.
-- If concurrency affects ordering, annotate lifelines/regions and reference the Concurrency viewpoint.
-
-#### 2.2.10 Algorithm
-💬 _Details the internal processing logic of an operation: steps, decisions, loops, and error handling, emphasizing critical or novel algorithms within the design._
-
-**Addresses:** Computational complexity; time-space processing logic; performance, determinism, and reproducibility.  
-**Typical Languages:** Pseudocode, flowchart, Decision Table mathematical formulation.
-
-💡 Tips: 
-- Tie each algorithm to its owning class/component.
-- Consider referencing Interface contracts to link invariants and pre/postconditions.
-- Consider referencing Resource impacts if performance or space is critical.
-
-#### 2.2.11 State Dynamics
-💬 _Details how system or component states evolve in response to events or stimuli over time._
-
-**Addresses:** Modes/states, transitions, events/triggers, guards, entry/exit effects, concurrency regions, synchronization.  
-**Typical Languages:** UML State Machine Diagram, State Transition Table, Automata, Petri Net.
-
-💡 Tips: 
-- Complements Interaction/Algorithm when behavior differs by state.
-
-#### 2.2.12 Concurrency
-💬 _Describes how the design handles parallelism, synchronization, and coordination among concurrent entities._
-
-**Addresses:** Thread/process structure; synchronization and locking; concurrency control; event ordering; parallel execution and race conditions.  
-**Typical Languages:** UML Activity Diagram, UML Sequence and State Diagram, actor model.
-
-💡 Tips:
-- Complements other dynamic viewpoints when parallelism, synchronization, or ordering guarantees are first-class concerns that would clutter those views.
-
-#### 2.2.13 Patterns
-💬 _Identifies reusable design ideas and collaborations—design patterns, architectural styles, or framework templates—that guide or constrain the system’s structure and behavior._
-
-**Addresses:** Reuse of proven solutions; consistency of architectural style; collaboration roles and connectors; template-based component structures.  
-**Typical Languages:** UML Composite Structure Diagram, UML Package/Class Diagram, Architecture Description Language.
-
-💡 Tips: 
-- Record which patterns are applied and where.
-
-#### 2.2.14 Deployment
-💬 _Describes how software entities are mapped onto the physical execution environment, what runs where and how nodes are connected_
-
-**Addresses:** Component-to-node allocation; deployment topology; communication mechanisms; distribution, replication, and scaling; operational constraints.  
-**Typical Languages:** UML Deployment Diagram, Infrastructure-as-Code topology, Network Diagram, CI/CD pipeline diagrams.
-
-💡 Tips: 
-- Include environment tiers and deployment sequencing if relevant.
-
-#### 2.2.15 Resources
-💬 _Specifies use and management of shared or limited resources, such as memory, bandwidth, threads, or file handles._
-
-**Addresses:** Resource utilization and allocation; contention and availability; performance bottlenecks; locks and priorities; resource management strategies.  
-**Typical Languages:** UML Class Diagram (for resource entities), UML Real-Time Profile, UML Object Constraint Language (OCL), Resource Allocation Table.
-
-💡 Tips: 
-- Cross-reference with Concurrency (timing) and Deployment (placement) views for a full runtime picture..
+| Viewpoint | Used? | Purpose in this SDD | Concrete views |
+|-----------|-------|---------------------|----------------|
+| Context | Yes | Establish system boundary, users, external systems, and deferred external environments. | [VIEW-001](./design/VIEW-001.md), [VIEW-014](./design/VIEW-014.md) |
+| Composition | Yes | Decompose the system into frontend, backend, persistence, asset, provider, and job elements. | [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-004](./design/VIEW-004.md) |
+| Logical | Yes | Describe stable domain concepts such as work, edition, book file, author, series, reading event, and automation rule. | [VIEW-005](./design/VIEW-005.md), [VIEW-010](./design/VIEW-010.md) |
+| Physical | Partial | Only the self-hosted/container deployment has physical relevance at this stage. Physical hardware topology is otherwise deployment-specific. | [VIEW-013](./design/VIEW-013.md) |
+| Structure | Yes | Show internal organization of frontend/backend and major connectors. | [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-004](./design/VIEW-004.md) |
+| Dependency | Yes | Make direction of dependencies explicit, especially around reusable core and adapters. | [VIEW-003](./design/VIEW-003.md) |
+| Information | Yes | Define persistent catalog data, asset metadata, versioning, reading events, and operation history. | [VIEW-006](./design/VIEW-006.md), [VIEW-010](./design/VIEW-010.md) |
+| Interface | Yes | Describe REST API, file import/download, metadata/image providers, and future device-sync interface. | [VIEW-007](./design/VIEW-007.md) |
+| Interaction | Yes | Describe import, metadata enrichment, EPUB modification, reading update, and background-job flows. | [VIEW-008](./design/VIEW-008.md), [VIEW-009](./design/VIEW-009.md), [VIEW-010](./design/VIEW-010.md), [VIEW-011](./design/VIEW-011.md) |
+| Algorithm | Partial | Used only where operation logic is architecturally significant, such as import checksums and EPUB mutation/versioning. | [VIEW-008](./design/VIEW-008.md), [VIEW-009](./design/VIEW-009.md) |
+| State Dynamics | Partial | Used for reading status, job status, and EPUB modification states. | [VIEW-009](./design/VIEW-009.md), [VIEW-010](./design/VIEW-010.md), [VIEW-011](./design/VIEW-011.md) |
+| Concurrency | Partial | Used for background jobs, provider calls, and long-running operations. | [VIEW-011](./design/VIEW-011.md) |
+| Patterns | Yes | Records architectural style: modular backend, ports/adapters, server-authoritative API, provider abstraction, versioned asset handling. | [VIEW-003](./design/VIEW-003.md), [VIEW-006](./design/VIEW-006.md), [VIEW-011](./design/VIEW-011.md), Section 4 |
+| Deployment | Yes | Map software units to self-hosted/server-browser/container deployment. | [VIEW-013](./design/VIEW-013.md) |
+| Resources | Yes | Address file assets, database, job workers, storage growth, logs, backup/restore, and external provider limits. | [VIEW-006](./design/VIEW-006.md), [VIEW-011](./design/VIEW-011.md), [VIEW-013](./design/VIEW-013.md) |
 
 ## 3. Design Views
-💬 _Documents the main architectural and design elements that define the system._
 
-➥ Define design views to a level of detail sufficient to implement the system (prescriptive architecture) or to understand how to operate or maintain the existing product (descriptive architecture). Use unique identifiers, keep elements concise and modular, and include diagrams or links where applicable. Reference relevant design decisions from Section 4 that this view represents. Include applicable SRS requirement IDs that this element implements when available.
+| Title | ID |
+| -------------- | --------------- |
+| System Context View | [VIEW-001](./design/VIEW-001.md) |
+| Top-Level Composition View | [VIEW-002](./design/VIEW-002.md) |
+| Backend Module and Dependency View | [VIEW-003](./design/VIEW-003.md) |
+| Frontend Application View | [VIEW-004](./design/VIEW-004.md) |
+| Logical Domain Model View | [VIEW-005](./design/VIEW-005.md) |
+| Persistence and Asset Storage View | [VIEW-006](./design/VIEW-006.md) |
+| REST and External Interface View | [VIEW-007](./design/VIEW-007.md) |
+| EPUB Import and Metadata Runtime View | [VIEW-008](./design/VIEW-008.md) |
+| EPUB Modification and Versioning View | [VIEW-009](./design/VIEW-009.md) |
+| Reading Tracking and Analytics View | [VIEW-010](./design/VIEW-010.md) |
+| Job Processing and Automation View | [VIEW-011](./design/VIEW-011.md) |
+| Security View | [VIEW-012](./design/VIEW-012.md) |
+| Deployment and Operations View | [VIEW-013](./design/VIEW-013.md) |
+| Deferred Extension View | [VIEW-014](./design/VIEW-014.md) |
 
-📃 Template:
-```markdown
-- ID: [NNN]-{title}
-- Title: Short, descriptive name of the view.
-- Viewpoint: The viewpoint of which this view is an instance.
-- Representation: The design view representation per the viewpoint and language selected, e.g., natural language description or a diagram or a combination thereof.
-- More Information: Additional context. Links to related artifacts.
-```
-
-💡 Tips:
-- This section should contain enough information to implement the system (prescriptive architecture) or to understand how to operate or maintain the existing product (descriptive architecture).
-- If available, include references to the SRS requirement IDs that the design view implements. This demonstrates how requirements are addressed by the design.
-- Reference relevant design decisions from Section 4 that influenced or resulted from this design element.
 
 ## 4. Decisions
-💬 Captures significant architectural or design decisions and their rationale.
 
-➥ Document significant architectural decisions that have substantial long-term impact on the system's structure,
-behavior, or quality attributes.
+All decisions are defined in separate architectural decision record files under [`/decisions`](./decisions/), following the [ADR Template](./decisions/adr-template.md).
 
-```markdown
-- ID: [NNN]-{title}
-- Title: short title, representative of solved problem and found solution.
-- Context: Describe the context and problem statement.
-- Options: Enumerate considered alternatives.
-- Outcome: Chosen option: "{title of option 1}", because {justification}.
-- More Information: Additional context. Links to related artifacts.
-```
-
-💡 Tips:
-- Keep one decision per record.
-- Consider adopting MADR (Markdown Architecture Decision Record) pattern directly to document decisions. 
+| Title | ID |
+|-------|----|
+| Use a Rust Backend exposing a REST API | [DEC-001](./decisions/DEC-001.md) |
+| Use a shared React TypeScript frontend | [DEC-002](./decisions/DEC-002.md) |
+| Keep the server as the authoritative consistency boundary | [DEC-003](./decisions/DEC-003.md) |
+| Structure the backend as a modular reusable core with adapters | [DEC-004](./decisions/DEC-004.md) |
+| Store structured catalog data separately from managed binary assets | [DEC-005](./decisions/DEC-005.md) |
+| Execute long-running operations as background jobs | [DEC-006](./decisions/DEC-006.md) |
+| Preserve previous EPUB versions before file mutation | [DEC-007](./decisions/DEC-007.md) |
+| Use provider abstraction for metadata and external image fetching | [DEC-008](./decisions/DEC-008.md) |
+| Treat SQLite as a POC candidate and defer the final database-engine decision | [DEC-009](./decisions/DEC-009.md) |
+| Defer native desktop/mobile, e-reader sync, audiobook, and cross-medium progress implementation | [DEC-010](./decisions/DEC-010.md) |
+| Use hexagonal architecture in Rust backend | [DEC-011](./decisions/DEC-011.md) |
 
 ## 5. Appendixes
-💬 _Optional supporting material that aids understanding without being normative._
 
-➥ Include glossaries, data dictionaries, models/diagrams, sample datasets, or change-impact analyses that support the main sections. Reference rather than duplicate content when possible.
+### Appendix A: Requirement-to-View Traceability
 
-💡 Tips:
-- Keep appendixes organized and referenced from the main text.
+| Requirement group | Primary views |
+|-------------------|---------------|
+| External Interfaces: [REQ-INT-001](./requirements/interface/REQ-INT-001.md), [REQ-INT-002](./requirements/interface/REQ-INT-002.md), [REQ-INT-003](./requirements/interface/REQ-INT-003.md), [REQ-INT-004](./requirements/interface/REQ-INT-004.md), [REQ-INT-005](./requirements/interface/REQ-INT-005.md), [REQ-INT-006](./requirements/interface/REQ-INT-006.md), [REQ-INT-007](./requirements/interface/REQ-INT-007.md), [REQ-INT-008](./requirements/interface/REQ-INT-008.md) | [VIEW-001](./design/VIEW-001.md), [VIEW-004](./design/VIEW-004.md), [VIEW-007](./design/VIEW-007.md), [VIEW-012](./design/VIEW-012.md), [VIEW-014](./design/VIEW-014.md) |
+| Library Management and EPUB Processing: [REQ-FUNC-001](./requirements/functional/REQ-FUNC-001.md), [REQ-FUNC-002](./requirements/functional/REQ-FUNC-002.md), [REQ-FUNC-003](./requirements/functional/REQ-FUNC-003.md), [REQ-FUNC-004](./requirements/functional/REQ-FUNC-004.md), [REQ-FUNC-005](./requirements/functional/REQ-FUNC-005.md), [REQ-FUNC-006](./requirements/functional/REQ-FUNC-006.md), [REQ-FUNC-007](./requirements/functional/REQ-FUNC-007.md), [REQ-FUNC-008](./requirements/functional/REQ-FUNC-008.md), [REQ-FUNC-009](./requirements/functional/REQ-FUNC-009.md), [REQ-FUNC-010](./requirements/functional/REQ-FUNC-010.md), [REQ-FUNC-037](./requirements/functional/REQ-FUNC-037.md), [REQ-FUNC-038](./requirements/functional/REQ-FUNC-038.md), [REQ-FUNC-039](./requirements/functional/REQ-FUNC-039.md) | [VIEW-002](./design/VIEW-002.md), [VIEW-005](./design/VIEW-005.md), [VIEW-006](./design/VIEW-006.md), [VIEW-007](./design/VIEW-007.md), [VIEW-008](./design/VIEW-008.md), [VIEW-009](./design/VIEW-009.md) |
+| Browsing, Authors, and Series: [REQ-FUNC-011](./requirements/functional/REQ-FUNC-011.md), [REQ-FUNC-012](./requirements/functional/REQ-FUNC-012.md), [REQ-FUNC-013](./requirements/functional/REQ-FUNC-013.md), [REQ-FUNC-014](./requirements/functional/REQ-FUNC-014.md), [REQ-FUNC-015](./requirements/functional/REQ-FUNC-015.md), [REQ-FUNC-016](./requirements/functional/REQ-FUNC-016.md), [REQ-FUNC-017](./requirements/functional/REQ-FUNC-017.md), [REQ-FUNC-018](./requirements/functional/REQ-FUNC-018.md), [REQ-FUNC-040](./requirements/functional/REQ-FUNC-040.md) | [VIEW-004](./design/VIEW-004.md), [VIEW-005](./design/VIEW-005.md), [VIEW-007](./design/VIEW-007.md) |
+| Reading Tracking and Analytics: [REQ-FUNC-019](./requirements/functional/REQ-FUNC-019.md), [REQ-FUNC-020](./requirements/functional/REQ-FUNC-020.md), [REQ-FUNC-021](./requirements/functional/REQ-FUNC-021.md), [REQ-FUNC-022](./requirements/functional/REQ-FUNC-022.md), [REQ-FUNC-023](./requirements/functional/REQ-FUNC-023.md), [REQ-FUNC-024](./requirements/functional/REQ-FUNC-024.md), [REQ-FUNC-025](./requirements/functional/REQ-FUNC-025.md), [REQ-FUNC-026](./requirements/functional/REQ-FUNC-026.md), [REQ-FUNC-027](./requirements/functional/REQ-FUNC-027.md) | [VIEW-005](./design/VIEW-005.md), [VIEW-007](./design/VIEW-007.md), [VIEW-010](./design/VIEW-010.md), [VIEW-012](./design/VIEW-012.md) |
+| Automation and Job Processing: [REQ-FUNC-028](./requirements/functional/REQ-FUNC-028.md), [REQ-FUNC-029](./requirements/functional/REQ-FUNC-029.md), [REQ-FUNC-030](./requirements/functional/REQ-FUNC-030.md), [REQ-FUNC-031](./requirements/functional/REQ-FUNC-031.md),  [REQ-FUNC-032](./requirements/functional/REQ-FUNC-032.md) | [VIEW-008](./design/VIEW-008.md), [VIEW-011](./design/VIEW-011.md) |
+| Deferred Device and Media Features: [REQ-FUNC-033](./requirements/functional/REQ-FUNC-033.md), [REQ-FUNC-034](./requirements/functional/REQ-FUNC-034.md), [REQ-FUNC-035](./requirements/functional/REQ-FUNC-035.md),  [REQ-FUNC-036](./requirements/functional/REQ-FUNC-036.md), [REQ-INT-007](./requirements/interface/REQ-INT-007.md) | [VIEW-014](./design/VIEW-014.md) |
+| Performance: [REQ-PERF-001](./requirements/performance/REQ-PERF-001.md), [REQ-PERF-002](./requirements/performance/REQ-PERF-002.md),  [REQ-PERF-003](./requirements/performance/REQ-PERF-003.md) | [VIEW-006](./design/VIEW-006.md), [VIEW-008](./design/VIEW-008.md), [VIEW-011](./design/VIEW-011.md), [VIEW-013](./design/VIEW-013.md) |
+| Security: [REQ-SEC-001](./requirements/security/REQ-SEC-001.md), [REQ-SEC-002](./requirements/security/REQ-SEC-002.md), [REQ-SEC-003](./requirements/security/REQ-SEC-003.md), [REQ-SEC-004](./requirements/security/REQ-SEC-004.md), [REQ-SEC-005](./requirements/security/REQ-SEC-005.md) | [VIEW-007](./design/VIEW-007.md), [VIEW-012](./design/VIEW-012.md), [VIEW-013](./design/VIEW-013.md) |
+| Reliability: [REQ-REL-001](./requirements/reliability/REQ-REL-001.md), [REQ-REL-002](./requirements/reliability/REQ-REL-002.md), [REQ-REL-003](./requirements/reliability/REQ-REL-003.md), [REQ-REL-004](./requirements/reliability/REQ-REL-004.md) | [VIEW-006](./design/VIEW-006.md), [VIEW-008](./design/VIEW-008.md), [VIEW-009](./design/VIEW-009.md), [VIEW-011](./design/VIEW-011.md) |
+| Availability and Observability: [REQ-AVAIL-001](./requirements/availability/REQ-AVAIL-001.md), [REQ-AVAIL-002](./requirements/availability/REQ-AVAIL-002.md), [REQ-OBS-001](./requirements/observability/REQ-OBS-001.md), [REQ-OBS-002](./requirements/observability/REQ-OBS-002.md) | [VIEW-006](./design/VIEW-006.md), [VIEW-011](./design/VIEW-011.md), [VIEW-013](./design/VIEW-013.md) |
+| Compliance: [REQ-COMP-001](./requirements/compliance/REQ-COMP-001.md), [REQ-COMP-002](./requirements/compliance/REQ-COMP-002.md), [REQ-COMP-003](./requirements/compliance/REQ-COMP-003.md) | [VIEW-001](./design/VIEW-001.md), [VIEW-007](./design/VIEW-007.md), [VIEW-010](./design/VIEW-010.md), [VIEW-012](./design/VIEW-012.md) |
+| Installation, Build, Distribution, Maintainability, Reusability, Portability, Cost, Deadline, POC, Change Management | [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-004](./design/VIEW-004.md), [VIEW-013](./design/VIEW-013.md), [VIEW-014](./design/VIEW-014.md), Section 4 decisions |
 
+### Appendix B: Decision-to-View Traceability
+
+| Decision | Affected views |
+|----------|----------------|
+| [DEC-001](./decisions/DEC-001.md) Use a Rust backend exposing a REST API | [VIEW-001](./design/VIEW-001.md), [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-007](./design/VIEW-007.md), [VIEW-013](./design/VIEW-013.md) |
+| [DEC-002](./decisions/DEC-002.md) Use a shared React TypeScript frontend | [VIEW-002](./design/VIEW-002.md), [VIEW-004](./design/VIEW-004.md), [VIEW-014](./design/VIEW-014.md) |
+| [DEC-003](./decisions/DEC-003.md) Keep the server as the authoritative consistency boundary | [VIEW-001](./design/VIEW-001.md), [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-004](./design/VIEW-004.md), [VIEW-007](./design/VIEW-007.md), [VIEW-012](./design/VIEW-012.md) |
+| [DEC-004](./decisions/DEC-004.md) Structure the backend as a modular reusable core with adapters | [VIEW-002](./design/VIEW-002.md), [VIEW-003](./design/VIEW-003.md), [VIEW-014](./design/VIEW-014.md) |
+| [DEC-005](./decisions/DEC-005.md) Store structured catalog data separately from managed binary assets | [VIEW-002](./design/VIEW-002.md), [VIEW-005](./design/VIEW-005.md), [VIEW-006](./design/VIEW-006.md), [VIEW-008](./design/VIEW-008.md), [VIEW-009](./design/VIEW-009.md), [VIEW-013](./design/VIEW-013.md) |
+| [DEC-006](./decisions/DEC-006.md) Execute long-running operations as background jobs | [VIEW-003](./design/VIEW-003.md), [VIEW-008](./design/VIEW-008.md), [VIEW-011](./design/VIEW-011.md), [VIEW-013](./design/VIEW-013.md) |
+| [DEC-007](./decisions/DEC-007.md) Preserve previous EPUB versions before file mutation | [VIEW-006](./design/VIEW-006.md), [VIEW-009](./design/VIEW-009.md) |
+| [DEC-008](./decisions/DEC-008.md) Use provider abstractions for metadata and external image fetching | [VIEW-001](./design/VIEW-001.md), [VIEW-003](./design/VIEW-003.md), [VIEW-007](./design/VIEW-007.md), [VIEW-008](./design/VIEW-008.md), [VIEW-011](./design/VIEW-011.md), [VIEW-012](./design/VIEW-012.md) |
+| [DEC-009](./decisions/DEC-009.md) Treat SQLite as a POC candidate and defer final database-engine decision | [VIEW-005](./design/VIEW-005.md), [VIEW-006](./design/VIEW-006.md), [VIEW-013](./design/VIEW-013.md) |
+| [DEC-010](./decisions/DEC-010.md) Defer native and multi-medium extensions | [VIEW-004](./design/VIEW-004.md), [VIEW-005](./design/VIEW-005.md), [VIEW-010](./design/VIEW-010.md), [VIEW-014](./design/VIEW-014.md) |
+
+### Appendix C: Open Issues Carried From the SRS
+
+The following items require resolution before the design can be treated as a stable implementation baseline:
+
+1. Target deployment model: single-user, household/multi-user, or future public multi-tenant.
+2. Authentication model: owner account, local users, OAuth/OIDC, reverse-proxy auth, or another model.
+3. Stable database engine and migration tooling.
+4. Expected library size and performance-test target.
+5. Expected concurrent user/client count.
+6. Metadata providers and provider-specific contract requirements.
+7. External image URL security rules, media types, maximum sizes, and redirect policy.
+8. First supported EPUB editing workflows.
+9. Exact reading statuses and allowed transitions.
+10. Reread handling in analytics.
+11. Multi-author attribution policy.
+12. Page-count and reading-speed calculation rules.
+13. UI accessibility target and supported browser matrix.
+14. Supported server and future desktop operating environments.
+15. Mobile strategy: responsive web, PWA, Tauri mobile, Capacitor, or native wrapper.
+16. E-reader devices and sync protocols.
+17. Backup retention and restore expectations.
+18. License and third-party dependency policy.
+
+### Appendix D: Suggested Next ADRs to Finalize
+
+The following ADRs should be split into individual files and reviewed before implementation hardens:
+
+1. Rust crate layout and module boundaries.
+2. Database engine selection and migration tool.
+3. Work/Edition/File model granularity.
+4. Authentication/session strategy.
+5. Image URL download security controls.
+6. Job queue implementation strategy.
+7. EPUB modification/versioning transaction strategy.
+8. Backup/restore format and consistency model.
+9. OpenAPI generation and API error schema.
+10. Frontend routing/state-management approach.

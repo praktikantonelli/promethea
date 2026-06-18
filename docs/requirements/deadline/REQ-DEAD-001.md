@@ -8,7 +8,7 @@ date: 2026-05-26
 The project shall organize delivery using the milestone sequence documented in Section 2.6 unless changed through project change management.
 
 ## Rationale
-- Rationale: The project has multiple product goals; milestones keep scope incremental and verifiable.
+The project has multiple product goals; milestones keep scope incremental and verifiable.
 
 ## Acceptance Criteria
 - GitHub milestones or equivalent planning artifacts exist for the documented sequence.

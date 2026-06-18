@@ -8,7 +8,7 @@ date: 2026-05-26
 The server REST API shall be implemented using a Rust library.
 
 ## Rationale
-The specific REST API library has not yet been selected.
+Rust for the backend is also a requirement, this way the backend stays consistent and uses one language.
 
 ## Acceptance Criteria
 - The server routing layer uses a Rust crate for REST API.
