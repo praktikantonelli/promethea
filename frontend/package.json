@@ -3,10 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.28.0"
+    "dev": "pnpm --filter @promethea/frontend-web dev",
+    "build": "pnpm --filter @promethea/frontend-web build",
+    "preview": "pnpm --filter @promethea/frontend-web preview"
+  }
 }
