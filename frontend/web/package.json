@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "web",
   "private": true,
   "description": "",
   "main": "index.js",
