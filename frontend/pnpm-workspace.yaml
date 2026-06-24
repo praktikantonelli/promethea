@@ -1,3 +1,3 @@
 packages:
-  - 'web'
-  - 'shared'
+  - 'apps/*'
+  - 'packages/*'
