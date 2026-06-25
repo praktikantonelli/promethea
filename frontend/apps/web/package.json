@@ -1,0 +1,12 @@
+{
+  "name": "@frontend/web",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "web",
+    "projectType": "application"
+  },
+  "dependencies": {
+    "@workspace/ui": "workspace:*"
+  }
+}
