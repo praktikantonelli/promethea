@@ -4,8 +4,11 @@ import App from './app/app';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 
 import { routeTree } from './routeTree.gen';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-const router = createRouter({ routeTree });
+const queryClient = new QueryClient();
+const router = createRouter({ routeTree, context: { queryClient } });
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -18,7 +21,10 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </StrictMode>
   )
 }
