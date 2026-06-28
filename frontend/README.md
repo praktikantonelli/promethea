@@ -1,8 +1,23 @@
 # Frontend
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+This is a Nx workspace that contains all frontend code for Promethea. It is split as follows:
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+```sh
+frontend/
+├── apps/web/            # web frontend package
+│   └── src/
+│       ├── routes/      # TanStack Router routes
+│       └── main.tsx     # entry point
+├── apps/desktop         # future desktop frontend package
+├── packages/ui/         # shared React library for both platforms
+│   └── src/
+│       ├── components   # shadcn/ui components
+│       ├── hooks        # shared hooks
+│       └── pages        # shared pages, displayed with TanStack Router
+└── packages/lib/        # shared TypeScript library
+    └── src/
+        └── lib          # shared types, types generated from Rust backend (HTTP responses etc.)
+```
 
 [Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
 
