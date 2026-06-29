@@ -12,3 +12,10 @@ _run-frontend:
 [private]
 _run-backend:
   cargo run --manifest-path backend/Cargo.toml
+
+test target:
+  @just _test-{{target}}
+
+[private]
+_test-backend:
+  cargo test --manifest-path backend/Cargo.toml
