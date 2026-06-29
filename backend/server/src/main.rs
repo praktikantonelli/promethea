@@ -1,4 +1,7 @@
 use axum::{Router, routing::get};
+pub mod types;
+
+use types::{MyDummyStruct, MyDummyEnum};
 
 #[tokio::main]
 async fn main() {
