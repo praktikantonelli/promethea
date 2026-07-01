@@ -1,7 +1,6 @@
 use serde::Serialize;
 #[derive(ts_rs::TS, Serialize)]
 #[ts(export)]
-#[allow(dead_code, reason = "just for testing purposes")]
 pub struct MyDummyStruct {
     pub id: u32,
     pub label: String,
