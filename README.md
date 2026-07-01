@@ -90,6 +90,7 @@ The config for `ts-rs` is set so each type is written to its own file in [`./fro
 // frontend/packages/lib/src/bindings/MyDummyEnum.ts
 export type MyDummyEnum = "One" | { "Two": string } | { "Three": { Ok : number } | { Err : string } } | { "Four": boolean | null };
 
+```TypeScript
 // frontend/packages/lib/src/bindings/MyDummyStruct.ts
 import type { MyDummyEnum } from "./MyDummyEnum.ts";
 
