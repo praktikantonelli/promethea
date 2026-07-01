@@ -1,4 +1,5 @@
-#[derive(ts_rs::TS)]
+use serde::Serialize;
+#[derive(ts_rs::TS, Serialize)]
 #[ts(export)]
 #[allow(dead_code, reason = "just for testing purposes")]
 pub struct MyDummyStruct {
@@ -8,7 +9,7 @@ pub struct MyDummyStruct {
     enumeration: MyDummyEnum,
 }
 
-#[derive(ts_rs::TS)]
+#[derive(ts_rs::TS, Serialize)]
 #[ts(export)]
 pub enum MyDummyEnum {
     One,
