@@ -3,10 +3,10 @@ use serde::Serialize;
 #[ts(export)]
 #[allow(dead_code, reason = "just for testing purposes")]
 pub struct MyDummyStruct {
-    id: u32,
-    label: String,
-    values: Vec<usize>,
-    enumeration: MyDummyEnum,
+    pub id: u32,
+    pub label: String,
+    pub values: Vec<usize>,
+    pub enumeration: MyDummyEnum,
 }
 
 #[derive(ts_rs::TS, Serialize)]
