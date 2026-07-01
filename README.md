@@ -64,6 +64,8 @@ The type needs to derive `ts_rs::TS` for generating TypeScript bindings, and `se
 2. Use the type in an `axum` handler function
 
 ```Rust
+use axum::{Json, Router, routing::get};
+
 async fn return_type() -> Json<MyDummyStruct> {
   let dummy = MyDummyStruct {
       id: 7,
@@ -77,6 +79,11 @@ async fn return_type() -> Json<MyDummyStruct> {
 #[tokio::main]
 async fn main() {
     let app = Router::new().route("/api/test-types", get(return_type));
+
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+        .await
+        .unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
 ```
 
