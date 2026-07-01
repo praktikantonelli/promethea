@@ -89,6 +89,7 @@ The config for `ts-rs` is set so each type is written to its own file in [`./fro
 ```TypeScript
 // frontend/packages/lib/src/bindings/MyDummyEnum.ts
 export type MyDummyEnum = "One" | { "Two": string } | { "Three": { Ok : number } | { Err : string } } | { "Four": boolean | null };
+```
 
 ```TypeScript
 // frontend/packages/lib/src/bindings/MyDummyStruct.ts
@@ -146,9 +147,11 @@ function Index() {
 
 6. Result:
 Before clicking the button:
+
 ![image before button click](./docs/images/dummy_type_test.png)
 
 After clicking the button:
+
 ![image after button click](./docs/images/dummy_type_test_result.png)
 
 The example explicitly doesn't use TanStack Query's useful automatic fetching by setting `useQuery({..., enabled: false})`. This prevents the query from being executed before the button is clicked. In a real application, that property would be removed to speed up page loads and instead, the visibility of the result would just change upon button click. 
