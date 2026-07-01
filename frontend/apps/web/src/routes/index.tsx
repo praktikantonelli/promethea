@@ -1,43 +1,38 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { Button } from '@workspace/ui'
-import { useQuery } from '@tanstack/react-query'
+import { createFileRoute } from "@tanstack/react-router";
+import { Button } from "@workspace/ui";
+import { useQuery } from "@tanstack/react-query";
+import type { MyDummyStruct } from "@workspace/lib";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   component: Index,
-})
+});
+
+async function fetchTestTypes(): Promise<MyDummyStruct> {
+  const response = await fetch("/api/test-types");
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch test types: ${response.status}`);
+  }
+
+  return response.json() as Promise<MyDummyStruct>;
+}
 
 function Index() {
-  const dummyQuery = useQuery({
-    queryKey: [],
-    queryFn: async () => {
-      const response = await fetch('/api/hello')
-
-      if (!response.ok) {
-        throw new Error(`Request failed: ${response.status}`)
-      }
-
-      return response.text()
-    },
+  const query = useQuery({
+    queryKey: ["test-types"],
+    queryFn: fetchTestTypes,
     enabled: false,
-  })
+  });
 
   return (
-    <div className="p-2">
-      <h3>Welcome Home!</h3>
-
-      <Button onClick={() => dummyQuery.refetch()}>
-        Test backend
+    <div>
+      <Button onClick={() => query.refetch()} disabled={query.isFetching}>
+        {query.isFetching ? "Loading..." : "Fetch test types"}
       </Button>
 
-      {dummyQuery.isFetching && <p>loading...</p>}
+      {query.isError && <div>Error: {query.error.message}</div>}
 
-      {dummyQuery.isError && (
-        <pre>{String(dummyQuery.error)}</pre>
-      )}
-
-      {dummyQuery.data && (
-        <pre>{dummyQuery.data}</pre>
-      )}
+      {query.data && <pre>{JSON.stringify(query.data, null, 2)}</pre>}
     </div>
-  )
+  );
 }
