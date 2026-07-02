@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitest/config';
 export default defineConfig(() => ({
-  root: __dirname,
+  root: import.meta.dirname,
   cacheDir: '../../node_modules/.vite/packages/lib',
   test: {
     name: 'lib',
