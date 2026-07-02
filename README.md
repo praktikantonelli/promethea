@@ -33,6 +33,9 @@ git verify-commit HEAD
 $ Good "git" signature for email@example.com with ED25519 key SHA256:<your-ssh-key>
 ```
 
+## Shell
+While technically not a hard requirement, the `justfile` hard-codes nushell as the shell environment. This is done because nushell is my shell of choice, and not having that option set in the `justfile` leads to problems when using `just` recipes in nushell.
+
 ## Shared Types
 Because the backend and frontend are written in different languages but may need to know about the same types (e.g., backend responds with a `CustomType` to an HTTP GET), shared types are auto-generated using [`ts-rs`](https://github.com/aleph-alpha/ts-rs). To generate the bindings, `ts-rs` generates a Cargo test that generates TypeScript types into [`frontend/packages/lib/src/bindings`](./frontend/packages/lib/src/bindings/) where each type gets written into its own `.ts` file with the same name as the type. Related types are automatically imported too.
 
