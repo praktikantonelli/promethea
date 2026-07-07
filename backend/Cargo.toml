@@ -4,3 +4,69 @@ members = ["server", "shared"]
 
 [workspace.package]
 rust-version = "1.88"
+
+[workspace.lints.rust]
+# enable all Rust lints
+warnings = "warn"
+deprecated_safe = "warn"
+future_incompatible = "warn"
+keyword_idents = "warn"
+let_underscore = "warn"
+nonstandard_style = "warn"
+refining_impl_trait = "warn"
+rust_2018_compatibility = "warn"
+rust_2018_idioms = "warn"
+rust_2021_compatibility = "warn"
+rust_2024_compatibility = "warn"
+unknown_or_malformed_diagnostic_attributes = "warn"
+unused = "warn"
+unsafe_code = "warn"
+missing_docs = "warn"
+missing_debug_implementations = "warn"
+missing_copy_implementations = "warn"
+unreachable_pub = "warn"
+unused_crate_dependencies = "warn"
+unused_extern_crates = "warn"
+unused_import_braces = "warn"
+unused_lifetimes = "warn"
+unused_qualifications = "warn"
+trivial_casts = "warn"
+trivial_numeric_casts = "warn"
+single_use_lifetimes = "warn"
+variant_size_differences = "warn"
+
+[workspace.lints.clippy]
+# enable all clippy lints
+all = "warn"
+correctness = "warn"
+suspicious = "warn"
+complexity = "warn"
+perf = "warn"
+style = "warn"
+pedantic = "warn"
+restriction = "warn"
+cargo = "warn"
+nursery = "warn"
+deprecated = "warn"
+
+# manually toggle conflicting / too strict lints
+
+# prefer 1u8 over 1_u8
+unseparated_literal_suffix = "allow"
+separated_literal_suffix = "deny"
+
+# general Rust idioms
+implicit_return = "allow"
+question_mark_used = "allow"
+single_char_lifetime_names = "allow"
+
+# module and visibility
+mod_module_names = "allow"
+self_named_module_files = "allow"
+pub_use = "allow"
+pub_with_shorthand = "allow"
+
+# regular std workspace -> no use for `no_std` lints
+std_instead_of_core = "allow"
+std_instead_of_allow = "allow"
+alloc_instead_of_core = "allow"
