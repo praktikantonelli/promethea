@@ -61,7 +61,7 @@ question_mark_used = "allow"
 single_char_lifetime_names = "allow"
 
 # module and visibility
-mod_module_names = "allow"
+mod_module_files = "allow"
 self_named_module_files = "allow"
 pub_use = "allow"
 pub_with_shorthand = "allow"
