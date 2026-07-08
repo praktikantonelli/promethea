@@ -1,3 +1,4 @@
+//! server backend package
 use axum::{Json, Router, routing::get};
 pub mod types;
 
