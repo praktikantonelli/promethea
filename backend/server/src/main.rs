@@ -14,11 +14,16 @@ async fn main() -> Result<(), Error> {
     Ok(())
 }
 
+#[allow(clippy::single_call_fn, reason = "example axum handler")]
+#[allow(clippy::print_stdout, reason = "example axum handler")]
+/// Sample axum handler for GET request that returns a simple value
 async fn say_hello() -> &'static str {
     println!("Request received!");
     "Hello from axum!"
 }
 
+#[allow(clippy::single_call_fn, reason = "example axum handler")]
+/// Sample axum handler for GET request that returns a custom type
 async fn return_type() -> Json<MyDummyStruct> {
     let dummy = MyDummyStruct {
         id: 7,
