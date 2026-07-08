@@ -1,4 +1,4 @@
-# .github/workflows/lints.yml
+# .github/workflows/lints.yaml
 name: Lints
 
 on:
