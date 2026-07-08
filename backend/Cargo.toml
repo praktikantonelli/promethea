@@ -70,3 +70,12 @@ pub_with_shorthand = "allow"
 std_instead_of_core = "allow"
 std_instead_of_alloc = "allow"
 alloc_instead_of_core = "allow"
+
+# allow using #[allow(...)], there are always exceptions for lints
+allow_attributes = "allow"
+
+# allow blanket restrictions, instead individually disable conflicting lints
+blanket_clippy_restriction_lints = "allow"
+
+# allow arbitrary ordering of fields/variants, logical grouping preferred over alphabetical
+arbitrary_source_item_ordering = "allow"
