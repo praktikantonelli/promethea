@@ -3,6 +3,7 @@ use serde::Serialize;
 /// sample struct that is used in type returned from axum handler
 #[derive(ts_rs::TS, Serialize, Debug)]
 #[ts(export)]
+#[non_exhaustive]
 pub struct MyDummyStruct {
     /// sample u32 value
     pub id: u32,
@@ -17,6 +18,7 @@ pub struct MyDummyStruct {
 /// sample enum that is used in type returned from axum handler
 #[derive(ts_rs::TS, Serialize, Debug)]
 #[ts(export)]
+#[non_exhaustive]
 pub enum MyDummyEnum {
     /// sample regular enum variant
     One,
