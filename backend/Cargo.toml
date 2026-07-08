@@ -7,47 +7,47 @@ rust-version = "1.88"
 
 [workspace.lints.rust]
 # enable all Rust lints
-warnings = "warn"
-deprecated_safe = "warn"
-future_incompatible = "warn"
-keyword_idents = "warn"
-let_underscore = "warn"
-nonstandard_style = "warn"
-refining_impl_trait = "warn"
-rust_2018_compatibility = "warn"
-rust_2018_idioms = "warn"
-rust_2021_compatibility = "warn"
-rust_2024_compatibility = "warn"
-unknown_or_malformed_diagnostic_attributes = "warn"
-unused = "warn"
-unsafe_code = "warn"
-missing_docs = "warn"
-missing_debug_implementations = "warn"
-missing_copy_implementations = "warn"
-unreachable_pub = "warn"
-unused_crate_dependencies = "warn"
-unused_extern_crates = "warn"
-unused_import_braces = "warn"
-unused_lifetimes = "warn"
-unused_qualifications = "warn"
-trivial_casts = "warn"
-trivial_numeric_casts = "warn"
-single_use_lifetimes = "warn"
-variant_size_differences = "warn"
+warnings = { level = "warn", priority = -1 }
+deprecated_safe = { level = "warn", priority = -1 }
+future_incompatible = { level = "warn", priority = -1 }
+keyword_idents = { level = "warn", priority = -1 }
+let_underscore = { level = "warn", priority = -1 }
+nonstandard_style = { level = "warn", priority = -1 }
+refining_impl_trait = { level = "warn", priority = -1 }
+rust_2018_compatibility = { level = "warn", priority = -1 }
+rust_2018_idioms = { level = "warn", priority = -1 }
+rust_2021_compatibility = { level = "warn", priority = -1 }
+rust_2024_compatibility = { level = "warn", priority = -1 }
+unknown_or_malformed_diagnostic_attributes = { level = "warn", priority = -1 }
+unused = { level = "warn", priority = -1 }
+unsafe_code = { level = "warn", priority = -1 }
+missing_docs = { level = "warn", priority = -1 }
+missing_debug_implementations = { level = "warn", priority = -1 }
+missing_copy_implementations = { level = "warn", priority = -1 }
+unreachable_pub = { level = "warn", priority = -1 }
+unused_crate_dependencies = { level = "warn", priority = -1 }
+unused_extern_crates = { level = "warn", priority = -1 }
+unused_import_braces = { level = "warn", priority = -1 }
+unused_lifetimes = { level = "warn", priority = -1 }
+unused_qualifications = { level = "warn", priority = -1 }
+trivial_casts = { level = "warn", priority = -1 }
+trivial_numeric_casts = { level = "warn", priority = -1 }
+single_use_lifetimes = { level = "warn", priority = -1 }
+variant_size_differences = { level = "warn", priority = -1 }
 
 [workspace.lints.clippy]
 # enable all clippy lints
-all = "warn"
-correctness = "warn"
-suspicious = "warn"
-complexity = "warn"
-perf = "warn"
-style = "warn"
-pedantic = "warn"
-restriction = "warn"
-cargo = "warn"
-nursery = "warn"
-deprecated = "warn"
+all = { level = "warn", priority = -1 }
+correctness = { level = "warn", priority = -1 }
+suspicious = { level = "warn", priority = -1 }
+complexity = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }
+style = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+restriction = { level = "warn", priority = -1 }
+cargo = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+deprecated = { level = "warn", priority = -1 }
 
 # manually toggle conflicting / too strict lints
 
