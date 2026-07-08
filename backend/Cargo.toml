@@ -47,7 +47,6 @@ pedantic = { level = "warn", priority = -1 }
 restriction = { level = "warn", priority = -1 }
 cargo = { level = "warn", priority = -1 }
 nursery = { level = "warn", priority = -1 }
-deprecated = { level = "warn", priority = -1 }
 
 # manually toggle conflicting / too strict lints
 
