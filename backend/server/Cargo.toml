@@ -3,6 +3,12 @@ name = "server"
 version = "0.1.0"
 edition = "2024"
 rust-version.workspace = true
+categories = ["server", "backend", "rust"]
+keywords = ["books", "library", "e-book"]
+license = "MIT"
+repository = "https://github.com/praktikantonelli/promethea"
+description = "The web server backend binary for Promethea"
+readme = "README.md"
 
 [dependencies]
 axum = "0.8.9"

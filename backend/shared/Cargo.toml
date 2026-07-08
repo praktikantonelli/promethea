@@ -3,6 +3,12 @@ name = "shared"
 version = "0.1.0"
 edition = "2024"
 rust-version.workspace = true
+categories = ["library", "backend", "rust", "domain"]
+keywords = ["books", "library", "e-book"]
+license = "MIT"
+repository = "https://github.com/praktikantonelli/promethea"
+description = "Shared backend logic for Promethea"
+readme = "README.md"
 
 [dependencies]
 
