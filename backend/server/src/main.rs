@@ -4,15 +4,14 @@ pub mod types;
 use types::{MyDummyEnum, MyDummyStruct};
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Error> {
     let app = Router::new()
         .route("/api/hello", get(say_hello))
         .route("/api/test-types", get(return_type));
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
-        .await
-        .unwrap();
-    axum::serve(listener, app).await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:3000").await?;
+    axum::serve(listener, app).await?;
+    Ok(())
 }
 
 async fn say_hello() -> &'static str {
