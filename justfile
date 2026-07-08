@@ -19,3 +19,6 @@ test target:
 [private]
 _test-backend:
   cargo test --manifest-path backend/Cargo.toml
+
+clippy:
+  cargo clippy --workspace --all-targets --all-features --manifest-path backend/Cargo.toml -- -D warnings
