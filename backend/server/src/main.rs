@@ -1,4 +1,8 @@
 //! server backend package
+
+// silence clippy by importing and not using
+use shared as _;
+
 use axum::{Json, Router, routing::get};
 use std::io::Error;
 use tokio::net::TcpListener;
