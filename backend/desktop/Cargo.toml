@@ -11,6 +11,7 @@ description = "The desktop backend binary for Promethea"
 readme = "README.md"
 
 [dependencies]
+shared = { path = "../shared/" }
 
 [lints]
 workspace = true
