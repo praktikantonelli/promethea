@@ -1,20 +1,10 @@
-//! As-of-yet empty library crate for shared logic between desktop and web server backends
-///
-/// sample function from initializing library crate
-#[must_use]
-#[inline]
-#[allow(clippy::arithmetic_side_effects, reason = "unused sample function")]
-pub const fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+//! `shared`
+//!
+//! Core library for the platform-independent logic of Promethea.
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+/// domain models, defines platform-agnostic types, errors and entities
+pub mod domain;
+/// hexagonal ports (traits) that define interactions between a sub-part of the system and the rest
+pub mod ports;
+/// use cases compose all necessary adapters to form a logical order of operations
+pub mod usecases;
