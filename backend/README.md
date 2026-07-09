@@ -33,6 +33,6 @@ server ..> adapters
 desktop --> shared
 desktop ..> adapters
 adapters --> shared
-shared -->3rd-party
+adapters -->3rd-party
 ```
 
