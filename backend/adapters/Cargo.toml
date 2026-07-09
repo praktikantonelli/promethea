@@ -11,6 +11,7 @@ description = "Implementations for shared ports"
 readme = "README.md"
 
 [dependencies]
+shared = { path = "../shared" }
 
 [lints]
 workspace = true
