@@ -1,0 +1,16 @@
+[package]
+name = "adapters"
+version = "0.1.0"
+edition = "2024"
+rust-version.workspace = true
+categories = ["backend", "rust"]
+keywords = ["books", "library", "e-book"]
+license = "MIT"
+repository = "https://github.com/praktikantonelli/promethea"
+description = "Implementations for shared ports"
+readme = "README.md"
+
+[dependencies]
+
+[lints]
+workspace = true
