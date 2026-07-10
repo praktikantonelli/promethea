@@ -7,7 +7,7 @@ The [`domain`](./src/domain) module defines common entities, such as objects lik
  
 
 ## Ports
-The [`ports`](./src/ports/) module defines all ports of the system. A port defines the communication between the system as a whole and the port's specific subsystem (e.g., the database, an HTTP client, the file system, etc.). Each port has a corresponding adapter in [`adapters`](../shared). A port should be defined in a way that makes it completely independent of concrete implementation details. For example, a database port should be written so it can be implemented for any database crate (e.g., `sqlx`, `diesel`, any NoSQL-database crate). 
+The [`ports`](./src/ports/) module defines all ports of the system. A port defines the communication between the system as a whole and the port's specific subsystem (e.g., the database, an HTTP client, the file system, etc.). Each port has a corresponding adapter in [`adapters`](../adapters). A port should be defined in a way that makes it completely independent of concrete implementation details. For example, a database port should be written so it can be implemented for any database crate (e.g., `sqlx`, `diesel`, any NoSQL-database crate). 
 
 
 ## Use Cases
