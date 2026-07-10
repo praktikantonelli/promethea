@@ -33,6 +33,8 @@ git verify-commit HEAD
 $ Good "git" signature for email@example.com with ED25519 key SHA256:<your-ssh-key>
 ```
 
+Note that you also need to register your public ssh key as a GitHub *signing* key (as opposed to a regular ssh access key). 
+
 ## Shell
 While technically not a hard requirement, the `justfile` hard-codes nushell as the shell environment. This is done because nushell is my shell of choice, and not having that option set in the `justfile` leads to problems when using `just` recipes in nushell.
 
