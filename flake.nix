@@ -7,8 +7,10 @@
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
-    rust-overlay.url = "github:oxalica/rust-overlay";
-
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
