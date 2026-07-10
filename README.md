@@ -12,6 +12,8 @@ For development on Windows, install the necessary components manually, including
 
 On Unix systems, specifically NixOS, clone the repository, install `direnv` (or `nix-direnv` on NixOS), run `direnv allow` inside the repository and voilà!
 
+Note that for commit linting to work, you need to run `pnpm install` at the repository root. This installs husky, which is used to check all commit messages before allowing them through.
+
 ## Commit Signing
 This project uses signed commits with ssh. To set up:
 
