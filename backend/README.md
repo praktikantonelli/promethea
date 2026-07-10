@@ -3,7 +3,7 @@
 The backend is split into multiple parts, hosting two distinct binaries: [`desktop`](./desktop/) and [`server`](./server). Most shared code lives in [`shared`](./shared), with the exception of [`adapters`](./adapters/), the reason for which is explained below.
 
 ## Architecture
-Given that most of the application logic is the same regardless of platform, a large part of the code lives in the [`sharead`](./shared) crate. To create a sensible structure, hexagonal architecture is used here. 
+Given that most of the application logic is the same regardless of platform, a large part of the code lives in the [`shared`](./shared) crate. To create a sensible structure, hexagonal architecture is used here. 
 
 In hexagonal architecture, the code is split into ports, adapters and use cases. 
 
