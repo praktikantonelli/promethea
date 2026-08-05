@@ -4,7 +4,6 @@ updates:
   # TypeScript / pnpm workspace
   - package-ecosystem: "npm"
     directory: "/frontend"
-    target-branch: "70-look-into-security-and-vulnerability-warnings"
 
     schedule:
       interval: "weekly"
@@ -32,7 +31,6 @@ updates:
   # Rust / Cargo workspace
   - package-ecosystem: "cargo"
     directory: "/backend"
-    target-branch: "70-look-into-security-and-vulnerability-warnings"
 
     schedule:
       interval: "weekly"
