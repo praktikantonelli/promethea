@@ -1,0 +1,50 @@
+version: 2
+
+updates:
+  # TypeScript / pnpm workspace
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Zurich"
+
+    open-pull-requests-limit: 10
+
+    groups:
+      nx-suite:
+        applies-to: "version-updates"
+        patterns:
+          - "nx"
+          - "@nx/*"
+
+      frontend-minor-patch:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Rust / Cargo workspace
+  - package-ecosystem: "cargo"
+    directory: "/backend"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Zurich"
+
+    open-pull-requests-limit: 10
+
+    groups:
+      rust-minor-patch:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
