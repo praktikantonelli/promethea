@@ -3,7 +3,9 @@ version: 2
 updates:
   # TypeScript / pnpm workspace
   - package-ecosystem: "npm"
-    directory: "/frontend"
+    directories: 
+      - "/frontend"
+      - "/"
 
     schedule:
       interval: "weekly"
