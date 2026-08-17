@@ -382,7 +382,6 @@ Advise on performance:
    }
    ```
 
-## Deployment Guidance
 
 ## Communication Style
 
