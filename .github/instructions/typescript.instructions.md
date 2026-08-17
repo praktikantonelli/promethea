@@ -1,5 +1,6 @@
 ---
 applyTo: **/*.{ts, tsx}
+excludeAgent: "cloud-agent"
 ---
 # TypeScript Coding Standards
 This file defines our TypeScript coding conventions for Copilot code review.
