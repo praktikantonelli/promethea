@@ -25,7 +25,7 @@ Help developers implement tools using macros:
 ```rust
 use rmcp::tool;
 use rmcp::model::Parameters;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize};
 use schemars::JsonSchema;
 
 #[derive(Debug, Deserialize, JsonSchema)]
