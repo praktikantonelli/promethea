@@ -55,3 +55,4 @@ interface user {
 async function FetchUser(Id) {
   // ...fetch logic, no error handling
 }
+```
