@@ -26,8 +26,8 @@ This file defines our TypeScript coding conventions for Copilot code review.
 ## Testing
 
 - Write unit tests for all exported functions.
-- Use [Jest](https://jestjs.io/) for all testing.
-- Name test files as `<filename>.test.ts`.
+- Use [Vitest](https://vitest.dev/) for all testing.
+- Name test files as `<filename>.spec.ts` (or `<filename>.spec.tsx` for React components).
 
 ## Example
 
