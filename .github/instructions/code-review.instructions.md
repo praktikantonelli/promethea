@@ -90,7 +90,7 @@ Tests should cover:
 ## Potential Bug Reports
 
 - [Severity] `path/to/file`: Short headline describing the issue.
-    - Details: Explain why it is likely a bug, referencing diff context.
+    - Details: Explain why it is likely a bug, referencing diff context. Also reference docs when you report a potential bug, be it 3rd-party docs or the specifications inside this project.
     - Recommendation: Suggested fix or mitigation.
 
 ## Security Considerations
