@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.ts, **/*.tsx"
+applyTo: **/*.{ts, tsx}
 ---
 # TypeScript Coding Standards
 This file defines our TypeScript coding conventions for Copilot code review.
