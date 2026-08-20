@@ -10,6 +10,7 @@ One challenge of domain-driven design will be the lack of "domain experts". In a
 
 Given that I'm doing this alone, for myself, I will have to take on the role of both engineer and domain expert. 
 
+*If sophisticated domain experts don't understand the model, there is something wrong with the model.* - Eric Evans
 
 ## Model Refinement
 In order to improve on a domain model's refinement, one can try and talk out loud about the various constructs because when speaking about entities and their relationships, we realize which parts of the relationships need to be improved on. Rough models will include more vague terms and names that may need to be made more concise with specific terms. Generally experimenting with language can help here. 
