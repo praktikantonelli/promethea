@@ -14,3 +14,8 @@ Given that I'm doing this alone, for myself, I will have to take on the role of 
 
 ## Model Refinement
 In order to improve on a domain model's refinement, one can try and talk out loud about the various constructs because when speaking about entities and their relationships, we realize which parts of the relationships need to be improved on. Rough models will include more vague terms and names that may need to be made more concise with specific terms. Generally experimenting with language can help here. 
+
+## Ubiquitous Language
+The book mentions the concept of ubiquitous language as meaning that the model should contain terms and language such that a domain expert can use the words used in the model to specifically talk about concise use cases of the application. It should be easy to speak about the domain using those terms, without it being awkward to use. 
+
+If a part of the model seems awkward to use, it may be a sign that the nomenclature could be improved upon.
