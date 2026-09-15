@@ -22,3 +22,8 @@ If a part of the model seems awkward to use, it may be a sign that the nomenclat
 
 ## Modules
 Instead of splitting the code into modules grouped by level (e.g., entities, services, ...), the code should be split by cohesive concepts, such as library, reading tracking, metadata etc.
+
+## Kinds of Objects
+Distinguish between several kinds of objects, including
+- Value objects: Objects that represent a value, something you would not borrow/move but instead just copy/clone, something that has no identity attached (e.g., some non-unique metadata for a book)
+- Entities: Objects that represent a unique entity where you can clearly distinguish multiple objects of the same type based on some values, something that you would reference/borrow/move because cloning/copying would violated some kind of uniqueness (e.g., a unique piece of literature)
