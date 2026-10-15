@@ -1,5 +1,5 @@
 ---
-applyTo: **/*.{ts,tsx}
+applyTo: "**/*.ts,**/*.tsx"
 excludeAgent: "cloud-agent"
 ---
 # TypeScript Coding Standards
