@@ -5,6 +5,8 @@ Important: According to Eric Evans' "Domain-Driven Design", it is vital that the
 ## Event Storming
 Event storming is a process that can be used to try and create a domain model. 
 
+The process is described in Vlad Khononov's "Learning Domain-Driven Design" as a kind of workshop to build a rough outline of ubiquitous language and a domain model in collaboration with up to ~10 people. Probably not applicable here.
+
 ## Domain Experts
 One challenge of domain-driven design will be the lack of "domain experts". In an example, Evans is the software engineer and he works with a group of electrical engineers that design PCBs. He states how important it is to have this exchange between programmers and domain experts, for example to establish a common language and a model that works for both sides of the problem.
 
@@ -27,3 +29,6 @@ Instead of splitting the code into modules grouped by level (e.g., entities, ser
 Distinguish between several kinds of objects, including
 - Value objects: Objects that represent a value, something you would not borrow/move but instead just copy/clone, something that has no identity attached (e.g., some non-unique metadata for a book)
 - Entities: Objects that represent a unique entity where you can clearly distinguish multiple objects of the same type based on some values, something that you would reference/borrow/move because cloning/copying would violated some kind of uniqueness (e.g., a unique piece of literature)
+
+## Architecture
+Domain-driven design is well-suited for ports and adapters (and thereby hexagonal architecture). The domain model is used for business logic, the ports define how the external requests must translate into said business logic, and the adapters are concrete implementations of those ports. 
