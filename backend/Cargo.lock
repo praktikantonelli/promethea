@@ -3,13 +3,6 @@
 version = 4
 
 [[package]]
-name = "adapters"
-version = "0.1.0"
-dependencies = [
- "shared",
-]
-
-[[package]]
 name = "atomic-waker"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -72,13 +65,6 @@ name = "bytes"
 version = "1.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ae3f5d315924270530207e2a68396c3cc547f6dca3fbdca317cfb1a51edb593"
-
-[[package]]
-name = "desktop"
-version = "0.1.0"
-dependencies = [
- "shared",
-]
 
 [[package]]
 name = "form_urlencoded"
@@ -363,14 +349,9 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "serde",
- "shared",
  "tokio",
  "ts-rs",
 ]
-
-[[package]]
-name = "shared"
-version = "0.1.0"
 
 [[package]]
 name = "slab"

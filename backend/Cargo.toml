@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = [ "adapters", "desktop","server", "shared"]
+members = ["server"]
 
 [workspace.package]
 rust-version = "1.88"
