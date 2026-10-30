@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["inbound", "outbound", "server"]
+members = [ "domain","inbound", "outbound", "server"]
 
 [workspace.package]
 rust-version = "1.88"
