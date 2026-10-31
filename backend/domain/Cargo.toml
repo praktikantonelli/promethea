@@ -11,6 +11,7 @@ description = "Promethea's domain model"
 readme = "README.md"
 
 [dependencies]
+uuid = { version = "1.29.0", features = ["v4"] }
 
 [lints]
 workspace = true
