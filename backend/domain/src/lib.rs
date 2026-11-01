@@ -13,8 +13,6 @@ pub struct Book {
     subtitle: Option<String>,
     /// The list of authors
     authors: Vec<Author>,
-    /// The number of pages in the book
-    number_of_pages: u16,
     /// A collection of all series this book belongs to
     series: HashMap<SeriesID, SeriesVolume>,
     /// All formats in which a work of literature is in the library
