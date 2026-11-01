@@ -17,6 +17,8 @@ pub struct Book {
     number_of_pages: u16,
     /// A collection of all series this book belongs to
     series: HashMap<SeriesID, SeriesVolume>,
+    /// All formats in which a work of literature is in the library
+    formats: Vec<Format>,
 }
 
 /// An individual that has contributed to a book.
@@ -46,3 +48,22 @@ pub struct SeriesID(Uuid);
 
 /// The index a book has in a series, must be non-negative!
 pub struct SeriesVolume(f32);
+
+/// Supported formats of a literary work in the library
+pub enum Format {
+    /// A digital version of a literary work
+    EBook(EBook),
+    /// An audio version of a literary work
+    Audiobook(Audiobook),
+    /// A digital representation of a physical book
+    Physical(PhysicalBook),
+}
+
+/// A digital book
+pub struct EBook {}
+
+/// An audiobook
+pub struct Audiobook {}
+
+/// A physical book
+pub struct PhysicalBook {}
