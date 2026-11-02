@@ -3,17 +3,19 @@
 use std::collections::HashMap;
 use uuid::Uuid;
 
-/// A representation of a work of literature.
-pub struct Book {
+/// A representation of a work of literature. 
+///
+/// A literary work does not take editions, revisions and publishers into account.
+pub struct LiteraryWork {
     /// A unique identifier for books of the same name
     book_id: BookID,
-    /// The book's title
+    /// The literary work's title
     title: String,
     /// A possible subtitle
     subtitle: Option<String>,
     /// The list of authors
     authors: Vec<Author>,
-    /// A collection of all series this book belongs to
+    /// A collection of all series this literary work belongs to
     series: HashMap<SeriesID, SeriesVolume>,
     /// All formats in which a work of literature is in the library
     formats: Vec<Format>,
