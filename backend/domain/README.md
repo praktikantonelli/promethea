@@ -23,6 +23,11 @@ Each book, author and series should be unique. But given that each of those enti
 ## Physical Books
 The library should allow the tracking and representing of physical books. While they're not directly as useful as the other formats, the library should be able to track information about them too.
 
+# Ubiquitous Language
+A literary work (represented as `LiteraryWork` in the code) represents one unique piece of literature, generally defined uniquely by a title and a list of authors. This representation is meant on a high level, meaning there is no distinction here regarding multiple editions due to revisions, different formats published by different publishers, different editions (e.g., anniversary, collector's editions etc.). 
+
+The `Format` represents a concrete entry in the library that maps to one (or more) `LiteraryWork`(s). In general, the mapping is one-to-one, but it may also be a one-to-many mapping due to omnibus collections. Each `Format` represents a different way in which the book may be available. An `EBook` is a digital version of a book, an `Audiobook` is a read-out version and a `PhysicalBook` is a representation of a physical book. Each `LiteraryWork` may be present in any number of each `Format`, but it will generally only be present in at most one of each (e.g., one `EBook`, one `Audiobook` and one `PhysicalBook`).
+
 # Open Points
 ## Book vs. Formats
 From the key goals, it's clear that a book has to be separated from its formats. A distinction between a unique piece of literature and its concrete formats is needed, but it's not clear yet which exact parts belong to which side of this distinction. 
