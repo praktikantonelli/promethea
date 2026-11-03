@@ -35,3 +35,19 @@ From the key goals, it's clear that a book has to be separated from its formats.
 A model may say that each piece of literature is modeled as a work, and that work has a one-to-many mapping to each available format. For example, a piece of literature may be available as an e-book, an audiobook and a physical book. But that causes problems with omnibus collections because there, the relationship would have to be inverted: 
 
 A format that contains multiple literary works would need to have a one-to-many mapping too, which would turn into a many-to-one mapping from the literary work's perspective. Maybe a many-to-many mapping?
+
+# Sources
+Some sources for domain-driven design, Rust web servers and hexagonal architecture:
+[The Hexagonal (Ports & Adapters) Architecture](https://alistair.cockburn.us/hexagonal-architecture): the original article by Alastair Cockburn on hexagonal architecture.
+
+[Hexagonal Architecture in Rust - From Zero to Ports and Adapters](https://chirath.hashnode.dev/hexagonal-architecture-in-rust-from-zero-to-ports-and-adapters): a blog post by Chirath Nissanka built around a real codebase. 
+
+[Domain-Driven Design Reference](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf): a reference of definitions and pattern summaries by Eric Evans (author of Domain-Driven Design). 
+
+[Hexagonal Rust Template](https://github.com/llmgraph-ai/hexagonal-rust-template): a GitHub template repository for a Rust backend following the ports and adapters model.
+
+[Axum Clean Architecture](https://github.com/codemountains/axum-ddd-explicit-architecture): a GitHub repository of an example Rust project using Axum with the clean architecture (very similar if not identical to hexagonal). 
+
+[Hexagonal Sandwich Recipes](https://github.com/firegloves/Hexagonal-Sandwich-Recipes): a GitHub repository following [this](https://medium.com/@lucorset/hexagonal-architecture-in-rust-72f8958eb26d) Medium article series on hexagonal architecture in Rust.
+
+[Axum Diesel Real-World Example](https://github.com/Quentin-Piot/axum-diesel-real-world): a real-world example of a GitHub repository doing domain-driven design with the Diesel SQL crate.
