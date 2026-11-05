@@ -1,9 +1,9 @@
 //! `domain`
 
-use std::collections::HashMap;
+use std::{collections::HashMap, path::PathBuf};
 use uuid::Uuid;
 
-/// A representation of a work of literature. 
+/// A representation of a work of literature.
 ///
 /// A literary work does not take editions, revisions and publishers into account.
 pub struct LiteraryWork {
@@ -60,10 +60,23 @@ pub enum Format {
 }
 
 /// A digital book
-pub struct EBook {}
+pub struct EBook {
+    /// the ebook's associated literary work
+    literary_work: &LiteraryWork,
+    /// the path at which the ebook is stored
+    path: PathBuf,
+}
 
 /// An audiobook
-pub struct Audiobook {}
+pub struct Audiobook {
+    /// the audiobook's associated literary work
+    literary_work: &LiteraryWork,
+    /// the path at which the audiobook is stored
+    path: PathBuf,
+}
 
 /// A physical book
-pub struct PhysicalBook {}
+pub struct PhysicalBook {
+    /// the physical book's associted literary work
+    literary_work: &LiteraryWork,
+}
