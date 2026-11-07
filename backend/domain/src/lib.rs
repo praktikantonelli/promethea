@@ -1,4 +1,4 @@
-//! `domain`
+//! `domain`, the domain model of the project.
 
 pub mod authors;
 pub use authors::Author;
