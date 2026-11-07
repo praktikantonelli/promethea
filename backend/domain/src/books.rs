@@ -36,22 +36,15 @@ pub enum Format {
 
 /// A digital book
 pub struct EBook {
-    /// the ebook's associated literary work
-    literary_work: &LiteraryWork,
     /// the path at which the ebook is stored
     path: PathBuf,
 }
 
 /// An audiobook
 pub struct Audiobook {
-    /// the audiobook's associated literary work
-    literary_work: &LiteraryWork,
     /// the path at which the audiobook is stored
     path: PathBuf,
 }
 
 /// A physical book
-pub struct PhysicalBook {
-    /// the physical book's associted literary work
-    literary_work: &LiteraryWork,
-}
+pub struct PhysicalBook {}
