@@ -12,4 +12,6 @@ pub struct Series {
 pub struct SeriesID(Uuid);
 
 /// The index a book has in a series, must be non-negative!
-pub struct SeriesVolume(f32);
+#[allow(dead_code, reason = "unused only for now")]
+#[derive(Debug, Clone, Copy)]
+pub struct Volume(f32);

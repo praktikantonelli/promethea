@@ -1,5 +1,5 @@
 use super::authors::Author;
-use super::series::{SeriesID, SeriesVolume};
+use super::series::{SeriesID, Volume};
 use std::collections::HashMap;
 use std::path::PathBuf;
 use uuid::Uuid;
@@ -16,7 +16,7 @@ pub struct LiteraryWork {
     /// The list of authors.
     authors: Vec<Author>,
     /// A collection of all series this literary work belongs to.
-    series: HashMap<SeriesID, SeriesVolume>,
+    series: HashMap<SeriesID, Volume>,
     /// All formats in which a work of literature is in the library.
     formats: Vec<Format>,
 }
