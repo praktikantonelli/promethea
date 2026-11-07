@@ -1,9 +1,9 @@
 [workspace]
 resolver = "3"
-members = [ "domain","inbound", "outbound", "server"]
+members = ["domain", "inbound", "outbound", "server"]
 
 [workspace.package]
-rust-version = "1.88"
+rust-version = "1.89"
 
 [workspace.lints.rust]
 # enable all Rust lints
@@ -78,3 +78,7 @@ blanket_clippy_restriction_lints = "allow"
 
 # allow arbitrary ordering of fields/variants, logical grouping preferred over alphabetical
 arbitrary_source_item_ordering = "allow"
+
+# allow exporting exhaustive structs, compilation _should_ fail if types are modified
+exhaustive_enums = "allow"
+exhaustive_structs = "allow"
