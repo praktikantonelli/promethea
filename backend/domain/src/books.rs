@@ -6,6 +6,8 @@ use uuid::Uuid;
 /// A representation of a work of literature.
 ///
 /// A literary work does not take editions, revisions and publishers into account.
+#[allow(dead_code, reason = "unused only for now")]
+#[derive(Debug)]
 pub struct LiteraryWork {
     /// A unique identifier for books of the same name.
     book_id: BookID,
@@ -22,9 +24,13 @@ pub struct LiteraryWork {
 }
 
 /// A newtype for the book ID.
+#[allow(dead_code, reason = "unused only for now")]
+#[derive(Debug, Clone, Copy)]
 pub struct BookID(Uuid);
 
 /// Supported formats of a literary work in the library.
+#[allow(dead_code, reason = "unused only for now")]
+#[derive(Debug)]
 pub enum Format {
     /// A digital version of a literary work.
     EBook(EBook),
@@ -35,16 +41,23 @@ pub enum Format {
 }
 
 /// A digital book.
+#[allow(dead_code, reason = "unused only for now")]
+#[derive(Debug)]
 pub struct EBook {
     /// the path at which the ebook is stored.
     path: PathBuf,
 }
 
 /// An audiobook.
+#[allow(dead_code, reason = "unused only for now")]
+#[derive(Debug)]
 pub struct Audiobook {
     /// the path at which the audiobook is stored.
     path: PathBuf,
 }
 
 /// A physical book.
-pub struct PhysicalBook {}
+#[allow(dead_code, reason = "unused only for now")]
+#[allow(missing_copy_implementations, reason = "only empty for now")]
+#[derive(Debug)]
+pub struct PhysicalBook;
