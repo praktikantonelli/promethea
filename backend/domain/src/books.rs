@@ -7,44 +7,44 @@ use uuid::Uuid;
 ///
 /// A literary work does not take editions, revisions and publishers into account.
 pub struct LiteraryWork {
-    /// A unique identifier for books of the same name
+    /// A unique identifier for books of the same name.
     book_id: BookID,
-    /// The literary work's title
+    /// The literary work's title.
     title: String,
-    /// A possible subtitle
+    /// A possible subtitle.
     subtitle: Option<String>,
-    /// The list of authors
+    /// The list of authors.
     authors: Vec<Author>,
-    /// A collection of all series this literary work belongs to
+    /// A collection of all series this literary work belongs to.
     series: HashMap<SeriesID, SeriesVolume>,
-    /// All formats in which a work of literature is in the library
+    /// All formats in which a work of literature is in the library.
     formats: Vec<Format>,
 }
 
-/// A newtype for the book ID
+/// A newtype for the book ID.
 pub struct BookID(Uuid);
 
-/// Supported formats of a literary work in the library
+/// Supported formats of a literary work in the library.
 pub enum Format {
-    /// A digital version of a literary work
+    /// A digital version of a literary work.
     EBook(EBook),
-    /// An audio version of a literary work
+    /// An audio version of a literary work.
     Audiobook(Audiobook),
-    /// A digital representation of a physical book
+    /// A digital representation of a physical book.
     Physical(PhysicalBook),
 }
 
-/// A digital book
+/// A digital book.
 pub struct EBook {
-    /// the path at which the ebook is stored
+    /// the path at which the ebook is stored.
     path: PathBuf,
 }
 
-/// An audiobook
+/// An audiobook.
 pub struct Audiobook {
-    /// the path at which the audiobook is stored
+    /// the path at which the audiobook is stored.
     path: PathBuf,
 }
 
-/// A physical book
+/// A physical book.
 pub struct PhysicalBook {}
