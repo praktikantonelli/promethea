@@ -17,7 +17,7 @@ pub struct LiteraryWork {
     /// The list of authors.
     authors: Vec<Author>,
     /// A collection of all series this literary work belongs to.
-    series: Vec<SeriesID, Volume>,
+    series: Vec<(SeriesID, Volume)>,
     /// All formats in which a work of literature is in the library.
     formats: Vec<Format>,
 }
