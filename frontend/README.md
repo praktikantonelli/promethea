@@ -1,82 +1,207 @@
-# Frontend
+Welcome to your new TanStack Start app!
 
-This is a Nx workspace that contains all frontend code for Promethea. It is split as follows:
+# Getting Started
 
-```sh
-frontend/
-├── apps/web/            # web frontend package
-│   └── src/
-│       ├── routes/      # TanStack Router routes
-│       └── main.tsx     # entry point
-├── apps/desktop         # future desktop frontend package
-├── packages/ui/         # shared React library for both platforms
-│   └── src/
-│       ├── components   # shadcn/ui components
-│       ├── hooks        # shared hooks
-│       └── pages        # shared pages, displayed with TanStack Router
-└── packages/lib/        # shared TypeScript library
-    └── src/
-        └── lib          # shared types, types generated from Rust backend (HTTP responses etc.)
+To run this application:
+
+```bash
+pnpm install
+pnpm dev
 ```
 
-## Architecture
+# Building For Production
 
-Each platform has its own `app` that tries to define as little logic as possible. The goal is to have a mostly identical user interface, regardless of platform.
+To build this application for production:
 
-Each platform defines its own route tree for TanStack Router, simply because the routes will not be identical. The components behind a route are to be defined in `packages/ui/src/pages` if they're present on both platforms. As such, the route tree on each platform defines all available routes, but each route will mostly be a thin wrapper around a main component defined in `packages/ui/src/pages`.
-
-Shared TypeScript code goes into `packages/lib/src`. This includes shared types and maybe also types inferred/generated from backend code. For example, if the backend returns a custom type on some HTTP request, it might make sense to auto-generate an equivalent type, for example with [1password's typeshare](https://github.com/1Password/typeshare).
-
-## Common Nx Commands
-
-Display a graph of all apps and packages:
-
-```sh
-pnpm dlx nx graph
+```bash
+pnpm build
 ```
 
-Run the dev server:
+## Styling
 
-```sh
-pnpm dlx nx serve web
+This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+
+### Removing Tailwind CSS
+
+If you prefer not to use Tailwind CSS:
+
+1. Remove the demo pages in `src/routes/demo/`
+2. Replace the Tailwind import in `src/styles.css` with your own styles
+3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
+4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
+
+## Linting & Formatting
+
+
+This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
+
+```bash
+pnpm lint
+pnpm format
+pnpm check
 ```
 
-Create a production bundle:
 
-```sh
-pnpm dlx nx build web
+## Shadcn
+
+Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
+
+```bash
+pnpm dlx shadcn@latest add button
 ```
 
-See all available targets to run for a project:
 
-```sh
-pnpm dlx nx show project web
+
+## Routing
+
+This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+
+### Adding A Route
+
+To add a new route to your application just add a new file in the `./src/routes` directory.
+
+TanStack will automatically generate the content of the route file for you.
+
+Now that you have two routes you can use a `Link` component to navigate between them.
+
+### Adding Links
+
+To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
+
+```tsx
+import { Link } from "@tanstack/react-router";
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+Then anywhere in your JSX you can use it like so:
 
-## Add new projects
-
-Generate a new React application:
-
-```sh
-pnpm dlx nx g @nx/react:app demo
+```tsx
+<Link to="/about">About</Link>
 ```
 
-Generate a new React library:
+This will create a link that will navigate to the `/about` route.
 
-```sh
-pnpm dlx nx g @nx/react:lib mylib
+More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
+
+### Using A Layout
+
+In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
+
+Here is an example layout that includes a header:
+
+```tsx
+import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+
+export const Route = createRootRoute({
+  head: () => ({
+    meta: [
+      { charSet: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { title: 'My App' },
+    ],
+  }),
+  shellComponent: ({ children }) => (
+    <html lang="en">
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        <header>
+          <nav>
+            <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
+          </nav>
+        </header>
+        {children}
+        <Scripts />
+      </body>
+    </html>
+  ),
+})
 ```
 
-List all installed Nx plugins:
+More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
 
-```sh
-pnpm dlx nx list
+## Server Functions
+
+TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
+
+```tsx
+import { createServerFn } from '@tanstack/react-start'
+
+const getServerTime = createServerFn({
+  method: 'GET',
+}).handler(async () => {
+  return new Date().toISOString()
+})
+
+// Use in a component
+function MyComponent() {
+  const [time, setTime] = useState('')
+  
+  useEffect(() => {
+    getServerTime().then(setTime)
+  }, [])
+  
+  return <div>Server time: {time}</div>
+}
 ```
 
-Learn more about a plugin:
+## API Routes
 
-```sh
-pnpm dlx nx list <plugin-name>
+You can create API routes by using the `server` property in your route definitions:
+
+```tsx
+import { createFileRoute } from '@tanstack/react-router'
+import { json } from '@tanstack/react-start'
+
+export const Route = createFileRoute('/api/hello')({
+  server: {
+    handlers: {
+      GET: () => json({ message: 'Hello, World!' }),
+    },
+  },
+})
 ```
+
+## Data Fetching
+
+There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
+
+For example:
+
+```tsx
+import { createFileRoute } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/people')({
+  loader: async () => {
+    const response = await fetch('https://swapi.dev/api/people')
+    return response.json()
+  },
+  component: PeopleComponent,
+})
+
+function PeopleComponent() {
+  const data = Route.useLoaderData()
+  return (
+    <ul>
+      {data.results.map((person) => (
+        <li key={person.name}>{person.name}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
+
+
+# Demo files
+
+Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
+
+
+# Learn More
+
+You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+
+For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
