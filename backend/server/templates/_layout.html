@@ -1,0 +1,30 @@
+{#-
+    This is the basic layout of our example application.
+    It is the core skeleton shared between all pages.
+    It expects the struct of any template that `{% extends %}` this layout to contain
+    (at least) a field `lang: Lang`, so it can be used in the `<html lang=` attribute.
+-#}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}{% endblock %}</title>
+
+        <meta http-equiv="expires" content="Sat, 01 Dec 2001 00:00:00 GMT" />
+        <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="pragma" content="no-cache" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="noindex, nofollow" />
+
+        <style>
+        /*<![CDATA[*/
+            {%~ include "_layout.css" ~%}
+        /*]]>*/
+        </style>
+        <script src="../../../frontend/htmx.min.js"></script>
+    </head>
+    <body>
+        {%~ block content %}{% endblock ~%}
+    </body>
+</html>

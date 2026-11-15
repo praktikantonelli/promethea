@@ -13,10 +13,22 @@ readme = "README.md"
 [dependencies]
 axum = "0.8.9"
 tracing = { workspace = true }
+thiserror = { workspace = true }
 tracing-subscriber = { version = "0.3.23" }
 tokio = { version = "1.52.3", features = ["rt-multi-thread", "macros", "net"] }
-tower-http = { version = "0.7.1", features = ["fs"] }
+tower-http = { version = "0.7.1", features = ["fs", "trace"] }
 tower-livereload = "0.10"
+askama = "0.16.1"
+askama_web = { version = "0.16.0", features = ["axum-0.8"] }
 
+# serde and strum are used to parse (deserialize) and generate (serialize) information
+# between web requests, e.g. to share the selected display language.
+serde = { version = "1.0.217", features = ["derive"] }
+strum = { version = "0.27.1", features = ["derive"] }
+
+# These depenendies are simply used for a better user experience, having access logs in the
+# console, and error messages if anything goes wrong, e.g. if the port is already in use.
+displaydoc = "0.2.5"
+pretty-error-debug = "0.3.1"
 [lints]
 workspace = true

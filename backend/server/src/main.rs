@@ -1,44 +1,111 @@
-//! server backend package
-
-use axum::{Router, body::Body, http::Request, response::Html, routing::get};
-use std::path::PathBuf;
-use tokio::net::TcpListener;
-use tower_http::services::ServeDir;
-#[cfg(debug_assertions)]
-use tower_livereload::LiveReloadLayer;
-use tracing::info;
-use tracing_subscriber::fmt::init;
-/// Module containing types used in axum handlers
+use askama::Template;
+use axum::extract::{Path, Query};
+use axum::http::StatusCode;
+use axum::response::{Html, IntoResponse, Redirect, Response};
+use axum::routing::get;
+use axum::{Router, serve};
+use serde::Deserialize;
+use tower_http::trace::TraceLayer;
+use tracing::{Level, info};
 
 #[tokio::main]
-async fn main() {
-    init();
-
-    let frontend_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../frontend");
+async fn main() -> Result<(), Error> {
+    tracing_subscriber::fmt()
+        .with_max_level(Level::DEBUG)
+        .init();
 
     let app = Router::new()
-        .route("/hello", get(hello))
-        .fallback_service(ServeDir::new(frontend_dir));
+        .route("/", get(start_handler))
+        .route("/{lang}/index.html", get(index_handler))
+        .route("/greet-me", get(greeting_handler))
+        .fallback(|| async { AppError::NotFound })
+        .layer(TraceLayer::new_for_http());
 
-    #[allow(clippy::shadow_reuse, reason = "needs to keep name")]
-    #[cfg(debug_assertions)]
-    let app = app.layer(
-        LiveReloadLayer::new()
-            .request_predicate(|req: &Request<Body>| !req.headers().contains_key("HX-Request")),
-    );
+    // In a real application you would most likely read the configuration from a config file.
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:8080")
+        .await
+        .map_err(Error::Bind)?;
 
-    #[allow(clippy::unwrap_used, reason = "unrecoverable error")]
-    let listener = TcpListener::bind("127.0.0.1:3000").await.unwrap();
-
-    info!("Server running at http://localhost:3000");
-
-    #[allow(clippy::unwrap_used, reason = "unrecoverable error")]
-    axum::serve(listener, app).await.unwrap();
+    if let Ok(addr) = listener.local_addr() {
+        info!("Listening on http://{addr}/");
+    }
+    serve(listener, app).await.map_err(Error::Run)
 }
 
-/// example GET endpoint
-#[allow(clippy::single_call_fn, reason = "example HTTP endpoint")]
-async fn hello() -> Html<&'static str> {
-    info!("Request received!");
-    Html("<p>Hello World from Axum!</p>")
+#[derive(displaydoc::Display, pretty_error_debug::Debug, thiserror::Error)]
+enum Error {
+    /// could not bind socket
+    Bind(#[source] std::io::Error),
+    /// could not run server
+    Run(#[source] std::io::Error),
+}
+
+#[derive(Debug, displaydoc::Display, thiserror::Error)]
+enum AppError {
+    /// not found
+    NotFound,
+    /// could not render template
+    Render(#[from] askama::Error),
+}
+
+impl IntoResponse for AppError {
+    fn into_response(self) -> Response {
+        #[derive(Debug, Template)]
+        #[template(path = "error.html")]
+        struct Tmpl {
+            err: AppError,
+        }
+
+        let status = match &self {
+            AppError::NotFound => StatusCode::NOT_FOUND,
+            AppError::Render(_) => StatusCode::INTERNAL_SERVER_ERROR,
+        };
+        let tmpl = Tmpl { err: self };
+        if let Ok(body) = tmpl.render() {
+            (status, Html(body)).into_response()
+        } else {
+            (status, "Something went wrong").into_response()
+        }
+    }
+}
+
+async fn start_handler() -> Redirect {
+    Redirect::temporary("/en/index.html")
+}
+
+#[derive(Debug, Deserialize)]
+struct IndexHandlerQuery {
+    #[serde(default)]
+    name: String,
+}
+
+async fn index_handler(
+    Query(query): Query<IndexHandlerQuery>,
+) -> Result<impl IntoResponse, AppError> {
+    #[derive(Debug, Template)]
+    #[template(path = "index.html")]
+    struct Tmpl {
+        name: String,
+    }
+
+    let template = Tmpl { name: query.name };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Debug, Deserialize)]
+struct GreetingHandlerQuery {
+    name: String,
+}
+
+async fn greeting_handler(
+    Query(query): Query<GreetingHandlerQuery>,
+) -> Result<impl IntoResponse, AppError> {
+    #[derive(Debug, Template)]
+    #[template(path = "greet.html")]
+    struct Tmpl {
+        name: String,
+    }
+
+    let template = Tmpl { name: query.name };
+    Ok(Html(template.render()?))
 }
