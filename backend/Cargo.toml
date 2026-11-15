@@ -5,6 +5,9 @@ members = ["domain", "inbound", "outbound", "server"]
 [workspace.package]
 rust-version = "1.89"
 
+[workspace.dependencies]
+tracing = "0.1.44"
+
 [workspace.lints.rust]
 # enable all Rust lints
 warnings = { level = "warn", priority = -1 }
