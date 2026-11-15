@@ -30,6 +30,7 @@
             (rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
             pnpm
             nodejs
+            cargo-watch
           ];
         };
       }
