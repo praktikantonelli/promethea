@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Promethea</title>
+    <script src="./htmx.min.js"></script>
+  </head>
+    <body>
+      <main>
+        <h1>Hello, World!</h1>
+        <button hx-get="/hello" hx-target="#result" hx-swap="innerHTML">Say Hello</button>
+        <div id="result"></div>
+      </main>  
+    </body> 
+</html>
