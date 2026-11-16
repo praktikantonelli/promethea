@@ -1,11 +1,14 @@
 use askama::Template;
+use axum::body::Body;
 use axum::extract::{Path, Query};
-use axum::http::StatusCode;
+use axum::http::{Request, StatusCode};
 use axum::response::{Html, IntoResponse, Redirect, Response};
 use axum::routing::get;
 use axum::{Router, serve};
 use serde::Deserialize;
 use tower_http::trace::TraceLayer;
+#[cfg(debug_assertions)]
+use tower_livereload::LiveReloadLayer;
 use tracing::{Level, info};
 
 #[tokio::main]
@@ -20,6 +23,12 @@ async fn main() -> Result<(), Error> {
         .route("/greet-me", get(greeting_handler))
         .fallback(|| async { AppError::NotFound })
         .layer(TraceLayer::new_for_http());
+
+    #[cfg(debug_assertions)]
+    let app = app.layer(
+        LiveReloadLayer::new()
+            .request_predicate(|req: &Request<Body>| !req.headers().contains_key("HX-Request")),
+    );
 
     // In a real application you would most likely read the configuration from a config file.
     let listener = tokio::net::TcpListener::bind("127.0.0.1:8080")
