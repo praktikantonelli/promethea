@@ -1,11 +1,16 @@
+//! Sample backend code
 use askama::Template;
+use askama_web as _;
 use axum::body::Body;
-use axum::extract::{Path, Query};
+use axum::extract::Query;
 use axum::http::{Request, StatusCode};
 use axum::response::{Html, IntoResponse, Redirect, Response};
 use axum::routing::get;
 use axum::{Router, serve};
 use serde::Deserialize;
+use std::io::Error as IOError;
+use strum as _;
+use tokio::net::TcpListener;
 use tower_http::trace::TraceLayer;
 #[cfg(debug_assertions)]
 use tower_livereload::LiveReloadLayer;
@@ -24,6 +29,7 @@ async fn main() -> Result<(), Error> {
         .fallback(|| async { AppError::NotFound })
         .layer(TraceLayer::new_for_http());
 
+    #[allow(clippy::shadow_reuse, reason = "name must remain")]
     #[cfg(debug_assertions)]
     let app = app.layer(
         LiveReloadLayer::new()
@@ -31,7 +37,7 @@ async fn main() -> Result<(), Error> {
     );
 
     // In a real application you would most likely read the configuration from a config file.
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:8080")
+    let listener = TcpListener::bind("127.0.0.1:8080")
         .await
         .map_err(Error::Bind)?;
 
@@ -44,9 +50,9 @@ async fn main() -> Result<(), Error> {
 #[derive(displaydoc::Display, pretty_error_debug::Debug, thiserror::Error)]
 enum Error {
     /// could not bind socket
-    Bind(#[source] std::io::Error),
+    Bind(#[source] IOError),
     /// could not run server
-    Run(#[source] std::io::Error),
+    Run(#[source] IOError),
 }
 
 #[derive(Debug, displaydoc::Display, thiserror::Error)]
