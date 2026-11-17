@@ -26,6 +26,7 @@ async fn main() -> Result<(), Error> {
         .route("/", get(start_handler))
         .route("/{lang}/index.html", get(index_handler))
         .route("/greet-me", get(greeting_handler))
+        .route("/sample", get(sample_handler))
         .fallback(|| async { AppError::NotFound })
         .layer(TraceLayer::new_for_http());
 
@@ -123,4 +124,8 @@ async fn greeting_handler(
 
     let template = Tmpl { name: query.name };
     Ok(Html(template.render()?))
+}
+
+async fn sample_handler() -> Result<impl IntoResponse, AppError> {
+    Ok(Html("<p>Hello World from Axum!</p>"))
 }
