@@ -31,3 +31,9 @@
             <div id="asdf"/>
     </form>
 {%- endblock -%}
+{%- block sample -%}
+        <p>
+          <button type="button" hx-get="/sample" hx-target="#sample">Click me!</button>
+          <div id="sample">I will be replaced</div>
+        </p>
+{%- endblock -%}
