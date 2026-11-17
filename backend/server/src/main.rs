@@ -11,7 +11,7 @@ use serde::Deserialize;
 use std::io::Error as IOError;
 use strum as _;
 use tokio::net::TcpListener;
-use tower_http::trace::TraceLayer;
+use tower_http::{services::ServeDir, trace::TraceLayer};
 #[cfg(debug_assertions)]
 use tower_livereload::LiveReloadLayer;
 use tracing::{Level, info};
@@ -27,6 +27,10 @@ async fn main() -> Result<(), Error> {
         .route("/{lang}/index.html", get(index_handler))
         .route("/greet-me", get(greeting_handler))
         .route("/sample", get(sample_handler))
+        .nest_service(
+            "/static",
+            ServeDir::new(concat!(env!("CARGO_MANIFEST_DIR"), "/../../frontend")),
+        )
         .fallback(|| async { AppError::NotFound })
         .layer(TraceLayer::new_for_http());
 
