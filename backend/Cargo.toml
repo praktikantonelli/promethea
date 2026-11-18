@@ -86,3 +86,6 @@ arbitrary_source_item_ordering = "allow"
 # allow exporting exhaustive structs, compilation _should_ fail if types are modified
 exhaustive_enums = "allow"
 exhaustive_structs = "allow"
+
+# allow functions that are called only once, otherwise all axum handlers would be flagged
+single_call_fn = "allow"

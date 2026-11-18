@@ -17,7 +17,7 @@ use tower_livereload::LiveReloadLayer;
 use tracing::{Level, info};
 
 #[tokio::main]
-async fn main() -> Result<(), Error> {
+async fn main() -> Result<(), PrometheaError> {
     tracing_subscriber::fmt()
         .with_max_level(Level::DEBUG)
         .init();
@@ -44,16 +44,17 @@ async fn main() -> Result<(), Error> {
     // In a real application you would most likely read the configuration from a config file.
     let listener = TcpListener::bind("127.0.0.1:8080")
         .await
-        .map_err(Error::Bind)?;
+        .map_err(PrometheaError::Bind)?;
 
     if let Ok(addr) = listener.local_addr() {
         info!("Listening on http://{addr}/");
     }
-    serve(listener, app).await.map_err(Error::Run)
+    serve(listener, app).await.map_err(PrometheaError::Run)
 }
 
+/// A custom error type.
 #[derive(displaydoc::Display, pretty_error_debug::Debug, thiserror::Error)]
-enum Error {
+enum PrometheaError {
     /// could not bind socket
     Bind(#[source] IOError),
     /// could not run server
@@ -73,19 +74,19 @@ impl IntoResponse for AppError {
         #[derive(Debug, Template)]
         #[template(path = "error.html")]
         struct Tmpl {
+            /// the custom error type.
             err: AppError,
         }
 
-        let status = match &self {
-            AppError::NotFound => StatusCode::NOT_FOUND,
-            AppError::Render(_) => StatusCode::INTERNAL_SERVER_ERROR,
+        let status = match self {
+            Self::NotFound => StatusCode::NOT_FOUND,
+            Self::Render(_) => StatusCode::INTERNAL_SERVER_ERROR,
         };
         let tmpl = Tmpl { err: self };
-        if let Ok(body) = tmpl.render() {
-            (status, Html(body)).into_response()
-        } else {
-            (status, "Something went wrong").into_response()
-        }
+        tmpl.render().map_or_else(
+            |_| (status, "Something went wrong").into_response(),
+            |body| (status, Html(body)).into_response(),
+        )
     }
 }
 
@@ -93,8 +94,10 @@ async fn start_handler() -> Redirect {
     Redirect::temporary("/en/index.html")
 }
 
+/// Handler for "/" route with query.
 #[derive(Debug, Deserialize)]
 struct IndexHandlerQuery {
+    /// name, supplied via input field
     #[serde(default)]
     name: String,
 }
@@ -102,9 +105,11 @@ struct IndexHandlerQuery {
 async fn index_handler(
     Query(query): Query<IndexHandlerQuery>,
 ) -> Result<impl IntoResponse, AppError> {
+    /// Template struct for askama's HTML template.
     #[derive(Debug, Template)]
     #[template(path = "index.html")]
     struct Tmpl {
+        /// name parameter.
         name: String,
     }
 
@@ -112,17 +117,21 @@ async fn index_handler(
     Ok(Html(template.render()?))
 }
 
+/// Handler for "/greet" route with query.
 #[derive(Debug, Deserialize)]
 struct GreetingHandlerQuery {
+    /// name, supplied via input field.
     name: String,
 }
 
 async fn greeting_handler(
     Query(query): Query<GreetingHandlerQuery>,
 ) -> Result<impl IntoResponse, AppError> {
+    /// Template struct for askama's HTML template.
     #[derive(Debug, Template)]
     #[template(path = "greet.html")]
     struct Tmpl {
+        /// name parameter.
         name: String,
     }
 
