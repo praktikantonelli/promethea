@@ -53,7 +53,7 @@ async fn main() -> Result<(), PrometheaError> {
 }
 
 /// A custom error type.
-#[derive(displaydoc::Display, pretty_error_debug::Debug, thiserror::Error)]
+#[derive(pretty_error_debug::Debug, thiserror::Error)]
 enum PrometheaError {
     /// could not bind socket
     Bind(#[source] IOError),
@@ -61,7 +61,7 @@ enum PrometheaError {
     Run(#[source] IOError),
 }
 
-#[derive(Debug, displaydoc::Display, thiserror::Error)]
+#[derive(Debug, thiserror::Error)]
 enum AppError {
     /// not found
     NotFound,

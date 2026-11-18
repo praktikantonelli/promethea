@@ -171,17 +171,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4e7648175b45a9a48536d676f68d918270699102aa8dab5496df06904c914600"
 
 [[package]]
-name = "displaydoc"
-version = "0.2.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6232dd377dcc64799954cbd3a9bb882e9cdc1308ccd87b1c098f1fb2eaf82a8"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 3.0.9",
-]
-
-[[package]]
 name = "domain"
 version = "0.1.0"
 dependencies = [
@@ -579,7 +568,6 @@ dependencies = [
  "askama",
  "askama_web",
  "axum",
- "displaydoc",
  "pretty-error-debug",
  "serde",
  "strum",

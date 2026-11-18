@@ -28,7 +28,6 @@ strum = { version = "0.27.1", features = ["derive"] }
 
 # These depenendies are simply used for a better user experience, having access logs in the
 # console, and error messages if anything goes wrong, e.g. if the port is already in use.
-displaydoc = "0.2.5"
 pretty-error-debug = "0.3.1"
 [lints]
 workspace = true
