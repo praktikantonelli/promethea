@@ -4,7 +4,7 @@ use askama_web as _;
 use axum::body::Body;
 use axum::extract::Query;
 use axum::http::{Request, StatusCode};
-use axum::response::{Html, IntoResponse, Redirect, Response};
+use axum::response::{Html, IntoResponse, Response};
 use axum::routing::get;
 use axum::{Router, serve};
 use serde::Deserialize;
@@ -22,8 +22,7 @@ async fn main() -> Result<(), PrometheaError> {
         .init();
 
     let app = Router::new()
-        .route("/", get(start_handler))
-        .route("/index.html", get(index_handler))
+        .route("/", get(index_handler))
         .route("/greet-me", get(greeting_handler))
         .nest_service(
             "/static",
@@ -90,10 +89,6 @@ impl IntoResponse for AppError {
             |body| (status, Html(body)).into_response(),
         )
     }
-}
-
-async fn start_handler() -> Redirect {
-    Redirect::temporary("/index.html")
 }
 
 /// Handler for "/" route with query.
