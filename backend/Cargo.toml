@@ -89,3 +89,6 @@ exhaustive_structs = "allow"
 
 # allow functions that are called only once, otherwise all axum handlers would be flagged
 single_call_fn = "allow"
+
+# allow single character identifiers, some macros do that and can't be overridden
+min_ident_chars = "allow"
