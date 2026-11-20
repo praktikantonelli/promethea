@@ -23,7 +23,7 @@ async fn main() -> Result<(), PrometheaError> {
 
     let app = Router::new()
         .route("/", get(start_handler))
-        .route("/{lang}/index.html", get(index_handler))
+        .route("/index.html", get(index_handler))
         .route("/greet-me", get(greeting_handler))
         .nest_service(
             "/static",
@@ -93,7 +93,7 @@ impl IntoResponse for AppError {
 }
 
 async fn start_handler() -> Redirect {
-    Redirect::temporary("/en/index.html")
+    Redirect::temporary("/index.html")
 }
 
 /// Handler for "/" route with query.
