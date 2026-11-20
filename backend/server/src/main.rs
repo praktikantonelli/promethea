@@ -25,7 +25,6 @@ async fn main() -> Result<(), PrometheaError> {
         .route("/", get(start_handler))
         .route("/{lang}/index.html", get(index_handler))
         .route("/greet-me", get(greeting_handler))
-        .route("/sample", get(sample_handler))
         .nest_service(
             "/static",
             ServeDir::new(concat!(env!("CARGO_MANIFEST_DIR"), "/../../frontend")),
@@ -140,8 +139,4 @@ async fn greeting_handler(
 
     let template = Tmpl { name: query.name };
     Ok(Html(template.render()?))
-}
-
-async fn sample_handler() -> Result<impl IntoResponse, AppError> {
-    Ok(Html("<p>Hello World from Axum!</p>"))
 }
