@@ -56,16 +56,20 @@ async fn main() -> Result<(), PrometheaError> {
 #[derive(pretty_error_debug::Debug, thiserror::Error)]
 enum PrometheaError {
     /// could not bind socket
+    #[error("Could not bind TCP listener: {0}")]
     Bind(#[source] IOError),
     /// could not run server
+    #[error("Could not run HTTP server: {0}")]
     Run(#[source] IOError),
 }
 
 #[derive(Debug, thiserror::Error)]
 enum AppError {
     /// not found
+    #[error("Route handler not found!")]
     NotFound,
     /// could not render template
+    #[error("Failed to render HTML!")]
     Render(#[from] askama::Error),
 }
 
