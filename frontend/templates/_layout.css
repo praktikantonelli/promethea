@@ -1,8 +1,3 @@
-{#-
-    This file is included by "_layout.html".
-    You can still use template syntax (such as this comment) in here.
--#}
-
 html {
     background-color: #eee;
     color: #111;
