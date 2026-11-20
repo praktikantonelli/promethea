@@ -9,7 +9,6 @@ use axum::routing::get;
 use axum::{Router, serve};
 use serde::Deserialize;
 use std::io::Error as IOError;
-use strum as _;
 use tokio::net::TcpListener;
 use tower_http::{services::ServeDir, trace::TraceLayer};
 #[cfg(debug_assertions)]
