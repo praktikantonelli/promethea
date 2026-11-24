@@ -1,1 +1,1 @@
-//! `inbound`
+//! `inbound`.

@@ -1,0 +1,3 @@
+[general]
+# search here for HTML templates
+dirs = ["../../frontend/templates"]

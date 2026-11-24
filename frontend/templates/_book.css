@@ -1,0 +1,9 @@
+.book th {
+  padding: 10px;
+  text-align: left;
+}
+
+.book td {
+  padding: 10px;
+  text-align: right;
+}

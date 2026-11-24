@@ -1,0 +1,40 @@
+{% extends "_layout.html" %}
+
+{%- block title -%}
+      Hello!
+{%- endblock -%}
+
+{%- block content -%}
+    <h1>Hello!</h1>
+    <form
+        hx-get="/greet-me"
+        hx-target="#asdf"
+        hx-swap="innerHTML"
+    >
+        <p>I would like to say <em>hello</em>. Would you please tell me your name?</p>
+        <p>
+            <label>My name is
+                <input
+                    type="text"
+                    value="{{name}}"
+                    name="name"
+                    required
+                    style="width: 10em"
+                />
+            </label>
+        </p>
+        <p>
+            <label>
+                <button type="submit">Greet me, then!</button>
+            </label>
+        </p>
+            <div id="asdf"></div>
+    </form>
+    <p>
+      <div id="sample">I will be replaced</div>
+    </p>
+    <p>
+      <button hx-get="/get_book" hx-target="#book">Get book</button>
+      <div id="book">Replace me with a book</div>
+    </p
+{%- endblock -%}

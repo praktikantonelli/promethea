@@ -1,0 +1,4 @@
+[git_hooks.commit-msg]
+script = """#!/bin/sh
+  exec cog --quiet verify --file "$1" > /dev/null
+"""
