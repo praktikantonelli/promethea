@@ -1,4 +1,4 @@
-//! Sample backend code
+//! Sample backend code.
 use askama::Template;
 use askama_web as _;
 use axum::body::Body;
@@ -53,20 +53,20 @@ async fn main() -> Result<(), PrometheaError> {
 /// A custom error type.
 #[derive(pretty_error_debug::Debug, thiserror::Error)]
 enum PrometheaError {
-    /// could not bind socket
+    /// could not bind socket.
     #[error("Could not bind TCP listener: {0}")]
     Bind(#[source] IOError),
-    /// could not run server
+    /// could not run server.
     #[error("Could not run HTTP server: {0}")]
     Run(#[source] IOError),
 }
 
 #[derive(Debug, thiserror::Error)]
 enum AppError {
-    /// not found
+    /// not found.
     #[error("Route handler not found!")]
     NotFound,
-    /// could not render template
+    /// could not render template.
     #[error("Failed to render HTML!")]
     Render(#[from] askama::Error),
 }
@@ -95,7 +95,7 @@ impl IntoResponse for AppError {
 /// Handler for "/" route with query.
 #[derive(Debug, Deserialize)]
 struct IndexHandlerQuery {
-    /// name, supplied via input field
+    /// name, supplied via input field.
     #[serde(default)]
     name: String,
 }
@@ -137,32 +137,32 @@ async fn greeting_handler(
     Ok(Html(template.render()?))
 }
 
-/// Sample templated struct returned by a GET request
+/// Sample templated struct returned by a GET request.
 #[derive(Template)]
 #[template(path = "book.html")]
 struct BookItem {
-    /// the book's title
+    /// the book's title.
     title: String,
-    /// the book's list of authors
+    /// the book's list of authors.
     authors: Vec<Author>,
-    /// the book's page count
+    /// the book's page count.
     page_count: u16,
-    /// the book's series memberships
+    /// the book's series memberships.
     series: Vec<SeriesAndVolume>,
 }
 
-/// Sample author struct
+/// Sample author struct.
 struct Author(String);
 
-/// Sample series and volume struct
+/// Sample series and volume struct.
 struct SeriesAndVolume {
-    /// the series in question
+    /// the series in question.
     title: Series,
-    /// the book's entry
+    /// the book's entry.
     index: f32,
 }
 
-/// Sample series struct
+/// Sample series struct.
 struct Series(String);
 
 async fn book_handler() -> Result<impl IntoResponse, AppError> {
