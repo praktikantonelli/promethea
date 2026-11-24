@@ -28,8 +28,7 @@
           packages = with pkgs; [
             just
             (rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
-            pnpm
-            nodejs
+            cocogitto
             cargo-watch
           ];
         };
