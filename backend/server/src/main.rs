@@ -24,6 +24,7 @@ async fn main() -> Result<(), PrometheaError> {
     let app = Router::new()
         .route("/", get(index_handler))
         .route("/greet-me", get(greeting_handler))
+        .route("/get_book", get(book_handler))
         .nest_service(
             "/static",
             ServeDir::new(concat!(env!("CARGO_MANIFEST_DIR"), "/../../frontend")),
@@ -134,4 +135,52 @@ async fn greeting_handler(
 
     let template = Tmpl { name: query.name };
     Ok(Html(template.render()?))
+}
+
+/// Sample templated struct returned by a GET request
+#[derive(Template)]
+#[template(path = "book.html")]
+struct BookItem {
+    /// the book's title
+    title: String,
+    /// the book's list of authors
+    authors: Vec<Author>,
+    /// the book's page count
+    page_count: u16,
+    /// the book's series memberships
+    series: Vec<SeriesAndVolume>,
+}
+
+/// Sample author struct
+struct Author(String);
+
+/// Sample series and volume struct
+struct SeriesAndVolume {
+    /// the series in question
+    title: Series,
+    /// the book's entry
+    index: f32,
+}
+
+/// Sample series struct
+struct Series(String);
+
+async fn book_handler() -> Result<impl IntoResponse, AppError> {
+    let title = "A Memory of Light".into();
+    let authors = vec![
+        Author("Brandon Sanderson".to_owned()),
+        Author("Robert Jordan".to_owned()),
+    ];
+    let page_count = 1056;
+    let series = vec![SeriesAndVolume {
+        title: Series("The Wheel of Time".to_owned()),
+        index: 12.0,
+    }];
+    let book = BookItem {
+        title,
+        authors,
+        page_count,
+        series,
+    };
+    Ok(Html(book.render()?))
 }
