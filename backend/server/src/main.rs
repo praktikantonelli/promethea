@@ -61,6 +61,7 @@ enum PrometheaError {
     Run(#[source] IOError),
 }
 
+/// An error type returnable by an axum handler.
 #[derive(Debug, thiserror::Error)]
 enum AppError {
     /// not found.
@@ -100,6 +101,7 @@ struct IndexHandlerQuery {
     name: String,
 }
 
+/// The axum handler for the root index.html.
 async fn index_handler(
     Query(query): Query<IndexHandlerQuery>,
 ) -> Result<impl IntoResponse, AppError> {
@@ -122,6 +124,7 @@ struct GreetingHandlerQuery {
     name: String,
 }
 
+/// The axum handler for the greet request.
 async fn greeting_handler(
     Query(query): Query<GreetingHandlerQuery>,
 ) -> Result<impl IntoResponse, AppError> {
@@ -165,6 +168,7 @@ struct SeriesAndVolume {
 /// Sample series struct.
 struct Series(String);
 
+/// A sample axum handler that returns a custom struct with a HTML template.
 async fn book_handler() -> Result<impl IntoResponse, AppError> {
     let title = "A Memory of Light".into();
     let authors = vec![
