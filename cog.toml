@@ -1,4 +1,9 @@
 [git_hooks.commit-msg]
 script = """#!/bin/sh
-  exec cog verify --file "$1" > /dev/null
+  if output=$(cog verify --file "$1" 2>&1); then
+    exit 0
+  else 
+    printf '%s\\n' "$output" >&2
+    exit 1
+  fi
 """
