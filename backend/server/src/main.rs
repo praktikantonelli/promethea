@@ -1,6 +1,5 @@
 //! Sample backend code.
 use askama::Template;
-use askama_web as _;
 use axum::body::Body;
 use axum::extract::Query;
 use axum::http::{Request, StatusCode};

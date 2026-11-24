@@ -56,30 +56,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "askama_web"
-version = "0.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "33d7972c9dc206f9832a16dbba72d589ce8cc313732bd82db36638e70a0b222c"
-dependencies = [
- "askama",
- "askama_web_derive",
- "axum-core",
- "bytes",
- "http",
-]
-
-[[package]]
-name = "askama_web_derive"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "940074e50ab8a902980dec23d265697dd1e8789e66be664d183dbb24c79b8e7c"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.119",
-]
-
-[[package]]
 name = "atomic-waker"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -560,7 +536,6 @@ name = "server"
 version = "0.1.0"
 dependencies = [
  "askama",
- "askama_web",
  "axum",
  "pretty-error-debug",
  "serde",
