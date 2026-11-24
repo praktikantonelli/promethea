@@ -1,0 +1,22 @@
+<table class="book">
+  <tr>
+    <th>Title</th>
+    <td>{{title}}</td>
+  </tr>
+  <tr>
+    <th>Authors</th>
+    <td>
+      {% for author in authors %} 
+      {{author.0}}{%- if !loop.last %}, {% endif %}
+      {% endfor %}
+    </td>
+  </tr>
+  <tr>
+    <th>Page count</th>
+    <td>{{page_count}}</td>
+  </tr>
+  <tr>
+    <th>Series</th>
+    <td>{% for x in series %}{{x.title.0}} #{{x.index}}{% endfor %}</td>
+  </tr>
+</table>
