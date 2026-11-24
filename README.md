@@ -7,7 +7,7 @@ Due to insufficient planning beforehand, the project has been saved under the `p
 ## Development
 For development on Windows, install the necessary components manually, including
 - the Rust toolchain for the backend with `cargo`, `clippy`, `rustfmt`, `rust-src` and `rust-analyzer` (as listed in [`rust-toolchain.toml`](./rust-toolchain.toml))
-- NodeJS and pnpm for the frontend
+- `cocogitto` for commit linting (a fast and small alternative to `husky` and `commitlint` without needing the `nodejs` ecosystem)
 - `just` for running recipes
 
 On Unix systems, specifically NixOS, clone the repository, install `direnv` (or `nix-direnv` on NixOS), run `direnv allow` inside the repository and voilà!
