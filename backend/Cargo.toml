@@ -3,7 +3,7 @@ resolver = "3"
 members = ["domain", "inbound", "outbound", "server"]
 
 [workspace.package]
-rust-version = "1.89"
+rust-version = "1.93"
 
 [workspace.dependencies]
 tracing = "0.1.44"
